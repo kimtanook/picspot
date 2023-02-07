@@ -1,16 +1,30 @@
+import Modal from '@/components/main/Modal';
 import Image from 'next/image';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 export default function Main() {
+  const [isOpenModal, setOpenModal] = useState(false);
+
+  const onClickToggleModal = () => {
+    setOpenModal(!isOpenModal);
+  };
+
   return (
     <>
+      {isOpenModal && (
+        <Modal onClickToggleModal={onClickToggleModal}>
+          <div>children</div>
+        </Modal>
+      )}
+
       <input />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
         <Categorys>지역</Categorys>
         <Categorys>작가</Categorys>
         <Categorys>지역</Categorys>
         <Categorys>팔로우</Categorys>
-        <Categorys>게시물 작성</Categorys>
+        <Categorys onClick={onClickToggleModal}>게시물 작성</Categorys>
       </div>
       <div></div>
       <div>
