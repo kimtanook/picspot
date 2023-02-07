@@ -1,38 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PicSpot 픽스팟 (픽쳐를 픽한 스팟)
+🏠[HomePage]()🔗[NOTION](https://www.notion.so/TEAM-2-_FAMILY-784e6ae20d7c499fa9df5620592f5d93)📐[Figma](https://www.figma.com/file/9cv3rhM9sjGuRCgVGxOLPD/Project_%ED%94%BD%EC%8A%A4%ED%8C%9F?node-id=0%3A1&t=N5kTxggsQwbvT68F-0)
+***
+## 🌼 팀 소개
+- 팀명 : FAMILY(Frontendesigner, Apple mac user, Member, I, LOVE, You)
+- 팀원 : Frontend 4인 | Designer 1인 
+<br>    김인섭(Leader), 임재영(Vice Leader), 김도훈, 박유진, 이기동 | 김승연
+- 프로젝트명 : 픽스팟 PicSpot (픽쳐를 픽한 스팟)
+- 프로젝트 목적 : 사진작가 커뮤니티에서 사진 스팟을 찾아보는 것 입니다. 사진에 대해 약간 이상의 전문성이 있는 사람을 대상으로 지역 기준 또는 팔로우 기준 등으로 사진들을 모아보고 카메라에 대한 정보와, 같이 출사(출장사진)를 나갈 사람을 구하는 등의 실시간 소통을 제공하는 페이지입니다.
+<br>
 
-## Getting Started
 
-First, run the development server:
+<br>
+<br>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+***
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📆 개발 기간
+22.02.06. ~ 23.3.13. (5 weeks)
+<br>
+<br>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🛠 사용 기술 및 라이브러리
+- Next.js
+-
+<br>
+<br>
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🌈 주요기능
+- 로그인/회원가입 : 
+- 메인페이지 : 
+- 상세페이지 : 
+- 마이페이지 : 
+<br>
+<br>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 🖼 주요 페이지
+홈페이지 | 로그인 | 회원가입
+----|----|----|
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+메인페이지 | 상세페이지 | 마이페이지
+----|----|----|
