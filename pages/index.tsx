@@ -2,6 +2,7 @@ import Modal from '@/components/main/Modal';
 import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
+import Seo from '@/components/Seo';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -12,6 +13,10 @@ export default function Main() {
 
   return (
     <>
+      <div>
+      <Seo title="Home" />
+      hello
+    </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
           <div>children</div>
