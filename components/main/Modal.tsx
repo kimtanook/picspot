@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
+import PostForm from './PostForm';
 
 interface ModalDefaultType {
   onClickToggleModal: () => void;
@@ -8,7 +9,9 @@ interface ModalDefaultType {
 const Modal = ({ onClickToggleModal }: PropsWithChildren<ModalDefaultType>) => {
   return (
     <ModalContainer>
-      <dialog open>Modal</dialog>
+      <StDialogBox open>
+        <PostForm />
+      </StDialogBox>
       <Backdrop
         onClick={(e) => {
           e.preventDefault();
@@ -31,6 +34,20 @@ const ModalContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StDialogBox = styled.dialog`
+  width: 600px;
+  height: 400px;
+  flex-direction: column;
+  align-items: center;
+
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 0 30px rgba(30, 30, 30 0.185);
+  box-sizing: border-box;
+  background-color: white;
+  z-index: 10000;
 `;
 
 const Backdrop = styled.div`
