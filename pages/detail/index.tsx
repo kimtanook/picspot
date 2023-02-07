@@ -1,8 +1,12 @@
+
+import Seo from '@/components/Seo';
 import { Map } from 'react-kakao-maps-sdk';
+
 
 export default function detail() {
   return (
     <div>
+      <Seo title="Detail" />
       <div>
         <Map // 지도를 표시할 Container
           center={{
