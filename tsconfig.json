@@ -27,7 +27,9 @@
     "**/*.tsx",
     "components/main/PostForm.tsx",
     "components/main/Modal.jsx",
-    "components/main/PostForm.tsx"
+    "components/main/PostForm.tsx",
+    "components/ModalWide.jsx",
+    "pages/mypage/index.jsx"
   ],
   "exclude": ["node_modules"]
 }
