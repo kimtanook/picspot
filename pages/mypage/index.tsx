@@ -1,7 +1,9 @@
+import Seo from '@/components/Seo';
+
 export default function mypage() {
   return (
     <div>
-      <div>mypage</div>
+      <Seo title="My" />
     </div>
   );
 }

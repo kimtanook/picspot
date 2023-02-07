@@ -1,7 +1,9 @@
+import Seo from '@/components/Seo';
+
 export default function detail() {
   return (
     <div>
-      <div>detail</div>
+      <Seo title="Detail" />
     </div>
   );
 }
