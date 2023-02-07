@@ -21,6 +21,13 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/main/PostForm.jsx",
+    "components/main/Modal.jsx",
+    "components/main/PostForm.jsx"
+  ],
   "exclude": ["node_modules"]
 }
