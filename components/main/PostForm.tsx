@@ -11,29 +11,34 @@ import {
 } from 'firebase/storage';
 
 const PostForm = () => {
-  //test state
   const [test, setTest] = useState('');
-
-  //image 관련
-  const [imageUpload, setImageUpload] = useState(null);
-  const [imageList, setImageList] = useState([]);
+  const [imageUpload, setImageUpload]: any = useState(null);
+  // const [imageList, setImageList] = useState([]);
 
   const storage = storageService;
-  const imageListRef = ref(storage, 'images/');
+  // const imageListRef = ref(storage, 'images/');
 
+  //* 이미지 스토리지에 업로드하기
+  //* 이미지 스토리지에서 다운로드해서 스냅샷하기
   const upload = () => {
     if (imageUpload === null) return;
 
+    console.log('imageUpload: ', imageUpload);
     const imageRef = ref(storage, `images/${imageUpload.name}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        setImageList((prev) => [...prev, url]);
+        console.log('사진이 업로드 되었습니다.');
       });
     });
-
-    console.log(imageUpload, imageList);
   };
-  // 이미지를 불러올 때
+
+  //* 텍스트 스토어에 저장하기
+  const onClickTest = async () => {
+    await addDoc(collection(dbService, 'test'), {
+      test: test,
+    });
+  };
+
   // useEffect(() => {
   //   listAll(imageListRef).then((response) => {
   //     response.items.forEach((item) => {
@@ -44,13 +49,6 @@ const PostForm = () => {
   //   });
   // }, []);
 
-  const onClickTest = async () => {
-    await addDoc(collection(dbService, 'post'), {
-      test: test,
-    });
-    // console.log('dd');
-  };
-
   return (
     <div>
       <div>
@@ -60,22 +58,19 @@ const PostForm = () => {
             setTest(e.target.value);
           }}
         />
-
         <button onClick={onClickTest}>추가</button>
       </div>
       <div>
         <input
           type="file"
-          onChange={(event) => {
+          onChange={(event: any) => {
             setImageUpload(event.target.files[0]);
           }}
         />
         <button onClick={upload}>업로드</button>
-        {imageList.map((el) => {
-          return <img key={el} src={el} />;
-        })}
       </div>
     </div>
   );
 };
+
 export default PostForm;
