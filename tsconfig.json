@@ -20,6 +20,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/ModalWide.jsx",
+    "pages/mypage/index.jsx"
+  ],
   "exclude": ["node_modules"]
 }
