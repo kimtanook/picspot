@@ -16,14 +16,14 @@ export default function Main() {
   return (
     <>
       <div>
-      <Seo title="Home" />
-      {closeModal && (
-        <ModalLogin closeModal={() => setCloseModal(!closeModal)}>
-          <button id="modalCloseBtn" />
-        </ModalLogin>
-      )}
-      <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
-    </div>
+        <Seo title="Home" />
+        {closeModal && (
+          <ModalLogin closeModal={() => setCloseModal(!closeModal)}>
+            <button id="modalCloseBtn" />
+          </ModalLogin>
+        )}
+        <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
+      </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
           <div>children</div>
