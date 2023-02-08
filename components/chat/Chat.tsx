@@ -11,7 +11,7 @@ interface IMessage {
   time?: string;
 }
 
-const Chatting: React.FC = () => {
+const Chat = () => {
   const [socketServer, setSocketServer] = useState<any>(null);
   const [socketId, setSocketId] = useState('');
   const [sendUser, setSendUser] = useState('');
@@ -168,18 +168,27 @@ const Chatting: React.FC = () => {
   );
 };
 
-export default Chatting;
-const ComponentContainer = styled.div``;
+export default Chat;
+const ComponentContainer = styled.div`
+  position: fixed;
+  background-color: aqua;
+  left: 60%;
+  top: 50%;
+  height: 300px;
+  width: 350px;
+`;
 const ChatListBox = styled.div`
   display: flex;
   flex-direction: column-reverse;
   height: 300px;
+  width: 350px;
   border: 1px solid black;
   overflow-y: scroll;
 `;
 const ChatItemBox = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 const User = styled.div`
   background-color: black;
@@ -197,6 +206,7 @@ const Message = styled.div`
   border-radius: 10px;
   width: 200px;
   text-align: center;
+  font-size: 12px;
 `;
 
 const Time = styled.div`
@@ -205,6 +215,7 @@ const Time = styled.div`
   padding: 3px;
   border-radius: 10px;
   color: white;
-  width: 250px;
+  width: 60px;
   text-align: center;
+  font-size: 10px;
 `;
