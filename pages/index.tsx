@@ -4,16 +4,14 @@ import { useState } from 'react';
 
 export default function Main() {
   const [closeModal, setCloseModal] = useState(false);
-
+  const closeModalButton = () => {
+    setCloseModal(!closeModal);
+  };
   return (
     <div>
       <Seo title="Home" />
-      {closeModal && (
-        <ModalLogin closeModal={() => setCloseModal(!closeModal)}>
-          <button id="modalCloseBtn" />
-        </ModalLogin>
-      )}
-      <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
+      {closeModal && <ModalLogin closeModal={closeModalButton} />}
+      <button onClick={closeModalButton}>로그인</button>
     </div>
   );
 }

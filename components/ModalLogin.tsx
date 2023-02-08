@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Auth from './main/Auth';
 
-function ModalLogin(props: {
+interface Props {
   closeModal: () => void;
-  children: any;
-  wide?: string;
-}) {
+}
+
+function ModalLogin(props: Props) {
   function closeModal() {
     props.closeModal();
   }
@@ -25,21 +25,15 @@ function ModalLogin(props: {
   }, []);
 
   return (
-    <ModalStyled
-      onClick={closeModal}
-      wide={props.wide === 'string' ? props.wide : ''}
-    >
-      <div className="modalBody" onClick={(e) => e.stopPropagation()}>
-        {props.children}
-        <Auth />
-      </div>
+    <ModalStyled onClick={closeModal}>
+      <Auth closeModal={closeModal} />
     </ModalStyled>
   );
 }
 
 export default ModalLogin;
 
-const ModalStyled = styled.div<{ wide: string }>`
+const ModalStyled = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -53,16 +47,8 @@ const ModalStyled = styled.div<{ wide: string }>`
   .modalBody {
     position: absolute;
     color: black;
-    ${(props) =>
-      props.wide
-        ? css`
-            width: 400px;
-            height: 430px;
-          `
-        : css`
-            width: 230px;
-            height: 230px;
-          `}
+    width: 300px;
+    height: 300px;
     padding: 30px 30px 30px 30px;
     z-index: 13;
     text-align: left;
@@ -84,7 +70,6 @@ const ModalStyled = styled.div<{ wide: string }>`
     font-size: 3vmin;
     font-weight: 600;
     transition: 0.3s;
-    font-family: 'neodgm';
     &:hover {
       background-color: rgb(230, 230, 230);
       cursor: pointer;
