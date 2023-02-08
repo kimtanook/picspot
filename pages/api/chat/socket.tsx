@@ -29,7 +29,6 @@ const socket = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     socket.on('message', (message) => {
       socket.to(message.room).emit('message', message);
     });
-    console.log(socket);
   });
   res.socket.server.io = io;
 };

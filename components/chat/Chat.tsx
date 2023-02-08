@@ -1,17 +1,14 @@
-import axios from 'axios';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
 // * Socket.io
 import * as SocketIOClient from 'socket.io-client';
-import styled from 'styled-components';
-
-// * MUI
 
 interface IMessage {
-  user: string;
-  message: string;
-  room: string;
-  time: string;
+  user?: string;
+  message?: string;
+  room?: string;
+  time?: string;
 }
 
 const Chatting: React.FC = () => {
@@ -42,14 +39,14 @@ const Chatting: React.FC = () => {
     });
 
     socket.on('enter', (user) => {
-      setChat((prevChat: any) => [
+      setChat((prevChat: IMessage[]) => [
         { user: '입장 알림!', message: `${user} joined!` },
         ...prevChat,
       ]);
     });
 
     socket.on('exit', (user) => {
-      setChat((prevChat: any) => [
+      setChat((prevChat: IMessage[]) => [
         { user: '퇴장 알림!', message: `${user} left..` },
         ...prevChat,
       ]);
@@ -58,8 +55,6 @@ const Chatting: React.FC = () => {
     // socket disconnect on component unmount if exists
     if (socket) return () => socket.disconnect();
   }, []);
-
-  // update chat on new message dispatched
 
   console.log(socketId);
   const sendRoomHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,16 +169,12 @@ const Chatting: React.FC = () => {
 };
 
 export default Chatting;
-const ComponentContainer = styled.div`
-  /* border: 1px solid black; */
-  /* height: 400px; */
-`;
+const ComponentContainer = styled.div``;
 const ChatListBox = styled.div`
   display: flex;
   flex-direction: column-reverse;
   height: 300px;
   border: 1px solid black;
-  /* justify-content: flex-end; */
   overflow-y: scroll;
 `;
 const ChatItemBox = styled.div`
