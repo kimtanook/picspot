@@ -8,6 +8,7 @@ import {
   uploadBytes,
   listAll,
   getDownloadURL,
+  uploadString,
 } from 'firebase/storage';
 
 const PostForm = () => {
@@ -37,6 +38,7 @@ const PostForm = () => {
     await addDoc(collection(dbService, 'test'), {
       test: test,
     });
+    console.log('추가가 되었습니다.');
   };
 
   // useEffect(() => {
