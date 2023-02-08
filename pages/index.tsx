@@ -2,6 +2,7 @@ import Modal from '@/components/main/Modal';
 import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
+import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
 
 export default function Main() {
@@ -10,12 +11,18 @@ export default function Main() {
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
   };
+  const [closeModal, setCloseModal] = useState(false);
 
   return (
     <>
       <div>
       <Seo title="Home" />
-      hello
+      {closeModal && (
+        <ModalLogin closeModal={() => setCloseModal(!closeModal)}>
+          <button id="modalCloseBtn" />
+        </ModalLogin>
+      )}
+      <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
     </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
