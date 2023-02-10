@@ -9,6 +9,7 @@ import Chat from '@/components/chat/Chat';
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
+
   const [closeModal, setCloseModal] = useState(false);
 
   const onClickToggleModal = () => {

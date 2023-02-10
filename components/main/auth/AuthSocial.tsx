@@ -27,6 +27,7 @@ const AuthSocial = (props: Props): JSX.Element => {
     <>
       <GoogleBtn
         type="button"
+        name="google"
         onClick={() => signInWithGoogle()}
         disabled={social}
       >

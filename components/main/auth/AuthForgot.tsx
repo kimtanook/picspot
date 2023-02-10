@@ -2,7 +2,11 @@ import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-const AuthForgot = (): JSX.Element => {
+interface Props {
+  forgotModalButton: () => void;
+}
+
+const AuthForgot = (props: Props): JSX.Element => {
   const [sending, setSending] = useState<boolean>(false);
   const [sent, setSent] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
@@ -49,6 +53,14 @@ const AuthForgot = (): JSX.Element => {
           <ResetPwBtn disabled={sending} onClick={() => resetPasswordRequest()}>
             Send Email
           </ResetPwBtn>
+          <ForgotOtherMethod>
+            <ForgotOrLine>
+              <div>OR</div>
+            </ForgotOrLine>
+            <LoginReturnContainer onClick={props.forgotModalButton}>
+              <LoginReturnDiv>로그인으로 돌아가기</LoginReturnDiv>
+            </LoginReturnContainer>
+          </ForgotOtherMethod>
         </>
       )}
     </ForgotPwContainer>
@@ -93,6 +105,49 @@ const ResetPwBtn = styled.button`
   &:hover {
     border: 3px solid Red;
   }
+`;
+const ForgotOtherMethod = styled.div``;
+const ForgotOrLine = styled.div`
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  margin: 25px 25px;
+  ::before {
+    content: '';
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 1);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 5px;
+  }
+  ::after {
+    content: '';
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 10);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 5px;
+  }
+`;
+
+const LoginReturnContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  transition: color 0.2s ease-in;
+
+  &:hover {
+    color: Red;
+  }
+`;
+
+const LoginReturnDiv = styled.div`
+  cursor: grab;
 `;
 
 export default AuthForgot;

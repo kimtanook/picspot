@@ -4,22 +4,25 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import AuthSocial from './AuthSocial';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
-// import { customAlert } from 'utils';
+import { customAlert } from '@/utils/alerts';
 
 interface AuthForm {
   email: string;
   password: string;
   confirm: string;
+  nickname: string;
 }
 interface Props {
+  changeModalButton: () => void;
   closeModal: () => void;
 }
 
-const AuthSignUp = (props: any) => {
+const AuthSignUp = (props: Props) => {
   const [registering, setRegistering] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const {
@@ -39,7 +42,7 @@ const AuthSignUp = (props: any) => {
     setRegistering(true);
     await createUserWithEmailAndPassword(authService, data.email, data.password)
       .then(() => {
-        // customAlert('회원가입을 축하합니다!');
+        customAlert('회원가입을 축하합니다!');
         props.closeModal();
       })
       .catch((error) => {
@@ -147,6 +150,36 @@ const AuthSignUp = (props: any) => {
               }
             }}
           />
+          <NicknameDiv>
+            <div>Nickname</div>
+          </NicknameDiv>
+          <NicknameInput
+            {...register('nickname', {
+              required: '별명을 입력해주세요.',
+              minLength: {
+                value: 2,
+                message:
+                  '별명은 영문 대문자, 소문자, 한글을 포함한 2글자 이상이어야 합니다.',
+              },
+              pattern: {
+                value: /[^a-z|ㄱ-ㅎ|가-힣]/gi,
+                message:
+                  '별명은 영문 대문자, 소문자, 한글을 포함한 2글자 이상이어야 합니다.',
+              },
+            })}
+            autoComplete="new-password"
+            name="nickname"
+            type="nickname"
+            id="nickname"
+            value={nickname}
+            onChange={(event) => setNickname(event.target.value)}
+            placeholder="별명을 입력해주세요"
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                handleSubmit(onSubmit);
+              }
+            }}
+          />
           <AuthWarn>{errors?.confirm?.message}</AuthWarn>
         </SignUpEmailPwContainer>
         <SignUpBtnContainer>
@@ -160,10 +193,10 @@ const AuthSignUp = (props: any) => {
           <div>OR</div>
         </SignUpOrLine>
         <SignUpGoogleGitContainer>
-          <AuthSocial closeModal={props.closeModalButton} />
+          <AuthSocial closeModal={props.closeModal} />
         </SignUpGoogleGitContainer>
       </SignUpOtherMethod>
-      <SignUpCheckContainer onClick={props.closeModalButton}>
+      <SignUpCheckContainer onClick={props.changeModalButton}>
         <SignUpCheckSign>이미 회원이신가요?</SignUpCheckSign>
       </SignUpCheckContainer>
     </SignUpContainer>
@@ -231,6 +264,17 @@ const SignUpPwConfirmInput = styled.input`
   border: 2px solid white;
   border-radius: 5px;
 `;
+const NicknameDiv = styled.div`
+  margin-top: 10px;
+`;
+const NicknameInput = styled.input`
+  height: 30px;
+  margin-top: 7px;
+  padding-left: 5px;
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+`;
 const SignUpBtnContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -291,16 +335,15 @@ const SignUpCheckContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  a {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    transition: color 0.2s ease-in;
-  }
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  transition: color 0.2s ease-in;
+
   &:hover {
-    a {
-      color: Red;
-    }
+    color: Red;
   }
 `;
-const SignUpCheckSign = styled.div``;
+const SignUpCheckSign = styled.div`
+  cursor: grab;
+`;

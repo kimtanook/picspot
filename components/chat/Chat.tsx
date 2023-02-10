@@ -14,37 +14,40 @@ interface IMessage {
 const Chat = () => {
   const [socketServer, setSocketServer] = useState<any>(null);
   const [socketId, setSocketId] = useState('');
-  const [sendUser, setSendUser] = useState('');
-  const [sendRoom, setSendRoom] = useState('');
-  const [sendMessage, setSendMessage] = useState<string>('');
+  const [nickname, setNickname] = useState('');
+  const [roomName, setRoomName] = useState('');
+  const [message, setMessage] = useState<string>('');
   const [connected, setConnected] = useState<boolean>(false);
   const [chat, setChat] = useState<IMessage[]>([]);
   const [toggle, setToggle] = useState(false);
 
   useEffect((): any => {
-    const socket = SocketIOClient.connect(
-      process.env.NEXT_PUBLIC_API_URL || 'localhost:3000',
-      {
-        path: '/api/chat/socket',
-      }
-    );
+    // socket.io 연결
+    const socket = SocketIOClient.connect({
+      path: '/api/chat/socket',
+    });
+    // useEffect 밖에서도 사용할 수 있게 state에 저장
     setSocketServer(socket);
+
+    // socket.io에 연결되면 socket id를 state에 저장
     socket.on('connect', () => {
       setSocketId(socket.id);
       setConnected(true);
     });
 
+    // message 데이터 받기 (on <- emit)
     socket.on('message', (data: IMessage) => {
       setChat((prev) => [data, ...prev]);
     });
 
+    // 방 입장 데이터 받기 (on <- emit)
     socket.on('enter', (user) => {
       setChat((prevChat: IMessage[]) => [
         { user: '입장 알림!', message: `${user} joined!` },
         ...prevChat,
       ]);
     });
-
+    // 방 퇴장 데이터 받기 (on <- emit)
     socket.on('exit', (user) => {
       setChat((prevChat: IMessage[]) => [
         { user: '퇴장 알림!', message: `${user} left..` },
@@ -52,40 +55,38 @@ const Chat = () => {
       ]);
     });
 
-    // socket disconnect on component unmount if exists
+    // useEffect clean 함수
     if (socket) return () => socket.disconnect();
   }, []);
 
-  console.log(socketId);
-  const sendRoomHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSendRoom(event.target.value);
+  const onChangeRoom = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomName(event.target.value);
   };
 
-  const sendMessageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSendMessage(event.target.value);
+  const onChangeMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
   };
 
-  const sendNicknameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSendUser(event.target.value);
+  const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(event.target.value);
   };
 
   const toggleHandler = () => {
     setToggle(true);
   };
-  const submitSendRoom = async (event: React.FormEvent<HTMLButtonElement>) => {
+  const submitRoomName = async (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    socketServer.emit('enter_room', sendRoom, sendUser, toggleHandler);
+    // 연결된 socket.io 서버로 데이터 보내기 (emit -> on)
+    socketServer.emit('enter_room', roomName, nickname, toggleHandler);
   };
 
-  const submitSendMessage = async (
-    event: React.FormEvent<HTMLButtonElement>
-  ) => {
+  const submitMessage = async (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (sendMessage) {
-      const message: IMessage = {
-        room: sendRoom,
-        user: sendUser,
-        message: sendMessage,
+    if (message) {
+      const messageData: IMessage = {
+        room: roomName,
+        user: nickname,
+        message: message,
         time: new Date(Date.now() + 9 * 60 * 60 * 1000).toLocaleString(
           'ko-KR',
           {
@@ -93,9 +94,9 @@ const Chat = () => {
           }
         ),
       };
-      socketServer.emit('message', message);
-      setChat((prev) => [message, ...prev]);
-      setSendMessage('');
+      socketServer.emit('message', messageData);
+      setChat((prev) => [messageData, ...prev]);
+      setMessage('');
     }
   };
 
@@ -107,7 +108,8 @@ const Chat = () => {
           {chat?.length ? (
             chat.map((chat, index) => (
               <ChatItemBox key={index}>
-                <User>{chat?.user}</User> <Message>{chat?.message}</Message>{' '}
+                <UserName>{chat?.user}</UserName>
+                <ChatMessage>{chat?.message}</ChatMessage>
                 <Time> {chat?.time}</Time>
               </ChatItemBox>
             ))
@@ -123,18 +125,14 @@ const Chat = () => {
             <div>
               <form>
                 <input
-                  value={sendMessage}
-                  onChange={sendMessageHandler}
+                  value={message}
+                  onChange={onChangeMessage}
                   autoFocus
                   placeholder={
                     connected ? 'enter your message' : 'Connecting...🕐'
                   }
                 />
-                <button
-                  type="submit"
-                  color="primary"
-                  onClick={submitSendMessage}
-                >
+                <button type="submit" color="primary" onClick={submitMessage}>
                   Send
                 </button>
               </form>
@@ -143,22 +141,22 @@ const Chat = () => {
             <div>
               <form>
                 <input
-                  value={sendRoom}
-                  onChange={sendRoomHandler}
+                  value={roomName}
+                  onChange={onChangeRoom}
                   autoFocus
                   placeholder={
                     connected ? 'enter your room' : 'Connecting...🕐'
                   }
                 />
                 <input
-                  value={sendUser}
-                  onChange={sendNicknameHandler}
+                  value={nickname}
+                  onChange={onChangeNickname}
                   autoFocus
                   placeholder={
                     connected ? 'enter your nickname' : 'Connecting...🕐'
                   }
                 />
-                <button onClick={submitSendRoom}>입장</button>
+                <button onClick={submitRoomName}>입장</button>
               </form>
             </div>
           )}
@@ -190,7 +188,7 @@ const ChatItemBox = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const User = styled.div`
+const UserName = styled.div`
   background-color: black;
   margin: 5px;
   padding: 3px;
@@ -199,7 +197,7 @@ const User = styled.div`
   width: 100px;
   text-align: center;
 `;
-const Message = styled.div`
+const ChatMessage = styled.div`
   background-color: #d3d3d3;
   margin: 5px;
   padding: 3px;

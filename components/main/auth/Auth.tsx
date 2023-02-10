@@ -103,9 +103,9 @@ const Auth = (props: Props): JSX.Element => {
           <div>OR</div>
         </LoginOrLine>
 
-        <LoginGoogleGitContainer>
+        <LoginGoogleContainer>
           <AuthSocial closeModal={props.closeModal} />
-        </LoginGoogleGitContainer>
+        </LoginGoogleContainer>
       </LoginOtherMethod>
 
       <LoginCheckContainer onClick={props.changeModalButton}>
@@ -113,7 +113,7 @@ const Auth = (props: Props): JSX.Element => {
       </LoginCheckContainer>
 
       <PwForgotContainer onClick={props.forgotModalButton}>
-        <div>비밀번호를 잃어버리셨나요?</div>
+        <LoginCheckSignDiv>비밀번호를 잃어버리셨나요?</LoginCheckSignDiv>
       </PwForgotContainer>
     </div>
   );
@@ -224,7 +224,7 @@ const LoginOrLine = styled.div`
   }
 `;
 
-const LoginGoogleGitContainer = styled.div`
+const LoginGoogleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -237,16 +237,14 @@ const LoginCheckContainer = styled.span`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  a {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    transition: color 0.03s ease-in;
-  }
+
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  transition: color 0.03s ease-in;
+
   &:hover {
-    a {
-      color: Red;
-    }
+    color: Red;
   }
 `;
 
@@ -255,19 +253,18 @@ const PwForgotContainer = styled.span`
   justify-content: center;
   align-items: center;
 
-  a {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    transition: color 0.2s ease-in;
-  }
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  transition: color 0.2s ease-in;
+
   &:hover {
-    a {
-      color: Red;
-    }
+    color: Red;
   }
 `;
 
-const LoginCheckSignDiv = styled.div``;
+const LoginCheckSignDiv = styled.div`
+  cursor: grab;
+`;
 
 export default Auth;
