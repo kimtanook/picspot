@@ -3,14 +3,8 @@ import { NextApiResponseServerIO } from 'types/chat';
 import { Server as ServerIO } from 'socket.io';
 import { Server as HttpServer } from 'http';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const socket = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  console.log('New Socket.io server...✅');
+  console.log('New Socket.io server! ✅');
 
   const httpServer: HttpServer = res.socket.server as any;
   const io = new ServerIO(httpServer, {
