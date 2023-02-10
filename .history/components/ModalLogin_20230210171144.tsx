@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Auth from './main/auth/Auth';
 import AuthSignUp from './main/auth/AuthSignUp';
 import AuthForgot from './main/auth/AuthForgot';
-
 interface Props {
   closeModal: () => void;
 }

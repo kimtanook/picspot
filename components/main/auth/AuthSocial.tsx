@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { FaGoogle } from 'react-icons/fa';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { authService } from '../../firebase';
+import { authService } from '../../../firebase';
 
 interface Props {
   closeModal: () => void;

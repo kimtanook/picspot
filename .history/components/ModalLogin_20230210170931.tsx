@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Auth from './main/auth/Auth';
 import AuthSignUp from './main/auth/AuthSignUp';
 import AuthForgot from './main/auth/AuthForgot';
-
 interface Props {
   closeModal: () => void;
 }
@@ -53,7 +52,7 @@ function ModalLogin(props: Props) {
         <ForgotOrLine>
           <div>OR</div>
         </ForgotOrLine>
-        <LoginReturnContainer onClick={props.closeModal}>
+        <LoginReturnContainer onClick={props.closeModalButton}>
           <div>로그인으로 돌아가기</div>
         </LoginReturnContainer>
       </ForgotOtherMethod>

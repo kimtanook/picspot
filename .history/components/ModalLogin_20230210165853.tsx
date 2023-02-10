@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Auth from './main/auth/Auth';
 import AuthSignUp from './main/auth/AuthSignUp';
 import AuthForgot from './main/auth/AuthForgot';
-
 interface Props {
   closeModal: () => void;
 }
@@ -49,14 +48,6 @@ function ModalLogin(props: Props) {
           changeModalButton={changeModalButton}
         />
       )}
-      <ForgotOtherMethod>
-        <ForgotOrLine>
-          <div>OR</div>
-        </ForgotOrLine>
-        <LoginReturnContainer onClick={props.closeModal}>
-          <div>로그인으로 돌아가기</div>
-        </LoginReturnContainer>
-      </ForgotOtherMethod>
     </ModalStyled>
   );
 }
@@ -103,48 +94,6 @@ const ModalStyled = styled.div`
     &:hover {
       background-color: rgb(230, 230, 230);
       cursor: pointer;
-    }
-  }
-`;
-const ForgotOtherMethod = styled.div``;
-const ForgotOrLine = styled.div`
-  display: flex;
-  flex-basis: 100%;
-  align-items: center;
-  margin: 25px 25px;
-  ::before {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 1);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-  ::after {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 10);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-`;
-
-const LoginReturnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  a {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    transition: color 0.2s ease-in;
-  }
-  &:hover {
-    a {
-      color: Red;
     }
   }
 `;

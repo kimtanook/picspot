@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import AuthSocial from './AuthSocial';
 import { useForm } from 'react-hook-form';
-import { customAlert } from 'utils';
 import { authService } from '@/firebase';
+// import { customAlert } from 'utils';
 
-interface IAuthForm {
+interface AuthForm {
   email: string;
   password: string;
   confirm: string;
@@ -16,7 +15,7 @@ interface Props {
   closeModal: () => void;
 }
 
-const SignUp = (props: Props): JSX.Element => {
+const AuthSignUp = (props: any) => {
   const [registering, setRegistering] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -27,9 +26,9 @@ const SignUp = (props: Props): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IAuthForm>({ mode: 'onBlur' });
+  } = useForm<AuthForm>({ mode: 'onBlur' });
 
-  const onSubmit = async (data: IAuthForm) => {
+  const onSubmit = async (data: AuthForm) => {
     if (data.password !== data.confirm) {
       alert('비밀번호가 일치하지 않습니다.');
       setError('비밀번호가 일치하지 않습니다');
@@ -40,7 +39,7 @@ const SignUp = (props: Props): JSX.Element => {
     setRegistering(true);
     await createUserWithEmailAndPassword(authService, data.email, data.password)
       .then(() => {
-        customAlert('회원가입을 축하합니다!');
+        // customAlert('회원가입을 축하합니다!');
         props.closeModal();
       })
       .catch((error) => {
@@ -164,14 +163,14 @@ const SignUp = (props: Props): JSX.Element => {
           <AuthSocial closeModal={props.closeModal} />
         </SignUpGoogleGitContainer>
       </SignUpOtherMethod>
-      <SignUpCheckContainer>
-        <Link to={'/login'}>
-          <SignUpCheckSign>이미 회원이신가요?</SignUpCheckSign>
-        </Link>
+      <SignUpCheckContainer onClick={props.closeModal}>
+        <SignUpCheckSign>이미 회원이신가요?</SignUpCheckSign>
       </SignUpCheckContainer>
     </SignUpContainer>
   );
 };
+
+export default AuthSignUp;
 
 const SignUpContainer = styled.div`
   background-color: #e9ecef;
@@ -248,9 +247,9 @@ const SignUpBtn = styled.button`
   border: 2px solid white;
   border-radius: 15px;
   transition: 0.03s;
-  &:active {
+  /* &:active {
     background-color: ${(props) => props.theme.colors.black0};
-  }
+  } */
   &:hover {
     cursor: pointer;
     outline: solid 2px red;
@@ -305,5 +304,3 @@ const SignUpCheckContainer = styled.div`
   }
 `;
 const SignUpCheckSign = styled.div``;
-
-export default SignUp;

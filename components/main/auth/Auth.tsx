@@ -4,13 +4,14 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
-import Link from 'next/link';
 
 interface AuthForm {
   email: string;
 }
 interface Props {
   closeModal: () => void;
+  changeModalButton: () => void;
+  forgotModalButton: () => void;
 }
 
 const Auth = (props: Props): JSX.Element => {
@@ -107,14 +108,12 @@ const Auth = (props: Props): JSX.Element => {
         </LoginGoogleGitContainer>
       </LoginOtherMethod>
 
-      <LoginCheckContainer>
-        <Link href="/">
-          <LoginCheckSignDiv>아직 회원이 아니신가요?</LoginCheckSignDiv>
-        </Link>
+      <LoginCheckContainer onClick={props.changeModalButton}>
+        <LoginCheckSignDiv>아직 회원이 아니신가요?</LoginCheckSignDiv>
       </LoginCheckContainer>
 
-      <PwForgotContainer>
-        <Link href="/">비밀번호를 잃어버리셨나요?</Link>
+      <PwForgotContainer onClick={props.forgotModalButton}>
+        <div>비밀번호를 잃어버리셨나요?</div>
       </PwForgotContainer>
     </div>
   );
