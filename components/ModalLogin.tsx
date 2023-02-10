@@ -1,22 +1,24 @@
-import React, { useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import Auth from './main/Auth';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Auth from './main/auth/Auth';
+import AuthSignUp from './main/auth/AuthSignUp';
+import AuthForgot from './main/auth/AuthForgot';
 
-function ModalLogin(props: {
+interface Props {
   closeModal: () => void;
-  children: any;
-  wide?: string;
-}) {
+}
+
+function ModalLogin(props: Props) {
   function closeModal() {
     props.closeModal();
   }
   // 모달창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
     document.body.style.cssText = `
-      position: fixed; 
-      top: -${window.scrollY}px;
-      overflow-y: scroll;
-      width: 100%;`;
+    position: fixed; 
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`;
     return () => {
       const scrollY = document.body.style.top;
       document.body.style.cssText = '';
@@ -24,22 +26,39 @@ function ModalLogin(props: {
     };
   }, []);
 
+  const [signUpModal, setSignUpModal] = useState(false);
+  const [forgotModal, setForgotModal] = useState(false);
+  // 회원가입 모달 창
+  const changeModalButton = () => {
+    setSignUpModal(!signUpModal);
+  };
+  // 비밀번호 찾기 모달 창
+  const forgotModalButton = () => {
+    setForgotModal(!forgotModal);
+  };
   return (
-    <ModalStyled
-      onClick={closeModal}
-      wide={props.wide === 'string' ? props.wide : ''}
-    >
-      <div className="modalBody" onClick={(e) => e.stopPropagation()}>
-        {props.children}
-        <Auth />
-      </div>
+    <ModalStyled>
+      {forgotModal ? (
+        <AuthForgot forgotModalButton={forgotModalButton} />
+      ) : signUpModal ? (
+        <AuthSignUp
+          changeModalButton={changeModalButton}
+          closeModal={closeModal}
+        />
+      ) : (
+        <Auth
+          closeModal={closeModal}
+          forgotModalButton={forgotModalButton}
+          changeModalButton={changeModalButton}
+        />
+      )}
     </ModalStyled>
   );
 }
 
 export default ModalLogin;
 
-const ModalStyled = styled.div<{ wide: string }>`
+const ModalStyled = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -53,16 +72,8 @@ const ModalStyled = styled.div<{ wide: string }>`
   .modalBody {
     position: absolute;
     color: black;
-    ${(props) =>
-      props.wide
-        ? css`
-            width: 400px;
-            height: 430px;
-          `
-        : css`
-            width: 230px;
-            height: 230px;
-          `}
+    width: 300px;
+    height: 300px;
     padding: 30px 30px 30px 30px;
     z-index: 13;
     text-align: left;
@@ -84,7 +95,6 @@ const ModalStyled = styled.div<{ wide: string }>`
     font-size: 3vmin;
     font-weight: 600;
     transition: 0.3s;
-    font-family: 'neodgm';
     &:hover {
       background-color: rgb(230, 230, 230);
       cursor: pointer;
