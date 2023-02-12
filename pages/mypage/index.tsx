@@ -1,20 +1,11 @@
 import { getDatas, deleteData, updataData } from '@/api';
+import PostList from '@/components/mypage/PostList';
 import Seo from '@/components/Seo';
-import { dbService, storageService } from '@/firebase';
-import {
-  query,
-  collection,
-  onSnapshot,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from 'firebase/firestore';
+import { storageService } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import Image from 'next/image';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-//! 이미지 수정 구현하기
 export default function Mypage() {
   const queryClient = useQueryClient();
 
@@ -87,30 +78,15 @@ export default function Mypage() {
     <div>
       <Seo title="My" />
       <h1>마이페이지임</h1>
-      {data.map((item: any) => (
-        <div key={item.id}>
-          <h3>{item.title}</h3>
-          <input
-            type="file"
-            onChange={(event: any) => {
-              setEditImgUpload(event.target.files[0]);
-            }}
-          />
-          <button onClick={onClickEditImgUpload}>업로드</button>
-          <input
-            onChange={(e) => {
-              setEditTitle(e.target.value);
-            }}
-          />
-          <button
-            onClick={() => onClickUpdateData({ id: item.id, ...editState })}
-          >
-            수정
-          </button>
-          <button onClick={() => onClickDeleteData(item.id)}>삭제</button>
-          <Image src={item.url} alt="image" height={100} width={100} />
-        </div>
-      ))}
+      <PostList
+        editState={editState}
+        data={data}
+        setEditImgUpload={setEditImgUpload}
+        onClickEditImgUpload={onClickEditImgUpload}
+        setEditTitle={setEditTitle}
+        onClickUpdateData={onClickUpdateData}
+        onClickDeleteData={onClickDeleteData}
+      />
     </div>
   );
 }
