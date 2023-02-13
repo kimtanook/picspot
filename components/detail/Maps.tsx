@@ -1,24 +1,33 @@
 import React from 'react';
-import { Map } from 'react-kakao-maps-sdk';
+import { useEffect } from 'react';
 
-const Maps = () => {
-  return (
-    <div>
-      <Map // 지도를 표시할 Container
-        center={{
-          // 지도의 중심좌표
-          lat: 33.450701,
-          lng: 126.570667,
-        }}
-        style={{
-          // 지도의 크기
-          width: '100%',
-          height: '450px',
-        }}
-        level={6} // 지도의 확대 레벨
-      />
-    </div>
-  );
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
+interface MapProps {
+  latitude: number;
+  longitude: number;
+}
+const Maps = ({ latitude, longitude }: MapProps) => {
+  useEffect(() => {
+    const { kakao } = window; // CNA에서는 useEffect 바깥에서는 window 객체를 참조할 수 없음.
+    kakao.maps.load(() => {
+      const container = document.getElementById('map');
+      const options = {
+        center: new kakao.maps.LatLng(latitude, longitude),
+      };
+      const map = new kakao.maps.Map(container, options);
+      const markerPosition = new kakao.maps.LatLng(latitude, longitude);
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+      });
+      marker.setMap(map);
+    });
+  }, [latitude, longitude]);
+  return <div id="map" style={{ width: '1400px', height: '400px' }}></div>;
 };
 
 export default Maps;

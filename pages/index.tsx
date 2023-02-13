@@ -6,6 +6,8 @@ import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 
+import Maps from '@/components/detail/Maps';
+
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
@@ -28,6 +30,7 @@ export default function Main() {
             <button id="modalCloseBtn" />
           </ModalLogin>
         )}
+
         <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
       </div>
       {isOpenModal && (
@@ -103,6 +106,8 @@ export default function Main() {
           {chatToggle ? '닫기' : '열기'}
         </ChatToggleBtn>
       </div>
+
+      <Maps latitude={37.4848929702844} longitude={126.89537799629241} />
     </>
   );
 }
