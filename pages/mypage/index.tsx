@@ -13,11 +13,10 @@ export default function Mypage() {
 
   const [editTitle, setEditTitle] = useState('');
   const [editImgUpload, setEditImgUpload]: any = useState(null);
-  // const [editImgUrl, setEditImgUrl] = useState('');
 
   let editState: any = {
     title: editTitle,
-    url: '',
+    imgUrl: '',
   };
 
   //* useQuery 사용해서 데이터 불러오기
@@ -47,6 +46,7 @@ export default function Mypage() {
   //* 수정버튼 눌렀을때 실행하는 함수
   const onClickUpdateData = (data: any) => {
     console.log('수정버튼을 클릭했습니다.');
+
     //? 이미지 인풋값이 빈값이면 함수 종료하기
     if (editImgUpload === null) {
       alert('이미지를 추가해주세요.');
@@ -89,10 +89,26 @@ export default function Mypage() {
 
     const imageRef = ref(storageService, `images/${editImgUpload.name}`);
     uploadBytes(imageRef, editImgUpload).then((snapshot) => {
+      let response;
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        // setEditImgUrl(url);
+        
+        response = url;
+
+        onUpdataData(
+          { ...data, imgUrl: response },
+          {
+            onSuccess: () => {
+              console.log('수정 요청 성공');
+              queryClient.invalidateQueries('datas');
+            },
+            onError: () => {
+              console.log('수정 요청 실패');
+            },
+          }
+        );
+
       });
     });
   };
@@ -104,6 +120,7 @@ export default function Mypage() {
     <div>
       <Seo title="My" />
       <h1>마이페이지임</h1>
+
       <PostList
         editState={editState}
         data={data}
