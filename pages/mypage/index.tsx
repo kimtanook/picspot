@@ -20,11 +20,10 @@ export default function Mypage() {
 
   const [editTitle, setEditTitle] = useState('');
   const [editImgUpload, setEditImgUpload]: any = useState(null);
-  const [editImgUrl, setEditImgUrl] = useState('');
 
-  const editState: any = {
+  let editState: any = {
     title: editTitle,
-    url: editImgUrl,
+    imgUrl: '',
   };
 
   //* useQuery 사용해서 데이터 불러오기
@@ -54,28 +53,31 @@ export default function Mypage() {
   //* 수정버튼 눌렀을때 실행하는 함수
   const onClickUpdateData = (data: any) => {
     console.log('수정버튼을 클릭했습니다.');
-    onUpdataData(data, {
-      onSuccess: () => {
-        console.log('수정 요청 성공');
-        queryClient.invalidateQueries('datas');
-      },
-      onError: () => {
-        console.log('수정 요청 실패');
-      },
-    });
-  };
-
-  //* 스토리지에 이미지 업로드하기
-  //* 스토리지에 있는 이미지 스냅샷해서 URL 가져오기
-  const onClickEditImgUpload = () => {
-    if (editImgUpload === null) return;
+    if (editImgUpload === null) {
+      alert('이미지를 추가해주세요.');
+      return;
+    }
 
     const imageRef = ref(storageService, `images/${editImgUpload.name}`);
     uploadBytes(imageRef, editImgUpload).then((snapshot) => {
+      let response;
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        setEditImgUrl(url);
+        response = url;
+
+        onUpdataData(
+          { ...data, imgUrl: response },
+          {
+            onSuccess: () => {
+              console.log('수정 요청 성공');
+              queryClient.invalidateQueries('datas');
+            },
+            onError: () => {
+              console.log('수정 요청 실패');
+            },
+          }
+        );
       });
     });
   };
@@ -92,11 +94,11 @@ export default function Mypage() {
           <h3>{item.title}</h3>
           <input
             type="file"
+            accept="image/png, image/jpeg, image/jpg"
             onChange={(event: any) => {
               setEditImgUpload(event.target.files[0]);
             }}
           />
-          <button onClick={onClickEditImgUpload}>업로드</button>
           <input
             onChange={(e) => {
               setEditTitle(e.target.value);
@@ -108,7 +110,7 @@ export default function Mypage() {
             수정
           </button>
           <button onClick={() => onClickDeleteData(item.id)}>삭제</button>
-          <Image src={item.url} alt="image" height={100} width={100} />
+          <Image src={item.imgUrl} alt="image" height={100} width={100} />
         </div>
       ))}
     </div>
