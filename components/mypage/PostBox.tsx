@@ -15,13 +15,13 @@ const PostBox = ({
       <h3>{item.title}</h3>
       <input
         type="file"
+        accept="image/png, image/jpeg, image/jpg"
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           if (event.target.files !== null) {
             setEditImgUpload(event.target.files[0]);
           }
         }}
       />
-      {/* <button onClick={onClickEditImgUpload}>업로드</button> */}
       <input
         onChange={(e) => {
           setEditTitle(e.target.value);
@@ -31,7 +31,7 @@ const PostBox = ({
         수정
       </button>
       <button onClick={() => onClickDeleteData(item.id)}>삭제</button>
-      {/* <Image src={item.url} alt="image" height={100} width={100} /> */}
+      <Image src={item.imgUrl} alt="image" height={100} width={100} />
     </StPostBox>
   );
 };
