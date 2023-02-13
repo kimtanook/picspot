@@ -6,7 +6,8 @@ import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 
-import Maps from '@/components/detail/Maps';
+import LandingPage from '@/components/detail/LandingPage';
+import SearchPlace from '@/components/detail/SearchPlace';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -38,7 +39,6 @@ export default function Main() {
           <div>children</div>
         </Modal>
       )}
-
       <input />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
         <Categorys>지역</Categorys>
@@ -106,8 +106,7 @@ export default function Main() {
           {chatToggle ? '닫기' : '열기'}
         </ChatToggleBtn>
       </div>
-
-      <Maps latitude={37.4848929702844} longitude={126.89537799629241} />
+      <SearchPlace />
     </>
   );
 }
