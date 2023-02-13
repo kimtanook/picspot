@@ -1,10 +1,11 @@
-import { dbService, storageService } from '@/firebase';
-import { addDoc, collection } from 'firebase/firestore';
-import React, { useState } from 'react';
+import { storageService } from '@/firebase';
+import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { addData } from '@/api';
 
+//! postState 타입 해결
+//! imageUpload 타입 해결
 const PostForm = () => {
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
@@ -57,7 +58,6 @@ const PostForm = () => {
           setImageUpload(event.target.files[0]);
         }}
       />
-
       <input
         onChange={(e) => {
           setTitle(e.target.value);

@@ -1,20 +1,13 @@
 import { getDatas, deleteData, updataData } from '@/api';
+import PostList from '@/components/mypage/PostList';
 import Seo from '@/components/Seo';
-import { dbService, storageService } from '@/firebase';
-import {
-  query,
-  collection,
-  onSnapshot,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from 'firebase/firestore';
+import { storageService } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import Image from 'next/image';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-//! 이미지 수정 구현하기
+//! editState 타입 해결
+//! editImgUpload 타입 해결
 export default function Mypage() {
   const queryClient = useQueryClient();
 
@@ -53,21 +46,28 @@ export default function Mypage() {
   //* 수정버튼 눌렀을때 실행하는 함수
   const onClickUpdateData = (data: any) => {
     console.log('수정버튼을 클릭했습니다.');
+
+    //? 이미지 인풋값이 빈값이면 함수 종료하기
     if (editImgUpload === null) {
       alert('이미지를 추가해주세요.');
       return;
     }
 
+    //? 이미지를 스토리지에 저장하고 url 받아오기
     const imageRef = ref(storageService, `images/${editImgUpload.name}`);
+    let response: string;
     uploadBytes(imageRef, editImgUpload).then((snapshot) => {
-      let response;
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
+        // setEditImgUrl(url);
+        //? 동기적으로 데이터 변경하기
         response = url;
+        editState = { ...editState, imgUrl: response };
 
+        //? 데이터 추가하는 트리거 실행하기
         onUpdataData(
-          { ...data, imgUrl: response },
+          { ...data, url: response },
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
@@ -82,6 +82,37 @@ export default function Mypage() {
     });
   };
 
+  //* 스토리지에 이미지 업로드하기
+  //* 스토리지에 있는 이미지 스냅샷해서 URL 가져오기
+  const onClickEditImgUpload = () => {
+    if (editImgUpload === null) return;
+
+    const imageRef = ref(storageService, `images/${editImgUpload.name}`);
+    uploadBytes(imageRef, editImgUpload).then((snapshot) => {
+      let response;
+      getDownloadURL(snapshot.ref).then((url) => {
+        console.log('사진이 업로드 되었습니다.');
+        console.log('url: ', url);
+        
+        response = url;
+
+        onUpdataData(
+          { ...data, imgUrl: response },
+          {
+            onSuccess: () => {
+              console.log('수정 요청 성공');
+              queryClient.invalidateQueries('datas');
+            },
+            onError: () => {
+              console.log('수정 요청 실패');
+            },
+          }
+        );
+
+      });
+    });
+  };
+
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
@@ -89,30 +120,16 @@ export default function Mypage() {
     <div>
       <Seo title="My" />
       <h1>마이페이지임</h1>
-      {data.map((item: any) => (
-        <div key={item.id}>
-          <h3>{item.title}</h3>
-          <input
-            type="file"
-            accept="image/png, image/jpeg, image/jpg"
-            onChange={(event: any) => {
-              setEditImgUpload(event.target.files[0]);
-            }}
-          />
-          <input
-            onChange={(e) => {
-              setEditTitle(e.target.value);
-            }}
-          />
-          <button
-            onClick={() => onClickUpdateData({ id: item.id, ...editState })}
-          >
-            수정
-          </button>
-          <button onClick={() => onClickDeleteData(item.id)}>삭제</button>
-          <Image src={item.imgUrl} alt="image" height={100} width={100} />
-        </div>
-      ))}
+
+      <PostList
+        editState={editState}
+        data={data}
+        setEditImgUpload={setEditImgUpload}
+        onClickEditImgUpload={onClickEditImgUpload}
+        setEditTitle={setEditTitle}
+        onClickUpdateData={onClickUpdateData}
+        onClickDeleteData={onClickDeleteData}
+      />
     </div>
   );
 }
