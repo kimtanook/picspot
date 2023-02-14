@@ -1,50 +1,61 @@
-import { addData, getDatas, postCounter, updataData } from '@/api';
+import { getDatas } from '@/api';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import Link from 'next/link';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import ReactGA from 'react-ga';
 
-export const DetailNoMap = () => {
+const DetailNoMap = () => {
   const { data, isLoading, isError } = useQuery('datas', getDatas);
-  // console.log('data', data);
+  console.log('data: ', data);
 
-  // const queryClient = useQueryClient();
-  // const { mutate: countMutate } = useMutation(postCounter, {
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries('post');
-  //   },
-  // });
+  if (isLoading) return <h1>로딩 중입니다.</h1>;
+  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
-  // useEffect(() => {
-  //   countMutate();
-  // }, []);
-  // const onClickCounter = () => {
-  //   for (let i = 0; i < 3; i++) setCount(count + 1);
-  // };
-
-  // console.log(window.location);
   return (
-    <>
-      {data?.map((item: any) => (
-        <PostList>
-          <PostItem>
+    <div>
+      {data.map((item: any) => (
+        <Link
+          key={item.id}
+          href={`/detail/${item.id}`}
+          style={{ textDecoration: 'none' }}
+        >
+          <StDetailBox>
+            <h1
+              style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}
+            >
+              {item.title}
+            </h1>
+            <h3
+              style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}
+            >
+              {item.city}
+            </h3>
+            <h3
+              style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}
+            >
+              {item.town}
+            </h3>
             <Image src={item.imgUrl} alt="image" height={100} width={100} />
-            <div>{item.title}</div>
-          </PostItem>
-        </PostList>
+          </StDetailBox>
+        </Link>
       ))}
-    </>
+    </div>
   );
 };
 
-const PostList = styled.div`
-  display: inline-block;
-  padding: 20px;
-`;
+export default DetailNoMap;
 
-const PostItem = styled.button`
-  border: solid 1px tomato;
-  width: 200px;
-  height: 200px;
+const StDetailBox = styled.div`
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
 `;
