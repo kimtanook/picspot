@@ -10,12 +10,10 @@ import Dropdown from '../mypage/Dropdown';
 const PostForm = () => {
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
-
   const [city, setCity] = useState('');
   console.log('city: ', city);
   const [town, setTown] = useState('');
   console.log('town: ', town);
-
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
 
@@ -26,6 +24,7 @@ const PostForm = () => {
     creator: authService.currentUser?.uid,
     city: city,
     town: town,
+    clickCounter: 0,
   };
 
   //* useMutation 사용해서 데이터 추가하기
@@ -42,10 +41,10 @@ const PostForm = () => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        const reponse = url;
+        const response = url;
         postState = {
           ...postState,
-          imgUrl: reponse,
+          imgUrl: response,
         };
         onAddData(postState, {
           onSuccess: () => {
