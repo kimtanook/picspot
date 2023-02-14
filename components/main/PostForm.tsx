@@ -1,19 +1,30 @@
-import { storageService } from '@/firebase';
-import { useState } from 'react';
+import { authService, storageService } from '@/firebase';
+import React, { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { addData } from '@/api';
+import Dropdown from 'components/main/Dropdown';
 
 //! postState 타입 해결
 //! imageUpload 타입 해결
 const PostForm = () => {
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
+  const [dropdownVisibility, setDropdownVisibility] = React.useState(false);
+  const [city, setCity] = useState('');
+  const [counter, setCounter] = useState(0);
+
+  const creator = authService.currentUser?.uid;
 
   let postState: any = {
     title: title,
     imgUrl: '',
     createdAt: Date.now(),
+    creator: creator,
+    postId: crypto.randomUUID(),
+    city: city,
+    town: '',
+    clickCounter: counter,
   };
 
   //* useMutation 사용해서 데이터 추가하기
@@ -30,10 +41,10 @@ const PostForm = () => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        const reponse = url;
+        const response = url;
         postState = {
           ...postState,
-          imgUrl: reponse,
+          imgUrl: response,
         };
         onAddData(postState, {
           onSuccess: () => {
@@ -47,6 +58,10 @@ const PostForm = () => {
     });
 
     // console.log('test URL', imgUrl);
+  };
+
+  const clickTown = (e: any) => {
+    setCity(e.target.innerText);
   };
 
   return (
@@ -64,6 +79,17 @@ const PostForm = () => {
         }}
       />
       <button onClick={onClickAddData}>추가</button>
+      <button onClick={() => setDropdownVisibility(!dropdownVisibility)}>
+        {dropdownVisibility ? '닫기' : '열기'}
+      </button>
+      <div className="app">
+        <Dropdown visibility={dropdownVisibility}>
+          <ul>
+            <button onClick={clickTown}>제주시</button>
+            <button onClick={clickTown}>서귀포시</button>
+          </ul>
+        </Dropdown>
+      </div>
     </>
   );
 };
