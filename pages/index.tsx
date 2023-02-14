@@ -12,7 +12,7 @@ import { getInfiniteData } from '@/api';
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-
+  // 로그인 모달 창 state
   const [closeModal, setCloseModal] = useState(false);
 
   const onClickToggleModal = () => {
@@ -22,7 +22,7 @@ export default function Main() {
   const onClickChatToggle = () => {
     setChatToggle(!chatToggle);
   };
-  // 로그인 모달 창
+  // 로그인 모달 창 버튼
   const closeModalButton = () => {
     setCloseModal(!closeModal);
   };
@@ -56,8 +56,13 @@ export default function Main() {
     <>
       <div>
         <Seo title="Home" />
+
         {closeModal && <ModalLogin closeModal={closeModalButton} />}
-        <button onClick={closeModalButton}>로그인</button>
+        {closeModal ? (
+          <LoginButton onClick={closeModalButton}>로그아웃</LoginButton>
+        ) : (
+          <LoginButton onClick={closeModalButton}>로그인</LoginButton>
+        )}
       </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
@@ -148,6 +153,7 @@ export default function Main() {
     </>
   );
 }
+const LoginButton = styled.button``;
 
 const Categorys = styled.button`
   background-color: tomato;
