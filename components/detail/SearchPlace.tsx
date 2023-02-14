@@ -20,7 +20,7 @@ const SearchPlace = () => {
     <StyleContainer>
       <StlyedForm onSubmit={handleSubmit}>
         <StyledInput
-          placeholder="Search Place..."
+          placeholder="지역 + 지명을 검색해주세요."
           onChange={onchange}
           value={inputText}
         />
