@@ -10,19 +10,12 @@ import Dropdown from '../mypage/Dropdown';
 const PostForm = () => {
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
-
   const [city, setCity] = useState('');
   console.log('city: ', city);
   const [town, setTown] = useState('');
   console.log('town: ', town);
-
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
-  const [dropdownVisibility, setDropdownVisibility] = React.useState(false);
-  const [city, setCity] = useState('');
-  const [counter, setCounter] = useState(0);
-
-  const creator = authService.currentUser?.uid;
 
   let postState: any = {
     title: title,
@@ -31,6 +24,7 @@ const PostForm = () => {
     creator: authService.currentUser?.uid,
     city: city,
     town: town,
+    clickCounter: 0,
   };
 
   //* useMutation 사용해서 데이터 추가하기

@@ -8,6 +8,8 @@ import {
   orderBy,
   query,
   updateDoc,
+  limit,
+  startAfter,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -78,13 +80,14 @@ export const deleteData: any = (docId: any) => {
 
 //* 스토어에 데이터 수정하기
 export const updataData: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
 
-export const postCounter: any = async () => {
-  await updateDoc(doc(dbService, 'post', 'oEsL3tvLEvgjT6AF4i6g'), {
+export const postCounter: any = async (item: any) => {
+  // console.log('item', item);
+  await updateDoc(doc(dbService, 'post', item), {
     clickCounter: increment(1),
   });
 };
