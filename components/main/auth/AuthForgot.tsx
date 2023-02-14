@@ -31,7 +31,7 @@ const AuthForgot = (props: Props): JSX.Element => {
   };
 
   return (
-    <ForgotPwContainer>
+    <ForgotPwContainer onClick={(e) => e.stopPropagation()}>
       <h3>비밀번호를 찾기 위해</h3>
       {sent ? (
         <div>이미 당신의 이메일로 보냈습니다</div>
