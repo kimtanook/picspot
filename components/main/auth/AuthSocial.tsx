@@ -31,7 +31,7 @@ const AuthSocial = (props: Props): JSX.Element => {
         onClick={() => signInWithGoogle()}
         disabled={social}
       >
-        <FaGoogle size="48px" />
+        {/* <FaGoogle size="48px" /> */}
       </GoogleBtn>
     </>
   );

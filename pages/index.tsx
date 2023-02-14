@@ -54,7 +54,6 @@ export default function Main() {
       <div>
         <ImageBox>
           <Image
-            // src = {https://i.pinimg.com/564x/c7/e6/ba/c7e6bad3167a4d0188a4e5914e0dcb28.jpg}
             src="/dog.jpeg"
             alt="dog"
             width={200}
@@ -64,7 +63,6 @@ export default function Main() {
             }}
           />
           <Image
-            // src = {https://i.pinimg.com/564x/c7/e6/ba/c7e6bad3167a4d0188a4e5914e0dcb28.jpg}
             src="/dog.jpeg"
             alt="dog"
             width={200}
@@ -74,7 +72,6 @@ export default function Main() {
             }}
           />
           <Image
-            // src = {https://i.pinimg.com/564x/c7/e6/ba/c7e6bad3167a4d0188a4e5914e0dcb28.jpg}
             src="/dog.jpeg"
             alt="dog"
             width={200}
@@ -84,7 +81,6 @@ export default function Main() {
             }}
           />
           <Image
-            // src = {https://i.pinimg.com/564x/c7/e6/ba/c7e6bad3167a4d0188a4e5914e0dcb28.jpg}
             src="/dog.jpeg"
             alt="dog"
             width={200}
@@ -94,7 +90,6 @@ export default function Main() {
             }}
           />
           <Image
-            // src = {https://i.pinimg.com/564x/c7/e6/ba/c7e6bad3167a4d0188a4e5914e0dcb28.jpg}
             src="/dog.jpeg"
             alt="dog"
             width={200}
