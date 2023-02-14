@@ -60,9 +60,9 @@ const AuthSignUp = (props: Props) => {
         alert('등록할 수 없습니다. 다시 시도해주세요');
       });
   };
-
+  console.log(nickname);
   return (
-    <SignUpContainer>
+    <SignUpContainer onClick={(e) => e.stopPropagation()}>
       <SignUpTextDiv>
         <h1>회원가입</h1>
       </SignUpTextDiv>
@@ -91,7 +91,6 @@ const AuthSignUp = (props: Props) => {
             autoFocus
           />
           <AuthWarn>{errors?.email?.message}</AuthWarn>
-
           <SignUpPwTextDiv>
             <div>Password</div>
           </SignUpPwTextDiv>
@@ -143,7 +142,7 @@ const AuthSignUp = (props: Props) => {
             id="confirm"
             value={confirm}
             onChange={(event) => setConfirm(event.target.value)}
-            placeholder="비밀번호를 다시 입력해주세요"
+            placeholder="다시 입력해주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
                 handleSubmit(onSubmit);
@@ -154,23 +153,10 @@ const AuthSignUp = (props: Props) => {
             <div>Nickname</div>
           </NicknameDiv>
           <NicknameInput
-            {...register('nickname', {
-              required: '별명을 입력해주세요.',
-              minLength: {
-                value: 2,
-                message:
-                  '별명은 영문 대문자, 소문자, 한글을 포함한 2글자 이상이어야 합니다.',
-              },
-              pattern: {
-                value: /[^a-z|ㄱ-ㅎ|가-힣]/gi,
-                message:
-                  '별명은 영문 대문자, 소문자, 한글을 포함한 2글자 이상이어야 합니다.',
-              },
-            })}
-            autoComplete="new-password"
-            name="nickname"
-            type="nickname"
-            id="nickname"
+            minLength={2}
+            name="username"
+            type="username"
+            id="username"
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
             placeholder="별명을 입력해주세요"
@@ -182,12 +168,16 @@ const AuthSignUp = (props: Props) => {
           />
           <AuthWarn>{errors?.confirm?.message}</AuthWarn>
         </SignUpEmailPwContainer>
-        <SignUpBtnContainer>
-          <SignUpBtn type="submit" disabled={registering}>
-            <div>SignUp</div>
-          </SignUpBtn>
-        </SignUpBtnContainer>
       </form>
+      <SignUpBtnContainer>
+        <SignUpBtn
+          onClick={handleSubmit(onSubmit)}
+          type="submit"
+          disabled={registering}
+        >
+          <div>SignUp</div>
+        </SignUpBtn>
+      </SignUpBtnContainer>
       <SignUpOtherMethod>
         <SignUpOrLine>
           <div>OR</div>
@@ -225,7 +215,7 @@ const SignUpEmailPwContainer = styled.form`
   width: 300px;
   height: 250px;
   margin: 0 auto;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 `;
 const SignUpEmailInput = styled.input`
   height: 30px;
@@ -241,6 +231,7 @@ const AuthWarn = styled.p`
   font-size: 13px;
   font-weight: 700px;
 `;
+// const SignUpPwContainer = styled.div``;
 
 const SignUpPwTextDiv = styled.div`
   margin-top: 10px;
@@ -276,10 +267,11 @@ const NicknameInput = styled.input`
   border-radius: 5px;
 `;
 const SignUpBtnContainer = styled.div`
+  border: 1px solid black;
   display: flex;
+  margin-top: 100px;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
 `;
 const SignUpBtn = styled.button`
   display: flex;
@@ -292,7 +284,7 @@ const SignUpBtn = styled.button`
   border-radius: 15px;
   transition: 0.03s;
   /* &:active {
-    background-color: ${(props) => props.theme.colors.black0};
+    background-color: black;
   } */
   &:hover {
     cursor: pointer;
