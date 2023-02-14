@@ -37,7 +37,7 @@ function ModalLogin(props: Props) {
     setForgotModal(!forgotModal);
   };
   return (
-    <ModalStyled>
+    <ModalStyled onClick={closeModal}>
       {forgotModal ? (
         <AuthForgot forgotModalButton={forgotModalButton} />
       ) : signUpModal ? (
@@ -72,8 +72,8 @@ const ModalStyled = styled.div`
   .modalBody {
     position: absolute;
     color: black;
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 500px;
     padding: 30px 30px 30px 30px;
     z-index: 13;
     text-align: left;

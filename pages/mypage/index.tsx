@@ -67,7 +67,7 @@ export default function Mypage() {
 
         //? 데이터 추가하는 트리거 실행하기
         onUpdataData(
-          { ...data, url: response },
+          { ...data, imgUrl: response },
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
@@ -93,7 +93,7 @@ export default function Mypage() {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        
+
         response = url;
 
         onUpdataData(
@@ -108,7 +108,6 @@ export default function Mypage() {
             },
           }
         );
-
       });
     });
   };
