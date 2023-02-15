@@ -1,6 +1,6 @@
 import Modal from '@/components/main/Modal';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
@@ -8,23 +8,41 @@ import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData } from '@/api';
+import { authService } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { customAlert } from '@/utils/alerts';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  // 로그인 모달 창 state
   const [closeModal, setCloseModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(false);
+  const nowuser = authService.currentUser;
 
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
   };
-
   const onClickChatToggle = () => {
     setChatToggle(!chatToggle);
   };
   // 로그인 모달 창 버튼
   const closeModalButton = () => {
     setCloseModal(!closeModal);
+  };
+  useEffect(() => {
+    if (authService.currentUser) {
+      setCurrentUser(true);
+    }
+  }, [nowuser]);
+
+  // 로그아웃
+  const logOut = () => {
+    signOut(authService).then(() => {
+      // Sign-out successful.
+      localStorage.clear();
+      setCurrentUser(false);
+      customAlert('로그아웃에 성공하였습니다!');
+    });
   };
 
   // 무한 스크롤
@@ -56,10 +74,10 @@ export default function Main() {
     <>
       <div>
         <Seo title="Home" />
-
+        {/* 로그인, 로그아웃 버튼 */}
         {closeModal && <ModalLogin closeModal={closeModalButton} />}
-        {closeModal ? (
-          <LoginButton onClick={closeModalButton}>로그아웃</LoginButton>
+        {currentUser ? (
+          <LoginButton onClick={logOut}>로그아웃</LoginButton>
         ) : (
           <LoginButton onClick={closeModalButton}>로그인</LoginButton>
         )}
