@@ -1,7 +1,7 @@
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
@@ -22,6 +22,8 @@ export default function Main() {
   const [chatToggle, setChatToggle] = useState(false);
   const [closeModal, setCloseModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
+  const [selectCity, setSelectCity] = useState('');
+  const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
 
   const onClickToggleModal = () => {
@@ -45,13 +47,22 @@ export default function Main() {
     });
   };
 
+  const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
+    visibleReset();
+    setSelectCity(event.target.value);
+  };
+  const onChangeSelectTown = (event: ChangeEvent<HTMLSelectElement>) => {
+    visibleReset();
+    setSelectTown(event.target.value);
+  };
+
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열
     fetchNextPage, // 다음 페이지를 불러오는 함수
     status, // loading, error, success 중 하나의 상태, string
   } = useInfiniteQuery(
-    'infiniteData', // data의 이름
+    ['infiniteData', selectTown, selectCity], // data의 이름
     getInfiniteData, // fetch callback, 위 data를 불러올 함수
     {
       getNextPageParam: () => {
@@ -71,13 +82,6 @@ export default function Main() {
     }
   }, [nowuser]);
 
-  if (status === 'loading') {
-    return <div>로딩중입니다.</div>;
-  }
-
-  if (status === 'error') {
-    return <div>데이터를 불러오지 못했습니다.</div>;
-  }
   return (
     <>
       <div>
@@ -101,11 +105,35 @@ export default function Main() {
       )}
       <input />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
-        <Categorys>지역</Categorys>
-        <Categorys>작가</Categorys>
-        <Categorys>지역</Categorys>
-        <Categorys>팔로우</Categorys>
-        <Categorys onClick={onClickToggleModal}>게시물 작성</Categorys>
+        <Categories onChange={onChangeSelectCity}>
+          <option value="">지역전체</option>
+          <option value="제주시">제주시</option>
+          <option value="서귀포시">서귀포시</option>
+        </Categories>
+        {selectCity === '제주시' ? (
+          <Categories onChange={onChangeSelectTown}>
+            <option value="">읍면동전체</option>
+            <option value="애월읍">애월읍</option>
+            <option value="남원읍">남원읍</option>
+          </Categories>
+        ) : selectCity === '제주시' ? (
+          <Categories onChange={onChangeSelectTown}>
+            <option value="">읍면동전체</option>
+            <option value="표선면">표선면</option>
+            <option value="대정읍">대정읍</option>
+          </Categories>
+        ) : (
+          <Categories onChange={onChangeSelectTown}>
+            <option value="">읍면동전체</option>
+            <option value="표선면">표선면</option>
+            <option value="대정읍">대정읍</option>
+            <option value="애월읍">애월읍</option>
+            <option value="남원읍">남원읍</option>
+          </Categories>
+        )}
+        <Categories>지역</Categories>
+        <Categories>팔로우</Categories>
+        <Categories onClick={onClickToggleModal}>게시물 작성</Categories>
       </div>
       <div></div>
       {/* <SearchPlace /> */}
@@ -158,17 +186,21 @@ export default function Main() {
           />
         </ImageBox>
         {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
-        <div>
-          <GridBox>
-            {data?.pages.map((data) =>
-              data.map((item: any) => (
-                <ItemBox key={uuidv4()}>
-                  <Content item={item} />
-                </ItemBox>
-              ))
-            )}
-          </GridBox>
-        </div>
+        {status === 'loading' ? (
+          <div>로딩중입니다.</div>
+        ) : (
+          <div>
+            <GridBox>
+              {data?.pages.map((data) =>
+                data.map((item: any) => (
+                  <ItemBox key={uuidv4()}>
+                    <Content item={item} />
+                  </ItemBox>
+                ))
+              )}
+            </GridBox>
+          </div>
+        )}
 
         {chatToggle ? <Chat /> : null}
         <ChatToggleBtn onClick={onClickChatToggle}>
@@ -181,7 +213,7 @@ export default function Main() {
 const LoginButton = styled.button``;
 const MypageButton = styled.button``;
 
-const Categorys = styled.button`
+const Categories = styled.select`
   background-color: tomato;
   width: 100px;
   height: 40px;
