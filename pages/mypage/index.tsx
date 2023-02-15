@@ -103,7 +103,7 @@ export default function Mypage() {
           editState={editState}
           data={data}
           setEditImgUpload={setEditImgUpload}
-          onClickEditImgUpload={onClickEditImgUpload}
+          // onClickEditImgUpload={onClickEditImgUpload}
           setEditTitle={setEditTitle}
           onClickUpdateData={onClickUpdateData}
           onClickDeleteData={onClickDeleteData}

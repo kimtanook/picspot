@@ -108,6 +108,7 @@ export default function Main() {
         <Categorys onClick={onClickToggleModal}>게시물 작성</Categorys>
       </div>
       <div></div>
+      {/* <SearchPlace /> */}
       <div>
         <ImageBox>
           <Image
