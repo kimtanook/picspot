@@ -116,7 +116,7 @@ export default function Main() {
             <option value="애월읍">애월읍</option>
             <option value="남원읍">남원읍</option>
           </Categories>
-        ) : selectCity === '제주시' ? (
+        ) : selectCity === '서귀포시' ? (
           <Categories onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="표선면">표선면</option>
