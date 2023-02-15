@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-const LandingPage = ({ searchPlace }: any) => {
+const LandingPage = ({ searchPlace, setInfoDiv, infoDiv }: any) => {
   const [saveLatLng, setSaveLatLng] = useState([]);
   const [saveAddress, setSaveAddress] = useState();
   useEffect(() => {
@@ -52,11 +52,10 @@ const LandingPage = ({ searchPlace }: any) => {
         }
       }
 
+      //----------------------------행정동 주소 왼쪽 상단에 올리기/----------------------------
+      searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
       //----------------------------좌표로 주소를 얻어내기/----------------------------
-      function searchAddrFromCoords(coords: any) {
-        // 좌표로 행정동 주소 정보를 요청합니다
-        geocoder.coord2RegionCode(coords.getLng(), coords.getLat());
-      }
 
       function searchDetailAddrFromCoords(coords: any, callback: any) {
         // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -79,6 +78,26 @@ const LandingPage = ({ searchPlace }: any) => {
           }
         );
       });
+
+      kakao.maps.event.addListener(map, 'idle', function () {
+        searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+      });
+      function searchAddrFromCoords(coords: any, callback: any) {
+        // 좌표로 행정동 주소 정보를 요청합니다
+        geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+      }
+
+      function displayCenterInfo(result: any, status: any) {
+        if (status === kakao.maps.services.Status.OK) {
+          for (var i = 0; i < result.length; i++) {
+            // 행정동의 region_type 값은 'H' 이므로
+            if (result[i].region_type === 'H') {
+              setInfoDiv(result[i].address_name);
+              break;
+            }
+          }
+        }
+      }
     });
   }, [searchPlace]);
   console.log('saveLatLng', saveLatLng);
