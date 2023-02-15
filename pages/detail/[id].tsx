@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
+import CommentList from '@/components/detail/CommentList';
 
 const Post = ({ id }: any) => {
   //* useQuery 사용해서 데이터 불러오기
@@ -75,6 +76,7 @@ const Post = ({ id }: any) => {
             <Image src={item.imgUrl} alt="image" height={100} width={100} />
           </StDetailBox>
         ))}
+      <CommentList postId={id} />
     </>
   );
 };

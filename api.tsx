@@ -53,7 +53,6 @@ export const getInfiniteData = async () => {
 
 //* 스토어에서 데이터 불러오기
 export const getDatas = async () => {
-  // const q = query(collection(dbService, 'post'), orderBy('createdAt', 'desc'));
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
@@ -61,6 +60,7 @@ export const getDatas = async () => {
     response.push({ id: doc.id, ...doc.data() });
   });
   console.log('데이터를 불러왔습니다.');
+
   return response;
 };
 
@@ -80,9 +80,39 @@ export const deleteData: any = (docId: any) => {
 
 //* 스토어에 데이터 수정하기
 export const updataData: any = (data: any) => {
-  // console.log('data: ', data);
+  console.log('data: ', data);
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
+};
+
+// 댓글 가져오기
+export const getComment = async ({ queryKey }: any) => {
+  const [, postId] = queryKey;
+  const response: any = [];
+  const q = query(
+    collection(dbService, `post/${postId}/comment`),
+    orderBy('createdAt', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  return response;
+};
+
+// 댓글 추가
+export const addComment = async (item: any) => {
+  console.log('commentData : ', item);
+  await addDoc(
+    collection(dbService, `post/${item.postId}/comment`),
+    item.submitCommentData
+  );
+};
+
+// 댓글 삭제
+
+export const deleteComment = async (item: any) => {
+  deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
 
 export const postCounter: any = async (item: any) => {
