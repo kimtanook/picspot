@@ -2,9 +2,17 @@ import LandingPage from './LandingPage';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';
-const SearchPlace = () => {
+
+const SearchPlace = ({
+  searchCategory,
+  saveLatLng,
+  setSaveLatLng,
+  saveAddress,
+  setSaveAddress,
+  setPlace,
+  place,
+}: any) => {
   const [inputText, setInputText] = useState('');
-  const [place, setPlace] = useState('');
   const [infoDiv, setInfoDiv] = useState('');
   const onchange = (e: any) => {
     setInputText(e.target.value);
@@ -19,7 +27,7 @@ const SearchPlace = () => {
   return (
     <StyleContainer>
       <StlyedForm onSubmit={handleSubmit}>
-        <StyleInfo> {infoDiv}</StyleInfo>
+        <StyledInfo>{infoDiv}</StyledInfo>
         <StyledInput
           placeholder="지역 + 지명을 검색해주세요."
           onChange={onchange}
@@ -32,8 +40,11 @@ const SearchPlace = () => {
       </StlyedForm>
 
       <LandingPage
-        searchPlace={place}
-        infoDiv={infoDiv}
+        searchPlace={place ? place : searchCategory}
+        saveLatLng={saveLatLng}
+        setSaveLatLng={setSaveLatLng}
+        saveAddress={saveAddress}
+        setSaveAddress={setSaveAddress}
         setInfoDiv={setInfoDiv}
       />
     </StyleContainer>
@@ -51,7 +62,7 @@ const StyleContainer = styled.div`
 const StlyedForm = styled.form`
   position: absolute;
   top: 10px;
-  z-index: 5;
+  z-index: 999;
 `;
 
 const StyledInput = styled.input`
@@ -61,13 +72,12 @@ const StyledInput = styled.input`
   border: 0.5px solid black;
 `;
 
-const StyleInfo = styled.div`
+const StyledInfo = styled.div`
+  padding: 10px;
+  width: 50%;
+  margin-left: 120px;
+  border-radius: 5px;
   background-color: gray;
   color: white;
-  padding: 5px 20px;
   text-align: center;
-  border-radius: 5px;
-  width: 300px;
-  margin-left: 120px;
-  margin-bottom: 10px;
 `;
