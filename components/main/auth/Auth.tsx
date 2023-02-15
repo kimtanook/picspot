@@ -175,6 +175,7 @@ const LoginContainer = styled.div`
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  /* z-index: 999999999999999999; */
 `;
 
 const LoginTextDiv = styled.div`

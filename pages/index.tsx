@@ -8,13 +8,14 @@ import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
-import { getInfiniteData } from '@/api';
+import { getInfiniteData, visibleReset } from '@/api';
+import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
-
 import LandingPage from '@/components/detail/LandingPage';
 import SearchPlace from '@/components/detail/SearchPlace';
+import Link from 'next/link';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -33,11 +34,6 @@ export default function Main() {
   const closeModalButton = () => {
     setCloseModal(!closeModal);
   };
-  useEffect(() => {
-    if (authService.currentUser) {
-      setCurrentUser(true);
-    }
-  }, [nowuser]);
 
   // 로그아웃
   const logOut = () => {
@@ -67,6 +63,14 @@ export default function Main() {
   useBottomScrollListener(() => {
     fetchNextPage();
   });
+
+  useEffect(() => {
+    visibleReset();
+    if (authService.currentUser) {
+      setCurrentUser(true);
+    }
+  }, [nowuser]);
+
   if (status === 'loading') {
     return <div>로딩중입니다.</div>;
   }
@@ -85,8 +89,10 @@ export default function Main() {
         ) : (
           <LoginButton onClick={closeModalButton}>로그인</LoginButton>
         )}
-
-        <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
+        {/* 마이페이지 버튼 */}
+        <Link href={'/mypage'}>
+          <MypageButton hidden={!currentUser}>마이페이지</MypageButton>
+        </Link>
       </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
@@ -156,13 +162,7 @@ export default function Main() {
             {data?.pages.map((data) =>
               data.map((item: any) => (
                 <ItemBox key={uuidv4()}>
-                  <div>{item.title}</div>
-                  <Image
-                    src={item.imgUrl}
-                    alt="image"
-                    height={100}
-                    width={100}
-                  />
+                  <Content item={item} />
                 </ItemBox>
               ))
             )}
@@ -179,6 +179,7 @@ export default function Main() {
   );
 }
 const LoginButton = styled.button``;
+const MypageButton = styled.button``;
 
 const Categorys = styled.button`
   background-color: tomato;

@@ -17,6 +17,11 @@ import { dbService } from './firebase';
 // startAt() 또는 startAfter()메서드를 사용하여 쿼리의 시작점을 정의합니다. startAt()메서드는 시작점을 포함하고, startAfter() 메서드는 시작점을 제외합니다.
 //예를 들어 쿼리에 startAt(A)을 사용하면 전체 알파벳이 반환됩니다. startAfter(A)를 대신 사용하면. B-Z가 반환됩니다.
 let lastVisible: any = undefined;
+export const visibleReset = () => {
+  // 리셋을 해주지 않으면 새로고침 전까지 lastVisible이 querySnapshot.docs.length로 유지됨
+  // 그로 인해, 페이지 이동 후 돌아오면 다음 페이지부터 보여주므로 기존 데이터 날아감.
+  lastVisible = undefined;
+};
 export const getInfiniteData = async () => {
   const getData: any = [];
   let q;
@@ -26,14 +31,14 @@ export const getInfiniteData = async () => {
     q = query(
       collection(dbService, 'post'),
       orderBy('createdAt', 'desc'),
-      limit(8),
+      limit(4),
       startAfter(lastVisible)
     );
   } else {
     q = query(
       collection(dbService, 'post'),
       orderBy('createdAt', 'desc'),
-      limit(16)
+      limit(8)
     );
   }
 
@@ -47,13 +52,11 @@ export const getInfiniteData = async () => {
     }
   });
 
-  console.log('데이터를 불러왔습니다.');
   return getData;
 };
 
 //* 스토어에서 데이터 불러오기
 export const getDatas = async () => {
-  // const q = query(collection(dbService, 'post'), orderBy('createdAt', 'desc'));
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
@@ -61,6 +64,7 @@ export const getDatas = async () => {
     response.push({ id: doc.id, ...doc.data() });
   });
   console.log('데이터를 불러왔습니다.');
+
   return response;
 };
 
@@ -80,9 +84,39 @@ export const deleteData: any = (docId: any) => {
 
 //* 스토어에 데이터 수정하기
 export const updataData: any = (data: any) => {
-  // console.log('data: ', data);
+  console.log('data: ', data);
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
+};
+
+// 댓글 가져오기
+export const getComment = async ({ queryKey }: any) => {
+  const [, postId] = queryKey;
+  const response: any = [];
+  const q = query(
+    collection(dbService, `post/${postId}/comment`),
+    orderBy('createdAt', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  return response;
+};
+
+// 댓글 추가
+export const addComment = async (item: any) => {
+  console.log('commentData : ', item);
+  await addDoc(
+    collection(dbService, `post/${item.postId}/comment`),
+    item.submitCommentData
+  );
+};
+
+// 댓글 삭제
+
+export const deleteComment = async (item: any) => {
+  deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
 
 export const postCounter: any = async (item: any) => {

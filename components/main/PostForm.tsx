@@ -4,8 +4,15 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
+import SearchPlace from '../detail/SearchPlace';
 
 const PostForm = () => {
+  const [saveLatLng, setSaveLatLng]: any = useState([]);
+  const [saveAddress, setSaveAddress]: any = useState();
+
+  //! category 클릭, 검색 시 map이동에 관한 통합 state
+  const [searchCategory, setSearchCategory]: any = useState('');
+
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [city, setCity] = useState('');
@@ -14,7 +21,8 @@ const PostForm = () => {
   // console.log('town: ', town);
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
-
+  console.log('주소테스트다임마', saveLatLng);
+  console.log('주소테스트다임마', saveAddress);
   let postState: any = {
     title: title,
     imgUrl: '',
@@ -23,6 +31,9 @@ const PostForm = () => {
     city: city,
     town: town,
     clickCounter: 0,
+    lat: saveLatLng.La,
+    long: saveLatLng.Ma,
+    address: saveAddress,
   };
 
   //* useMutation 사용해서 데이터 추가하기
@@ -56,9 +67,12 @@ const PostForm = () => {
     });
   };
 
-  //* 카테고리 클릭 시 스테이트 변경하는 함수
+  const [place, setPlace] = useState('');
+
   const onClickTown = (e: any) => {
     setTown(e.target.innerText);
+    setPlace('');
+    setSearchCategory(e.target.innerText);
   };
 
   return (
@@ -136,6 +150,15 @@ const PostForm = () => {
         <button onClick={onClickTown}>우도</button>
         <button onClick={onClickTown}>마라도</button>
       </div>
+      <SearchPlace
+        searchCategory={searchCategory}
+        saveLatLng={saveLatLng}
+        setSaveLatLng={setSaveLatLng}
+        saveAddress={saveAddress}
+        setSaveAddress={setSaveAddress}
+        setPlace={setPlace}
+        place={place}
+      />
     </>
   );
 };
