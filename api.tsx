@@ -83,3 +83,33 @@ export const updataData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
+
+// 댓글 가져오기
+export const getComment = async ({ queryKey }: any) => {
+  const [, postId] = queryKey;
+  const response: any = [];
+  const q = query(
+    collection(dbService, `post/${postId}/comment`),
+    orderBy('createdAt', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  return response;
+};
+
+// 댓글 추가
+export const addComment = async (item: any) => {
+  console.log('commentData : ', item);
+  await addDoc(
+    collection(dbService, `post/${item.postId}/comment`),
+    item.submitCommentData
+  );
+};
+
+// 댓글 삭제
+
+export const deleteComment = async (item: any) => {
+  deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
+};
