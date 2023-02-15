@@ -13,7 +13,7 @@ const Modal = ({ onClickToggleModal }: PropsWithChildren<ModalDefaultType>) => {
         <PostForm />
       </StDialogBox>
       <Backdrop
-        onClick={(e) => {
+        onClick={(e: any) => {
           e.preventDefault();
 
           if (onClickToggleModal) {

@@ -1,30 +1,48 @@
 import Modal from '@/components/main/Modal';
+import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
-import { getInfiniteData } from '@/api';
+import { getInfiniteData, visibleReset } from '@/api';
+import Content from '@/components/main/Content';
+import { authService } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { customAlert } from '@/utils/alerts';
+import LandingPage from '@/components/detail/LandingPage';
+import SearchPlace from '@/components/detail/SearchPlace';
+import Link from 'next/link';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  // 로그인 모달 창 state
   const [closeModal, setCloseModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(false);
+  const nowuser = authService.currentUser;
 
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
   };
-
   const onClickChatToggle = () => {
     setChatToggle(!chatToggle);
   };
   // 로그인 모달 창 버튼
   const closeModalButton = () => {
     setCloseModal(!closeModal);
+  };
+
+  // 로그아웃
+  const logOut = () => {
+    signOut(authService).then(() => {
+      // Sign-out successful.
+      localStorage.clear();
+      setCurrentUser(false);
+      customAlert('로그아웃에 성공하였습니다!');
+    });
   };
 
   // 무한 스크롤
@@ -45,6 +63,14 @@ export default function Main() {
   useBottomScrollListener(() => {
     fetchNextPage();
   });
+
+  useEffect(() => {
+    visibleReset();
+    if (authService.currentUser) {
+      setCurrentUser(true);
+    }
+  }, [nowuser]);
+
   if (status === 'loading') {
     return <div>로딩중입니다.</div>;
   }
@@ -56,20 +82,23 @@ export default function Main() {
     <>
       <div>
         <Seo title="Home" />
-
+        {/* 로그인, 로그아웃 버튼 */}
         {closeModal && <ModalLogin closeModal={closeModalButton} />}
-        {closeModal ? (
-          <LoginButton onClick={closeModalButton}>로그아웃</LoginButton>
+        {currentUser ? (
+          <LoginButton onClick={logOut}>로그아웃</LoginButton>
         ) : (
           <LoginButton onClick={closeModalButton}>로그인</LoginButton>
         )}
+        {/* 마이페이지 버튼 */}
+        <Link href={'/mypage'}>
+          <MypageButton hidden={!currentUser}>마이페이지</MypageButton>
+        </Link>
       </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
           <div>children</div>
         </Modal>
       )}
-
       <input />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
         <Categorys>지역</Categorys>
@@ -79,6 +108,7 @@ export default function Main() {
         <Categorys onClick={onClickToggleModal}>게시물 작성</Categorys>
       </div>
       <div></div>
+      {/* <SearchPlace /> */}
       <div>
         <ImageBox>
           <Image
@@ -132,19 +162,14 @@ export default function Main() {
           <GridBox>
             {data?.pages.map((data) =>
               data.map((item: any) => (
-                <ItemBox key={crypto.randomUUID()}>
-                  <div>{item.title}</div>
-                  <Image
-                    src={item.imgUrl}
-                    alt="image"
-                    height={100}
-                    width={100}
-                  />
+                <ItemBox key={uuidv4()}>
+                  <Content item={item} />
                 </ItemBox>
               ))
             )}
           </GridBox>
         </div>
+
         {chatToggle ? <Chat /> : null}
         <ChatToggleBtn onClick={onClickChatToggle}>
           {chatToggle ? '닫기' : '열기'}
@@ -154,6 +179,7 @@ export default function Main() {
   );
 }
 const LoginButton = styled.button``;
+const MypageButton = styled.button``;
 
 const Categorys = styled.button`
   background-color: tomato;

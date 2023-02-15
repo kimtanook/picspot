@@ -1,11 +1,13 @@
 import { getDatas, deleteData, updataData } from '@/api';
 import PostList from '@/components/mypage/PostList';
+import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
 import { authService, storageService } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-
+import styled from 'styled-components';
 //! editState 타입 해결
 //! editImgUpload 타입 해결
 export default function Mypage() {
@@ -115,19 +117,64 @@ export default function Mypage() {
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   return (
-    <div>
-      <Seo title="My" />
-      <h1>마이페이지임</h1>
-
-      <PostList
-        editState={editState}
-        data={data}
-        setEditImgUpload={setEditImgUpload}
-        onClickEditImgUpload={onClickEditImgUpload}
-        setEditTitle={setEditTitle}
-        onClickUpdateData={onClickUpdateData}
-        onClickDeleteData={onClickDeleteData}
-      />
-    </div>
+    <MyContainer>
+      <MyTextDiv>
+        <Seo title="My" />
+        <h1>마이페이지입니다</h1>
+        <Link href={'/'}>
+          <ToMainpage>메인페이지로 돌아가기</ToMainpage>
+        </Link>
+      </MyTextDiv>
+      <MyProfileContainer>
+        <Profile />
+      </MyProfileContainer>
+      <MyProfileListContainer>
+        <PostList
+          editState={editState}
+          data={data}
+          setEditImgUpload={setEditImgUpload}
+          onClickEditImgUpload={onClickEditImgUpload}
+          setEditTitle={setEditTitle}
+          onClickUpdateData={onClickUpdateData}
+          onClickDeleteData={onClickDeleteData}
+        />
+      </MyProfileListContainer>
+      <MyKeywordContainer>키워드</MyKeywordContainer>
+    </MyContainer>
   );
 }
+const MyContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+const MyTextDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ToMainpage = styled.button``;
+
+const MyProfileContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const MyProfileListContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-self: auto;
+  overflow: scroll;
+`;
+
+const MyKeywordContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;

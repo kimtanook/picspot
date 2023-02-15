@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
+import CommentList from '@/components/detail/CommentList';
 
 const Post = ({ id }: any) => {
   //* useQuery 사용해서 데이터 불러오기
@@ -28,6 +29,21 @@ const Post = ({ id }: any) => {
   console.log('data:', data);
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+
+  //* split함수로 주소 뽑아오기
+  // const testmessage = '제주특별자치도 제주시 법환동';
+  // const arr = testmessage.split(' ');
+  // console.log(arr[1]);
+
+  //* 뽑아온 주소를 카테고리로 만들고,
+  //* city : 정렬[0,1] (제주특별...,제주시 or 서귀포시)
+  //* town : 정렬[2] (법환동, 애월리 ... 등등)
+
+  //* input창을 만들어 줘야하나? ( 검색하고 있는 주소가 맞는지??)
+
+  //* 카테고리 클릭시 맵 이동기능 하나
+  //* 맵 이동시 카테고리 생성 기능? 하나
+  //* 카테고리 만들어 놓고 그 값 클릭시 맵 이동 (하위 카테고리는 town만 해당)
 
   return (
     <>
@@ -60,6 +76,7 @@ const Post = ({ id }: any) => {
             <Image src={item.imgUrl} alt="image" height={100} width={100} />
           </StDetailBox>
         ))}
+      <CommentList postId={id} />
     </>
   );
 };
