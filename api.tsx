@@ -4,11 +4,12 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  limit,
+  increment,
   orderBy,
   query,
-  startAfter,
   updateDoc,
+  limit,
+  startAfter,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -52,6 +53,7 @@ export const getInfiniteData = async () => {
 
 //* 스토어에서 데이터 불러오기
 export const getDatas = async () => {
+  // const q = query(collection(dbService, 'post'), orderBy('createdAt', 'desc'));
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
@@ -59,7 +61,6 @@ export const getDatas = async () => {
     response.push({ id: doc.id, ...doc.data() });
   });
   console.log('데이터를 불러왔습니다.');
-
   return response;
 };
 
@@ -79,7 +80,20 @@ export const deleteData: any = (docId: any) => {
 
 //* 스토어에 데이터 수정하기
 export const updataData: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
+
+export const postCounter: any = async (item: any) => {
+  // console.log('item', item);
+  await updateDoc(doc(dbService, 'post', item), {
+    clickCounter: increment(1),
+  });
+};
+
+// export const postCounter: any = (data: any) => {
+//   updateDoc(doc(dbService, 'post', data.id), {
+//     clickCounter: increment(1),
+//   });
+// };
