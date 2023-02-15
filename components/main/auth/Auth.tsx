@@ -4,7 +4,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
-import Cookies from 'js-cookie';
+import { customAlert } from '@/utils/alerts';
+// import Cookies from 'js-cookie';
 
 interface AuthForm {
   email: string;
@@ -20,7 +21,7 @@ const Auth = (props: Props): JSX.Element => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const [isRemember, setIsRemember] = useState<boolean>(false);
+  // const [isRemember, setIsRemember] = useState<boolean>(false);
 
   const {
     register,
@@ -35,13 +36,13 @@ const Auth = (props: Props): JSX.Element => {
     await signInWithEmailAndPassword(authService, email, password)
       .then((res) => {
         console.log(res);
-        Cookies.set('userID', 'qkrdbwls', { expires: 10000 });
+        customAlert('로그인에 성공하였습니다!');
+        // Cookies.set('userID', 'qkrdbwls', { expires: 10000 });
         props.closeModal();
       })
       .catch(() => {
         alert('로그인 실패, 다시 입력해주세요');
         setAuthenticating(false);
-        3;
         setError('Failed Login');
       });
   };
@@ -122,16 +123,16 @@ const Auth = (props: Props): JSX.Element => {
             }}
           />
         </LoginEmailPwContainer>
-        <LoginRememberContainer>
+        {/* <LoginRememberContainer>
           <LoginRememberCheck
             type="checkbox"
             id="checkbox"
             name="checkbox"
             checked={isRemember}
-            // onChange={handleOnChange}
+            onChange={handleOnChange}
           />
           <LoginRememberText htmlFor="checkbox">아이디 저장</LoginRememberText>
-        </LoginRememberContainer>
+        </LoginRememberContainer> */}
         <LoginBtnContainer>
           <LoginBtn
             type="submit"
@@ -218,22 +219,22 @@ const LoginPwInput = styled.input`
   border: 2px solid white;
   border-radius: 5px;
 `;
-const LoginRememberContainer = styled.div`
-  height: 30px;
-  margin-top: 10px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
-`;
+// const LoginRememberContainer = styled.div`
+//   height: 30px;
+//   margin-top: 10px;
+//   padding-left: 5px;
+//   background-color: white;
+//   border: 2px solid white;
+//   border-radius: 5px;
+// `;
 
-const LoginRememberText = styled.label`
-  display: flex;
-`;
-const LoginRememberCheck = styled.input`
-  display: flex;
-  justify-content: center;
-`;
+// const LoginRememberText = styled.label`
+//   display: flex;
+// `;
+// const LoginRememberCheck = styled.input`
+//   display: flex;
+//   justify-content: center;
+// `;
 
 const LoginBtnContainer = styled.div`
   display: flex;
