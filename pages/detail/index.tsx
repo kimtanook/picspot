@@ -1,7 +1,10 @@
-import React from 'react';
+import Seo from '@/components/Seo';
 
-function index() {
-  return <div>index</div>;
+export default function detail() {
+  return (
+    <div>
+      <Seo title="Detail" />
+      <div></div>
+    </div>
+  );
 }
-
-export default index;

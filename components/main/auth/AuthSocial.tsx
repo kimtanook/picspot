@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaGoogle } from 'react-icons/fa';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { authService } from '../../../firebase';
+import { customAlert } from '@/utils/alerts';
 
 interface Props {
   closeModal: () => void;
@@ -17,6 +18,7 @@ const AuthSocial = (props: Props): JSX.Element => {
     signInWithPopup(authService, new GoogleAuthProvider())
       .then((response) => {
         props.closeModal();
+        customAlert('로그인에 성공하였습니다!');
       })
       .catch((error) => {
         setSocial(false);
@@ -31,7 +33,7 @@ const AuthSocial = (props: Props): JSX.Element => {
         onClick={() => signInWithGoogle()}
         disabled={social}
       >
-        {/* <FaGoogle size="48px" /> */}
+        <FaGoogle size="48px" />
       </GoogleBtn>
     </>
   );
