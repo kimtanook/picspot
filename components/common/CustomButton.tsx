@@ -21,11 +21,12 @@ export const CustomButton = styled.button<ButtonProps>`
   font-size: ${(props) => props.fontSize || '16px'};
   border-radius: ${(props) => props.borderRadius || '0px'};
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 
   &:disabled {
     opacity: 0.5;
   }
-  ㄴ &:hover {
+  &:hover {
     cursor: pointer;
     scale: 1.02;
   }

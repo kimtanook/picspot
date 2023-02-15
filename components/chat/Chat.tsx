@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 // * Socket.io
 import * as SocketIOClient from 'socket.io-client';
-
-interface IMessage {
-  user?: string;
-  message?: string;
-  room?: string;
-  time?: string;
-}
+import ChatItem from './ChatItem';
 
 const Chat = () => {
   const [socketServer, setSocketServer] = useState<any>(null);
   const [socketId, setSocketId] = useState('');
   const [nickname, setNickname] = useState('');
   const [roomName, setRoomName] = useState('');
+  const [openPublicRooms, setOpenPublicRooms] = useState([]);
   const [message, setMessage] = useState<string>('');
   const [connected, setConnected] = useState<boolean>(false);
   const [chat, setChat] = useState<IMessage[]>([]);
@@ -47,6 +43,15 @@ const Chat = () => {
         ...prevChat,
       ]);
     });
+    // 열린 방 보여주기
+    socket.on('roomChange', (rooms) => {
+      console.log('rooms : ', rooms);
+      if (rooms.length === 0) {
+        setOpenPublicRooms([]);
+      }
+      setOpenPublicRooms(rooms);
+    });
+
     // 방 퇴장 데이터 받기 (on <- emit)
     socket.on('exit', (user) => {
       setChat((prevChat: IMessage[]) => [
@@ -76,14 +81,24 @@ const Chat = () => {
   };
   const submitRoomName = async (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // 연결된 socket.io 서버로 데이터 보내기 (emit -> on)
-    socketServer.emit('enter_room', roomName, nickname, toggleHandler);
+    if (roomName && nickname) {
+      // 연결된 socket.io 서버로 데이터 보내기 (emit -> on)
+      socketServer.emit(
+        'enterRoom',
+        roomName,
+        nickname,
+        socketId,
+        toggleHandler
+      );
+    }
   };
 
   const submitMessage = async (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
     if (message) {
       const messageData: IMessage = {
+        id: socketId,
         room: roomName,
         user: nickname,
         message: message,
@@ -93,6 +108,7 @@ const Chat = () => {
             timeZone: 'UTC',
           }
         ),
+        messageType: 'publicMsg',
       };
       socketServer.emit('message', messageData);
       setChat((prev) => [messageData, ...prev]);
@@ -103,22 +119,22 @@ const Chat = () => {
   return (
     <ComponentContainer>
       <div>
-        {/* 채팅 메시지 출력 영역 */}
         <ChatListBox>
           {chat?.length ? (
-            chat.map((chat, index) => (
-              <ChatItemBox key={index}>
-                <UserName>{chat?.user}</UserName>
-                <ChatMessage>{chat?.message}</ChatMessage>
-                <Time> {chat?.time}</Time>
-              </ChatItemBox>
+            chat.map((chat) => (
+              <ChatItem
+                key={uuidv4()}
+                myName={nickname}
+                item={chat}
+                socketServer={socketServer}
+                setChat={setChat}
+              />
             ))
           ) : (
             <div>No Chat Messages</div>
           )}
         </ChatListBox>
       </div>
-      {/* 채팅 메시지 입력 영역 */}
       <div>
         <div>
           {toggle ? (
@@ -139,22 +155,36 @@ const Chat = () => {
             </div>
           ) : (
             <div>
+              <div>열린 방</div>
+              <OpenRoom>
+                {openPublicRooms.length ? (
+                  <RoomList>
+                    {openPublicRooms?.map((item: { room: string }) => (
+                      <RoomName key={uuidv4()}>{item.room}</RoomName>
+                    ))}
+                  </RoomList>
+                ) : (
+                  '없음'
+                )}
+              </OpenRoom>
               <form>
                 <input
                   value={roomName}
                   onChange={onChangeRoom}
                   autoFocus
                   placeholder={
-                    connected ? 'enter your room' : 'Connecting...🕐'
+                    connected ? 'Room name (8 letters) ' : 'Connecting...🕐'
                   }
+                  maxLength={8}
                 />
                 <input
                   value={nickname}
                   onChange={onChangeNickname}
                   autoFocus
                   placeholder={
-                    connected ? 'enter your nickname' : 'Connecting...🕐'
+                    connected ? 'Nickname (12 letters)' : 'Connecting...🕐'
                   }
+                  maxLength={12}
                 />
                 <button onClick={submitRoomName}>입장</button>
               </form>
@@ -170,11 +200,13 @@ export default Chat;
 const ComponentContainer = styled.div`
   position: fixed;
   background-color: aqua;
-  left: 60%;
-  top: 50%;
+  left: 80%;
+  top: 70%;
+  transform: translate(-50%, -50%);
   height: 300px;
   width: 350px;
 `;
+
 const ChatListBox = styled.div`
   display: flex;
   flex-direction: column-reverse;
@@ -183,37 +215,21 @@ const ChatListBox = styled.div`
   border: 1px solid black;
   overflow-y: scroll;
 `;
-const ChatItemBox = styled.div`
+
+const OpenRoom = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  width: 350px;
+  overflow-x: scroll;
 `;
-const UserName = styled.div`
-  background-color: black;
-  margin: 5px;
-  padding: 3px;
-  border-radius: 10px;
-  color: white;
-  width: 100px;
-  text-align: center;
-`;
-const ChatMessage = styled.div`
-  background-color: #d3d3d3;
-  margin: 5px;
-  padding: 3px;
-  border-radius: 10px;
-  width: 200px;
-  text-align: center;
-  font-size: 12px;
+const RoomList = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
-const Time = styled.div`
-  background-color: #3f3f3f;
+const RoomName = styled.div`
+  background-color: aqua;
+  width: 120px;
   margin: 5px;
-  padding: 3px;
-  border-radius: 10px;
-  color: white;
-  width: 60px;
   text-align: center;
-  font-size: 10px;
 `;

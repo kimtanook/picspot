@@ -1,11 +1,7 @@
-import { Server as NetServer, Socket } from 'net';
-import { NextApiResponse } from 'next';
-import { Server as SocketIOServer } from 'socket.io';
+declare interface RoomsType {
+  [key: string[]]: { [key: string]: string };
+}
 
-export type NextApiResponseServerIO = NextApiResponse & {
-  socket: Socket & {
-    server: NetServer & {
-      io: SocketIOServer;
-    };
-  };
-};
+declare interface IMessage {
+  [key: string]: string;
+}
