@@ -45,7 +45,7 @@ const ChatItem = ({
           setChat={setChat}
         />
       ) : null}
-      <ChatItemBox key={crypto.randomUUID()}>
+      <ChatItemBox>
         <UserName onClick={onClickUserMenuToggle} value={item.id}>
           <div>{item.user === myName ? '나' : item.user}</div>
         </UserName>

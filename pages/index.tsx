@@ -1,4 +1,5 @@
 import Modal from '@/components/main/Modal';
+import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -132,7 +133,7 @@ export default function Main() {
           <GridBox>
             {data?.pages.map((data) =>
               data.map((item: any) => (
-                <ItemBox key={crypto.randomUUID()}>
+                <ItemBox key={uuidv4()}>
                   <div>{item.title}</div>
                   <Image
                     src={item.imgUrl}

@@ -18,20 +18,13 @@ const socket = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
       },
     } = io;
     const publicRooms: RoomsType[] = [];
-    // const privateRooms: RoomsType[] = [];
     rooms.forEach((_, key) => {
       if (sids.get(key) === undefined) {
         publicRooms.push({ room: key });
       }
     });
-    // rooms.forEach((_, key) => {
-    //   if (sids.get(key) !== undefined) {
-    //     privateRooms.push({ room: key });
-    //   }
-    // });
 
-    return { publicRooms };
-    // return { publicRooms, privateRooms };
+    return publicRooms;
   };
 
   io.on('connection', (socket) => {

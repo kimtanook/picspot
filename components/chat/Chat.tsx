@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 // * Socket.io
 import * as SocketIOClient from 'socket.io-client';
@@ -11,7 +12,6 @@ const Chat = () => {
   const [nickname, setNickname] = useState('');
   const [roomName, setRoomName] = useState('');
   const [openPublicRooms, setOpenPublicRooms] = useState([]);
-  const [openPrivateRooms, setOpenPrivateRooms] = useState([]);
   const [message, setMessage] = useState<string>('');
   const [connected, setConnected] = useState<boolean>(false);
   const [chat, setChat] = useState<IMessage[]>([]);
@@ -45,15 +45,11 @@ const Chat = () => {
     });
     // 열린 방 보여주기
     socket.on('roomChange', (rooms) => {
-      if (rooms.publicRooms.length === 0) {
+      console.log('rooms : ', rooms);
+      if (rooms.length === 0) {
         setOpenPublicRooms([]);
       }
-      // if (rooms.privateRooms.length === 0) {
-      //   setOpenPrivateRooms([]);
-      // }
-
-      setOpenPublicRooms(rooms.publicRooms);
-      // setOpenPrivateRooms(rooms.privateRooms);
+      setOpenPublicRooms(rooms);
     });
 
     // 방 퇴장 데이터 받기 (on <- emit)
@@ -127,7 +123,7 @@ const Chat = () => {
           {chat?.length ? (
             chat.map((chat) => (
               <ChatItem
-                key={crypto.randomUUID()}
+                key={uuidv4()}
                 myName={nickname}
                 item={chat}
                 socketServer={socketServer}
@@ -164,7 +160,7 @@ const Chat = () => {
                 {openPublicRooms.length ? (
                   <RoomList>
                     {openPublicRooms?.map((item: { room: string }) => (
-                      <RoomName key={crypto.randomUUID()}>{item.room}</RoomName>
+                      <RoomName key={uuidv4()}>{item.room}</RoomName>
                     ))}
                   </RoomList>
                 ) : (
