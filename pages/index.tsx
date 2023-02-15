@@ -10,6 +10,9 @@ import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData } from '@/api';
 
+import LandingPage from '@/components/detail/LandingPage';
+import SearchPlace from '@/components/detail/SearchPlace';
+
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
@@ -64,13 +67,14 @@ export default function Main() {
         ) : (
           <LoginButton onClick={closeModalButton}>로그인</LoginButton>
         )}
+
+        <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
       </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
           <div>children</div>
         </Modal>
       )}
-
       <input />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
         <Categorys>지역</Categorys>
@@ -80,6 +84,7 @@ export default function Main() {
         <Categorys onClick={onClickToggleModal}>게시물 작성</Categorys>
       </div>
       <div></div>
+      <SearchPlace />
       <div>
         <ImageBox>
           <Image
@@ -146,6 +151,7 @@ export default function Main() {
             )}
           </GridBox>
         </div>
+
         {chatToggle ? <Chat /> : null}
         <ChatToggleBtn onClick={onClickChatToggle}>
           {chatToggle ? '닫기' : '열기'}
