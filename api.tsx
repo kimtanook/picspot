@@ -4,11 +4,12 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  limit,
+  increment,
   orderBy,
   query,
-  startAfter,
   updateDoc,
+  limit,
+  startAfter,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -117,3 +118,16 @@ export const addComment = async (item: any) => {
 export const deleteComment = async (item: any) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
+
+export const postCounter: any = async (item: any) => {
+  // console.log('item', item);
+  await updateDoc(doc(dbService, 'post', item), {
+    clickCounter: increment(1),
+  });
+};
+
+// export const postCounter: any = (data: any) => {
+//   updateDoc(doc(dbService, 'post', data.id), {
+//     clickCounter: increment(1),
+//   });
+// };

@@ -2,7 +2,7 @@ import { getDatas, deleteData, updataData } from '@/api';
 import PostList from '@/components/mypage/PostList';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
-import { storageService } from '@/firebase';
+import { authService, storageService } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -62,14 +62,13 @@ export default function Mypage() {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        // setEditImgUrl(url);
         //? 동기적으로 데이터 변경하기
         response = url;
         editState = { ...editState, imgUrl: response };
 
         //? 데이터 추가하는 트리거 실행하기
         onUpdataData(
-          { ...data, url: response },
+          { ...data, imgUrl: response },
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
