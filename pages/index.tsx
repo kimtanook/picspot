@@ -15,6 +15,7 @@ import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import LandingPage from '@/components/detail/LandingPage';
 import SearchPlace from '@/components/detail/SearchPlace';
+import Link from 'next/link';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -86,8 +87,10 @@ export default function Main() {
         ) : (
           <LoginButton onClick={closeModalButton}>로그인</LoginButton>
         )}
-
-        <button onClick={() => setCloseModal(!closeModal)}>로그인</button>
+        {/* 마이페이지 버튼 */}
+        <Link href={'/mypage'}>
+          <MypageButton hidden={!currentUser}>마이페이지</MypageButton>
+        </Link>
       </div>
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>
@@ -174,6 +177,7 @@ export default function Main() {
   );
 }
 const LoginButton = styled.button``;
+const MypageButton = styled.button``;
 
 const Categorys = styled.button`
   background-color: tomato;

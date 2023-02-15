@@ -3,6 +3,7 @@ import PostList from '@/components/mypage/PostList';
 import Seo from '@/components/Seo';
 import { storageService } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
@@ -93,7 +94,7 @@ export default function Mypage() {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         console.log('url: ', url);
-        
+
         response = url;
 
         onUpdataData(
@@ -108,7 +109,6 @@ export default function Mypage() {
             },
           }
         );
-
       });
     });
   };
@@ -119,8 +119,12 @@ export default function Mypage() {
   return (
     <div>
       <Seo title="My" />
-      <h1>마이페이지임</h1>
-
+      <h1>마이페이지입니다</h1>
+      <div>
+        <Link href={'/'}>
+          <button>메인페이지로 돌아가기</button>
+        </Link>
+      </div>
       <PostList
         editState={editState}
         data={data}
