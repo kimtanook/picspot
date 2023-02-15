@@ -133,7 +133,9 @@ export default function Main() {
         )}
         <Categories>지역</Categories>
         <Categories>팔로우</Categories>
-        <Categories onClick={onClickToggleModal}>게시물 작성</Categories>
+        <PostFormButton onClick={onClickToggleModal}>
+          게시물 작성
+        </PostFormButton>
       </div>
       <div></div>
       {/* <SearchPlace /> */}
@@ -214,6 +216,11 @@ const LoginButton = styled.button``;
 const MypageButton = styled.button``;
 
 const Categories = styled.select`
+  background-color: tomato;
+  width: 100px;
+  height: 40px;
+`;
+const PostFormButton = styled.button`
   background-color: tomato;
   width: 100px;
   height: 40px;
