@@ -16,6 +16,11 @@ import { dbService } from './firebase';
 // startAt() 또는 startAfter()메서드를 사용하여 쿼리의 시작점을 정의합니다. startAt()메서드는 시작점을 포함하고, startAfter() 메서드는 시작점을 제외합니다.
 //예를 들어 쿼리에 startAt(A)을 사용하면 전체 알파벳이 반환됩니다. startAfter(A)를 대신 사용하면. B-Z가 반환됩니다.
 let lastVisible: any = undefined;
+export const visibleReset = () => {
+  // 리셋을 해주지 않으면 새로고침 전까지 lastVisible이 querySnapshot.docs.length로 유지됨
+  // 그로 인해, 페이지 이동 후 돌아오면 다음 페이지부터 보여주므로 기존 데이터 날아감.
+  lastVisible = undefined;
+};
 export const getInfiniteData = async () => {
   const getData: any = [];
   let q;
@@ -25,14 +30,14 @@ export const getInfiniteData = async () => {
     q = query(
       collection(dbService, 'post'),
       orderBy('createdAt', 'desc'),
-      limit(8),
+      limit(4),
       startAfter(lastVisible)
     );
   } else {
     q = query(
       collection(dbService, 'post'),
       orderBy('createdAt', 'desc'),
-      limit(16)
+      limit(8)
     );
   }
 
@@ -46,7 +51,6 @@ export const getInfiniteData = async () => {
     }
   });
 
-  console.log('데이터를 불러왔습니다.');
   return getData;
 };
 
