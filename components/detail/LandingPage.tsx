@@ -7,9 +7,15 @@ declare global {
   }
 }
 
-const LandingPage = ({ searchPlace }: any) => {
-  const [saveLatLng, setSaveLatLng] = useState([]);
-  const [saveAddress, setSaveAddress] = useState();
+const LandingPage = ({
+  searchPlace,
+  saveLatLng,
+  setSaveLatLng,
+  saveAddress,
+  setSaveAddress,
+}: any) => {
+  // const [saveLatLng, setSaveLatLng] = useState([]);
+  // const [saveAddress, setSaveAddress] = useState();
   useEffect(() => {
     const { kakao } = window;
 

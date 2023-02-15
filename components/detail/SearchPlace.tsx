@@ -2,10 +2,17 @@ import LandingPage from './LandingPage';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';
-const SearchPlace = () => {
-  const [inputText, setInputText] = useState('');
-  const [place, setPlace] = useState('');
 
+const SearchPlace = ({
+  searchCategory,
+  saveLatLng,
+  setSaveLatLng,
+  saveAddress,
+  setSaveAddress,
+  setPlace,
+  place,
+}: any) => {
+  const [inputText, setInputText] = useState('');
   const onchange = (e: any) => {
     setInputText(e.target.value);
   };
@@ -30,7 +37,13 @@ const SearchPlace = () => {
         </CustomButton>
       </StlyedForm>
 
-      <LandingPage searchPlace={place} />
+      <LandingPage
+        searchPlace={place ? place : searchCategory}
+        saveLatLng={saveLatLng}
+        setSaveLatLng={setSaveLatLng}
+        saveAddress={saveAddress}
+        setSaveAddress={setSaveAddress}
+      />
     </StyleContainer>
   );
 };
