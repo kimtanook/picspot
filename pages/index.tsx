@@ -8,7 +8,7 @@ import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
-import { getInfiniteData } from '@/api';
+import { getInfiniteData, visibleReset } from '@/api';
 import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
@@ -33,11 +33,6 @@ export default function Main() {
   const closeModalButton = () => {
     setCloseModal(!closeModal);
   };
-  useEffect(() => {
-    if (authService.currentUser) {
-      setCurrentUser(true);
-    }
-  }, [nowuser]);
 
   // 로그아웃
   const logOut = () => {
@@ -67,6 +62,13 @@ export default function Main() {
   useBottomScrollListener(() => {
     fetchNextPage();
   });
+
+  useEffect(() => {
+    visibleReset();
+    if (authService.currentUser) {
+      setCurrentUser(true);
+    }
+  }, [nowuser]);
 
   if (status === 'loading') {
     return <div>로딩중입니다.</div>;
