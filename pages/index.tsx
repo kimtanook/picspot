@@ -9,6 +9,7 @@ import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData } from '@/api';
+import Content from '@/components/main/Content';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -46,6 +47,7 @@ export default function Main() {
   useBottomScrollListener(() => {
     fetchNextPage();
   });
+
   if (status === 'loading') {
     return <div>로딩중입니다.</div>;
   }
@@ -134,13 +136,7 @@ export default function Main() {
             {data?.pages.map((data) =>
               data.map((item: any) => (
                 <ItemBox key={uuidv4()}>
-                  <div>{item.title}</div>
-                  <Image
-                    src={item.imgUrl}
-                    alt="image"
-                    height={100}
-                    width={100}
-                  />
+                  <Content item={item} />
                 </ItemBox>
               ))
             )}
