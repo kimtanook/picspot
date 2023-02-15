@@ -5,15 +5,13 @@ import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 
-//! postState 타입 해결
-//! imageUpload 타입 해결
 const PostForm = () => {
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [city, setCity] = useState('');
-  console.log('city: ', city);
+  // console.log('city: ', city);
   const [town, setTown] = useState('');
-  console.log('town: ', town);
+  // console.log('town: ', town);
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
 
@@ -58,6 +56,7 @@ const PostForm = () => {
     });
   };
 
+  //* 카테고리 클릭 시 스테이트 변경하는 함수
   const onClickTown = (e: any) => {
     setTown(e.target.innerText);
   };

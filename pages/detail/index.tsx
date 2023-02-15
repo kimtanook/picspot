@@ -8,17 +8,6 @@ import styled from 'styled-components';
 import DetailNoMap from '@/components/detail/DetailNoMap';
 
 export default function detail() {
-  // const { mutate: countMutate } = useMutation(postCounter, {
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries('datas');
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   countMutate();
-  // }, []);
-  // console.log(data);
-
   return (
     <div>
       <Seo title="Detail" />

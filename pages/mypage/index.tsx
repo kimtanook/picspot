@@ -6,8 +6,6 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-//! editState 타입 해결
-//! editImgUpload 타입 해결
 export default function Mypage() {
   const queryClient = useQueryClient();
 
@@ -81,36 +79,6 @@ export default function Mypage() {
     });
   };
 
-  //* 스토리지에 이미지 업로드하기
-  //* 스토리지에 있는 이미지 스냅샷해서 URL 가져오기
-  const onClickEditImgUpload = () => {
-    if (editImgUpload === null) return;
-
-    const imageRef = ref(storageService, `images/${editImgUpload.name}`);
-    uploadBytes(imageRef, editImgUpload).then((snapshot) => {
-      let response;
-      getDownloadURL(snapshot.ref).then((url) => {
-        console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
-
-        response = url;
-
-        onUpdataData(
-          { ...data, imgUrl: response },
-          {
-            onSuccess: () => {
-              console.log('수정 요청 성공');
-              queryClient.invalidateQueries('datas');
-            },
-            onError: () => {
-              console.log('수정 요청 실패');
-            },
-          }
-        );
-      });
-    });
-  };
-
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
@@ -123,7 +91,6 @@ export default function Mypage() {
         editState={editState}
         data={data}
         setEditImgUpload={setEditImgUpload}
-        onClickEditImgUpload={onClickEditImgUpload}
         setEditTitle={setEditTitle}
         onClickUpdateData={onClickUpdateData}
         onClickDeleteData={onClickDeleteData}

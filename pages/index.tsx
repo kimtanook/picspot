@@ -173,7 +173,7 @@ export default function Main() {
         <ChatToggleBtn onClick={onClickChatToggle}>
           {chatToggle ? '닫기' : '열기'}
         </ChatToggleBtn>
-        <SearchPlace />
+        {/* <SearchPlace /> */}
       </div>
     </>
   );

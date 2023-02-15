@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
+import SearchPlace from '../detail/SearchPlace';
 import PostForm from './PostForm';
 
 interface ModalDefaultType {
@@ -11,6 +12,7 @@ const Modal = ({ onClickToggleModal }: PropsWithChildren<ModalDefaultType>) => {
     <ModalContainer>
       <StDialogBox open>
         <PostForm />
+        <SearchPlace />
       </StDialogBox>
       <Backdrop
         onClick={(e: any) => {
@@ -33,7 +35,7 @@ const ModalContainer = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 `;
 
 const StDialogBox = styled.dialog`
