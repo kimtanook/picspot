@@ -6,13 +6,7 @@ import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import SearchPlace from '../detail/SearchPlace';
 
-interface ModalDefaultType {
-  onClickToggleModal: () => void;
-}
-
-const PostForm = ({
-  onClickToggleModal,
-}: PropsWithChildren<ModalDefaultType>) => {
+const PostForm = ({ setOpenModal }: any) => {
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
 
@@ -27,8 +21,10 @@ const PostForm = ({
   // console.log('town: ', town);
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
+
   console.log('주소테스트다임마', saveLatLng);
   console.log('주소테스트다임마', saveAddress);
+
   let postState: any = {
     title: title,
     imgUrl: '',
@@ -51,6 +47,17 @@ const PostForm = ({
       alert('이미지를 추가해주세요.');
       return;
     }
+
+    if (city === '' || town === '') {
+      alert('카테고리를 입력해주세요');
+      return;
+    }
+
+    if (saveLatLng === undefined || saveAddress === undefined) {
+      alert('지도에 마커를 찍어주세요');
+      return;
+    }
+
     const imageRef = ref(storageService, `images/${imageUpload.name}`);
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
@@ -64,7 +71,7 @@ const PostForm = ({
         onAddData(postState, {
           onSuccess: () => {
             console.log('추가 요청 성공');
-            onClickToggleModal(false);
+            setOpenModal(false);
           },
           onError: () => {
             console.log('추가 요청 실패');
