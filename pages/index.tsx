@@ -15,18 +15,20 @@ import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Search from '@/components/main/Search';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeModal, setCloseModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
+  const [searchOption, setSearchOption] = useState('userName');
+  const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
 
   const router = useRouter();
-
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
   };
@@ -48,12 +50,25 @@ export default function Main() {
     });
   };
 
+  const onChangeSearchOption = (event: ChangeEvent<HTMLSelectElement>) => {
+    visibleReset();
+    setSearchOption(event.target.value);
+  };
+  const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
+    visibleReset();
+    setSelectCity('');
+    setSelectTown('');
+    setSearchValue(event.target.value);
+  };
+
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
+    setSearchValue('');
     visibleReset();
     setSelectCity(event.target.value);
   };
   const onChangeSelectTown = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSearchValue('');
     visibleReset();
     setSelectTown(event.target.value);
   };
@@ -64,7 +79,7 @@ export default function Main() {
     fetchNextPage, // 다음 페이지를 불러오는 함수
     status, // loading, error, success 중 하나의 상태, string
   } = useInfiniteQuery(
-    ['infiniteData', selectTown, selectCity], // data의 이름
+    ['infiniteData', searchOption, searchValue, selectTown, selectCity], // data의 이름
     getInfiniteData, // fetch callback, 위 data를 불러올 함수
     {
       getNextPageParam: () => {
@@ -106,27 +121,31 @@ export default function Main() {
           <div>children</div>
         </Modal>
       )}
-      <input />
+      <Search
+        searchValue={searchValue}
+        onChangeSearchOption={onChangeSearchOption}
+        onChangeSearchValue={onChangeSearchValue}
+      />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
-        <Categories onChange={onChangeSelectCity}>
+        <Categories value={selectCity} onChange={onChangeSelectCity}>
           <option value="">지역전체</option>
           <option value="제주시">제주시</option>
           <option value="서귀포시">서귀포시</option>
         </Categories>
         {selectCity === '제주시' ? (
-          <Categories onChange={onChangeSelectTown}>
+          <Categories value={selectTown} onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="애월읍">애월읍</option>
             <option value="남원읍">남원읍</option>
           </Categories>
         ) : selectCity === '서귀포시' ? (
-          <Categories onChange={onChangeSelectTown}>
+          <Categories value={selectTown} onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="표선면">표선면</option>
             <option value="대정읍">대정읍</option>
           </Categories>
         ) : (
-          <Categories onChange={onChangeSelectTown}>
+          <Categories value={selectTown} onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="표선면">표선면</option>
             <option value="대정읍">대정읍</option>
