@@ -9,7 +9,6 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
-
 export default function Mypage() {
   const queryClient = useQueryClient();
 
@@ -103,7 +102,6 @@ export default function Mypage() {
           editState={editState}
           data={data}
           setEditImgUpload={setEditImgUpload}
-          // onClickEditImgUpload={onClickEditImgUpload}
           setEditTitle={setEditTitle}
           onClickUpdateData={onClickUpdateData}
           onClickDeleteData={onClickDeleteData}

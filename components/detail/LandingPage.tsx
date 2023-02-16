@@ -15,8 +15,6 @@ const LandingPage = ({
   setSaveAddress,
   setInfoDiv,
 }: any) => {
-  // const [saveLatLng, setSaveLatLng] = useState([]);
-  // const [saveAddress, setSaveAddress] = useState();
   useEffect(() => {
     const { kakao } = window;
 
