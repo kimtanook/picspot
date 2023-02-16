@@ -22,7 +22,7 @@ export default function Mypage() {
 
   //* useQuery 사용해서 데이터 불러오기
   const { data, isLoading, isError } = useQuery('datas', getDatas);
-  console.log('data: ', data);
+  // console.log('data: ', data);
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -60,7 +60,7 @@ export default function Mypage() {
     uploadBytes(imageRef, editImgUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
+        // console.log('url: ', url);
         //? 동기적으로 데이터 변경하기
         response = url;
         editState = { ...editState, imgUrl: response };
@@ -84,10 +84,22 @@ export default function Mypage() {
 
   //* useQuery 사용해서 following 데이터 불러오기
   const { data: followingData } = useQuery('followingData', getFollwing);
-  console.log('followingData: ', followingData);
+  // console.log('followingData: ', followingData);
+  // console.log('authService.currentUser.uid', authService?.currentUser?.uid);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+
+  //* 팔로잉한 사람 uid 뽑아오기
+  const newArr: any = [];
+
+  followingData
+    .filter((item: any) => {
+      return item.uid === authService?.currentUser?.uid;
+    })
+    .map((item: any) => newArr.push(item.follow));
+
+  console.log('newArr: ', newArr);
 
   return (
     <MyContainer>
@@ -101,10 +113,14 @@ export default function Mypage() {
       <MyProfileContainer>
         <Profile />
       </MyProfileContainer>
-      <h3>팔로잉 중인사람</h3>
-      {/* {followingData.filter((item: any) => {
-        return item.uid === authService?.currentUser?.uid;
-      })} */}
+      <h3>팔로잉 중인사람 uid</h3>
+      {followingData
+        .filter((item: any) => {
+          return item.uid === authService?.currentUser?.uid;
+        })
+        .map((item: any) => (
+          <div key={item.follow}>{item.follow}</div>
+        ))}
 
       <MyProfileListContainer>
         <PostList
