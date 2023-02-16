@@ -197,7 +197,7 @@ export default function Main() {
           <div>
             <GridBox>
               {data?.pages.map((data) =>
-                data.map((item: any) => (
+                data?.map((item: any) => (
                   <ItemBox key={uuidv4()}>
                     <Content item={item} />
                   </ItemBox>
