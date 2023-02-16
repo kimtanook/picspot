@@ -11,8 +11,7 @@ const Modal = ({ onClickToggleModal }: PropsWithChildren<ModalDefaultType>) => {
   return (
     <ModalContainer>
       <StDialogBox open>
-        <PostForm />
-        <SearchPlace />
+        <PostForm onClickToggleModal={onClickToggleModal} />
       </StDialogBox>
       <Backdrop
         onClick={(e: any) => {

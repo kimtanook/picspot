@@ -26,9 +26,17 @@ export default function Main() {
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
 
+  //* 게시물 작성 모달창
   const onClickToggleModal = () => {
-    setOpenModal(!isOpenModal);
+    if (!authService.currentUser) {
+      setCloseModal(!closeModal);
+      return;
+    }
+    if (authService.currentUser) {
+      setOpenModal(!isOpenModal);
+    }
   };
+
   const onClickChatToggle = () => {
     setChatToggle(!chatToggle);
   };

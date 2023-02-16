@@ -1,12 +1,18 @@
 import { authService, storageService } from '@/firebase';
-import { useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import SearchPlace from '../detail/SearchPlace';
 
-const PostForm = () => {
+interface ModalDefaultType {
+  onClickToggleModal: () => void;
+}
+
+const PostForm = ({
+  onClickToggleModal,
+}: PropsWithChildren<ModalDefaultType>) => {
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
 
@@ -58,6 +64,7 @@ const PostForm = () => {
         onAddData(postState, {
           onSuccess: () => {
             console.log('추가 요청 성공');
+            onClickToggleModal(false);
           },
           onError: () => {
             console.log('추가 요청 실패');
