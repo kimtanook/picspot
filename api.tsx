@@ -11,6 +11,10 @@ import {
   limit,
   startAfter,
   where,
+  setDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -77,7 +81,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
 };
 
 //* 스토어에서 데이터 불러오기
-export const getDatas = async () => {
+export const getData = async () => {
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
@@ -89,6 +93,19 @@ export const getDatas = async () => {
   return response;
 };
 
+//* 스토어에서 collection데이터 불러오기
+export const getCollection = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'collection'));
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  console.log('collection데이터를 불러왔습니다.');
+
+  return response;
+};
+
 //* 스토어에 데이터 추가하기
 export const addData: any = (data: any) => {
   console.log('data: ', data);
@@ -96,16 +113,33 @@ export const addData: any = (data: any) => {
   console.log('데이터가 추가되었습니다.');
 };
 
+//* 스토어에 collection 컬렉션 데이터 추가하기
+export const addCollectionData: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'collection', data.uid),
+    {
+      collector: arrayUnion(data.collector),
+    },
+    { merge: true }
+  );
+  console.log('게시물이 저장되었습니다');
+};
+//* 스토어에 collection 컬렉션 데이터 삭제하기
+export const deleteCollectionData: any = (data: any) => {
+  updateDoc(doc(dbService, 'collection', data.uid), {
+    collector: arrayRemove(data.collector),
+  }),
+    console.log('게시물이 저장되었습니다');
+};
+
 //* 스토어에 데이터 삭제하기
 export const deleteData: any = (docId: any) => {
-  console.log('docId: ', docId);
   deleteDoc(doc(dbService, 'post', docId));
   console.log('데이터가 삭제되었습니다.');
 };
 
 //* 스토어에 데이터 수정하기
 export const updataData: any = (data: any) => {
-  console.log('data: ', data);
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
@@ -127,7 +161,6 @@ export const getComment = async ({ queryKey }: any) => {
 
 // 댓글 추가
 export const addComment = async (item: any) => {
-  console.log('commentData : ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -141,7 +174,6 @@ export const deleteComment = async (item: any) => {
 };
 
 export const postCounter: any = async (item: any) => {
-  // console.log('item', item);
   await updateDoc(doc(dbService, 'post', item), {
     clickCounter: increment(1),
   });

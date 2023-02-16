@@ -35,7 +35,6 @@ const Auth = (props: Props): JSX.Element => {
     setAuthenticating(true);
     await signInWithEmailAndPassword(authService, email, password)
       .then((res) => {
-        console.log(res);
         customAlert('로그인에 성공하였습니다!');
         // Cookies.set('userID', 'qkrdbwls', { expires: 10000 });
         props.closeModal();

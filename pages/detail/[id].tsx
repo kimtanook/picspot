@@ -1,17 +1,38 @@
-import { getDatas, postCounter } from '@/api';
+import {
+  addCollectionData,
+  deleteCollectionData,
+  getCollection,
+  getData,
+  postCounter,
+} from '@/api';
 import Seo from '@/components/Seo';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
+import { authService } from '@/firebase';
 
 const Post = ({ id }: any) => {
+  //* collection 저장 state
+  const [isCollect, setIsCollect] = useState(true);
+
   //* useQuery 사용해서 데이터 불러오기
-  const { data, isLoading, isError } = useQuery('detailData', getDatas);
-  // console.log('data: ', data);
+  const {
+    data: detailData,
+    isLoading,
+    isError,
+  } = useQuery('detailData', getData);
+
+  //* useQuery 사용해서 collection 데이터 불러오기
+  const {
+    data: collectiondata,
+    isLoading: isLoadingCollection,
+    isError: isErrorCollection,
+  } = useQuery('detailData', getCollection);
+
   const queryClient = useQueryClient();
 
   //* mutation 사용해서 counting값 보내기
@@ -21,29 +42,62 @@ const Post = ({ id }: any) => {
     },
   });
 
+  //* mutation 사용해서 collector값 보내기
+  const { mutate: onAddCollection } = useMutation(addCollectionData, {
+    onSuccess: () => {
+      console.log('collection 저장 성공');
+    },
+    onError: () => {
+      console.log('collection 요청 실패');
+    },
+  });
+
+  //* mutation 사용해서 collector값 삭제하기
+  const { mutate: onDeleteCollection } = useMutation(deleteCollectionData, {
+    onSuccess: () => {
+      console.log('collection 삭제 성공');
+    },
+    onError: () => {
+      console.log('collection 요청 실패');
+    },
+  });
+
   //* 변화된 counting 값 인지
   useEffect(() => {
     countMutate(id);
-    console.log('id:', id);
   }, []);
-  console.log('data:', data);
+
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
-  //* split함수로 주소 뽑아오기
-  // const testmessage = '제주특별자치도 제주시 법환동';
-  // const arr = testmessage.split(' ');
-  // console.log(arr[1]);
+  //* collector필드의 value값
+  const collector = authService.currentUser?.uid;
+  let postId = id;
+  //* 만약에 맵을 돌렸을 때 내 이름이 array에 있다면 false 아니면 true
 
-  //* 뽑아온 주소를 카테고리로 만들고,
-  //* city : 정렬[0,1] (제주특별...,제주시 or 서귀포시)
-  //* town : 정렬[2] (법환동, 애월리 ... 등등)
+  //* collection 저장 기능입니다.
+  const onClickCollection = (item: any) => {
+    onAddCollection({ ...item, uid: postId, collector: collector });
+    setIsCollect(!isCollect);
+  };
 
-  //* input창을 만들어 줘야하나? ( 검색하고 있는 주소가 맞는지??)
+  //* collection 삭제 기능입니다.
+  const deleteCollection = (item: any) => {
+    onDeleteCollection({ ...item, uid: postId, collector: collector });
+    setIsCollect(!isCollect);
+  };
 
-  //* 카테고리 클릭시 맵 이동기능 하나
-  //* 맵 이동시 카테고리 생성 기능? 하나
-  //* 카테고리 만들어 놓고 그 값 클릭시 맵 이동 (하위 카테고리는 town만 해당)
+  // //* collection에 담았는지 안담았는지 확인하는 함수
+  // const Lim = collectiondata.map((e: any) => e);
+  // const yim = Lim.filter((e: any) => e.id === id);
+  // const jaeyoung = yim.map((e: any) => e.collector);
+  // const young = jaeyoung.map((e: any) => {
+  //   e.filter((collectors: any) => {
+  //     if (collectors === collector) {
+  //       return 'dd';
+  //     }
+  //   });
+  // });
 
   return (
     <>
@@ -63,7 +117,18 @@ const Post = ({ id }: any) => {
           level={6} // 지도의 확대 레벨
         />
       </div>
-      {data
+      {isCollect ? (
+        <div>
+          <button onClick={onClickCollection}> 담아요 </button>
+          <div>이 게시물을 내 collection에 담겠습니까?</div>
+        </div>
+      ) : (
+        <div>
+          <button onClick={deleteCollection}> 빼요 </button>
+          <div>이 게시물을 내 collection에서 빼겠습니까?</div>
+        </div>
+      )}
+      {detailData
         .filter((item: any) => {
           return item.id === id;
         })

@@ -1,10 +1,11 @@
 import { authService, storageService } from '@/firebase';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import SearchPlace from '../detail/SearchPlace';
+import styled from 'styled-components';
 
 //! postState 타입 해결
 //! imageUpload 타입 해결
@@ -15,16 +16,15 @@ const PostForm = () => {
   //! category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
 
+  const fileInput: any = useRef();
+
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [city, setCity] = useState('');
-  console.log('city: ', city);
   const [town, setTown] = useState('');
-  console.log('town: ', town);
   const [title, setTitle] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
-  console.log('주소테스트다임마', saveLatLng);
-  console.log('주소테스트다임마', saveAddress);
+
   let postState: any = {
     title: title,
     imgUrl: '',
@@ -41,6 +41,27 @@ const PostForm = () => {
   //* useMutation 사용해서 데이터 추가하기
   const { mutate: onAddData } = useMutation(addData);
 
+  //* image 업로드 후 화면 표시 함수
+  const handleImageChange = (e: any) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      }: any = finishedEvent;
+      setImageUpload(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+  //* 이미지 다시 설정 = 취소
+  const onClearAttachment = () => {
+    setImageUpload(null);
+    fileInput.current.value = null;
+  };
+
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
     if (imageUpload === null) {
@@ -51,7 +72,6 @@ const PostForm = () => {
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
         const response = url;
         postState = {
           ...postState,
@@ -79,19 +99,39 @@ const PostForm = () => {
 
   return (
     <>
-      <input
-        type="file"
-        accept="image/png, image/jpeg, image/jpg"
-        onChange={(event: any) => {
-          setImageUpload(event.target.files[0]);
-        }}
-      />
-      <input
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-      />
-      <button onClick={onClickAddData}>추가</button>
+      <div style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}>
+        <Img>
+          <input
+            type="file"
+            accept="image/png, image/jpeg, image/jpg"
+            // onChange={(event: any) => {
+            //   setImageUpload(event.target.files[0]);
+            // }}
+            onChange={handleImageChange}
+            src={imageUpload}
+            ref={fileInput}
+            id="file"
+            style={{
+              height: '100%',
+              width: '100%',
+              display: 'none',
+            }}
+          />
+          {imageUpload && <SpotImg src={imageUpload} />}
+        </Img>
+        <div
+          style={{
+            alignSelf: 'flex-end',
+          }}
+        >
+          <input
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+          <button onClick={onClickAddData}>추가</button>
+        </div>
+      </div>
 
       <div>
         <h3>여행갈 지역을 골라주세요</h3>
@@ -166,3 +206,19 @@ const PostForm = () => {
 };
 
 export default PostForm;
+
+const Img = styled.label`
+  height: 100px;
+  width: 100px;
+  background-image: url(/plusimage.png);
+  background-position: center;
+  cursor: pointer;
+  margin: 10px;
+`;
+
+const SpotImg = styled.img`
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  object-fit: contain;
+`;

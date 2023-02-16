@@ -11,7 +11,6 @@ function CommentItem({
   item: commentItemType;
   postId: string | string[] | undefined;
 }) {
-  console.log('authService.currentUser  : ', authService.currentUser);
   const queryClient = useQueryClient();
   const { isLoading, mutate } = useMutation(deleteComment);
 

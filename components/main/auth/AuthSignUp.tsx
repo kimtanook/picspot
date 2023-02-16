@@ -60,7 +60,6 @@ const AuthSignUp = (props: Props) => {
         alert('등록할 수 없습니다. 다시 시도해주세요');
       });
   };
-  console.log(nickname);
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
       <SignUpTextDiv>

@@ -1,4 +1,4 @@
-import { getDatas, deleteData, updataData } from '@/api';
+import { getData, deleteData, updataData } from '@/api';
 import PostList from '@/components/mypage/PostList';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
@@ -22,8 +22,7 @@ export default function Mypage() {
   };
 
   //* useQuery 사용해서 데이터 불러오기
-  const { data, isLoading, isError } = useQuery('datas', getDatas);
-  console.log('data: ', data);
+  const { data, isLoading, isError } = useQuery('data', getData);
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -34,7 +33,7 @@ export default function Mypage() {
     onDeleteData(docId, {
       onSuccess: () => {
         console.log('삭제 요청 성공');
-        queryClient.invalidateQueries('datas');
+        queryClient.invalidateQueries('data');
       },
       onError: () => {
         console.log('삭제 요청 실패');
@@ -61,7 +60,6 @@ export default function Mypage() {
     uploadBytes(imageRef, editImgUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
         //? 동기적으로 데이터 변경하기
         response = url;
         editState = { ...editState, imgUrl: response };
@@ -72,7 +70,7 @@ export default function Mypage() {
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
-              queryClient.invalidateQueries('datas');
+              queryClient.invalidateQueries('data');
             },
             onError: () => {
               console.log('수정 요청 실패');
@@ -85,6 +83,7 @@ export default function Mypage() {
 
   //* 스토리지에 이미지 업로드하기
   //* 스토리지에 있는 이미지 스냅샷해서 URL 가져오기
+
   const onClickEditImgUpload = () => {
     if (editImgUpload === null) return;
 
@@ -93,7 +92,6 @@ export default function Mypage() {
       let response;
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
 
         response = url;
 
@@ -102,7 +100,7 @@ export default function Mypage() {
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
-              queryClient.invalidateQueries('datas');
+              queryClient.invalidateQueries('data');
             },
             onError: () => {
               console.log('수정 요청 실패');
