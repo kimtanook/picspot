@@ -10,6 +10,7 @@ import {
   updateDoc,
   limit,
   startAfter,
+  where,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -22,7 +23,9 @@ export const visibleReset = () => {
   // 그로 인해, 페이지 이동 후 돌아오면 다음 페이지부터 보여주므로 기존 데이터 날아감.
   lastVisible = undefined;
 };
-export const getInfiniteData = async () => {
+export const getInfiniteData = async ({ queryKey }: any) => {
+  const [_, town, city] = queryKey;
+
   const getData: any = [];
   let q;
   if (lastVisible === -1) {
@@ -35,11 +38,29 @@ export const getInfiniteData = async () => {
       startAfter(lastVisible)
     );
   } else {
-    q = query(
-      collection(dbService, 'post'),
-      orderBy('createdAt', 'desc'),
-      limit(8)
-    );
+    if (town) {
+      q = query(
+        collection(dbService, 'post'),
+        where('town', '==', `${town}`),
+        orderBy('createdAt', 'desc'),
+        limit(8)
+      );
+    } else {
+      if (city) {
+        q = query(
+          collection(dbService, 'post'),
+          where('city', '==', `${city}`),
+          orderBy('createdAt', 'desc'),
+          limit(8)
+        );
+      } else {
+        q = query(
+          collection(dbService, 'post'),
+          orderBy('createdAt', 'desc'),
+          limit(8)
+        );
+      }
+    }
   }
 
   const querySnapshot = await getDocs(q);
