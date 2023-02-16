@@ -14,6 +14,7 @@ import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -23,6 +24,8 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
+
+  const router = useRouter();
 
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
@@ -75,7 +78,8 @@ export default function Main() {
   });
 
   useEffect(() => {
-    visibleReset();
+    // routeChangeComplete = 주소가 완전히 변경되면 실행되는 이벤트
+    router.events.on('routeChangeComplete', visibleReset);
     if (authService.currentUser) {
       setCurrentUser(true);
     }
