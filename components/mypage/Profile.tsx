@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
 import { authService, storageService } from '@/firebase';
 import { updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
@@ -57,31 +57,30 @@ const Profile = () => {
 
   const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNicknameEdit(e.target.value);
-
-    return (
-      <ProfileContainer>
-        <ProfilePhotoContainer>
-          <>
-            <ProfilePhotoBtn>
-              <ProfilePhotoLabel htmlFor="changePhoto">
-                파일선택
-              </ProfilePhotoLabel>
-            </ProfilePhotoBtn>
-            <ProfilePhotoInput
-              id="changePhoto"
-              type="file"
-              placeholder="파일선택"
-              onChange={saveImgFile}
-            />
-          </>
-        </ProfilePhotoContainer>
-        <ProfileNicknameContainer></ProfileNicknameContainer>
-        <ProfileEditContainer>
-          <ProfileEditBtn></ProfileEditBtn>
-        </ProfileEditContainer>
-      </ProfileContainer>
-    );
   };
+  return (
+    <ProfileContainer>
+      <ProfilePhotoContainer>
+        <>
+          <ProfilePhotoBtn>
+            <ProfilePhotoLabel htmlFor="changePhoto">
+              파일선택
+            </ProfilePhotoLabel>
+          </ProfilePhotoBtn>
+          <ProfilePhotoInput
+            id="changePhoto"
+            type="file"
+            placeholder="파일선택"
+            onChange={saveImgFile}
+          />
+        </>
+      </ProfilePhotoContainer>
+      <ProfileNicknameContainer></ProfileNicknameContainer>
+      <ProfileEditContainer>
+        <ProfileEditBtn></ProfileEditBtn>
+      </ProfileEditContainer>
+    </ProfileContainer>
+  );
 };
 export default Profile;
 
