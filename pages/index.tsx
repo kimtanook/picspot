@@ -29,7 +29,7 @@ export default function Main() {
   //* 게시물 작성 모달창
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
-      setCloseModal(!closeModal);
+      setOpenModal(!closeModal);
       return;
     }
     if (authService.currentUser) {
@@ -107,7 +107,7 @@ export default function Main() {
         </Link>
       </div>
       {isOpenModal && (
-        <Modal onClickToggleModal={onClickToggleModal}>
+        <Modal onClickToggleModal={onClickToggleModal} setOpenModal={setOpenModal}>
           <div>children</div>
         </Modal>
       )}

@@ -3,15 +3,11 @@ import styled from 'styled-components';
 import SearchPlace from '../detail/SearchPlace';
 import PostForm from './PostForm';
 
-interface ModalDefaultType {
-  onClickToggleModal: () => void;
-}
-
-const Modal = ({ onClickToggleModal }: PropsWithChildren<ModalDefaultType>) => {
+const Modal = ({ onClickToggleModal, setOpenModal }: any) => {
   return (
     <ModalContainer>
       <StDialogBox open>
-        <PostForm onClickToggleModal={onClickToggleModal} />
+        <PostForm setOpenModal={setOpenModal} />
       </StDialogBox>
       <Backdrop
         onClick={(e: any) => {
