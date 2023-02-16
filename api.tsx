@@ -207,7 +207,7 @@ export const addFollowing: any = (data: any) => {
 export const deleteFollwing: any = (data: any) => {
   // console.log('data: ', data);
   updateDoc(doc(dbService, 'following', data.uid), {
-    follow: arrayRemove(data.id),
+    follow: arrayRemove(data.creator),
   });
   console.log('팔로잉이 삭제되었습니다');
 };
