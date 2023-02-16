@@ -1,4 +1,4 @@
-import { getDatas, deleteData, updataData } from '@/api';
+import { getDatas, deleteData, updataData, getFollwing } from '@/api';
 import PostList from '@/components/mypage/PostList';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
@@ -82,6 +82,10 @@ export default function Mypage() {
     });
   };
 
+  //* useQuery 사용해서 following 데이터 불러오기
+  const { data: followingData } = useQuery('followingData', getFollwing);
+  console.log('followingData: ', followingData);
+
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
@@ -97,6 +101,11 @@ export default function Mypage() {
       <MyProfileContainer>
         <Profile />
       </MyProfileContainer>
+      <h3>팔로잉 중인사람</h3>
+      {/* {followingData.filter((item: any) => {
+        return item.uid === authService?.currentUser?.uid;
+      })} */}
+
       <MyProfileListContainer>
         <PostList
           editState={editState}

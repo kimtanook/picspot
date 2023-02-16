@@ -158,7 +158,7 @@ export const addFollowing: any = (data: any) => {
   setDoc(
     doc(dbService, 'following', data.uid),
     {
-      follow: arrayUnion(data.id),
+      follow: arrayUnion(data.creator),
     },
     { merge: true }
   );
