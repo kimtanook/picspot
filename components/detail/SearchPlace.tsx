@@ -1,4 +1,4 @@
-import LandingPage from './LandingPage';
+import MapLandingPage from './MapLandingPage';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';
@@ -30,7 +30,7 @@ const SearchPlace = () => {
         </CustomButton>
       </StlyedForm>
 
-      <LandingPage searchPlace={place} />
+      <MapLandingPage searchPlace={place} />
     </StyleContainer>
   );
 };

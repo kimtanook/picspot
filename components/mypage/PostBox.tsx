@@ -13,6 +13,8 @@ const PostBox = ({
   return (
     <StPostBox key={item.id}>
       <h3>{item.title}</h3>
+      <h3>{item.city}</h3>
+      <div>{item.address}</div>
       <input
         type="file"
         accept="image/png, image/jpeg, image/jpg"
