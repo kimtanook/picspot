@@ -4,7 +4,8 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
-import SearchPlace from '../detail/SearchPlace';
+
+import MapLandingPage from '../detail/MapLandingPage';
 
 //! postState 타입 해결
 //! imageUpload 타입 해결
@@ -152,7 +153,7 @@ const PostForm = () => {
         <button onClick={onClickTown}>우도</button>
         <button onClick={onClickTown}>마라도</button>
       </div>
-      <SearchPlace
+      <MapLandingPage
         searchCategory={searchCategory}
         saveLatLng={saveLatLng}
         setSaveLatLng={setSaveLatLng}
