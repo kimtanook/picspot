@@ -3,7 +3,7 @@ import Seo from '@/components/Seo';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { Map } from 'react-kakao-maps-sdk';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
@@ -48,34 +48,40 @@ const Post = ({ id }: any) => {
   return (
     <>
       <Seo title="Detail" />
-      <div>
-        <Map // 지도를 표시할 Container
-          center={{
-            // 지도의 중심좌표
-            lat: 33.450701,
-            lng: 126.570667,
-          }}
-          style={{
-            // 지도의 크기
-            width: '100%',
-            height: '450px',
-          }}
-          level={6} // 지도의 확대 레벨
-        />
-      </div>
+      <div></div>
       {data
         .filter((item: any) => {
           return item.id === id;
         })
-        .map((item: any) => (
-          <StDetailBox key={item.id}>
-            <h1>{item.title}</h1>
-            <h3>{item.city}</h3>
-            <h3>{item.town}</h3>
-            <h3>{item.clickCounter}</h3>
-            <Image src={item.imgUrl} alt="image" height={100} width={100} />
-          </StDetailBox>
-        ))}
+        .map((item: any) => {
+          console.log('item입니다', item);
+          return (
+            <StDetailBox key={item.id}>
+              <Map // 지도를 표시할 Container
+                center={{
+                  // 지도의 중심좌표
+                  lat: item.lat,
+                  lng: item.long,
+                }}
+                style={{
+                  // 지도의 크기
+                  width: '100%',
+                  height: '450px',
+                }}
+                level={6} // 지도의 확대 레벨
+              >
+                <MapMarker
+                  position={{ lat: item.lat, lng: item.long }}
+                ></MapMarker>
+              </Map>
+              <h1>{item.title}</h1>
+              <h3>{item.city}</h3>
+              <h3>{item.town}</h3>
+              <h3>{item.clickCounter}</h3>
+              <Image src={item.imgUrl} alt="image" height={100} width={100} />
+            </StDetailBox>
+          );
+        })}
       <CommentList postId={id} />
     </>
   );
