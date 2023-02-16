@@ -14,22 +14,21 @@ import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import Search from '@/components/main/Search';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeModal, setCloseModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
+  const [searchOption, setSearchOption] = useState('userName');
+  const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
 
-  // console.log(
-  //   'authService?.currentUser?.displayName: ',
-  //   authService?.currentUser?.displayName
-  // );
-
-  //* 게시물 작성 모달창
+  const router = useRouter();
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
       setCloseModal(!closeModal);
@@ -57,12 +56,29 @@ export default function Main() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
+  // [검색] 유저가 검색할 때 고르는 옵션(카테고리) (닉네임 또는 제목)
+  const onChangeSearchOption = (event: ChangeEvent<HTMLSelectElement>) => {
+    visibleReset();
+    setSearchOption(event.target.value);
+  };
+  // [검색] 유저가 옵션(카테고리)을 고른 후 입력하는 input
+  const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
+    visibleReset();
+    setSelectCity('');
+    setSelectTown('');
+    setSearchValue(event.target.value);
+  };
 
+  // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectTown('');
+    setSearchValue('');
     visibleReset();
     setSelectCity(event.target.value);
   };
+  // [카테고리] 타운 카테고리 onChange
   const onChangeSelectTown = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSearchValue('');
     visibleReset();
     setSelectTown(event.target.value);
   };
@@ -73,7 +89,7 @@ export default function Main() {
     fetchNextPage, // 다음 페이지를 불러오는 함수
     status, // loading, error, success 중 하나의 상태, string
   } = useInfiniteQuery(
-    ['infiniteData', selectTown, selectCity], // data의 이름
+    ['infiniteData', searchOption, searchValue, selectTown, selectCity], // data의 이름
     getInfiniteData, // fetch callback, 위 data를 불러올 함수
     {
       getNextPageParam: () => {
@@ -87,7 +103,8 @@ export default function Main() {
   });
 
   useEffect(() => {
-    visibleReset();
+    // routeChangeComplete = 주소가 완전히 변경되면 실행되는 이벤트
+    router.events.on('routeChangeComplete', visibleReset);
     if (authService.currentUser) {
       setCurrentUser(true);
     }
@@ -117,27 +134,31 @@ export default function Main() {
           <div>children</div>
         </Modal>
       )}
-      <input />
+      <Search
+        searchValue={searchValue}
+        onChangeSearchOption={onChangeSearchOption}
+        onChangeSearchValue={onChangeSearchValue}
+      />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
-        <Categories onChange={onChangeSelectCity}>
+        <Categories value={selectCity} onChange={onChangeSelectCity}>
           <option value="">지역전체</option>
           <option value="제주시">제주시</option>
           <option value="서귀포시">서귀포시</option>
         </Categories>
         {selectCity === '제주시' ? (
-          <Categories onChange={onChangeSelectTown}>
+          <Categories value={selectTown} onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="애월읍">애월읍</option>
             <option value="남원읍">남원읍</option>
           </Categories>
         ) : selectCity === '서귀포시' ? (
-          <Categories onChange={onChangeSelectTown}>
+          <Categories value={selectTown} onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="표선면">표선면</option>
             <option value="대정읍">대정읍</option>
           </Categories>
         ) : (
-          <Categories onChange={onChangeSelectTown}>
+          <Categories value={selectTown} onChange={onChangeSelectTown}>
             <option value="">읍면동전체</option>
             <option value="표선면">표선면</option>
             <option value="대정읍">대정읍</option>
@@ -151,8 +172,6 @@ export default function Main() {
           게시물 작성
         </PostFormButton>
       </div>
-      <div></div>
-      {/* <SearchPlace /> */}
       <div>
         <ImageBox>
           <Image
@@ -204,11 +223,13 @@ export default function Main() {
         {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
         {status === 'loading' ? (
           <div>로딩중입니다.</div>
+        ) : status === 'error' ? (
+          <div>데이터를 불러오지 못했습니다.</div>
         ) : (
           <div>
             <GridBox>
               {data?.pages.map((data) =>
-                data.map((item: any) => (
+                data?.map((item: any) => (
                   <ItemBox key={uuidv4()}>
                     <Content item={item} />
                   </ItemBox>

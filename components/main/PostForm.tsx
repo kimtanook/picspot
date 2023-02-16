@@ -4,11 +4,12 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, addUser } from '@/api';
 import Dropdown from '../mypage/Dropdown';
-import SearchPlace from '../detail/SearchPlace';
 import styled from 'styled-components';
+import MapLandingPage from '../detail/MapLandingPage';
 
 const PostForm = ({ setOpenModal }: any) => {
   const queryClient = useQueryClient();
+
 
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
@@ -211,7 +212,7 @@ const PostForm = ({ setOpenModal }: any) => {
         <button onClick={onClickTown}>우도</button>
         <button onClick={onClickTown}>마라도</button>
       </div>
-      <SearchPlace
+      <MapLandingPage
         searchCategory={searchCategory}
         saveLatLng={saveLatLng}
         setSaveLatLng={setSaveLatLng}
