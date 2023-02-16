@@ -1,13 +1,15 @@
 import { authService, storageService } from '@/firebase';
-import { PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import SearchPlace from '../detail/SearchPlace';
 import styled from 'styled-components';
 
 const PostForm = ({ setOpenModal }: any) => {
+  const queryClient = useQueryClient();
+
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
 
@@ -85,6 +87,7 @@ const PostForm = ({ setOpenModal }: any) => {
           onSuccess: () => {
             console.log('추가 요청 성공');
             setOpenModal(false);
+            queryClient.invalidateQueries('infiniteData');
           },
           onError: () => {
             console.log('추가 요청 실패');
