@@ -23,7 +23,7 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
-  console.log('selectTown : ', selectTown);
+
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
   };
@@ -187,6 +187,8 @@ export default function Main() {
         {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
         {status === 'loading' ? (
           <div>로딩중입니다.</div>
+        ) : status === 'error' ? (
+          <div>데이터를 불러오지 못했습니다.</div>
         ) : (
           <div>
             <GridBox>
