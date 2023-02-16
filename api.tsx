@@ -11,6 +11,10 @@ import {
   limit,
   startAfter,
   where,
+  arrayUnion,
+  arrayRemove,
+  setDoc,
+  getDoc,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -140,6 +144,7 @@ export const deleteComment = async (item: any) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
 
+//* 조회수 증가하기
 export const postCounter: any = async (item: any) => {
   // console.log('item', item);
   await updateDoc(doc(dbService, 'post', item), {
@@ -147,8 +152,37 @@ export const postCounter: any = async (item: any) => {
   });
 };
 
-// export const postCounter: any = (data: any) => {
-//   updateDoc(doc(dbService, 'post', data.id), {
-//     clickCounter: increment(1),
-//   });
-// };
+//* 팔로잉 추가하기
+export const addFollowing: any = (data: any) => {
+  console.log('data: ', data);
+  setDoc(
+    doc(dbService, 'following', data.uid),
+    {
+      follow: arrayUnion(data.id),
+    },
+    { merge: true }
+  );
+  console.log('팔로잉이 추가되었습니다');
+};
+
+//* 팔로잉 삭제하기
+export const deleteFollwing: any = (data: any) => {
+  console.log('data: ', data);
+  updateDoc(doc(dbService, 'following', data.uid), {
+    follow: arrayRemove(data.id),
+  });
+  console.log('팔로잉이 삭제되었습니다');
+};
+
+//* 팔로잉 가져오기
+export const getFollwing = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'following'));
+  querySnapshot.forEach((doc) => {
+    response.push({ uid: doc.id, ...doc.data() });
+  });
+  console.log('데이터를 불러왔습니다.');
+
+  return response;
+};

@@ -35,9 +35,9 @@ const CommentList = ({ postId }: postId) => {
     );
     setComment('');
   };
-  console.log('postId : ', postId);
-  console.log('comment : ', comment);
-  console.log('authService.currentUser : ', authService.currentUser);
+  // console.log('postId : ', postId);
+  // console.log('comment : ', comment);
+  // console.log('authService.currentUser : ', authService.currentUser);
 
   if (isLoading) {
     return <div>로딩중입니다</div>;

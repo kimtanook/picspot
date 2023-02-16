@@ -51,7 +51,17 @@ const PostForm = ({ setOpenModal }: any) => {
       return;
     }
 
-    if (title === '' || content === '' || city === '' || town === '') {
+    if (title === '') {
+      alert('제목을 입력해주세요');
+      return;
+    }
+
+    if (content === '') {
+      alert('내용을 입력해주세요');
+      return;
+    }
+
+    if (city === '' || town === '') {
       alert('카테고리를 입력해주세요');
       return;
     }
