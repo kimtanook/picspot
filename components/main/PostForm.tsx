@@ -5,6 +5,7 @@ import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import SearchPlace from '../detail/SearchPlace';
+import styled from 'styled-components';
 
 const PostForm = ({ setOpenModal }: any) => {
   const [saveLatLng, setSaveLatLng]: any = useState([]);
@@ -20,6 +21,7 @@ const PostForm = ({ setOpenModal }: any) => {
   const [town, setTown] = useState('');
   // console.log('town: ', town);
   const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
 
   console.log('주소테스트다임마', saveLatLng);
@@ -27,6 +29,7 @@ const PostForm = ({ setOpenModal }: any) => {
 
   let postState: any = {
     title: title,
+    content: content,
     imgUrl: '',
     createdAt: Date.now(),
     creator: authService.currentUser?.uid,
@@ -48,7 +51,7 @@ const PostForm = ({ setOpenModal }: any) => {
       return;
     }
 
-    if (city === '' || town === '') {
+    if (title === '' || content === '' || city === '' || town === '') {
       alert('카테고리를 입력해주세요');
       return;
     }
@@ -91,19 +94,32 @@ const PostForm = ({ setOpenModal }: any) => {
 
   return (
     <>
-      <input
-        type="file"
-        accept="image/png, image/jpeg, image/jpg"
-        onChange={(event: any) => {
-          setImageUpload(event.target.files[0]);
-        }}
-      />
-      <input
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-      />
-      <button onClick={onClickAddData}>추가</button>
+      <StAddButton onClick={onClickAddData}>추가</StAddButton>
+      <p>
+        <input
+          type="file"
+          accept="image/png, image/jpeg, image/jpg"
+          onChange={(event: any) => {
+            setImageUpload(event.target.files[0]);
+          }}
+        />
+      </p>
+      <p>
+        제목:
+        <input
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
+      </p>
+      <p>
+        내용:
+        <input
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+        />
+      </p>
 
       <div>
         <h3>여행갈 지역을 골라주세요</h3>
@@ -178,3 +194,7 @@ const PostForm = ({ setOpenModal }: any) => {
 };
 
 export default PostForm;
+
+const StAddButton = styled.button`
+  color: red;
+`;

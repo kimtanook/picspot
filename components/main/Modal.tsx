@@ -13,8 +13,8 @@ const Modal = ({ onClickToggleModal, setOpenModal }: any) => {
         onClick={(e: any) => {
           e.preventDefault();
 
-          if (onClickToggleModal) {
-            onClickToggleModal();
+          if (setOpenModal) {
+            setOpenModal(!setOpenModal);
           }
         }}
       ></Backdrop>
@@ -35,7 +35,7 @@ const ModalContainer = styled.div`
 
 const StDialogBox = styled.dialog`
   width: 600px;
-  height: 400px;
+  /* height: 400px; */
   flex-direction: column;
   align-items: center;
 
