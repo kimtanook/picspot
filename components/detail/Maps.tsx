@@ -50,7 +50,7 @@ const Maps = ({
           }
           map.setBounds(bounds);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          alert(' 제주도 지명을 검색해주세요.');
+          alert(' 제주도 지역명을 검색해주세요.');
         } else if (status === kakao.maps.services.Status.ERROR) {
           alert('에러입니다.');
         }
