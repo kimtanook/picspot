@@ -30,8 +30,15 @@ export default function Main() {
 
   const router = useRouter();
   const onClickToggleModal = () => {
-    setOpenModal(!isOpenModal);
+    if (!authService.currentUser) {
+      setCloseModal(!closeModal);
+      return;
+    }
+    if (authService.currentUser) {
+      setOpenModal(!isOpenModal);
+    }
   };
+
   const onClickChatToggle = () => {
     setChatToggle(!chatToggle);
   };
@@ -120,7 +127,10 @@ export default function Main() {
         </Link>
       </div>
       {isOpenModal && (
-        <Modal onClickToggleModal={onClickToggleModal}>
+        <Modal
+          onClickToggleModal={onClickToggleModal}
+          setOpenModal={setOpenModal}
+        >
           <div>children</div>
         </Modal>
       )}
@@ -233,6 +243,7 @@ export default function Main() {
         <ChatToggleBtn onClick={onClickChatToggle}>
           {chatToggle ? '닫기' : '열기'}
         </ChatToggleBtn>
+        {/* <SearchPlace /> */}
       </div>
     </>
   );

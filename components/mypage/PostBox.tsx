@@ -5,7 +5,6 @@ const PostBox = ({
   editState,
   item,
   setEditImgUpload,
-  onClickEditImgUpload,
   setEditTitle,
   onClickUpdateData,
   onClickDeleteData,

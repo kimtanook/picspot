@@ -1,23 +1,20 @@
 import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
+import SearchPlace from '../detail/SearchPlace';
 import PostForm from './PostForm';
 
-interface ModalDefaultType {
-  onClickToggleModal: () => void;
-}
-
-const Modal = ({ onClickToggleModal }: PropsWithChildren<ModalDefaultType>) => {
+const Modal = ({ onClickToggleModal, setOpenModal }: any) => {
   return (
     <ModalContainer>
       <StDialogBox open>
-        <PostForm />
+        <PostForm setOpenModal={setOpenModal} />
       </StDialogBox>
       <Backdrop
         onClick={(e: any) => {
           e.preventDefault();
 
-          if (onClickToggleModal) {
-            onClickToggleModal();
+          if (setOpenModal) {
+            setOpenModal(!setOpenModal);
           }
         }}
       ></Backdrop>
@@ -33,12 +30,12 @@ const ModalContainer = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 `;
 
 const StDialogBox = styled.dialog`
   width: 600px;
-  height: 400px;
+  /* height: 400px; */
   flex-direction: column;
   align-items: center;
 
