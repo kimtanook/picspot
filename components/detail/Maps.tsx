@@ -83,6 +83,7 @@ const Maps = ({
         );
       });
 
+      //----------------------------현재 지도 중심으로 상단에 주소 랜더링/----------------------------
       kakao.maps.event.addListener(map, 'idle', function () {
         searchAddrFromCoords(map.getCenter(), displayCenterInfo);
       });
