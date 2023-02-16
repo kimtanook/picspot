@@ -25,7 +25,7 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
-
+  console.log('selectTown : ', selectTown);
   const onClickToggleModal = () => {
     setOpenModal(!isOpenModal);
   };
@@ -48,6 +48,7 @@ export default function Main() {
   };
 
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectTown('');
     visibleReset();
     setSelectCity(event.target.value);
   };
