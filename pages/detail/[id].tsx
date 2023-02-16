@@ -7,13 +7,11 @@ import {
 } from '@/api';
 import Seo from '@/components/Seo';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
-import { authService } from '@/firebase';
 import FollowingButton from '@/components/detail/FollowingButton';
 
 const Post = ({ id }: any) => {

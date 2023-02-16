@@ -3,11 +3,9 @@ import { authService } from '@/firebase';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 
 const FollowingButton = ({ item }: any) => {
   const router = useRouter();
-  const { id } = router.query;
 
   //* mutation 사용해서 팔로잉 데이터 보내기
   const { mutate: follwingMutate } = useMutation(addFollowing, {
@@ -46,8 +44,8 @@ const FollowingButton = ({ item }: any) => {
 
   //* following 걸러내기
   // console.log('item: ', item);
-  console.log('data: ', data);
-  console.log('authService.currentUser.uid', authService?.currentUser?.uid);
+  // console.log('data: ', data);
+  // console.log('authService.currentUser.uid', authService?.currentUser?.uid);
 
   if (isLoading) return <h1>로딩중 입니다</h1>;
   if (isError) return <h1>통신이 불안정합니다</h1>;

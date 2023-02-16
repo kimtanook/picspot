@@ -13,8 +13,6 @@ import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
-import LandingPage from '@/components/detail/LandingPage';
-import SearchPlace from '@/components/detail/SearchPlace';
 import Link from 'next/link';
 
 export default function Main() {
@@ -25,6 +23,11 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
+
+  // console.log(
+  //   'authService?.currentUser?.displayName: ',
+  //   authService?.currentUser?.displayName
+  // );
 
   //* 게시물 작성 모달창
   const onClickToggleModal = () => {
