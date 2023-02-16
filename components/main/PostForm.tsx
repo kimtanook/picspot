@@ -2,7 +2,7 @@ import { authService, storageService } from '@/firebase';
 import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
-import { addData } from '@/api';
+import { addData, addUser } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import SearchPlace from '../detail/SearchPlace';
 import styled from 'styled-components';
@@ -26,8 +26,8 @@ const PostForm = ({ setOpenModal }: any) => {
   const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
 
-  console.log('주소테스트다임마', saveLatLng);
-  console.log('주소테스트다임마', saveAddress);
+  // console.log('주소테스트다임마', saveLatLng);
+  // console.log('주소테스트다임마', saveAddress);
 
   let postState: any = {
     title: title,
@@ -43,8 +43,17 @@ const PostForm = ({ setOpenModal }: any) => {
     address: saveAddress,
   };
 
-  //* useMutation 사용해서 데이터 추가하기
+  let userState: any = {
+    uid: authService?.currentUser?.uid,
+    userName: authService?.currentUser?.displayName,
+    userImg: authService?.currentUser?.photoURL,
+  };
+
+  //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData } = useMutation(addData);
+
+  //* useMutation 사용해서 유저 추가하기
+  const { mutate: onAddUser } = useMutation(addUser);
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -77,7 +86,7 @@ const PostForm = ({ setOpenModal }: any) => {
     uploadBytes(imageRef, imageUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
+        // console.log('url: ', url);
         const response = url;
         postState = {
           ...postState,
@@ -85,23 +94,32 @@ const PostForm = ({ setOpenModal }: any) => {
         };
         onAddData(postState, {
           onSuccess: () => {
-            console.log('추가 요청 성공');
-            setOpenModal(false);
+            console.log('포스트 추가 요청 성공');
             queryClient.invalidateQueries('infiniteData');
+            setOpenModal(false);
           },
           onError: () => {
-            console.log('추가 요청 실패');
+            console.log('포스트 추가 요청 실패');
           },
         });
+        onAddUser(userState),
+          {
+            onSuccess: () => {
+              console.log('유저 추가 요청 성공');
+            },
+            onError: () => {
+              console.log('유저 추가 요청 실패');
+            },
+          };
       });
     });
   };
 
+  //* 카테고리버튼 눌렀을 때 실행하는 함수
   const [place, setPlace] = useState('');
-
   const onClickTown = (e: any) => {
-    setTown(e.target.innerText);
     setPlace('');
+    setTown(e.target.innerText);
     setSearchCategory(e.target.innerText);
   };
 

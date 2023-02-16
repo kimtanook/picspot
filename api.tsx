@@ -95,21 +95,21 @@ export const getDatas = async () => {
 
 //* 스토어에 데이터 추가하기
 export const addData: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   addDoc(collection(dbService, 'post'), data);
   console.log('데이터가 추가되었습니다.');
 };
 
 //* 스토어에 데이터 삭제하기
 export const deleteData: any = (docId: any) => {
-  console.log('docId: ', docId);
+  // console.log('docId: ', docId);
   deleteDoc(doc(dbService, 'post', docId));
   console.log('데이터가 삭제되었습니다.');
 };
 
 //* 스토어에 데이터 수정하기
 export const updataData: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
@@ -131,7 +131,7 @@ export const getComment = async ({ queryKey }: any) => {
 
 // 댓글 추가
 export const addComment = async (item: any) => {
-  console.log('commentData : ', item);
+  // console.log('commentData : ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -154,7 +154,7 @@ export const postCounter: any = async (item: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
@@ -167,7 +167,7 @@ export const addFollowing: any = (data: any) => {
 
 //* 팔로잉 삭제하기
 export const deleteFollwing: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   updateDoc(doc(dbService, 'following', data.uid), {
     follow: arrayRemove(data.id),
   });
@@ -185,4 +185,15 @@ export const getFollwing = async () => {
   console.log('데이터를 불러왔습니다.');
 
   return response;
+};
+
+//* 유저 추가하기
+export const addUser: any = (data: any) => {
+  // console.log('data: ', data);
+  setDoc(doc(dbService, 'user', data.uid), {
+    uid: data.uid,
+    userName: data.userName,
+    userImg: data.userImg,
+  });
+  console.log('유저 추가되었습니다');
 };
