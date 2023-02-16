@@ -49,11 +49,12 @@ export default function Main() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
-
+  // [검색] 유저가 검색할 때 고르는 옵션(카테고리) (닉네임 또는 제목)
   const onChangeSearchOption = (event: ChangeEvent<HTMLSelectElement>) => {
     visibleReset();
     setSearchOption(event.target.value);
   };
+  // [검색] 유저가 옵션(카테고리)을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
     visibleReset();
     setSelectCity('');
@@ -61,12 +62,14 @@ export default function Main() {
     setSearchValue(event.target.value);
   };
 
+  // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
     setSearchValue('');
     visibleReset();
     setSelectCity(event.target.value);
   };
+  // [카테고리] 타운 카테고리 onChange
   const onChangeSelectTown = (event: ChangeEvent<HTMLSelectElement>) => {
     setSearchValue('');
     visibleReset();
