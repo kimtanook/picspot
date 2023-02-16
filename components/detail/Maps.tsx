@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import SearchPlace from './SearchPlace';
 
 declare global {
   interface Window {
@@ -7,7 +6,7 @@ declare global {
   }
 }
 
-const LandingPage = ({
+const Maps = ({
   searchPlace,
   saveLatLng,
   setSaveLatLng,
@@ -15,8 +14,6 @@ const LandingPage = ({
   setSaveAddress,
   setInfoDiv,
 }: any) => {
-  // const [saveLatLng, setSaveLatLng] = useState([]);
-  // const [saveAddress, setSaveAddress] = useState();
   useEffect(() => {
     const { kakao } = window;
 
@@ -39,7 +36,7 @@ const LandingPage = ({
       //----------------------------장소 검색/----------------------------
 
       const ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성
-      ps.keywordSearch(searchPlace, placeSearchDB); //키워드로 장소를 검색
+      ps.keywordSearch(`제주특별자치도 ${searchPlace}`, placeSearchDB); //키워드로 장소를 검색
 
       function placeSearchDB(data: any, status: any, pagination: any) {
         //키워드 검색 완료 시 호출되는 콜백함수
@@ -53,7 +50,7 @@ const LandingPage = ({
           }
           map.setBounds(bounds);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          alert(' 지역 + 지명을 검색해주세요.');
+          alert(' 제주도 지명을 검색해주세요.');
         } else if (status === kakao.maps.services.Status.ERROR) {
           alert('에러입니다.');
         }
@@ -111,4 +108,4 @@ const LandingPage = ({
   return <div id="map" style={{ width: '100%', height: '400px' }}></div>;
 };
 
-export default LandingPage;
+export default Maps;

@@ -4,6 +4,9 @@ import {
   getCollection,
   getData,
   postCounter,
+  getFollwing,
+  addFollowing,
+  deleteFollwing,
 } from '@/api';
 import Seo from '@/components/Seo';
 import Image from 'next/image';
@@ -13,6 +16,7 @@ import { Map } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
+import FollowingButton from '@/components/detail/FollowingButton';
 import { authService } from '@/firebase';
 
 const Post = ({ id }: any) => {
@@ -102,21 +106,6 @@ const Post = ({ id }: any) => {
   return (
     <>
       <Seo title="Detail" />
-      <div>
-        <Map // 지도를 표시할 Container
-          center={{
-            // 지도의 중심좌표
-            lat: 33.450701,
-            lng: 126.570667,
-          }}
-          style={{
-            // 지도의 크기
-            width: '100%',
-            height: '450px',
-          }}
-          level={6} // 지도의 확대 레벨
-        />
-      </div>
       {isCollect ? (
         <div>
           <button onClick={onClickCollection}> 담아요 </button>
@@ -133,13 +122,30 @@ const Post = ({ id }: any) => {
           return item.id === id;
         })
         .map((item: any) => (
-          <StDetailBox key={item.id}>
-            <h1>{item.title}</h1>
-            <h3>{item.city}</h3>
-            <h3>{item.town}</h3>
-            <h3>{item.clickCounter}</h3>
-            <Image src={item.imgUrl} alt="image" height={100} width={100} />
-          </StDetailBox>
+          <div key={item.id}>
+            <Map // 지도를 표시할 Container
+              center={{
+                // 지도의 중심좌표
+                lat: 33.450701,
+                lng: 126.570667,
+              }}
+              style={{
+                // 지도의 크기
+                width: '100%',
+                height: '450px',
+              }}
+              level={6} // 지도의 확대 레벨
+            />
+            <StDetailBox>
+              <h1>{item.title}</h1>
+              <h3>{item.city}</h3>
+              <h3>{item.town}</h3>
+              <h3>{item.clickCounter}</h3>
+              <Image src={item.imgUrl} alt="image" height={100} width={100} />
+
+              <FollowingButton item={item} />
+            </StDetailBox>
+          </div>
         ))}
       <CommentList postId={id} />
     </>

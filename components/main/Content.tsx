@@ -6,6 +6,7 @@ const Content = ({ item }: any) => {
     <div>
       <Link href={`/detail/${item.id}`}>
         <div>{item.title}</div>
+        <div>content : {item.content}</div>
         <div>address : {item.address}</div>
         <div>city : {item.city}</div>
         <div>town : {item.town}</div>
