@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const Content = ({ item }: any) => {
-  console.log('item : ', item);
+  // console.log('item : ', item);
   return (
     <div>
       <Link href={`/detail/${item.id}`}>

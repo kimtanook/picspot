@@ -1,7 +1,7 @@
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
@@ -18,10 +18,11 @@ import SearchPlace from '@/components/detail/SearchPlace';
 import Link from 'next/link';
 
 export default function Main() {
-  const [isOpenModal, setOpenModal] = useState(false);
-  const [chatToggle, setChatToggle] = useState(false);
-  const [closeModal, setCloseModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(false);
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
+  const [chatToggle, setChatToggle] = useState<boolean>(false);
+  const [closeModal, setCloseModal] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<boolean>(false);
+
   const nowuser = authService.currentUser;
 
   const onClickToggleModal = () => {
@@ -89,7 +90,9 @@ export default function Main() {
         )}
         {/* 마이페이지 버튼 */}
         <Link href={'/mypage'}>
-          <MypageButton hidden={!currentUser}>마이페이지</MypageButton>
+          {authService.currentUser?.displayName
+            ? `${authService.currentUser?.displayName}의 프로필`
+            : '프로필'}
         </Link>
       </div>
       {isOpenModal && (

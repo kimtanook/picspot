@@ -81,8 +81,8 @@ const LandingPage = ({ searchPlace }: any) => {
       });
     });
   }, [searchPlace]);
-  console.log('saveLatLng', saveLatLng);
-  console.log('saveAddress', saveAddress);
+  // console.log('saveLatLng', saveLatLng);
+  // console.log('saveAddress', saveAddress);
 
   return <div id="map" style={{ width: '100%', height: '400px' }}></div>;
 };

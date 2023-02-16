@@ -1,16 +1,16 @@
 import LandingPage from './LandingPage';
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';
 const SearchPlace = () => {
   const [inputText, setInputText] = useState('');
   const [place, setPlace] = useState('');
 
-  const onchange = (e: any) => {
+  const onchange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPlace(inputText);
     setInputText('');
