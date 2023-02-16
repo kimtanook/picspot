@@ -30,15 +30,16 @@ export const getInfiniteData = async ({ queryKey }: any) => {
   let q;
   if (lastVisible === -1) {
     return;
-  } else if (lastVisible) {
-    q = query(
-      collection(dbService, 'post'),
-      orderBy('createdAt', 'desc'),
-      limit(4),
-      startAfter(lastVisible)
-    );
   } else {
-    if (town) {
+    if (town !== '' && lastVisible) {
+      q = query(
+        collection(dbService, 'post'),
+        where('town', '==', `${town}`),
+        orderBy('createdAt', 'desc'),
+        limit(4),
+        startAfter(lastVisible)
+      );
+    } else if (town !== '') {
       q = query(
         collection(dbService, 'post'),
         where('town', '==', `${town}`),
@@ -46,7 +47,15 @@ export const getInfiniteData = async ({ queryKey }: any) => {
         limit(8)
       );
     } else {
-      if (city) {
+      if (city !== '' && lastVisible) {
+        q = query(
+          collection(dbService, 'post'),
+          where('city', '==', `${city}`),
+          orderBy('createdAt', 'desc'),
+          limit(4),
+          startAfter(lastVisible)
+        );
+      } else if (city !== '') {
         q = query(
           collection(dbService, 'post'),
           where('city', '==', `${city}`),
@@ -54,11 +63,20 @@ export const getInfiniteData = async ({ queryKey }: any) => {
           limit(8)
         );
       } else {
-        q = query(
-          collection(dbService, 'post'),
-          orderBy('createdAt', 'desc'),
-          limit(8)
-        );
+        if (lastVisible) {
+          q = query(
+            collection(dbService, 'post'),
+            orderBy('createdAt', 'desc'),
+            limit(4),
+            startAfter(lastVisible)
+          );
+        } else {
+          q = query(
+            collection(dbService, 'post'),
+            orderBy('createdAt', 'desc'),
+            limit(8)
+          );
+        }
       }
     }
   }
