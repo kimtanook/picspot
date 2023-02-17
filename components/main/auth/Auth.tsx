@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
@@ -35,7 +35,6 @@ const Auth = (props: Props): JSX.Element => {
     setAuthenticating(true);
     await signInWithEmailAndPassword(authService, email, password)
       .then((res) => {
-        console.log(res);
         customAlert('로그인에 성공하였습니다!');
         // Cookies.set('userID', 'qkrdbwls', { expires: 10000 });
         props.closeModal();

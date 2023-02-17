@@ -1,45 +1,84 @@
 import { authService, storageService } from '@/firebase';
-import { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useMutation } from 'react-query';
-import { addData } from '@/api';
+import { useRef, useState } from 'react';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadString,
+} from 'firebase/storage';
+import { useMutation, useQueryClient } from 'react-query';
+import { addData, addUser } from '@/api';
 import Dropdown from '../mypage/Dropdown';
-import SearchPlace from '../detail/SearchPlace';
+import styled from 'styled-components';
+import MapLandingPage from '../detail/MapLandingPage';
 
-//! postState 타입 해결
-//! imageUpload 타입 해결
-const PostForm = () => {
+const PostForm = ({ setOpenModal }: any) => {
+  const queryClient = useQueryClient();
+
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
 
   //! category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
 
+  const fileInput: any = useRef();
+
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [city, setCity] = useState('');
-  console.log('city: ', city);
   const [town, setTown] = useState('');
-  console.log('town: ', town);
   const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
-  console.log('주소테스트다임마', saveLatLng);
-  console.log('주소테스트다임마', saveAddress);
+  const nickname = authService?.currentUser?.displayName;
+
   let postState: any = {
     title: title,
+    content: content,
     imgUrl: '',
     createdAt: Date.now(),
     creator: authService.currentUser?.uid,
     city: city,
     town: town,
     clickCounter: 0,
-    lat: saveLatLng.La,
-    long: saveLatLng.Ma,
+    lat: saveLatLng.Ma,
+    long: saveLatLng.La,
     address: saveAddress,
+    nickname: nickname,
   };
 
-  //* useMutation 사용해서 데이터 추가하기
+  let userState: any = {
+    uid: authService?.currentUser?.uid,
+    userName: authService?.currentUser?.displayName,
+    userImg: authService?.currentUser?.photoURL,
+  };
+
+  //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData } = useMutation(addData);
+
+  //* useMutation 사용해서 유저 추가하기
+  const { mutate: onAddUser } = useMutation(addUser);
+
+  //* image 업로드 후 화면 표시 함수
+  const handleImageChange = (e: any) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(theFile);
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      }: any = finishedEvent;
+      setImageUpload(result);
+    };
+  };
+  // //* 이미지 다시 설정 = 취소
+  // const onClearAttachment = () => {
+  //   setImageUpload(null);
+  //   fileInput.current.value = null;
+  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -47,11 +86,31 @@ const PostForm = () => {
       alert('이미지를 추가해주세요.');
       return;
     }
+
+    if (title === '') {
+      alert('제목을 입력해주세요');
+      return;
+    }
+
+    if (content === '') {
+      alert('내용을 입력해주세요');
+      return;
+    }
+
+    if (city === '' || town === '') {
+      alert('카테고리를 입력해주세요');
+      return;
+    }
+
+    if (saveLatLng === undefined || saveAddress === undefined) {
+      alert('지도에 마커를 찍어주세요');
+      return;
+    }
+
     const imageRef = ref(storageService, `images/${imageUpload.name}`);
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
+    uploadString(imageRef, imageUpload, 'data_url').then((response) => {
+      getDownloadURL(response.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        console.log('url: ', url);
         const response = url;
         postState = {
           ...postState,
@@ -59,39 +118,73 @@ const PostForm = () => {
         };
         onAddData(postState, {
           onSuccess: () => {
-            console.log('추가 요청 성공');
+            console.log('포스트 추가 요청 성공');
+            queryClient.invalidateQueries('infiniteData');
+            setOpenModal(false);
           },
           onError: () => {
-            console.log('추가 요청 실패');
+            console.log('포스트 추가 요청 실패');
           },
         });
+        onAddUser(userState),
+          {
+            onSuccess: () => {
+              console.log('유저 추가 요청 성공');
+            },
+            onError: () => {
+              console.log('유저 추가 요청 실패');
+            },
+          };
       });
     });
   };
 
+  //* 카테고리버튼 눌렀을 때 실행하는 함수
   const [place, setPlace] = useState('');
-
   const onClickTown = (e: any) => {
-    setTown(e.target.innerText);
     setPlace('');
+    setTown(e.target.innerText);
     setSearchCategory(e.target.innerText);
   };
 
   return (
     <>
-      <input
-        type="file"
-        accept="image/png, image/jpeg, image/jpg"
-        onChange={(event: any) => {
-          setImageUpload(event.target.files[0]);
-        }}
-      />
-      <input
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-      />
-      <button onClick={onClickAddData}>추가</button>
+      <StAddButton onClick={onClickAddData}>추가</StAddButton>
+      <div style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}>
+        <Img>
+          <input
+            type="file"
+            accept="image/png, image/jpeg, image/jpg"
+            onChange={handleImageChange}
+            src={imageUpload}
+            ref={fileInput}
+            alt="image"
+            id="file"
+            style={{
+              height: '100%',
+              width: '100%',
+              display: 'none',
+            }}
+          />
+          {imageUpload && <SpotImg src={imageUpload} />}
+        </Img>
+        <p>
+          제목:
+          <input
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+        </p>
+        <p>
+          내용:
+          <input
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+          />
+        </p>
+      </div>
 
       <div>
         <h3>여행갈 지역을 골라주세요</h3>
@@ -152,7 +245,7 @@ const PostForm = () => {
         <button onClick={onClickTown}>우도</button>
         <button onClick={onClickTown}>마라도</button>
       </div>
-      <SearchPlace
+      <MapLandingPage
         searchCategory={searchCategory}
         saveLatLng={saveLatLng}
         setSaveLatLng={setSaveLatLng}
@@ -166,3 +259,23 @@ const PostForm = () => {
 };
 
 export default PostForm;
+
+const StAddButton = styled.button`
+  color: red;
+`;
+
+const Img = styled.label`
+  height: 100px;
+  width: 100px;
+  background-image: url(/plusimage.png);
+  background-position: center;
+  cursor: pointer;
+  margin: 10px;
+`;
+
+const SpotImg = styled.img`
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  object-fit: contain;
+`;

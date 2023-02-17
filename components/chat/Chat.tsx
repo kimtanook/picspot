@@ -45,7 +45,6 @@ const Chat = () => {
     });
     // 열린 방 보여주기
     socket.on('roomChange', (rooms) => {
-      console.log('rooms : ', rooms);
       if (rooms.length === 0) {
         setOpenPublicRooms([]);
       }

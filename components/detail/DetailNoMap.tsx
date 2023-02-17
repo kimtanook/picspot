@@ -1,12 +1,11 @@
-import { getDatas } from '@/api';
+import { getData } from '@/api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
 const DetailNoMap = () => {
-  const { data, isLoading, isError } = useQuery('datas', getDatas);
-  console.log('data: ', data);
+  const { data, isLoading, isError } = useQuery('data', getData);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
