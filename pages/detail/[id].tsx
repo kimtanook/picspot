@@ -16,12 +16,6 @@ import FollowingButton from '@/components/detail/FollowingButton';
 import { authService } from '@/firebase';
 
 const Post = ({ id }: any) => {
-  console.log('authService?.currentUser?.uid', authService?.currentUser?.uid);
-  console.log(
-    'authService?.currentUser?.displayName',
-    authService?.currentUser?.displayName
-  );
-
   //* useQuery 사용해서 데이터 불러오기
   const { data, isLoading, isError } = useQuery('detailData', getDatas);
   // console.log('data: ', data);
