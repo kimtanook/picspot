@@ -6,6 +6,10 @@
     "Mainpage",
     "Mypage",
     "selectd",
-    "Updata"
+    "Updata",
+    "Jibun",
+    "kakao",
+    "latlng",
+    "firestore"
   ]
 }
