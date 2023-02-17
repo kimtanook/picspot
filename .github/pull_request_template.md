@@ -4,7 +4,4 @@
 ### 변경사항
 
 
-### Trouble shooting
-
-
-### Solve trouble
+### 문제 해결

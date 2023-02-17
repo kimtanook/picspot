@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 const DetailNoMap = () => {
   const { data, isLoading, isError } = useQuery('datas', getDatas);
-  console.log('data: ', data);
+  // console.log('data: ', data);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
