@@ -123,7 +123,9 @@ export default function Main() {
         )}
         {/* 마이페이지 버튼 */}
         <Link href={'/mypage'}>
-          <MypageButton hidden={!currentUser}>마이페이지</MypageButton>
+          {authService.currentUser?.displayName
+            ? `${authService.currentUser?.displayName}의 프로필`
+            : '프로필'}
         </Link>
       </div>
       {isOpenModal && (
