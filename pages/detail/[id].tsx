@@ -3,13 +3,13 @@ import Seo from '@/components/Seo';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
 
 const Post = ({ id }: any) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   //* useQuery 사용해서 데이터 불러오기
   const { data, isLoading, isError } = useQuery('detailData', getDatas);
@@ -72,53 +72,65 @@ const Post = ({ id }: any) => {
                 }}
                 level={6} // 지도의 확대 레벨
               >
-                <MapMarker // 인포윈도우를 생성하고 지도에 표시합니다
+                <MapMarker
                   position={{
-                    // 인포윈도우가 표시될 위치입니다
+                    // 지도의 중심좌표
                     lat: item.lat,
                     lng: item.long,
                   }}
-                  clickable={true} // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-                  // 마커에 마우스오버 이벤트를 등록합니다
-                  onMouseOver={
-                    // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
-                    () => setIsOpen(true)
-                  }
-                  // 마커에 마우스아웃 이벤트를 등록합니다
-                  onMouseOut={
-                    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-                    () => setIsOpen(false)
-                  }
-                >
-                  {/* MapMarker의 자식을 넣어줌으로 해당 자식이 InfoWindow로 만들어지게 합니다 */}
-                  {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
-
-                  {isOpen && (
-                    <StOverLayContainer>
-                      <StOverLayTitle>
-                        {item.title}
-                        <div
-                          className="close"
-                          onClick={() => setIsOpen(false)}
-                          title="닫기"
-                        ></div>
-                      </StOverLayTitle>
-                      <StOverLayContent>
-                        <div>
-                          <Image
-                            src={item.imgUrl}
-                            alt="image"
-                            height={100}
-                            width={100}
-                          />
-                        </div>
-                        <StOverLayAddress>
-                          <div>{item.address}</div>
-                        </StOverLayAddress>
-                      </StOverLayContent>
-                    </StOverLayContainer>
-                  )}
-                </MapMarker>
+                  onClick={() => setIsOpen(true)}
+                />
+                {isOpen && (
+                  <CustomOverlayMap
+                    position={{
+                      // 지도의 중심좌표
+                      lat: item.lat,
+                      lng: item.long,
+                    }}
+                  >
+                    <StOverLayWrap>
+                      <StOverLayInfo>
+                        <StOverLayTitle>
+                          {item.title}
+                          <StOverLayClose
+                            className="close"
+                            onClick={() => setIsOpen(false)}
+                            title="닫기"
+                          ></StOverLayClose>
+                        </StOverLayTitle>
+                        <StOverLayBody>
+                          <StOverLayImg>
+                            <Image
+                              src={item.imgUrl}
+                              alt="image"
+                              height={100}
+                              width={100}
+                            />
+                          </StOverLayImg>
+                          <StOverLayDesc>
+                            <StOverLayEllipsis>
+                              {item.address}
+                            </StOverLayEllipsis>
+                            <StOverLayCounter>
+                              조회수 : {item.clickCounter}
+                            </StOverLayCounter>
+                            <div>
+                              <a
+                                href="https://www.kakaocorp.com/main"
+                                target="_blank"
+                                className="link"
+                                rel="noreferrer"
+                              >
+                                페이지이동(기능추가예정)
+                              </a>
+                            </div>
+                          </StOverLayDesc>
+                        </StOverLayBody>
+                      </StOverLayInfo>
+                    </StOverLayWrap>
+                    ;
+                  </CustomOverlayMap>
+                )}
               </Map>
               <h1>{item.title}</h1>
               <h3>{item.city}</h3>
@@ -137,37 +149,108 @@ export default Post;
 
 const StDetailBox = styled.div`
   border: 1px solid black;
-  padding: 10px;
+  padding: 0px;
   margin: 10px;
 `;
 
-const StOverLayContainer = styled.div`
-  border: 0.3px solid white;
-  border-radius: 3px;
+const StOverLayWrap = styled.div`
+  position: absolute;
+  left: 0;
+  bottom: 50px;
+  width: 288px;
+  height: 132px;
+  margin-left: -144px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  line-height: 1.5;
+  padding: 0;
+  margin: 20;
+`;
+
+const StOverLayInfo = styled.div`
+  width: 286px;
+  height: 120px;
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+
+  :nth-child(1) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+  }
+  ::after {
+    content: '';
+    position: absolute;
+    margin-left: -12px;
+    left: 50%;
+    bottom: 0;
+    width: 22px;
+    height: 12px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+  }
+  .link {
+    color: #5085bb;
+  }
 `;
 
 const StOverLayTitle = styled.div`
-  font-size: 1.2rem;
-  padding: 10px;
-  font-weight: 700;
-  background-color: lightgray;
-`;
-
-const StOverLayContent = styled.div`
+  padding: 5px 0 0 10px;
+  height: 30px;
+  background: #eee;
+  border-bottom: 1px solid #ddd;
   font-size: 18px;
-  border-radius: 3px;
-  padding: 5px;
+  font-weight: bold;
+`;
 
-  display: flex;
-  justify-content: space-between;
+const StOverLayClose = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+  :hover {
+    cursor: pointer;
+  }
 `;
-const StOverLayAddress = styled.div`
-  font-size: 1rem;
-  border-radius: 3px;
-  padding: 5px;
-  /* margin-top: 3%; */
-  font-weight: 200;
+
+const StOverLayBody = styled.div`
+  position: relative;
+  overflow: hidden;
+  cursor: inherit;
 `;
+
+const StOverLayDesc = styled.div`
+  position: relative;
+  margin: 13px 0 0 90px;
+  height: 75px;
+`;
+const StOverLayEllipsis = styled.div`
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+`;
+const StOverLayCounter = styled.div`
+  font-size: 11px;
+  color: #888;
+  margin-top: -2px;
+`;
+const StOverLayImg = styled.div`
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 73px;
+  height: 71px;
+  border: 1px solid #ddd;
+  color: #888;
+  overflow: hidden;
+`;
+
 //* SSR방식으로 server에서 id 값 보내기
 export async function getServerSideProps(context: { params: any }) {
   const { params } = context;
