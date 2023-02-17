@@ -1,6 +1,11 @@
 import { authService, storageService } from '@/firebase';
 import { useRef, useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadString,
+} from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, addUser } from '@/api';
 import Dropdown from '../mypage/Dropdown';
@@ -25,6 +30,8 @@ const PostForm = ({ setOpenModal }: any) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
+  const nickname = authService?.currentUser?.displayName;
+
   let postState: any = {
     title: title,
     content: content,
@@ -37,6 +44,7 @@ const PostForm = ({ setOpenModal }: any) => {
     lat: saveLatLng.La,
     long: saveLatLng.Ma,
     address: saveAddress,
+    nickname: nickname,
   };
 
   let userState: any = {
@@ -58,19 +66,19 @@ const PostForm = ({ setOpenModal }: any) => {
     } = e;
     const theFile = files[0];
     const reader = new FileReader();
+    reader.readAsDataURL(theFile);
     reader.onloadend = (finishedEvent) => {
       const {
         currentTarget: { result },
       }: any = finishedEvent;
       setImageUpload(result);
     };
-    reader.readAsDataURL(theFile);
   };
-  //* 이미지 다시 설정 = 취소
-  const onClearAttachment = () => {
-    setImageUpload(null);
-    fileInput.current.value = null;
-  };
+  // //* 이미지 다시 설정 = 취소
+  // const onClearAttachment = () => {
+  //   setImageUpload(null);
+  //   fileInput.current.value = null;
+  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -100,8 +108,8 @@ const PostForm = ({ setOpenModal }: any) => {
     }
 
     const imageRef = ref(storageService, `images/${imageUpload.name}`);
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
+    uploadString(imageRef, imageUpload, 'data_url').then((response) => {
+      getDownloadURL(response.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
         const response = url;
         postState = {

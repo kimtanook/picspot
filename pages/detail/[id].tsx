@@ -106,17 +106,6 @@ const Post = ({ id }: any) => {
   return (
     <>
       <Seo title="Detail" />
-      {isCollect ? (
-        <div>
-          <button onClick={onClickCollection}> 담아요 </button>
-          <div>이 게시물을 내 collection에 담겠습니까?</div>
-        </div>
-      ) : (
-        <div>
-          <button onClick={deleteCollection}> 빼요 </button>
-          <div>이 게시물을 내 collection에서 빼겠습니까?</div>
-        </div>
-      )}
       {detailData
         .filter((item: any) => {
           return item.id === id;
@@ -136,6 +125,11 @@ const Post = ({ id }: any) => {
               }}
               level={6} // 지도의 확대 레벨
             />
+            {isCollect ? (
+              <button onClick={onClickCollection}> collection 담기</button>
+            ) : (
+              <button onClick={deleteCollection}> collection 빼기</button>
+            )}
             <StDetailBox>
               <h1>{item.title}</h1>
               <h3>{item.city}</h3>
