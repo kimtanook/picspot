@@ -41,8 +41,8 @@ const PostForm = ({ setOpenModal }: any) => {
     city: city,
     town: town,
     clickCounter: 0,
-    lat: saveLatLng.La,
-    long: saveLatLng.Ma,
+    lat: saveLatLng.Ma,
+    long: saveLatLng.La,
     address: saveAddress,
     nickname: nickname,
   };

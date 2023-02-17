@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from 'firebase/auth';
 import AuthSocial from './AuthSocial';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
@@ -41,7 +45,10 @@ const AuthSignUp = (props: Props) => {
 
     setRegistering(true);
     await createUserWithEmailAndPassword(authService, data.email, data.password)
-      .then(() => {
+      .then((res) => {
+        updateProfile(authService?.currentUser!, {
+          displayName: nickname,
+        });
         customAlert('회원가입을 축하합니다!');
         props.closeModal();
       })
@@ -54,6 +61,11 @@ const AuthSignUp = (props: Props) => {
         if (error.code.includes('auth/email-already-in-use')) {
           setRegistering(false);
           alert('이메일이 이미 존재합니다');
+          return;
+        }
+        if (error.code.includes('auth/invalid-display-name-in-use')) {
+          setRegistering(false);
+          alert('별명이 이미 존재합니다');
           return;
         }
         setRegistering(false);
@@ -148,6 +160,8 @@ const AuthSignUp = (props: Props) => {
               }
             }}
           />
+          <AuthWarn>{errors?.confirm?.message}</AuthWarn>
+
           <NicknameDiv>
             <div>Nickname</div>
           </NicknameDiv>
@@ -165,7 +179,7 @@ const AuthSignUp = (props: Props) => {
               }
             }}
           />
-          <AuthWarn>{errors?.confirm?.message}</AuthWarn>
+          <AuthWarn>{errors?.nickname?.message}</AuthWarn>
         </SignUpEmailPwContainer>
       </form>
       <SignUpBtnContainer>

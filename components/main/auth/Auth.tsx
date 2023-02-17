@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
