@@ -1,4 +1,4 @@
-import { getDatas, deleteData, updataData, getFollwing, getUser } from '@/api';
+import { getData, deleteData, updataData, getFollwing, getUser } from '@/api';
 import PostList from '@/components/mypage/PostList';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
@@ -21,8 +21,7 @@ export default function Mypage() {
   };
 
   //* useQuery 사용해서 데이터 불러오기
-  const { data, isLoading, isError } = useQuery('datas', getDatas);
-  // console.log('data: ', data);
+  const { data, isLoading, isError } = useQuery('data', getData);
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -33,7 +32,7 @@ export default function Mypage() {
     onDeleteData(docId, {
       onSuccess: () => {
         console.log('삭제 요청 성공');
-        queryClient.invalidateQueries('datas');
+        queryClient.invalidateQueries('data');
       },
       onError: () => {
         console.log('삭제 요청 실패');
@@ -60,7 +59,6 @@ export default function Mypage() {
     uploadBytes(imageRef, editImgUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        // console.log('url: ', url);
         //? 동기적으로 데이터 변경하기
         response = url;
         editState = { ...editState, imgUrl: response };
@@ -71,7 +69,7 @@ export default function Mypage() {
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
-              queryClient.invalidateQueries('datas');
+              queryClient.invalidateQueries('data');
             },
             onError: () => {
               console.log('수정 요청 실패');
@@ -89,9 +87,6 @@ export default function Mypage() {
   //* useQuery 사용해서 userData 데이터 불러오기
   const { data: userData } = useQuery('userData', getUser);
   // console.log('userData: ', userData);
-
-  if (isLoading) return <h1>로딩 중입니다.</h1>;
-  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   //* 팔로잉한 사람 프로필 닉네임 뽑아오기
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
@@ -118,7 +113,10 @@ export default function Mypage() {
   const selectId4 = userData.filter((item: any) =>
     selectdId3.includes(item.uid)
   );
-  // console.log('selectId4: ', selectId4);
+  console.log('selectId4: ', selectId4);
+
+  if (isLoading) return <h1>로딩 중입니다.</h1>;
+  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   return (
     <MyContainer>
