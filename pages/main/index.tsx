@@ -174,7 +174,7 @@ export default function Main() {
           게시물 작성
         </PostFormButton>
       </div>
-      <h1>제주</h1>
+      <h1>{!selectCity ? '제주 전체' : selectCity}</h1>
       <div>
         {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
         {status === 'loading' ? (

@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import landTop from '/land-top.png';
-import landBottom from '/land-bottom.png';
 import { useRouter } from 'next/router';
 
 function Landing() {
