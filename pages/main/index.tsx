@@ -1,7 +1,7 @@
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
@@ -28,7 +28,7 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState(`${router.query.city ?? ''}`);
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
-  console.log('selectCity : ', selectCity);
+
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
       setCloseModal(!closeModal);
@@ -56,16 +56,14 @@ export default function Main() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
-  // [검색] 유저가 검색할 때 고르는 옵션(카테고리) (닉네임 또는 제목)
-  const onChangeSearchOption = (event: ChangeEvent<HTMLSelectElement>) => {
-    visibleReset();
-    setSearchOption(event.target.value);
-  };
-  // [검색] 유저가 옵션(카테고리)을 고른 후 입력하는 input
+  const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
+
+  // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
-    visibleReset();
     setSelectCity('');
     setSelectTown('');
+    visibleReset();
+    setSearchOption(searchOptionRef.current?.value);
     setSearchValue(event.target.value);
   };
 
@@ -137,8 +135,8 @@ export default function Main() {
         </Modal>
       )}
       <Search
+        searchOptionRef={searchOptionRef}
         searchValue={searchValue}
-        onChangeSearchOption={onChangeSearchOption}
         onChangeSearchValue={onChangeSearchValue}
       />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
