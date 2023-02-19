@@ -91,7 +91,7 @@ export default function Mypage() {
   //* 팔로잉한 사람 프로필 닉네임 뽑아오기
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
   const selectId = followingData
-    .filter((item: any) => {
+    ?.filter((item: any) => {
       return item.uid === authService?.currentUser?.uid;
     })
     .find((item: any) => {
@@ -100,17 +100,17 @@ export default function Mypage() {
   // console.log('selectId: ', selectId);
 
   //? userData의 uid를 배열에 담았습니다.
-  const selectdId2 = userData.map((item: any) => {
+  const selectdId2 = userData?.map((item: any) => {
     return item.uid;
   });
   // console.log('selectdId2: ', selectdId2);
 
   //? 팔로잉한 사람 uid와 userData의 uid의 교집합을 배열에 담았습니다.
-  const selectdId3 = selectId.filter((item: any) => selectdId2.includes(item));
+  const selectdId3 = selectId?.filter((item: any) => selectdId2.includes(item));
   console.log('selectdId3: ', selectdId3);
 
   //? userData와 selectId3의 교집합을 배열에 담았습니다.
-  const selectId4 = userData.filter((item: any) =>
+  const selectId4 = userData?.filter((item: any) =>
     selectdId3.includes(item.uid)
   );
   console.log('selectId4: ', selectId4);
