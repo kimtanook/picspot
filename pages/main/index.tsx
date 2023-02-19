@@ -25,7 +25,7 @@ export default function Main() {
   const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
-  const [selectCity, setSelectCity] = useState(`${router.query.city ?? ''}`);
+  const [selectCity, setSelectCity] = useState(`${router.query.city}`);
   const [selectTown, setSelectTown] = useState('');
   const nowuser = authService.currentUser;
 
@@ -141,7 +141,7 @@ export default function Main() {
       />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
         <Categories value={selectCity} onChange={onChangeSelectCity}>
-          <option value="">제주전체</option>
+          <option value="제주전체">제주전체</option>
           <option value="제주시">제주시</option>
           <option value="서귀포시">서귀포시</option>
         </Categories>

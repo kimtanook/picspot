@@ -52,7 +52,7 @@ function Landing() {
           onClick={() =>
             router.push({
               pathname: '/main',
-              query: { city: '' },
+              query: { city: '제주전체' },
             })
           }
         >
