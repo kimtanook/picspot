@@ -252,7 +252,7 @@ export const getFollwing = async () => {
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
   });
-  console.log('데이터를 불러왔습니다.');
+  console.log('팔로잉 데이터를 불러왔습니다.');
 
   return response;
 };
@@ -266,4 +266,17 @@ export const addUser: any = (data: any) => {
     userImg: data.userImg,
   });
   console.log('유저 추가되었습니다');
+};
+
+//* 유저 가져오기
+export const getUser = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'user'));
+  querySnapshot.forEach((doc) => {
+    response.push({ ...doc.data() });
+  });
+  console.log('유저 데이터를 불러왔습니다.');
+
+  return response;
 };
