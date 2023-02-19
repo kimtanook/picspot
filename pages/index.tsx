@@ -115,9 +115,9 @@ export default function Main() {
           <LoginButton onClick={closeModalButton}>로그인</LoginButton>
         )}
         {/* 마이페이지 버튼 */}
-        <Link href={'/mypage'}>
+        <Link href={'/mypage'} hidden={!currentUser}>
           {authService.currentUser?.displayName
-            ? `${authService.currentUser?.displayName}의 프로필`
+            ? `${authService.currentUser?.displayName}님의 프로필`
             : '프로필'}
         </Link>
       </div>
@@ -240,7 +240,6 @@ export default function Main() {
   );
 }
 const LoginButton = styled.button``;
-const MypageButton = styled.button``;
 
 const Categories = styled.select`
   background-color: tomato;
