@@ -4,13 +4,9 @@ import {
   getCollection,
   getData,
   postCounter,
-  getFollwing,
-  addFollowing,
-  deleteFollwing,
 } from '@/api';
 import Seo from '@/components/Seo';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
