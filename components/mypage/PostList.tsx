@@ -4,7 +4,6 @@ const PostList = ({
   editState,
   data,
   setEditImgUpload,
-  onClickEditImgUpload,
   setEditTitle,
   onClickUpdateData,
   onClickDeleteData,
@@ -17,7 +16,6 @@ const PostList = ({
           editState={editState}
           item={item}
           setEditImgUpload={setEditImgUpload}
-          onClickEditImgUpload={onClickEditImgUpload}
           setEditTitle={setEditTitle}
           onClickUpdateData={onClickUpdateData}
           onClickDeleteData={onClickDeleteData}

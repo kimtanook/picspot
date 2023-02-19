@@ -11,6 +11,10 @@ import {
   limit,
   startAfter,
   where,
+  arrayUnion,
+  arrayRemove,
+  setDoc,
+  getDoc,
   QueryDocumentSnapshot,
   DocumentData,
   endAt,
@@ -30,7 +34,6 @@ export const visibleReset = () => {
 };
 export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
   const [_, option, value, town, city] = queryKey;
-
   const getData: { [key: string]: string }[] = [];
   let q;
 
@@ -43,7 +46,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(4),
+        limit(8),
         startAfter(lastVisible)
       );
     } else if (value) {
@@ -52,7 +55,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(8)
+        limit(20)
       );
     } else {
       if (town && lastVisible) {
@@ -60,7 +63,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(4),
+          limit(8),
           startAfter(lastVisible)
         );
       } else if (town) {
@@ -68,7 +71,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(8)
+          limit(20)
         );
       } else {
         if (city && lastVisible) {
@@ -76,7 +79,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(4),
+            limit(8),
             startAfter(lastVisible)
           );
         } else if (city) {
@@ -84,21 +87,21 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(8)
+            limit(20)
           );
         } else {
           if (lastVisible) {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(4),
+              limit(8),
               startAfter(lastVisible)
             );
           } else {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(8)
+              limit(20)
             );
           }
         }
@@ -179,14 +182,55 @@ export const deleteComment = async (item: any) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
 
+//* 조회수 증가하기
 export const postCounter: any = async (item: any) => {
   await updateDoc(doc(dbService, 'post', item), {
     clickCounter: increment(1),
   });
 };
 
-// export const postCounter: any = (data: any) => {
-//   updateDoc(doc(dbService, 'post', data.id), {
-//     clickCounter: increment(1),
-//   });
-// };
+//* 팔로잉 추가하기
+export const addFollowing: any = (data: any) => {
+  // console.log('data: ', data);
+  setDoc(
+    doc(dbService, 'following', data.uid),
+    {
+      follow: arrayUnion(data.creator),
+    },
+    { merge: true }
+  );
+  console.log('팔로잉이 추가되었습니다');
+};
+
+//* 팔로잉 삭제하기
+export const deleteFollwing: any = (data: any) => {
+  // console.log('data: ', data);
+  updateDoc(doc(dbService, 'following', data.uid), {
+    follow: arrayRemove(data.creator),
+  });
+  console.log('팔로잉이 삭제되었습니다');
+};
+
+//* 팔로잉 가져오기
+export const getFollwing = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'following'));
+  querySnapshot.forEach((doc) => {
+    response.push({ uid: doc.id, ...doc.data() });
+  });
+  console.log('데이터를 불러왔습니다.');
+
+  return response;
+};
+
+//* 유저 추가하기
+export const addUser: any = (data: any) => {
+  // console.log('data: ', data);
+  setDoc(doc(dbService, 'user', data.uid), {
+    uid: data.uid,
+    userName: data.userName,
+    userImg: data.userImg,
+  });
+  console.log('유저 추가되었습니다');
+};
