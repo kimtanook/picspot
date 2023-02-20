@@ -11,14 +11,14 @@ import {
   limit,
   startAfter,
   where,
-  arrayUnion,
-  arrayRemove,
-  setDoc,
-  getDoc,
   QueryDocumentSnapshot,
   DocumentData,
   endAt,
   startAt,
+  setDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -123,7 +123,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
 };
 
 //* 스토어에서 데이터 불러오기
-export const getDatas = async () => {
+export const getData = async () => {
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
@@ -135,10 +135,42 @@ export const getDatas = async () => {
   return response;
 };
 
+//* 스토어에서 collection데이터 불러오기
+export const getCollection = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'collection'));
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  console.log('collection데이터를 불러왔습니다.');
+
+  return response;
+};
+
 //* 스토어에 데이터 추가하기
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
   console.log('데이터가 추가되었습니다.');
+};
+
+//* 스토어에 collection 컬렉션 데이터 추가하기
+export const addCollectionData: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'collection', data.uid),
+    {
+      collector: arrayUnion(data.collector),
+    },
+    { merge: true }
+  );
+  console.log('게시물이 저장되었습니다');
+};
+//* 스토어에 collection 컬렉션 데이터 삭제하기
+export const deleteCollectionData: any = (data: any) => {
+  updateDoc(doc(dbService, 'collection', data.uid), {
+    collector: arrayRemove(data.collector),
+  }),
+    console.log('게시물이 저장되었습니다');
 };
 
 //* 스토어에 데이터 삭제하기
@@ -219,7 +251,7 @@ export const getFollwing = async () => {
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
   });
-  console.log('데이터를 불러왔습니다.');
+  console.log('팔로잉 데이터를 불러왔습니다.');
 
   return response;
 };
@@ -233,4 +265,17 @@ export const addUser: any = (data: any) => {
     userImg: data.userImg,
   });
   console.log('유저 추가되었습니다');
+};
+
+//* 유저 가져오기
+export const getUser = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'user'));
+  querySnapshot.forEach((doc) => {
+    response.push({ ...doc.data() });
+  });
+  console.log('유저 데이터를 불러왔습니다.');
+
+  return response;
 };

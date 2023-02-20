@@ -1,3 +1,6 @@
+// import HomeCategory from './HomeCategory';
+// import HomePost from './HomePost';
+import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,10 +42,6 @@ export default function Main() {
       setOpenModal(!isOpenModal);
     }
   };
-
-  const onClickChatToggle = () => {
-    setChatToggle(!chatToggle);
-  };
   // 로그인 모달 창 버튼
   const closeLoginModalButton = () => {
     setCloseLoginModal(!closeLoginModal);
@@ -57,6 +56,11 @@ export default function Main() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
+
+  const onClickChatToggle = () => {
+    setChatToggle(!chatToggle);
+  };
+
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
 
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
@@ -121,6 +125,7 @@ export default function Main() {
     <>
       <div>
         <Seo title="Home" />
+        <Header />
         {/* 로그인, 로그아웃, 마이페이지 버튼 */}
         {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
         <Profile onClick={() => setIsProfileOpen(!isProfileOpen)}>
@@ -224,7 +229,6 @@ export default function Main() {
     </>
   );
 }
-const LoginButton = styled.button``;
 
 const Categories = styled.select`
   background-color: tomato;
@@ -237,11 +241,6 @@ const PostFormButton = styled.button`
   height: 40px;
 `;
 
-const ImageBox = styled.div`
-  border: tomato 1px solid;
-  display: flex;
-  flex-direction: row;
-`;
 const GridBox = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
