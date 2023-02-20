@@ -1,15 +1,11 @@
 import Image from 'next/image';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
 function Landing() {
   const [imageTopHover, setImageTopHover] = useState(false);
   const [imageBottomHover, setImageBottomHover] = useState(false);
-  const [isModalActive, setIsModalActive] = useState(false);
-  const onClickToggleMapModal = useCallback(() => {
-    setIsModalActive(!isModalActive);
-  }, [isModalActive]);
   const router = useRouter();
 
   return (
@@ -130,19 +126,4 @@ const SkipButton = styled.div`
     color: white;
     transition: 0.3s;
   }
-`;
-
-const MapModalBtn = styled.button`
-  background-color: cornflowerblue;
-  border: 0px;
-  border-radius: 7px;
-  padding: 5px;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  position: fixed;
-  bottom: 10px;
-  width: 80px;
-  right: 50%;
-  left: 50%;
 `;

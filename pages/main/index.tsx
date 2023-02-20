@@ -1,7 +1,7 @@
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
@@ -17,6 +17,8 @@ import { customAlert } from '@/utils/alerts';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
+import { CustomModal } from '@/components/common/CustomModal';
+import ModalMaps from '@/components/detail/ModalMaps';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -27,6 +29,10 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
+  const [isModalActive, setIsModalActive] = useState(false);
+  const onClickToggleMapModal = useCallback(() => {
+    setIsModalActive(!isModalActive);
+  }, [isModalActive]);
   const router = useRouter();
   const nowUser = authService.currentUser;
 
@@ -208,6 +214,18 @@ export default function Main() {
         </ChatToggleBtn>
         {/* <SearchPlace /> */}
       </div>
+      <MapModalBtn onClick={onClickToggleMapModal}>지도열기</MapModalBtn>;
+      {isModalActive ? (
+        <CustomModal
+          modal={isModalActive}
+          setModal={setIsModalActive}
+          width="1200"
+          height="700"
+          element={<ModalMaps />}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 }
@@ -250,4 +268,19 @@ const ChatToggleBtn = styled.button`
 
   width: 50px;
   height: 50px;
+`;
+
+const MapModalBtn = styled.button`
+  background-color: cornflowerblue;
+  border: 0px;
+  border-radius: 7px;
+  padding: 5px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  position: fixed;
+  bottom: 10px;
+  width: 80px;
+  right: 50%;
+  left: 50%;
 `;

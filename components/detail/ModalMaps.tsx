@@ -1,4 +1,4 @@
-import { getDatas } from '@/api';
+import { getData } from '@/api';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
 const ModalMaps = () => {
-  const { data, isLoading, isError } = useQuery('detailData', getDatas);
+  const { data, isLoading, isError } = useQuery('detailData', getData);
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen]: any = useState(false);
 
