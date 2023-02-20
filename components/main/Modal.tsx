@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
-import SearchPlace from '../detail/SearchPlace';
+// import SearchPlace from '../detail/SearchPlace';
 import PostForm from './PostForm';
 
 const Modal = ({ onClickToggleModal, setOpenModal }: any) => {

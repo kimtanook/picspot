@@ -18,12 +18,12 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 
 export default function Main() {
-  console.log('authService?.currentUser?.uid: ', authService?.currentUser?.uid);
+  // console.log('authService?.currentUser?.uid: ', authService?.currentUser?.uid);
 
-  console.log(
-    'authService?.currentUser?.displayName: ',
-    authService?.currentUser?.displayName
-  );
+  // console.log(
+  //   'authService?.currentUser?.displayName: ',
+  //   authService?.currentUser?.displayName
+  // );
 
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
