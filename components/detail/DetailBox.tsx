@@ -9,27 +9,31 @@ import { storageService } from '@/firebase';
 import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
 
-const DetailBox = ({ item }: any) => {
+const DetailBox = ({
+  item,
+  inputToggle,
+  setInputToggle,
+  setImageUpload,
+  imageUpload,
+  editTitle,
+  editContent,
+  editCity,
+  editTown,
+  editState,
+  setEditTitle,
+  setEditContent,
+  setEditCity,
+  setEditTown,
+  setDropdownToggle,
+  dropdownToggle,
+  onClickEditTown,
+  setSaveLatLng,
+  setSaveAddress,
+}: any) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const editFileInput: any = useRef();
-
-  const [inputToggle, setInputToggle] = useState(false);
-  const [dropdownToggle, setDropdownToggle] = useState(false);
-  const [editTitle, setEditTitle] = useState('');
-  const [editContent, setEditContent] = useState('');
-  const [editCity, setEditCity] = useState('');
-  const [editTown, setEditTown] = useState('');
-  const [imageUpload, setImageUpload]: any = useState(null);
-
-  let editState = {
-    title: editTitle,
-    content: editContent,
-    city: editCity,
-    town: editTown,
-    imgUrl: '',
-  };
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -117,6 +121,8 @@ const DetailBox = ({ item }: any) => {
               setEditContent('');
               setEditCity('');
               setEditTown('');
+              setSaveLatLng([]);
+              setSaveAddress('');
             },
             onError: () => {
               console.log('수정 요청 실패');
@@ -126,11 +132,6 @@ const DetailBox = ({ item }: any) => {
       });
     });
     setInputToggle(!inputToggle);
-  };
-
-  //* town state 변경
-  const onClickEditTown = (e: any) => {
-    setEditTown(e.target.innerText);
   };
 
   if (inputToggle) {
