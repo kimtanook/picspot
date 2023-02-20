@@ -94,10 +94,10 @@ export default function Mypage() {
   const newArr: any = [];
 
   followingData
-    .filter((item: any) => {
+    ?.filter((item: any) => {
       return item.uid === authService?.currentUser?.uid;
     })
-    .map((item: any) => newArr.push(item.follow));
+    ?.map((item: any) => newArr.push(item.follow));
 
   console.log('newArr: ', newArr);
 
@@ -106,7 +106,7 @@ export default function Mypage() {
       <MyTextDiv>
         <Seo title="My" />
         <h1>마이페이지입니다</h1>
-        <Link href={'/'}>
+        <Link href={'/main'}>
           <ToMainpage>메인페이지로 돌아가기</ToMainpage>
         </Link>
       </MyTextDiv>
