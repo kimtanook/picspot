@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
 import FollowingButton from '@/components/detail/FollowingButton';
 import { authService } from '@/firebase';
+import DetailBox from '@/components/detail/DetailBox';
 
 const Post = ({ id }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -185,12 +186,7 @@ const Post = ({ id }: any) => {
               )}
             </Map>
             <StDetailBox>
-              <h1>{item.title}</h1>
-              <h3>{item.city}</h3>
-              <h3>{item.town}</h3>
-              <h3>{item.clickCounter}</h3>
-              <Image src={item.imgUrl} alt="image" height={100} width={100} />
-
+              <DetailBox item={item} />
               <FollowingButton item={item} />
             </StDetailBox>
           </div>
