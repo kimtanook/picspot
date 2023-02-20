@@ -19,9 +19,7 @@ const Chat = () => {
 
   useEffect((): any => {
     // socket.io 연결
-    const socket = SocketIOClient.connect({
-      path: '/api/chat/socket',
-    });
+    const socket = SocketIOClient.connect('43.201.52.201:80');
     // useEffect 밖에서도 사용할 수 있게 state에 저장
     setSocketServer(socket);
 

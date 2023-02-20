@@ -1,23 +1,17 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  Dispatch,
-  SetStateAction,
-  useState,
-} from 'react';
+import { ChangeEventHandler, RefObject } from 'react';
 
 const Search = ({
+  searchOptionRef,
   searchValue,
-  onChangeSearchOption,
   onChangeSearchValue,
 }: {
+  searchOptionRef: RefObject<HTMLSelectElement>;
   searchValue: string;
-  onChangeSearchOption: ChangeEventHandler<HTMLSelectElement>;
   onChangeSearchValue: ChangeEventHandler<HTMLInputElement>;
 }) => {
   return (
     <div>
-      <select onChange={onChangeSearchOption}>
+      <select ref={searchOptionRef}>
         <option value="userName">닉네임</option>
         <option value="title">제목</option>
       </select>
