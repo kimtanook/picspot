@@ -1,11 +1,18 @@
 import { addFollowing, deleteFollwing, getFollwing } from '@/api';
 import { authService } from '@/firebase';
-import { useRouter } from 'next/router';
+import { calculateSizeAdjustValues } from 'next/dist/server/font-utils';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
 
 const FollowingButton = ({ item }: any) => {
-  const router = useRouter();
+  //* 토글 state
+  const [follwingUserAndCreatorUidState, setFollwingUserAndCreatorUidState] =
+    useState(false);
+
+  // console.log(authService.currentUser?.uid);
+  // console.log('item: ', item);
+  // console.log('data: ', data);
 
   //* mutation 사용해서 팔로잉 데이터 보내기
   const { mutate: follwingMutate } = useMutation(addFollowing, {
@@ -21,6 +28,7 @@ const FollowingButton = ({ item }: any) => {
   const onClickFollowingBtn = (item: any) => {
     console.log('팔로잉 버튼을 클릭했습니다.');
     follwingMutate({ ...item, uid: authService?.currentUser?.uid });
+    setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
   };
 
   //* mutation 사용해서 팔로잉 삭제 데이터 보내기
@@ -37,49 +45,50 @@ const FollowingButton = ({ item }: any) => {
   const onClickDeleteFollwing = (item: any) => {
     console.log('팔로잉삭제 버튼을 클릭했습니다');
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
+    setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
   };
 
   //* useQuery 사용해서 following 데이터 불러오기
-  const { data, isLoading, isError } = useQuery('followingData', getFollwing);
+  const {
+    data: followingData,
+    isLoading,
+    isError,
+  } = useQuery('followingData', getFollwing);
 
-  //* following 걸러내기
-  // console.log('item: ', item);
-  // console.log('data: ', data);
-  // console.log('authService.currentUser.uid', authService?.currentUser?.uid);
+  //* 해당 게시물에 대하여 팔로우한 사람은 팔로우 삭제 버튼이 팔로우 하지 않은 사람은 팔로우 추가 버튼을 보이도록 하기
+  //? 팔로잉한 사람 uid를 배열에 담았습니다.
+  const followingUserUid = followingData
+    ?.filter((item: any) => {
+      return item.uid === authService.currentUser?.uid;
+    })
+    .find((item: any) => {
+      return item.follow;
+    })?.follow;
+  // console.log('followingUserUid: ', followingUserUid);
+
+  //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다.
+  useEffect(() => {
+    if (followingUserUid?.indexOf(item.creator) > -1) {
+      setFollwingUserAndCreatorUidState(true);
+    } else {
+      setFollwingUserAndCreatorUidState(false);
+    }
+  }, [followingUserUid, item.creator]);
 
   if (isLoading) return <h1>로딩중 입니다</h1>;
   if (isError) return <h1>통신이 불안정합니다</h1>;
 
   return (
     <div>
-      {/* 해당 게시물에 대하여 팔로우한 사람은 팔로우 삭제 버튼이 팔로우 하지 않은 사람은 팔로우 추가 버튼을 보이도록 하기!! */}
-      {/* {data
-        .map((following: any) => {
-          console.log('following.id: ', following.id);
-          console.log('following.follow: ', following.follow);
-          return following.follow === id;
-          //following.id === authService?.currentUser?.uid;
-        })
-        .map((follow: any) => (
-          <div key={uuidv4()}>
-            {follow === id ? (
-              <StFollowingBtn onClick={() => onClickFollowingBtn(item)}>
-                팔로잉
-              </StFollowingBtn>
-            ) : (
-              <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
-                팔로잉 삭제
-              </StFollowingBtn>
-            )}
-          </div>
-        ))} */}
-
-      <StFollowingBtn onClick={() => onClickFollowingBtn(item)}>
-        팔로잉
-      </StFollowingBtn>
-      <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
-        팔로잉 삭제
-      </StFollowingBtn>
+      {follwingUserAndCreatorUidState ? (
+        <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
+          팔로잉 삭제
+        </StFollowingBtn>
+      ) : (
+        <StFollowingBtn onClick={() => onClickFollowingBtn(item)}>
+          팔로잉
+        </StFollowingBtn>
+      )}
     </div>
   );
 };

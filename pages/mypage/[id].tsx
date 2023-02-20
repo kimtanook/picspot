@@ -1,4 +1,4 @@
-import { getData, deleteData, updataData, getFollwing } from '@/api';
+import { getData, deleteData, updataData, getFollwing, getUser } from '@/api';
 import PostList from '@/components/mypage/PostList';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
@@ -83,22 +83,37 @@ export default function Mypage() {
   //* useQuery 사용해서 following 데이터 불러오기
   const { data: followingData } = useQuery('followingData', getFollwing);
   // console.log('followingData: ', followingData);
-  // console.log('authService.currentUser.uid', authService?.currentUser?.uid);
 
-  if (isLoading) return <h1>로딩 중입니다.</h1>;
-  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+  //* useQuery 사용해서 userData 데이터 불러오기
+  const { data: userData } = useQuery('userData', getUser);
+  // console.log('userData: ', userData);
 
-  //* 팔로잉한 사람 uid 뽑아오기
-  const newArr: any = [];
-
-  followingData
-    .filter((item: any) => {
+  //* 팔로잉한 사람 프로필 닉네임 뽑아오기
+  //? 팔로잉한 사람 uid를 배열에 담았습니다.
+  const selectId = followingData
+    ?.filter((item: any) => {
       return item.uid === authService?.currentUser?.uid;
     })
-    .map((item: any) => newArr.push(item.follow));
+    .find((item: any) => {
+      return item.follow;
+    }).follow;
+  // console.log('selectId: ', selectId);
 
-  //* 스토리지에 이미지 업로드하기
-  //* 스토리지에 있는 이미지 스냅샷해서 URL 가져오기
+  //? userData의 uid를 배열에 담았습니다.
+  const selectdId2 = userData?.map((item: any) => {
+    return item.uid;
+  });
+  // console.log('selectdId2: ', selectdId2);
+
+  //? 팔로잉한 사람 uid와 userData의 uid의 교집합을 배열에 담았습니다.
+  const selectdId3 = selectId?.filter((item: any) => selectdId2.includes(item));
+  console.log('selectdId3: ', selectdId3);
+
+  //? userData와 selectId3의 교집합을 배열에 담았습니다.
+  const selectId4 = userData?.filter((item: any) =>
+    selectdId3.includes(item.uid)
+  );
+  console.log('selectId4: ', selectId4);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
@@ -115,14 +130,10 @@ export default function Mypage() {
       <MyProfileContainer>
         <Profile />
       </MyProfileContainer>
-      <h3>팔로잉 중인사람 uid</h3>
-      {followingData
-        .filter((item: any) => {
-          return item.uid === authService?.currentUser?.uid;
-        })
-        .map((item: any) => (
-          <div key={item.follow}>{item.follow}</div>
-        ))}
+      <h3>팔로잉 중인사람</h3>
+      {selectId4.map((item: any) => (
+        <div key={item.uid}>{item.userName}</div>
+      ))}
 
       <MyProfileListContainer>
         <PostList

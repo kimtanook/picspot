@@ -32,7 +32,7 @@ const PostBox = ({
         수정
       </button>
       <button onClick={() => onClickDeleteData(item.id)}>삭제</button>
-      <Image src={item.imgUrl} alt="image" height={100} width={100} />
+      {/* <Image src={item.imgUrl} alt="image" height={100} width={100} /> */}
     </StPostBox>
   );
 };
