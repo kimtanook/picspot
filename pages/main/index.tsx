@@ -1,7 +1,8 @@
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
-import Image from 'next/image';
+
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';

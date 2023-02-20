@@ -62,6 +62,7 @@ function Landing() {
     </LandingWrap>
   );
 }
+const LoginButton = styled.button``;
 
 export default Landing;
 
