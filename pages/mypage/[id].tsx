@@ -96,7 +96,7 @@ export default function Mypage() {
     })
     .find((item: any) => {
       return item.follow;
-    }).follow;
+    })?.follow;
   // console.log('selectId: ', selectId);
 
   //? userData의 uid를 배열에 담았습니다.
@@ -111,7 +111,7 @@ export default function Mypage() {
 
   //? userData와 selectId3의 교집합을 배열에 담았습니다.
   const selectId4 = userData?.filter((item: any) =>
-    selectdId3.includes(item.uid)
+    selectdId3?.includes(item.uid)
   );
   console.log('selectId4: ', selectId4);
 

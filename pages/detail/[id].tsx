@@ -1,28 +1,16 @@
-import {
-  addCollectionData,
-  deleteCollectionData,
-  getCollection,
-  getData,
-  postCounter,
-  getFollwing,
-  addFollowing,
-  deleteFollwing,
-} from '@/api';
+import { getData, postCounter } from '@/api';
 import Seo from '@/components/Seo';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
 import FollowingButton from '@/components/detail/FollowingButton';
-import { authService } from '@/firebase';
+import CollectionButton from '@/components/detail/CollectionButton';
 
 const Post = ({ id }: any) => {
   const [isOpen, setIsOpen] = useState(false);
-  //* collection 저장 state
-  const [isCollect, setIsCollect] = useState(true);
 
   //* useQuery 사용해서 데이터 불러오기
   const {
@@ -30,9 +18,6 @@ const Post = ({ id }: any) => {
     isLoading,
     isError,
   } = useQuery('detailData', getData);
-
-  //* useQuery 사용해서 collection 데이터 불러오기
-  const { data: collectiondata } = useQuery('collectiondata', getCollection);
 
   const queryClient = useQueryClient();
 
@@ -42,72 +27,16 @@ const Post = ({ id }: any) => {
       queryClient.invalidateQueries('detailData');
     },
   });
-
-  //* mutation 사용해서 collector값 보내기
-  const { mutate: onAddCollection } = useMutation(addCollectionData, {
-    onSuccess: () => {
-      console.log('collection 저장 성공');
-      queryClient.invalidateQueries('collectiondata');
-    },
-    onError: () => {
-      console.log('collection 요청 실패');
-    },
-  });
-
-  //* mutation 사용해서 collector값 삭제하기
-  const { mutate: onDeleteCollection } = useMutation(deleteCollectionData, {
-    onSuccess: () => {
-      console.log('collection 삭제 성공');
-      queryClient.invalidateQueries('collectiondata');
-    },
-    onError: () => {
-      console.log('collection 요청 실패');
-    },
-  });
-  //* collector필드의 value값
-  const collector = authService.currentUser?.uid;
-  let postId = id;
-  // //* 해당 post의 collector들 uid의 배열
-  // const collectorUid = collectiondata
-  //   ?.filter((e: any) => e.id === id)
-  //   ?.map((e: any) => e.collector);
-
   //* 변화된 counting 값 인지
   useEffect(() => {
-    // if (collectorUid?.indexOf(collector) !== -1) {
-    //   //* 담기
-    //   setIsCollect(true);
-    // } else {
-    //   setIsCollect(false);
-    // }
-
     countMutate(id);
   }, []);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
-  //* 만약에 맵을 돌렸을 때 내 이름이 array에 있다면 false 아니면 true
-
-  //* collection 저장 기능입니다.
-  const onClickCollection = (item: any) => {
-    onAddCollection({ ...item, uid: postId, collector: collector });
-    setIsCollect(!isCollect);
-  };
-
-  //* collection 삭제 기능입니다.
-  const deleteCollection = (item: any) => {
-    onDeleteCollection({ ...item, uid: postId, collector: collector });
-    setIsCollect(!isCollect);
-  };
-
   return (
     <>
-      {isCollect ? (
-        <button onClick={onClickCollection}> collection 담기</button>
-      ) : (
-        <button onClick={deleteCollection}> collection 빼기</button>
-      )}
       <Seo title="Detail" />
       {detailData
         .filter((item: any) => {
@@ -191,8 +120,8 @@ const Post = ({ id }: any) => {
               <h3>{item.town}</h3>
               <h3>{item.clickCounter}</h3>
               <Image src={item.imgUrl} alt="image" height={100} width={100} />
-
               <FollowingButton item={item} />
+              <CollectionButton item={item} />
             </StDetailBox>
           </div>
         ))}
