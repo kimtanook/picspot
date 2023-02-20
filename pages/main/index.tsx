@@ -1,6 +1,8 @@
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
-import { ChangeEvent, useEffect, useState } from 'react';
+
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
@@ -17,17 +19,17 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 
 export default function Main() {
-  const router = useRouter();
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeModal, setCloseModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
-  const [selectCity, setSelectCity] = useState(`${router.query.city ?? ''}`);
+  const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
-  const nowuser = authService.currentUser;
-  console.log('selectCity : ', selectCity);
+  const router = useRouter();
+  const nowUser = authService.currentUser;
+
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
       setCloseModal(!closeModal);
@@ -55,24 +57,30 @@ export default function Main() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
-  // [검색] 유저가 검색할 때 고르는 옵션(카테고리) (닉네임 또는 제목)
-  const onChangeSearchOption = (event: ChangeEvent<HTMLSelectElement>) => {
-    visibleReset();
-    setSearchOption(event.target.value);
-  };
-  // [검색] 유저가 옵션(카테고리)을 고른 후 입력하는 input
-  const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
-    visibleReset();
-    setSelectCity('');
-    setSelectTown('');
-    setSearchValue(event.target.value);
-  };
+  const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
 
+  // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
+  const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
+    setSelectCity('제주전체');
+    setSelectTown('');
+    visibleReset();
+    setSearchOption(searchOptionRef.current?.value);
+    setSearchValue(event.target.value);
+    router.push({
+      pathname: '/main',
+      query: { city: '제주전체' },
+    });
+  };
+  console.log('searchValue : ', searchValue);
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
     setSearchValue('');
     visibleReset();
+    router.push({
+      pathname: '/main',
+      query: { city: event.target.value },
+    });
     setSelectCity(event.target.value);
   };
   // [카테고리] 타운 카테고리 onChange
@@ -102,12 +110,12 @@ export default function Main() {
   });
 
   useEffect(() => {
-    // routeChangeComplete = 주소가 완전히 변경되면 실행되는 이벤트
-    router.events.on('routeChangeComplete', visibleReset);
     if (authService.currentUser) {
       setCurrentUser(true);
     }
-  }, [nowuser]);
+    setSelectCity(`${router.query.city}`);
+    visibleReset();
+  }, [nowUser, router]);
 
   return (
     <>
@@ -136,13 +144,13 @@ export default function Main() {
         </Modal>
       )}
       <Search
+        searchOptionRef={searchOptionRef}
         searchValue={searchValue}
-        onChangeSearchOption={onChangeSearchOption}
         onChangeSearchValue={onChangeSearchValue}
       />
       <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
         <Categories value={selectCity} onChange={onChangeSelectCity}>
-          <option value="">제주전체</option>
+          <option value="제주전체">제주전체</option>
           <option value="제주시">제주시</option>
           <option value="서귀포시">서귀포시</option>
         </Categories>
@@ -173,7 +181,7 @@ export default function Main() {
           게시물 작성
         </PostFormButton>
       </div>
-      <h1>{!selectCity ? '제주 전체' : selectCity}</h1>
+      <h1>{selectCity === 'undefined' ? '로딩중입니다.' : selectCity}</h1>
       <div>
         {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
         {status === 'loading' ? (
