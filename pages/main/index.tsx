@@ -19,7 +19,6 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 
 export default function Main() {
-  const router = useRouter();
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeModal, setCloseModal] = useState(false);
@@ -28,7 +27,8 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
-  const nowuser = authService.currentUser;
+  const router = useRouter();
+  const nowUser = authService.currentUser;
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
@@ -110,13 +110,12 @@ export default function Main() {
   });
 
   useEffect(() => {
-    setSelectCity(`${router.query.city}`);
-    visibleReset();
-    router.events.on('routeChangeStart', visibleReset);
     if (authService.currentUser) {
       setCurrentUser(true);
     }
-  }, [nowuser]);
+    setSelectCity(`${router.query.city}`);
+    visibleReset();
+  }, [nowUser, router]);
 
   return (
     <>
