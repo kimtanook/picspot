@@ -135,6 +135,14 @@ export default function Mypage() {
         />
       </MyProfileListContainer>
       <MyKeywordContainer>키워드</MyKeywordContainer>
+      {/* <CollectionList 
+        editState={editState}
+        data={data}
+        setEditImgUpload={setEditImgUpload}
+        setEditTitle={setEditTitle}
+        onClickUpdateData={onClickUpdateData}
+        onClickDeleteData={onClickDeleteData}
+      /> */}
     </MyContainer>
   );
 }

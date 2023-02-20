@@ -32,11 +32,7 @@ const Post = ({ id }: any) => {
   } = useQuery('detailData', getData);
 
   //* useQuery 사용해서 collection 데이터 불러오기
-  const {
-    data: collectiondata,
-    isLoading: isLoadingCollection,
-    isError: isErrorCollection,
-  } = useQuery('detailData', getCollection);
+  const { data: collectiondata } = useQuery('collectiondata', getCollection);
 
   const queryClient = useQueryClient();
 
@@ -51,6 +47,7 @@ const Post = ({ id }: any) => {
   const { mutate: onAddCollection } = useMutation(addCollectionData, {
     onSuccess: () => {
       console.log('collection 저장 성공');
+      queryClient.invalidateQueries('collectiondata');
     },
     onError: () => {
       console.log('collection 요청 실패');
@@ -61,23 +58,35 @@ const Post = ({ id }: any) => {
   const { mutate: onDeleteCollection } = useMutation(deleteCollectionData, {
     onSuccess: () => {
       console.log('collection 삭제 성공');
+      queryClient.invalidateQueries('collectiondata');
     },
     onError: () => {
       console.log('collection 요청 실패');
     },
   });
+  //* collector필드의 value값
+  const collector = authService.currentUser?.uid;
+  let postId = id;
+  // //* 해당 post의 collector들 uid의 배열
+  // const collectorUid = collectiondata
+  //   ?.filter((e: any) => e.id === id)
+  //   ?.map((e: any) => e.collector);
 
   //* 변화된 counting 값 인지
   useEffect(() => {
+    // if (collectorUid?.indexOf(collector) !== -1) {
+    //   //* 담기
+    //   setIsCollect(true);
+    // } else {
+    //   setIsCollect(false);
+    // }
+
     countMutate(id);
   }, []);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
-  //* collector필드의 value값
-  const collector = authService.currentUser?.uid;
-  let postId = id;
   //* 만약에 맵을 돌렸을 때 내 이름이 array에 있다면 false 아니면 true
 
   //* collection 저장 기능입니다.
@@ -91,18 +100,6 @@ const Post = ({ id }: any) => {
     onDeleteCollection({ ...item, uid: postId, collector: collector });
     setIsCollect(!isCollect);
   };
-
-  // //* collection에 담았는지 안담았는지 확인하는 함수
-  // const Lim = collectiondata.map((e: any) => e);
-  // const yim = Lim.filter((e: any) => e.id === id);
-  // const jaeyoung = yim.map((e: any) => e.collector);
-  // const young = jaeyoung.map((e: any) => {
-  //   e.filter((collectors: any) => {
-  //     if (collectors === collector) {
-  //       return 'dd';
-  //     }
-  //   });
-  // });
 
   return (
     <>
