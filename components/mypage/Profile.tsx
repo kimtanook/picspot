@@ -3,27 +3,19 @@ import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
 import { authService, storageService } from '@/firebase';
 import { updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
-import { getAuth } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { customAlert } from '@/utils/alerts';
 
-type ProfileItem = {
-  image: string;
-  nickname: string;
-};
-
-const imgProfile = 'https://t1.daumcdn.net/cfile/tistory/2513B53E55DB206927';
+const imgFile = '/profile-img.png';
 
 const Profile = () => {
-  const profileimg = authService?.currentUser?.photoURL ?? imgProfile;
+  const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [imgEdit, setImgEdit] = useState<string>(profileimg);
   const [nicknameEdit, setNicknameEdit] = useState<string>(
     authService?.currentUser?.displayName as string
   );
   const imgRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  const auth = getAuth();
-  const user = auth.currentUser?.uid!;
 
   // 프로필 수정하기
   const [editmode, setEdit] = useState(false);
@@ -45,6 +37,19 @@ const Profile = () => {
       };
     }
   };
+  // 프로필 사진 삭제
+  const deleteImgFile = async () => {
+    await updateProfile(authService?.currentUser!, {
+      displayName: nicknameEdit,
+      photoURL: '',
+    })
+      .then((res) => {})
+      .catch((error) => {
+        console.log(error);
+      });
+    setImgEdit(imgFile as string);
+  };
+
   // 전체 프로필 수정을 완료하기
   const profileEditComplete = async () => {
     const imgRef = ref(
@@ -60,14 +65,12 @@ const Profile = () => {
     }
     await updateProfile(authService?.currentUser!, {
       displayName: nicknameEdit,
-      photoURL: downloadUrl ? downloadUrl : null,
+      photoURL: downloadUrl ?? null,
     })
       .then((res) => {
         customAlert('프로필 수정 완료하였습니다!');
       })
       .then(() => {
-        localStorage.setItem('User', JSON.stringify(authService.currentUser));
-        localStorage.removeItem('imgURL');
         setEdit(!editmode);
       })
       .catch((error) => {
@@ -97,6 +100,7 @@ const Profile = () => {
                 파일선택
               </ProfilePhotoLabel>
             </ProfilePhotoBtn>
+            <button onClick={deleteImgFile}>삭제</button>
             <ProfilePhotoInput
               hidden
               id="changePhoto"
@@ -146,7 +150,6 @@ const Profile = () => {
 export default Profile;
 
 const ProfileContainer = styled.div`
-  border: 1px solid black;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -163,7 +166,6 @@ const ProfileImage = styled.div<{ img: string }>`
   box-shadow: 2px 2px 1px black;
 `;
 const ProfilePhotoContainer = styled.div`
-  border: 1px solid pink;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,20 +177,17 @@ const ProfilePhotoLabel = styled.label`
 `;
 const ProfilePhotoInput = styled.input``;
 const ProfileNicknameContainer = styled.div`
-  border: 1px solid purple;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 const ProfileNicknameEdit = styled.input`
-  border: 1px solid orange;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const ProfileNickname = styled.div`
-  border: 1px solid orange;
   display: flex;
   justify-content: center;
   align-items: center;

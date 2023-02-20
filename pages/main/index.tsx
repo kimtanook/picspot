@@ -204,7 +204,6 @@ export default function Main() {
   );
 }
 const LoginButton = styled.button``;
-const MypageButton = styled.button``;
 
 const Categories = styled.select`
   background-color: tomato;
