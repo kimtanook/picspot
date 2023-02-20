@@ -74,7 +74,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           limit(20)
         );
       } else {
-        if (city && lastVisible) {
+        if (city !== '제주전체' && lastVisible) {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
@@ -82,7 +82,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
             limit(8),
             startAfter(lastVisible)
           );
-        } else if (city) {
+        } else if (city !== '제주전체') {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
