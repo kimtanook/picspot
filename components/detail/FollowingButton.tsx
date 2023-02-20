@@ -63,7 +63,7 @@ const FollowingButton = ({ item }: any) => {
     .find((item: any) => {
       return item.follow;
     })?.follow;
-  console.log('authFollowingUid: ', authFollowingUid);
+  // console.log('authFollowingUid: ', authFollowingUid);
 
   //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다. -> 팔로우가 있는 유저
   useEffect(() => {
