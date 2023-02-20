@@ -1,4 +1,3 @@
-import LandingPage from './Maps';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';

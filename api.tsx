@@ -11,14 +11,14 @@ import {
   limit,
   startAfter,
   where,
-  arrayUnion,
-  arrayRemove,
-  setDoc,
-  getDoc,
   QueryDocumentSnapshot,
   DocumentData,
   endAt,
   startAt,
+  setDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -34,7 +34,6 @@ export const visibleReset = () => {
 };
 export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
   const [_, option, value, town, city] = queryKey;
-
   const getData: { [key: string]: string }[] = [];
   let q;
 
@@ -47,7 +46,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(4),
+        limit(8),
         startAfter(lastVisible)
       );
     } else if (value) {
@@ -56,7 +55,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(8)
+        limit(20)
       );
     } else {
       if (town && lastVisible) {
@@ -64,7 +63,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(4),
+          limit(8),
           startAfter(lastVisible)
         );
       } else if (town) {
@@ -72,37 +71,37 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(8)
+          limit(20)
         );
       } else {
-        if (city && lastVisible) {
+        if (city !== '제주전체' && lastVisible) {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(4),
+            limit(8),
             startAfter(lastVisible)
           );
-        } else if (city) {
+        } else if (city !== '제주전체') {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(8)
+            limit(20)
           );
         } else {
           if (lastVisible) {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(4),
+              limit(8),
               startAfter(lastVisible)
             );
           } else {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(8)
+              limit(20)
             );
           }
         }
@@ -124,7 +123,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
 };
 
 //* 스토어에서 데이터 불러오기
-export const getDatas = async () => {
+export const getData = async () => {
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
@@ -136,10 +135,42 @@ export const getDatas = async () => {
   return response;
 };
 
+//* 스토어에서 collection데이터 불러오기
+export const getCollection = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'collection'));
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  console.log('collection데이터를 불러왔습니다.');
+
+  return response;
+};
+
 //* 스토어에 데이터 추가하기
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
   console.log('데이터가 추가되었습니다.');
+};
+
+//* 스토어에 collection 컬렉션 데이터 추가하기
+export const addCollectionData: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'collection', data.uid),
+    {
+      collector: arrayUnion(data.collector),
+    },
+    { merge: true }
+  );
+  console.log('게시물이 저장되었습니다');
+};
+//* 스토어에 collection 컬렉션 데이터 삭제하기
+export const deleteCollectionData: any = (data: any) => {
+  updateDoc(doc(dbService, 'collection', data.uid), {
+    collector: arrayRemove(data.collector),
+  }),
+    console.log('게시물이 저장되었습니다');
 };
 
 //* 스토어에 데이터 삭제하기
@@ -220,7 +251,7 @@ export const getFollwing = async () => {
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
   });
-  console.log('데이터를 불러왔습니다.');
+  console.log('팔로잉 데이터를 불러왔습니다.');
 
   return response;
 };
@@ -234,4 +265,17 @@ export const addUser: any = (data: any) => {
     userImg: data.userImg,
   });
   console.log('유저 추가되었습니다');
+};
+
+//* 유저 가져오기
+export const getUser = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'user'));
+  querySnapshot.forEach((doc) => {
+    response.push({ ...doc.data() });
+  });
+  console.log('유저 데이터를 불러왔습니다.');
+
+  return response;
 };
