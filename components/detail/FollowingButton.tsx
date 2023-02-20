@@ -63,16 +63,23 @@ const FollowingButton = ({ item }: any) => {
     .find((item: any) => {
       return item.follow;
     })?.follow;
-  // console.log('authFollowingUid: ', authFollowingUid);
+  console.log('authFollowingUid: ', authFollowingUid);
 
-  //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다.
+  //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다. -> 팔로우가 있는 유저
   useEffect(() => {
-    if (authFollowingUid?.indexOf(item.creator) !== -1) {
-      setFollwingUserAndCreatorUidState(true);
-    } else {
+    if (authFollowingUid?.indexOf(item.creator) === -1) {
       setFollwingUserAndCreatorUidState(false);
+    } else {
+      setFollwingUserAndCreatorUidState(true);
     }
   }, [authFollowingUid, item.creator]);
+
+  //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다. -> 팔로우가 없는 유저
+  useEffect(() => {
+    if (authFollowingUid === undefined) {
+      setFollwingUserAndCreatorUidState(false);
+    }
+  }, []);
 
   if (isLoading) return <h1>로딩중 입니다</h1>;
   if (isError) return <h1>통신이 불안정합니다</h1>;

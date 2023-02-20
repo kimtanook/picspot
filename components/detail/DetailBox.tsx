@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { storageService } from '@/firebase';
 import styled from 'styled-components';
+import { customAlert } from '@/utils/alerts';
 
 const DetailBox = ({ item }: any) => {
   const router = useRouter();
@@ -34,13 +35,14 @@ const DetailBox = ({ item }: any) => {
   const { mutate: onDeleteData } = useMutation(deleteData);
 
   //* 삭제 버튼을 눌렀을때 실행하는 함수
-  const onClickDeleteBtn = (docId: any) => {
+  const onClickDelete = (docId: any) => {
     console.log('삭제 버튼을 눌렀습니다.');
     onDeleteData(docId, {
       onSuccess: () => {
         console.log('삭제 요청 성공');
+        customAlert('삭제를 완료하였습니다!');
         queryClient.invalidateQueries('infiniteData');
-        router.push('/');
+        router.push('/main?city=제주전체');
       },
       onError: () => {
         console.log('삭제 요청 실패');
@@ -108,6 +110,7 @@ const DetailBox = ({ item }: any) => {
           {
             onSuccess: () => {
               console.log('수정 요청 성공');
+              customAlert('수정을 완료하였습니다!');
               queryClient.invalidateQueries('detailData');
               setImageUpload(null);
               setEditTitle('');
@@ -253,7 +256,7 @@ const DetailBox = ({ item }: any) => {
         <button onClick={onClickChangeInput}>수정</button>
       </div>
       <div>
-        <button onClick={() => onClickDeleteBtn(item.id)}>삭제</button>
+        <button onClick={() => onClickDelete(item.id)}>삭제</button>
       </div>
     </>
   );
