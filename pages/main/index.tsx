@@ -14,14 +14,14 @@ import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  const [closeModal, setCloseModal] = useState(false);
+  const [closeLoginModal, setCloseLoginModal] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
@@ -32,7 +32,7 @@ export default function Main() {
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
-      setCloseModal(!closeModal);
+      setCloseLoginModal(!closeLoginModal);
       return;
     }
     if (authService.currentUser) {
@@ -44,8 +44,8 @@ export default function Main() {
     setChatToggle(!chatToggle);
   };
   // 로그인 모달 창 버튼
-  const closeModalButton = () => {
-    setCloseModal(!closeModal);
+  const closeLoginModalButton = () => {
+    setCloseLoginModal(!closeLoginModal);
   };
 
   // 로그아웃
@@ -121,19 +121,32 @@ export default function Main() {
     <>
       <div>
         <Seo title="Home" />
-        {/* 로그인, 로그아웃 버튼 */}
-        {closeModal && <ModalLogin closeModal={closeModalButton} />}
-        {currentUser ? (
-          <LoginButton onClick={logOut}>로그아웃</LoginButton>
-        ) : (
-          <LoginButton onClick={closeModalButton}>로그인</LoginButton>
-        )}
-        {/* 마이페이지 버튼 */}
-        <Link href={'/mypage'}>
-          {authService.currentUser?.displayName
-            ? `${authService.currentUser?.displayName}의 프로필`
-            : '프로필'}
-        </Link>
+        {/* 로그인, 로그아웃, 마이페이지 버튼 */}
+        {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
+        <Profile onClick={() => setIsProfileOpen(!isProfileOpen)}>
+          {authService.currentUser?.photoURL ? (
+            <ProfileImg src={authService.currentUser?.photoURL} />
+          ) : (
+            <ProfileImg src="/profileicon.svg" />
+          )}
+        </Profile>
+        {isProfileOpen === true ? (
+          <Menu>
+            {currentUser ? (
+              <MenuItem onClick={() => router.push('/mypage')}>
+                {' '}
+                마이페이지
+              </MenuItem>
+            ) : (
+              <MenuItem hidden onClick={() => router.push('/mypage')} />
+            )}
+            {currentUser ? (
+              <MenuItem onClick={logOut}>로그아웃</MenuItem>
+            ) : (
+              <MenuItem onClick={closeLoginModalButton}>로그인</MenuItem>
+            )}
+          </Menu>
+        ) : null}
       </div>
       {isOpenModal && (
         <Modal
@@ -250,4 +263,42 @@ const ChatToggleBtn = styled.button`
 
   width: 50px;
   height: 50px;
+`;
+const Profile = styled.div`
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  background-color: white;
+  cursor: pointer;
+`;
+
+const ProfileImg = styled.img`
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  object-fit: cover;
+`;
+
+const Menu = styled.div`
+  width: 100px;
+  height: 85px;
+  position: absolute;
+  top: 95px;
+  right: 20px;
+  background-color: orange;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px orange;
+  text-align: center;
+  color: white;
+  font-family: GmarketSans;
+
+  z-index: 6000;
+`;
+
+const MenuItem = styled.p`
+  cursor: pointer;
 `;

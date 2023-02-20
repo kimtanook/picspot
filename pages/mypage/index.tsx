@@ -115,10 +115,10 @@ export default function Mypage() {
       </MyProfileContainer>
       <h3>팔로잉 중인사람 uid</h3>
       {followingData
-        .filter((item: any) => {
+        ?.filter((item: any) => {
           return item.uid === authService?.currentUser?.uid;
         })
-        .map((item: any) => (
+        ?.map((item: any) => (
           <div key={item.follow}>{item.follow}</div>
         ))}
 
