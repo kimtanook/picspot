@@ -9,17 +9,16 @@ import {
   useMap,
   ZoomControl,
 } from 'react-kakao-maps-sdk';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import Link from 'next/link';
-
+import MapPanTo from './MapPanTo';
 const ModalMaps = () => {
   const { data, isLoading, isError } = useQuery('detailData', getData);
-  const queryClient = useQueryClient();
   const [isOpen, setIsOpen]: any = useState(false);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+
   console.log('data', data);
 
   return (
@@ -33,23 +32,18 @@ const ModalMaps = () => {
         style={{
           // 지도의 크기
           width: '1200px',
-          height: '600px',
+          height: '700px',
         }}
         level={10} // 지도의 확대 레벨
       >
+        <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
+        <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
         {data
           // .filter((item: any) => item.town === '우도')
           .map((item: any) => {
             return (
               <div key={item.id}>
-                <MapMarker
-                  key={item.id}
-                  position={{
-                    lat: item.lat,
-                    lng: item.long,
-                  }}
-                  onClick={() => setIsOpen(item)}
-                />
+                <MapPanTo item={item} setIsOpen={setIsOpen} />
                 {isOpen && isOpen.id === item.id && (
                   <CustomOverlayMap
                     position={{

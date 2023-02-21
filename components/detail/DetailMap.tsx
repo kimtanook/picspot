@@ -1,5 +1,11 @@
 import Image from 'next/image';
-import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
+import {
+  CustomOverlayMap,
+  Map,
+  MapMarker,
+  MapTypeControl,
+  ZoomControl,
+} from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import MapLandingPage from './MapLandingPage';
 
@@ -55,6 +61,8 @@ const DetailMap = ({
           }}
           onClick={() => setIsOpen(true)}
         />
+        <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
+        <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
         {isOpen && (
           <CustomOverlayMap
             position={{
