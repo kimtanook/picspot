@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  updateProfile,
-} from 'firebase/auth';
-import AuthSocial from './AuthSocial';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
+import { useMutation } from 'react-query';
+import { addUser } from '@/api';
 
 interface AuthForm {
   email: string;
@@ -21,7 +18,17 @@ interface Props {
   closeModal: () => void;
 }
 
+//* user 초기 데이터
+let userState: any = {
+  uid: '',
+  userName: '',
+  userImg: '/profileicon.svg',
+};
+
 const AuthSignUp = (props: Props) => {
+  //* useMutation 사용해서 유저 추가하기
+  const { mutate: onAddUser } = useMutation(addUser);
+
   const [registering, setRegistering] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -45,12 +52,29 @@ const AuthSignUp = (props: Props) => {
 
     setRegistering(true);
     await createUserWithEmailAndPassword(authService, data.email, data.password)
-      .then((res) => {
+      .then(() => {
         updateProfile(authService?.currentUser!, {
           displayName: nickname,
         });
+        userState = {
+          ...userState,
+          uid: authService.currentUser?.uid,
+          userName: nickname,
+        };
         customAlert('회원가입을 축하합니다!');
         props.closeModal();
+      })
+      .then(() => {
+        //* 회원가입 시 user 추가하기
+        onAddUser(userState),
+          {
+            onSuccess: () => {
+              console.log('유저추가 요청 성공');
+            },
+            onError: () => {
+              console.log('유저추가 요청 실패');
+            },
+          };
       })
       .catch((error) => {
         if (error.code.includes('auth/weak-password')) {

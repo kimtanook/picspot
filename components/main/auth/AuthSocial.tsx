@@ -4,23 +4,53 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { authService } from '../../../firebase';
 import { customAlert } from '@/utils/alerts';
 import Image from 'next/image';
+import { useMutation } from 'react-query';
+import { addUser } from '@/api';
 
 interface Props {
   closeModal: () => void;
 }
 
 const AuthSocial = (props: Props): JSX.Element => {
+  //* useMutation 사용해서 유저 추가하기
+  const { mutate: onAddUser } = useMutation(addUser);
+
   const [social, setSocial] = useState<boolean>(false);
+
+  //* user 초기 데이터
+  let userState: any = {
+    uid: '',
+    userName: '',
+    userImg: '',
+  };
 
   const signInWithGoogle = async () => {
     setSocial(true);
 
     signInWithPopup(authService, new GoogleAuthProvider())
-      .then((response) => {
+      .then(() => {
+        userState = {
+          ...userState,
+          uid: authService.currentUser?.uid,
+          userName: authService.currentUser?.displayName,
+          userImg: authService.currentUser?.photoURL,
+        };
         props.closeModal();
         customAlert('로그인에 성공하였습니다!');
       })
-      .catch((error) => {
+      //* 구글 로그인 시 user 추가하기
+      .then(() => {
+        onAddUser(userState),
+          {
+            onSuccess: () => {
+              console.log('유저추가 요청 성공');
+            },
+            onError: () => {
+              console.log('유저추가 요청 실패');
+            },
+          };
+      })
+      .catch(() => {
         setSocial(false);
       });
   };

@@ -1,13 +1,8 @@
 import { authService, storageService } from '@/firebase';
 import { useRef, useState } from 'react';
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  uploadString,
-} from 'firebase/storage';
+import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
-import { addData, addUser } from '@/api';
+import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import styled from 'styled-components';
 import MapLandingPage from '../detail/MapLandingPage';
@@ -56,9 +51,6 @@ const PostForm = ({ setOpenModal }: any) => {
   //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData } = useMutation(addData);
 
-  //* useMutation 사용해서 유저 추가하기
-  const { mutate: onAddUser } = useMutation(addUser);
-
   //* image 업로드 후 화면 표시 함수
   const handleImageChange = (e: any) => {
     const {
@@ -74,11 +66,6 @@ const PostForm = ({ setOpenModal }: any) => {
       setImageUpload(result);
     };
   };
-  // //* 이미지 다시 설정 = 취소
-  // const onClearAttachment = () => {
-  //   setImageUpload(null);
-  //   fileInput.current.value = null;
-  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -126,15 +113,6 @@ const PostForm = ({ setOpenModal }: any) => {
             console.log('포스트 추가 요청 실패');
           },
         });
-        onAddUser(userState),
-          {
-            onSuccess: () => {
-              console.log('유저 추가 요청 성공');
-            },
-            onError: () => {
-              console.log('유저 추가 요청 실패');
-            },
-          };
       });
     });
   };

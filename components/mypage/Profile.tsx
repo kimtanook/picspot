@@ -77,6 +77,7 @@ const Profile = () => {
       downloadUrl = await getDownloadURL(response.ref);
     }
 
+    //* 프로필 변경 시 user 수정하기
     editUser = {
       ...editUser,
       userName: nicknameEdit,
