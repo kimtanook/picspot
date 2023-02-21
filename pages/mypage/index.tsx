@@ -1,5 +1,5 @@
 import Header from '@/components/Header';
-import { getFollwing, getUser } from '@/api';
+import { getData, getFollwing, getUser } from '@/api';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
 import { authService } from '@/firebase';
@@ -10,6 +10,8 @@ import styled from 'styled-components';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import { useState } from 'react';
+import CollectionList from '@/components/mypage/CollectionList';
+import { uuidv4 } from '@firebase/util';
 
 export default function Mypage() {
   console.log(authService.currentUser?.displayName);
@@ -25,7 +27,8 @@ export default function Mypage() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
-
+  //* useQuery 사용해서 데이터 불러오기
+  const { data } = useQuery('data', getData);
   //* useQuery 사용해서 following 데이터 불러오기
   const {
     data: followingData,
@@ -80,8 +83,11 @@ export default function Mypage() {
           <Image src={item.userImg} alt="image" height={100} width={100} />
         </div>
       ))}
-
       <MyKeywordContainer>키워드</MyKeywordContainer>
+      {/* 구분하기 위해 임의로 라인 그었습니다! */}
+      <CollectionListBox>
+        <CollectionList key={uuidv4()} postData={data} />
+      </CollectionListBox>
     </MyContainer>
   );
 }
@@ -110,4 +116,8 @@ const MyProfileContainer = styled.div`
 const MyKeywordContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const CollectionListBox = styled.div`
+  border: solid 1px tomato;
 `;

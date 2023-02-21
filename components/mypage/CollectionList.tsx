@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useState } from 'react';
+import { uuidv4 } from '@firebase/util';
 
 const CollectionList = ({ postData }: any) => {
   const [toggle, setToggle]: any = useState(false);
@@ -33,14 +34,20 @@ const CollectionList = ({ postData }: any) => {
     <>
       <button onClick={() => setToggle(!toggle)}>collection 게시물</button>
       {toggle ? (
-        <Div>
+        <Div key={uuidv4()}>
           {postId?.map((item: any) => (
-            <Link href={`/detail/${item.id}`}>
-              <CollectionBox>
-                <div>{item.title}</div>
-                <div>{item.nickname}</div>
-                <div key={item.city}>{item.town}</div>
-                <Image src={item.imgUrl} alt="image" height={100} width={100} />
+            <Link href={`/detail/${item.id}`} key={uuidv4()}>
+              <CollectionBox key={uuidv4()}>
+                <div key={uuidv4()}>{item.title}</div>
+                <div key={uuidv4()}>{item.nickname}</div>
+                <div key={uuidv4()}>{item.town}</div>
+                <Image
+                  src={item.imgUrl}
+                  alt="image"
+                  height={100}
+                  width={100}
+                  key={uuidv4()}
+                />
               </CollectionBox>
             </Link>
           ))}
