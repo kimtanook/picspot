@@ -41,7 +41,18 @@ export default function Main() {
   };
 
   const onClickChatToggle = () => {
-    setChatToggle(!chatToggle);
+    if (!authService.currentUser) {
+      alert('로그인을 해주세요.');
+      closeModalButton();
+      return;
+    }
+    if (
+      chatToggle &&
+      confirm('닫으시면 지금까지의 대화내용이 사라집니다. 닫으시겠습니까?')
+    ) {
+      return setChatToggle(false);
+    }
+    setChatToggle(true);
   };
   // 로그인 모달 창 버튼
   const closeModalButton = () => {
@@ -71,7 +82,7 @@ export default function Main() {
       query: { city: '제주전체' },
     });
   };
-  console.log('searchValue : ', searchValue);
+
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
@@ -115,6 +126,7 @@ export default function Main() {
     }
     setSelectCity(`${router.query.city}`);
     visibleReset();
+    setChatToggle(false);
   }, [nowUser, router]);
 
   return (
@@ -201,11 +213,12 @@ export default function Main() {
             </GridBox>
           </div>
         )}
-
-        {chatToggle ? <Chat /> : null}
-        <ChatToggleBtn onClick={onClickChatToggle}>
-          {chatToggle ? '닫기' : '열기'}
-        </ChatToggleBtn>
+        <ChatWrap>
+          <div>{chatToggle ? <Chat /> : null}</div>
+          <ChatToggleBtn onClick={onClickChatToggle}>
+            {chatToggle ? '닫기' : '열기'}
+          </ChatToggleBtn>
+        </ChatWrap>
         {/* <SearchPlace /> */}
       </div>
     </>
@@ -241,11 +254,20 @@ const ItemBox = styled.div`
   height: 250px;
   margin: 10px;
 `;
+const ChatWrap = styled.div`
+  /* background-color: red; */
+  position: fixed;
+  left: 80%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 520px;
+`;
 const ChatToggleBtn = styled.button`
   position: fixed;
   background-color: aqua;
-  left: 90%;
-  top: 90%;
+  left: 85%;
+  top: 85%;
   border-radius: 50%;
   border: none;
 
