@@ -64,11 +64,12 @@ const ModalStyled = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: gray;
   display: flex;
-  z-index: 10;
+  z-index: 1000000;
   justify-content: center;
   align-items: center;
+
   .modalBody {
     position: absolute;
     color: black;
@@ -78,9 +79,9 @@ const ModalStyled = styled.div`
     z-index: 13;
     text-align: left;
     background-color: rgb(255, 255, 255);
-    border-radius: 20px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
   }
+
   #modalCloseBtn {
     position: absolute;
     top: 215px;

@@ -1,13 +1,15 @@
-// import HomeCategory from './HomeCategory';
-// import HomePost from './HomePost';
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
-
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
-import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
@@ -15,21 +17,15 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData, visibleReset } from '@/api';
 import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
-import { signOut } from 'firebase/auth';
-import { customAlert } from '@/utils/alerts';
 import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 
 export default function Main() {
-  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
-
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
@@ -39,7 +35,6 @@ export default function Main() {
     setIsModalActive(!isModalActive);
   }, [isModalActive]);
   const router = useRouter();
-  const nowUser = authService.currentUser;
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
@@ -50,23 +45,19 @@ export default function Main() {
       setOpenModal(!isOpenModal);
     }
   };
-  // 로그인 모달 창 버튼
-  const closeLoginModalButton = () => {
-    setCloseLoginModal(!closeLoginModal);
-  };
-
-  // 로그아웃
-  const logOut = () => {
-    signOut(authService).then(() => {
-      // Sign-out successful.
-      localStorage.clear();
-      setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
-    });
-  };
 
   const onClickChatToggle = () => {
-    setChatToggle(!chatToggle);
+    if (!authService.currentUser) {
+      alert('로그인을 해주세요.');
+      return;
+    }
+    if (
+      chatToggle &&
+      confirm('닫으시면 지금까지의 대화내용이 사라집니다. 닫으시겠습니까?')
+    ) {
+      return setChatToggle(false);
+    }
+    setChatToggle(true);
   };
 
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
@@ -83,7 +74,7 @@ export default function Main() {
       query: { city: '제주전체' },
     });
   };
-  console.log('searchValue : ', searchValue);
+
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
@@ -96,10 +87,10 @@ export default function Main() {
     setSelectCity(event.target.value);
   };
   // [카테고리] 타운 카테고리 onChange
-  const onChangeSelectTown = (event: ChangeEvent<HTMLSelectElement>) => {
+  const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
-    setSelectTown(event.target.value);
+    setSelectTown(event.currentTarget.value);
   };
 
   // 무한 스크롤
@@ -122,45 +113,73 @@ export default function Main() {
   });
 
   useEffect(() => {
-    if (authService.currentUser) {
-      setCurrentUser(true);
-    }
     setSelectCity(`${router.query.city}`);
     visibleReset();
-  }, [nowUser, router]);
+    setChatToggle(false);
+  }, [router]);
 
   return (
-    <>
-      <div>
-        <Seo title="Home" />
-        <Header />
-        {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-        {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
-        <Profile onClick={() => setIsProfileOpen(!isProfileOpen)}>
-          {authService.currentUser?.photoURL ? (
-            <ProfileImg src={authService.currentUser?.photoURL} />
+    <MainContainer>
+      <Seo title="Home" />
+      <CityCategoryWrap>
+        <CityCategory value={selectCity} onChange={onChangeSelectCity}>
+          <option value="제주전체">제주전체</option>
+          <option value="제주시">제주시</option>
+          <option value="서귀포시">서귀포시</option>
+        </CityCategory>
+      </CityCategoryWrap>
+      <Header />
+      <MainHeaderdiv>
+        <SearchAndForm>
+          <PostFormButton onClick={onClickToggleModal}>
+            + 나의 스팟 추가
+          </PostFormButton>
+          <Search
+            searchOptionRef={searchOptionRef}
+            searchValue={searchValue}
+            onChangeSearchValue={onChangeSearchValue}
+          />
+        </SearchAndForm>
+      </MainHeaderdiv>
+      <CategoriesWrap>
+        <TownCategory>
+          {selectCity === '제주시' ? (
+            <div>
+              <TownBtn onClick={onClickSelectTown} value="애월읍">
+                애월읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="남원읍">
+                남원읍
+              </TownBtn>
+            </div>
+          ) : selectCity === '서귀포시' ? (
+            <div>
+              <TownBtn onClick={onClickSelectTown} value="표선면">
+                표선면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="대정읍">
+                대정읍
+              </TownBtn>
+            </div>
           ) : (
-            <ProfileImg src="/profileicon.svg" />
+            <div>
+              <TownBtn onClick={onClickSelectTown} value="표선면">
+                표선면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="대정읍">
+                대정읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="애월읍">
+                애월읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="남원읍">
+                남원읍
+              </TownBtn>
+            </div>
           )}
-        </Profile>
-        {isProfileOpen === true ? (
-          <Menu>
-            {currentUser ? (
-              <MenuItem onClick={() => router.push('/mypage')}>
-                {' '}
-                마이페이지
-              </MenuItem>
-            ) : (
-              <MenuItem hidden onClick={() => router.push('/mypage')} />
-            )}
-            {currentUser ? (
-              <MenuItem onClick={logOut}>로그아웃</MenuItem>
-            ) : (
-              <MenuItem onClick={closeLoginModalButton}>로그인</MenuItem>
-            )}
-          </Menu>
-        ) : null}
-      </div>
+        </TownCategory>
+      </CategoriesWrap>
+
       {isOpenModal && (
         <Modal
           onClickToggleModal={onClickToggleModal}
@@ -169,72 +188,36 @@ export default function Main() {
           <div>children</div>
         </Modal>
       )}
-      <Search
-        searchOptionRef={searchOptionRef}
-        searchValue={searchValue}
-        onChangeSearchValue={onChangeSearchValue}
-      />
-      <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
-        <Categories value={selectCity} onChange={onChangeSelectCity}>
-          <option value="제주전체">제주전체</option>
-          <option value="제주시">제주시</option>
-          <option value="서귀포시">서귀포시</option>
-        </Categories>
-        {selectCity === '제주시' ? (
-          <Categories value={selectTown} onChange={onChangeSelectTown}>
-            <option value="">읍면동전체</option>
-            <option value="애월읍">애월읍</option>
-            <option value="남원읍">남원읍</option>
-          </Categories>
-        ) : selectCity === '서귀포시' ? (
-          <Categories value={selectTown} onChange={onChangeSelectTown}>
-            <option value="">읍면동전체</option>
-            <option value="표선면">표선면</option>
-            <option value="대정읍">대정읍</option>
-          </Categories>
-        ) : (
-          <Categories value={selectTown} onChange={onChangeSelectTown}>
-            <option value="">읍면동전체</option>
-            <option value="표선면">표선면</option>
-            <option value="대정읍">대정읍</option>
-            <option value="애월읍">애월읍</option>
-            <option value="남원읍">남원읍</option>
-          </Categories>
-        )}
-        <Categories>지역</Categories>
-        <Categories>팔로우</Categories>
-        <PostFormButton onClick={onClickToggleModal}>
-          게시물 작성
-        </PostFormButton>
-      </div>
-      <h1>{selectCity === 'undefined' ? '로딩중입니다.' : selectCity}</h1>
+
       <div>
-        {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
+        {/* 무한 스크롤 */}
         {status === 'loading' ? (
           <div>로딩중입니다.</div>
         ) : status === 'error' ? (
           <div>데이터를 불러오지 못했습니다.</div>
         ) : (
-          <div>
-            <GridBox>
-              {data?.pages.map((data) =>
-                data?.map((item: any) => (
-                  <ItemBox key={uuidv4()}>
-                    <Content item={item} />
-                  </ItemBox>
-                ))
-              )}
-            </GridBox>
-          </div>
+          <GridBox>
+            {data?.pages.map((data) =>
+              data?.map((item: any) => (
+                <ItemBox key={uuidv4()}>
+                  <Content item={item} />
+                </ItemBox>
+              ))
+            )}
+          </GridBox>
         )}
 
-        {chatToggle ? <Chat /> : null}
-        <ChatToggleBtn onClick={onClickChatToggle}>
-          {chatToggle ? '닫기' : '열기'}
-        </ChatToggleBtn>
-        {/* <SearchPlace /> */}
+        <ChatWrap>
+          <div>{chatToggle ? <Chat /> : null}</div>
+          <ChatToggleBtn onClick={onClickChatToggle}>
+            {chatToggle ? '닫기' : '열기'}
+          </ChatToggleBtn>
+        </ChatWrap>
       </div>
-      <MapModalBtn onClick={onClickToggleMapModal}>지도열기</MapModalBtn>;
+      <MapModalBtn onClick={onClickToggleMapModal}>
+        지도에서 핀 보기
+      </MapModalBtn>
+
       {isModalActive ? (
         <CustomModal
           modal={isModalActive}
@@ -246,84 +229,100 @@ export default function Main() {
       ) : (
         ''
       )}
-    </>
+    </MainContainer>
   );
 }
 
-const Categories = styled.select`
-  background-color: tomato;
-  width: 100px;
-  height: 40px;
+const MainContainer = styled.div`
+  width: 1440px;
+  margin: auto;
+`;
+
+const MainHeaderdiv = styled.div`
+  position: relative;
+  width: 1440px;
+`;
+const SearchAndForm = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-left: 65%;
+  width: 440px;
 `;
 const PostFormButton = styled.button`
-  background-color: tomato;
-  width: 100px;
+  border-radius: 20px;
+  color: #1882ff;
+  border: 1px solid cornflowerblue;
+  background-color: white;
+  cursor: pointer;
+  width: 121.16px;
+  height: 31px;
+  z-index: 101;
+`;
+
+const CategoriesWrap = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+`;
+const CityCategoryWrap = styled.div`
+  width: 1440px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const CityCategory = styled.select`
+  font-size: 24px;
+  border: none;
+  border-radius: 20px;
   height: 40px;
+  z-index: 100;
+`;
+const TownCategory = styled.div`
+  margin-top: 40px;
+`;
+const TownBtn = styled.button`
+  background-color: #dcdcdc;
+  width: 66px;
+  height: 26px;
+  margin: 3px;
+  border: none;
+  border-radius: 52px;
+  cursor: pointer;
 `;
 
 const GridBox = styled.div`
+  background-color: gray;
+  margin-top: 80px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  height: 100px;
-  margin: 10px;
+  grid-template-columns: repeat(4, 252px);
+  justify-content: center;
 `;
 const ItemBox = styled.div`
-  background-color: aqua;
-  height: 250px;
+  background-color: pink;
   margin: 10px;
+`;
+const ChatWrap = styled.div`
+  /* background-color: red; */
+  position: fixed;
+  left: 80%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 520px;
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
-  background-color: aqua;
+  background-color: cornflowerblue;
   left: 90%;
   top: 90%;
   border-radius: 50%;
   border: none;
-
   width: 50px;
   height: 50px;
-`;
-const Profile = styled.div`
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  z-index: 999;
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  background-color: white;
-  cursor: pointer;
-`;
-
-const ProfileImg = styled.img`
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  object-fit: cover;
-  position: fixed;
-  top: 10;
-  left: 80;
-  right: 20;
-`;
-
-const Menu = styled.div`
-  width: 100px;
-  height: 85px;
-  position: absolute;
-  top: 95px;
-  right: 20px;
-  background-color: orange;
-  border-radius: 5px;
-  box-shadow: 1px 1px 1px orange;
-  text-align: center;
-  color: white;
-  font-family: GmarketSans;
-
-  z-index: 6000;
-`;
-
-const MenuItem = styled.p`
-  cursor: pointer;
 `;
 
 const MapModalBtn = styled.button`
@@ -336,7 +335,7 @@ const MapModalBtn = styled.button`
   cursor: pointer;
   position: fixed;
   bottom: 10px;
-  width: 80px;
+  width: 100px;
   right: 50%;
   left: 50%;
 `;
