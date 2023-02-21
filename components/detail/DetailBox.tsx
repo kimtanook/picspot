@@ -1,11 +1,11 @@
-import { deleteData, updataData } from '@/api';
+import { deleteData, updateData } from '@/api';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import Dropdown from '../main/Dropdown';
 import { useRouter } from 'next/router';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import { storageService } from '@/firebase';
+import { authService, storageService } from '@/firebase';
 import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
 
@@ -30,6 +30,8 @@ const DetailBox = ({
   setSaveLatLng,
   setSaveAddress,
 }: any) => {
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -73,7 +75,7 @@ const DetailBox = ({
   };
 
   //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdataData } = useMutation(updataData);
+  const { mutate: onUpdateData } = useMutation(updateData);
 
   //* 수정완료 버튼을 눌렀을때 실행하는 함수
   const onClickEdit = (data: any) => {
@@ -109,7 +111,7 @@ const DetailBox = ({
           imgUrl: response,
         };
 
-        onUpdataData(
+        onUpdateData(
           { ...data, imgUrl: response },
           {
             onSuccess: () => {
@@ -253,12 +255,16 @@ const DetailBox = ({
       <h3>{item.city}</h3>
       <h3>{item.town}</h3>
       <h3>{item.clickCounter}</h3>
-      <div>
-        <button onClick={onClickChangeInput}>수정</button>
-      </div>
-      <div>
-        <button onClick={() => onClickDelete(item.id)}>삭제</button>
-      </div>
+      {authService.currentUser?.uid === item.creator && (
+        <>
+          <div>
+            <button onClick={onClickChangeInput}>수정</button>
+          </div>
+          <div>
+            <button onClick={() => onClickDelete(item.id)}>삭제</button>
+          </div>
+        </>
+      )}
     </>
   );
 };

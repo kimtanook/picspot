@@ -61,11 +61,7 @@ const Post = ({ id }: any) => {
   const [isOpen, setIsOpen] = useState(false);
 
   //* useQuery 사용해서 데이터 불러오기
-  const {
-    data: detailData,
-    isLoading,
-    isError,
-  } = useQuery('detailData', getData);
+  const { data: detail, isLoading, isError } = useQuery('detailData', getData);
 
   //* useQuery 사용해서 collection 데이터 불러오기
   const {
@@ -148,8 +144,7 @@ const Post = ({ id }: any) => {
         <button onClick={deleteCollection}> collection 빼기</button>
       )}
       <Seo title="Detail" />
-      <Header />
-      {detailData
+      {detail
         .filter((item: any) => {
           return item.id === id;
         })

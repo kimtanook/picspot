@@ -23,6 +23,8 @@ import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 
 export default function Main() {
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useState(false);
