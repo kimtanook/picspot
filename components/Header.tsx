@@ -40,17 +40,17 @@ const Header = () => {
       {/* 로그인, 로그아웃, 마이페이지 버튼 */}
       {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
       {currentUser ? (
-        <Profile onClick={() => router.push('/mypage')}>
+        <div onClick={() => router.push('/mypage')}>
           {userImg ? (
             <ProfileImg src={userImg} />
           ) : (
             <ProfileImg src="/profileicon.svg" />
           )}
-        </Profile>
+        </div>
       ) : (
-        <Profile onClick={closeLoginModalButton}>
+        <div onClick={closeLoginModalButton}>
           <ProfileImg src="/profileicon.svg" />
-        </Profile>
+        </div>
       )}
     </HeaderContainer>
   );
@@ -60,6 +60,7 @@ export default Header;
 
 const HeaderContainer = styled.div`
   width: 1440px;
+  margin: auto;
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -71,25 +72,9 @@ const Title = styled.div`
   font-size: 24px;
   cursor: pointer;
 `;
-const Profile = styled.div`
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  z-index: 999;
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  background-color: white;
-  cursor: pointer;
-`;
 const ProfileImg = styled.img`
-  margin-left: auto;
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  object-fit: cover;
-  position: fixed;
-  top: 10;
-  left: 80;
-  right: 20;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 `;
