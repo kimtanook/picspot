@@ -1,6 +1,11 @@
 import { authService, storageService } from '@/firebase';
-import { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useRef, useState } from 'react';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadString,
+} from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, addUser } from '@/api';
 import Dropdown from '../mypage/Dropdown';
@@ -10,25 +15,22 @@ import MapLandingPage from '../detail/MapLandingPage';
 const PostForm = ({ setOpenModal }: any) => {
   const queryClient = useQueryClient();
 
-
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
 
-  //! category 클릭, 검색 시 map이동에 관한 통합 state
+  //* category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
+
+  const fileInput: any = useRef();
 
   //* 드롭다운 상태
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [city, setCity] = useState('');
-  // console.log('city: ', city);
   const [town, setTown] = useState('');
-  // console.log('town: ', town);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
-
-  // console.log('주소테스트다임마', saveLatLng);
-  // console.log('주소테스트다임마', saveAddress);
+  const nickname = authService?.currentUser?.displayName;
 
   let postState: any = {
     title: title,
@@ -42,12 +44,13 @@ const PostForm = ({ setOpenModal }: any) => {
     lat: saveLatLng.Ma,
     long: saveLatLng.La,
     address: saveAddress,
+    nickname: nickname,
   };
 
   let userState: any = {
     uid: authService?.currentUser?.uid,
     userName: authService?.currentUser?.displayName,
-    userImg: authService?.currentUser?.photoURL,
+    userImg: '/plusimage.png',
   };
 
   //* useMutation 사용해서 포스트 추가하기
@@ -55,6 +58,27 @@ const PostForm = ({ setOpenModal }: any) => {
 
   //* useMutation 사용해서 유저 추가하기
   const { mutate: onAddUser } = useMutation(addUser);
+
+  //* image 업로드 후 화면 표시 함수
+  const handleImageChange = (e: any) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(theFile);
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      }: any = finishedEvent;
+      setImageUpload(result);
+    };
+  };
+  // //* 이미지 다시 설정 = 취소
+  // const onClearAttachment = () => {
+  //   setImageUpload(null);
+  //   fileInput.current.value = null;
+  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -84,10 +108,9 @@ const PostForm = ({ setOpenModal }: any) => {
     }
 
     const imageRef = ref(storageService, `images/${imageUpload.name}`);
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
+    uploadString(imageRef, imageUpload, 'data_url').then((response) => {
+      getDownloadURL(response.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
-        // console.log('url: ', url);
         const response = url;
         postState = {
           ...postState,
@@ -127,31 +150,41 @@ const PostForm = ({ setOpenModal }: any) => {
   return (
     <>
       <StAddButton onClick={onClickAddData}>추가</StAddButton>
-      <p>
-        <input
-          type="file"
-          accept="image/png, image/jpeg, image/jpg"
-          onChange={(event: any) => {
-            setImageUpload(event.target.files[0]);
-          }}
-        />
-      </p>
-      <p>
-        제목:
-        <input
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-        />
-      </p>
-      <p>
-        내용:
-        <input
-          onChange={(e) => {
-            setContent(e.target.value);
-          }}
-        />
-      </p>
+      <div style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}>
+        <Img>
+          <input
+            type="file"
+            accept="image/png, image/jpeg, image/jpg"
+            onChange={handleImageChange}
+            src={imageUpload}
+            ref={fileInput}
+            alt="image"
+            id="file"
+            style={{
+              height: '100%',
+              width: '100%',
+              display: 'none',
+            }}
+          />
+          {imageUpload && <SpotImg src={imageUpload} />}
+        </Img>
+        <p>
+          제목:
+          <input
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+        </p>
+        <p>
+          내용:
+          <input
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+          />
+        </p>
+      </div>
 
       <div>
         <h3>여행갈 지역을 골라주세요</h3>
@@ -229,4 +262,20 @@ export default PostForm;
 
 const StAddButton = styled.button`
   color: red;
+`;
+
+const Img = styled.label`
+  height: 100px;
+  width: 100px;
+  background-image: url(/plusimage.png);
+  background-position: center;
+  cursor: pointer;
+  margin: 10px;
+`;
+
+const SpotImg = styled.img`
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  object-fit: contain;
 `;

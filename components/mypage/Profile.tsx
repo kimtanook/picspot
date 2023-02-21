@@ -5,10 +5,23 @@ import { updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { customAlert } from '@/utils/alerts';
+import { useMutation } from 'react-query';
+import { updateUser } from '@/api';
 
-const imgFile = '/profile-img.png';
+const imgFile = '/profileicon.svg';
 
 const Profile = () => {
+  // console.log(authService.currentUser?.uid);
+
+  //* useMutation 사용해서 user 데이터 수정하기
+  const { mutate: onUpdateUser } = useMutation(updateUser);
+
+  let editUser: any = {
+    uid: authService.currentUser?.uid,
+    userName: '',
+    userImg: '',
+  };
+
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [imgEdit, setImgEdit] = useState<string>(profileimg);
   const [nicknameEdit, setNicknameEdit] = useState<string>(
@@ -63,6 +76,21 @@ const Profile = () => {
       const response = await uploadString(imgRef, imgDataUrl, 'data_url');
       downloadUrl = await getDownloadURL(response.ref);
     }
+
+    editUser = {
+      ...editUser,
+      userName: nicknameEdit,
+      userImg: downloadUrl,
+    };
+    onUpdateUser(editUser, {
+      onSuccess: () => {
+        console.log('유저수정 요청 성공');
+      },
+      onError: () => {
+        console.log('유저수정 요청 실패');
+      },
+    });
+
     await updateProfile(authService?.currentUser!, {
       displayName: nicknameEdit,
       photoURL: downloadUrl ?? null,

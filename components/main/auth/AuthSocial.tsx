@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { FaGoogle } from 'react-icons/fa';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { authService } from '../../../firebase';
 import { customAlert } from '@/utils/alerts';
+import Image from 'next/image';
 
 interface Props {
   closeModal: () => void;
@@ -33,22 +33,38 @@ const AuthSocial = (props: Props): JSX.Element => {
         onClick={() => signInWithGoogle()}
         disabled={social}
       >
-        <FaGoogle size="48px" />
+        <Image
+          src="/google.svg"
+          alt="image"
+          width={30}
+          height={30}
+          style={{ position: 'absolute' }}
+        />
+
+        <StTextBox>구글 이메일로 로그인하기</StTextBox>
       </GoogleBtn>
     </>
   );
 };
-const GoogleBtn = styled.button`
-  background-color: white;
 
-  border-radius: 10px;
-  border: 1px solid white60;
-  &:active {
-    background-color: white;
-  }
+const GoogleBtn = styled.button`
+  background-color: #f4f4f4;
   &:hover {
     cursor: pointer;
   }
+
+  width: 100%;
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+  padding: 5px;
+  border: 1px solid #8e8e93;
+`;
+
+const StTextBox = styled.div`
+  margin: auto;
 `;
 
 export default AuthSocial;

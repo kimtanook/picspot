@@ -1,138 +1,93 @@
-import { getDatas, deleteData, updataData, getFollwing } from '@/api';
-import PostList from '@/components/mypage/PostList';
+import Header from '@/components/Header';
+import { getData, getFollwing, getUser } from '@/api';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
-import { authService, storageService } from '@/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { authService } from '@/firebase';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
+import { signOut } from 'firebase/auth';
+import { customAlert } from '@/utils/alerts';
+import { useState } from 'react';
+import CollectionList from '@/components/mypage/CollectionList';
+import { uuidv4 } from '@firebase/util';
 
 export default function Mypage() {
-  const queryClient = useQueryClient();
+  console.log(authService.currentUser?.displayName);
+  console.log(authService.currentUser?.photoURL);
+  const [currentUser, setCurrentUser] = useState(false);
 
-  const [editTitle, setEditTitle] = useState('');
-  const [editImgUpload, setEditImgUpload]: any = useState(null);
-
-  let editState: any = {
-    title: editTitle,
-    imgUrl: '',
+  // 로그아웃
+  const logOut = () => {
+    signOut(authService).then(() => {
+      // Sign-out successful.
+      localStorage.clear();
+      setCurrentUser(false);
+      customAlert('로그아웃에 성공하였습니다!');
+    });
   };
-
   //* useQuery 사용해서 데이터 불러오기
-  const { data, isLoading, isError } = useQuery('datas', getDatas);
-  // console.log('data: ', data);
-
-  //* useMutation 사용해서 데이터 삭제하기
-  const { mutate: onDeleteData } = useMutation(deleteData);
-
-  //* 삭제버튼 눌렀을때 실행하는 함수
-  const onClickDeleteData = (docId: any) => {
-    console.log('삭제버튼을 클릭했습니다.');
-    onDeleteData(docId, {
-      onSuccess: () => {
-        console.log('삭제 요청 성공');
-        queryClient.invalidateQueries('datas');
-      },
-      onError: () => {
-        console.log('삭제 요청 실패');
-      },
-    });
-  };
-
-  //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdataData } = useMutation(updataData);
-
-  //* 수정버튼 눌렀을때 실행하는 함수
-  const onClickUpdateData = (data: any) => {
-    console.log('수정버튼을 클릭했습니다.');
-
-    //? 이미지 인풋값이 빈값이면 함수 종료하기
-    if (editImgUpload === null) {
-      alert('이미지를 추가해주세요.');
-      return;
-    }
-
-    //? 이미지를 스토리지에 저장하고 url 받아오기
-    const imageRef = ref(storageService, `images/${editImgUpload.name}`);
-    let response: string;
-    uploadBytes(imageRef, editImgUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        console.log('사진이 업로드 되었습니다.');
-        // console.log('url: ', url);
-        //? 동기적으로 데이터 변경하기
-        response = url;
-        editState = { ...editState, imgUrl: response };
-
-        //? 데이터 추가하는 트리거 실행하기
-        onUpdataData(
-          { ...data, imgUrl: response },
-          {
-            onSuccess: () => {
-              console.log('수정 요청 성공');
-              queryClient.invalidateQueries('datas');
-            },
-            onError: () => {
-              console.log('수정 요청 실패');
-            },
-          }
-        );
-      });
-    });
-  };
-
+  const { data } = useQuery('data', getData);
   //* useQuery 사용해서 following 데이터 불러오기
-  const { data: followingData } = useQuery('followingData', getFollwing);
+  const {
+    data: followingData,
+    isLoading,
+    isError,
+  } = useQuery('followingData', getFollwing);
   // console.log('followingData: ', followingData);
-  // console.log('authService.currentUser.uid', authService?.currentUser?.uid);
+
+  //* useQuery 사용해서 userData 데이터 불러오기
+  const { data: userData } = useQuery('userData', getUser);
+  // console.log('userData: ', userData);
+
+  //* 팔로잉한 사람 프로필 닉네임 뽑아오기
+  //? 팔로잉한 사람 uid를 배열에 담았습니다.
+  const authFollowingUid = followingData
+    ?.filter((item: any) => {
+      return item.uid === authService?.currentUser?.uid;
+    })
+    ?.find((item: any) => {
+      return item.follow;
+    })?.follow;
+  // console.log('authFollowingUid: ', authFollowingUid);
+
+  //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
+  const followingUser = userData?.filter((item: any) =>
+    authFollowingUid?.includes(item.uid)
+  );
+  // console.log('followingUser: ', followingUser);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
-  //* 팔로잉한 사람 uid 뽑아오기
-  const newArr: any = [];
-
-  followingData
-    ?.filter((item: any) => {
-      return item.uid === authService?.currentUser?.uid;
-    })
-    ?.map((item: any) => newArr.push(item.follow));
-
-  console.log('newArr: ', newArr);
-
   return (
     <MyContainer>
+      <Header />
       <MyTextDiv>
         <Seo title="My" />
         <h1>마이페이지입니다</h1>
-        <Link href={'/main'}>
-          <ToMainpage>메인페이지로 돌아가기</ToMainpage>
-        </Link>
       </MyTextDiv>
+      <Link href={'//main?city=제주전체'}>
+        {authService.currentUser ? (
+          <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+        ) : null}
+      </Link>
       <MyProfileContainer>
         <Profile />
       </MyProfileContainer>
-      <h3>팔로잉 중인사람 uid</h3>
-      {followingData
-        .filter((item: any) => {
-          return item.uid === authService?.currentUser?.uid;
-        })
-        .map((item: any) => (
-          <div key={item.follow}>{item.follow}</div>
-        ))}
-
-      <MyProfileListContainer>
-        <PostList
-          editState={editState}
-          data={data}
-          setEditImgUpload={setEditImgUpload}
-          setEditTitle={setEditTitle}
-          onClickUpdateData={onClickUpdateData}
-          onClickDeleteData={onClickDeleteData}
-        />
-      </MyProfileListContainer>
+      <h3>팔로잉 중인사람</h3>
+      {followingUser?.map((item: any) => (
+        <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
+          <div>{item.userName}</div>
+          <Image src={item.userImg} alt="image" height={100} width={100} />
+        </div>
+      ))}
       <MyKeywordContainer>키워드</MyKeywordContainer>
+      {/* 구분하기 위해 임의로 라인 그었습니다! */}
+      <CollectionListBox>
+        <CollectionList key={uuidv4()} postData={data} />
+      </CollectionListBox>
     </MyContainer>
   );
 }
@@ -151,23 +106,18 @@ const MyTextDiv = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-const ToMainpage = styled.button``;
+const LogoutButton = styled.button``;
 
 const MyProfileContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-const MyProfileListContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  align-self: auto;
-  overflow: scroll;
-`;
-
 const MyKeywordContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const CollectionListBox = styled.div`
+  border: solid 1px tomato;
 `;
