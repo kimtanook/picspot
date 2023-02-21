@@ -87,16 +87,6 @@ const DetailMap = ({
                     <StOverLayCounter>
                       조회수 : {item.clickCounter}
                     </StOverLayCounter>
-                    <div>
-                      <a
-                        href="https://www.kakaocorp.com/main"
-                        target="_blank"
-                        className="link"
-                        rel="noreferrer"
-                      >
-                        페이지이동(기능추가예정)
-                      </a>
-                    </div>
                   </StOverLayDesc>
                 </StOverLayBody>
               </StOverLayInfo>

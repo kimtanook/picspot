@@ -6,10 +6,12 @@ import {
   Map,
   MapMarker,
   MapTypeControl,
+  useMap,
   ZoomControl,
 } from 'react-kakao-maps-sdk';
 import { useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 const ModalMaps = () => {
   const { data, isLoading, isError } = useQuery('detailData', getData);
@@ -35,8 +37,6 @@ const ModalMaps = () => {
         }}
         level={10} // 지도의 확대 레벨
       >
-        <MapTypeControl position={kakao.maps.ControlPosition.TOPRIGHT} />
-        <ZoomControl position={kakao.maps.ControlPosition.RIGHT} />
         {data
           // .filter((item: any) => item.town === '우도')
           .map((item: any) => {
@@ -84,16 +84,15 @@ const ModalMaps = () => {
                             <StOverLayCounter>
                               조회수 : {item.clickCounter}
                             </StOverLayCounter>
-                            <div>
-                              <a
-                                href="https://www.kakaocorp.com/main"
-                                target="_blank"
-                                className="link"
-                                rel="noreferrer"
-                              >
-                                페이지이동(기능추가예정)
-                              </a>
-                            </div>
+
+                            <StOverLayLink
+                              href={`/detail/${item.id}`}
+                              target="_blank"
+                              className="link"
+                              rel="noreferrer"
+                            >
+                              자세히보기
+                            </StOverLayLink>
                           </StOverLayDesc>
                         </StOverLayBody>
                       </StOverLayInfo>
@@ -204,5 +203,10 @@ const StOverLayImg = styled.div`
   border: 1px solid #ddd;
   color: #888;
   overflow: hidden;
+`;
+
+const StOverLayLink = styled.a`
+  color: inherit;
+  text-decoration: none;
 `;
 export default ModalMaps;
