@@ -46,7 +46,17 @@ export default function Main() {
   };
 
   const onClickChatToggle = () => {
-    setChatToggle(!chatToggle);
+    if (!authService.currentUser) {
+      alert('로그인을 해주세요.');
+      return;
+    }
+    if (
+      chatToggle &&
+      confirm('닫으시면 지금까지의 대화내용이 사라집니다. 닫으시겠습니까?')
+    ) {
+      return setChatToggle(false);
+    }
+    setChatToggle(true);
   };
 
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
@@ -63,7 +73,7 @@ export default function Main() {
       query: { city: '제주전체' },
     });
   };
-  console.log('searchValue : ', searchValue);
+
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
@@ -107,6 +117,7 @@ export default function Main() {
     }
     setSelectCity(`${router.query.city}`);
     visibleReset();
+    setChatToggle(false);
   }, [nowUser, router]);
 
   return (
@@ -163,6 +174,7 @@ export default function Main() {
             <div>children</div>
           </Modal>
         )}
+
         <h1>{selectCity === 'undefined' ? '로딩중입니다.' : selectCity}</h1>
         <div>
           {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
@@ -184,11 +196,12 @@ export default function Main() {
             </div>
           )}
 
-          {chatToggle ? <Chat /> : null}
-          <ChatToggleBtn onClick={onClickChatToggle}>
-            {chatToggle ? '닫기' : '열기'}
-          </ChatToggleBtn>
-          {/* <SearchPlace /> */}
+          <ChatWrap>
+            <div>{chatToggle ? <Chat /> : null}</div>
+            <ChatToggleBtn onClick={onClickChatToggle}>
+              {chatToggle ? '닫기' : '열기'}
+            </ChatToggleBtn>
+          </ChatWrap>
         </div>
         <MapModalBtn onClick={onClickToggleMapModal}>
           지도에서 핀 보기
@@ -247,6 +260,15 @@ const ItemBox = styled.div`
   height: 250px;
   margin: 10px;
 `;
+const ChatWrap = styled.div`
+  /* background-color: red; */
+  position: fixed;
+  left: 80%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 520px;
+`;
 const ChatToggleBtn = styled.button`
   position: fixed;
   background-color: cornflowerblue;
@@ -254,7 +276,6 @@ const ChatToggleBtn = styled.button`
   top: 90%;
   border-radius: 50%;
   border: none;
-
   width: 50px;
   height: 50px;
 `;
