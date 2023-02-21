@@ -33,7 +33,6 @@ export const visibleReset = () => {
 };
 export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
   const [_, option, value, town, city] = queryKey;
-
   const getData: { [key: string]: string }[] = [];
   let q;
 
@@ -46,7 +45,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(4),
+        limit(8),
         startAfter(lastVisible)
       );
     } else if (value) {
@@ -55,7 +54,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(8)
+        limit(20)
       );
     } else {
       if (town && lastVisible) {
@@ -63,7 +62,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(4),
+          limit(8),
           startAfter(lastVisible)
         );
       } else if (town) {
@@ -71,44 +70,43 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(8)
+          limit(20)
         );
       } else {
-        if (city && lastVisible) {
+        if (city !== '제주전체' && lastVisible) {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(4),
+            limit(8),
             startAfter(lastVisible)
           );
-        } else if (city) {
+        } else if (city !== '제주전체') {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(8)
+            limit(20)
           );
         } else {
           if (lastVisible) {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(4),
+              limit(8),
               startAfter(lastVisible)
             );
           } else {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(8)
+              limit(20)
             );
           }
         }
       }
     }
   }
-
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     getData.push({ id: doc.id, ...doc.data() });
@@ -299,21 +297,21 @@ export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
 
   return response;
 };
-//* post town 기준 데이터 가져오기
-export const getTownDataJeju = async ({ queryKey }: { queryKey: string[] }) => {
-  const [town] = queryKey;
-  const response: any = [];
-  let q = query(
-    collection(dbService, 'post'),
-    where('town', '==', '우도'),
-    orderBy('createdAt', 'desc')
-  );
+// //* post town 기준 데이터 가져오기
+// export const getTownDataJeju = async ({ queryKey }: { queryKey: string[] }) => {
+//   const [_, town] = queryKey;
+//   const response: any = [];
+//   let q = query(
+//     collection(dbService, 'post'),
+//     where('town', '==', town),
+//     orderBy('createdAt', 'desc')
+//   );
 
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    response.push({ id: doc.id, ...doc.data() });
-  });
-  console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
+//   const querySnapshot = await getDocs(q);
+//   querySnapshot.forEach((doc) => {
+//     response.push({ id: doc.id, ...doc.data() });
+//   });
+//   console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
 
-  return response;
-};
+//   return response;
+// };

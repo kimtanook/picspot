@@ -1,10 +1,16 @@
+import { getCollection, getData, getTownData, getTownDataJeju } from '@/api';
 import { authService, dbService } from '@/firebase';
+import Image from 'next/image';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { uuidv4 } from '@firebase/util';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import MyPostList from './MyPostList';
 import MyCollectItem from './MyCollectItem';
 
-const Town = ({ value }: { value: string }) => {
+const CollectorCategory = ({ value }: { value: string }) => {
   //* post town 기준 데이터 가져오기
   const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
     const [_, town] = queryKey;
@@ -24,16 +30,13 @@ const Town = ({ value }: { value: string }) => {
     return response;
   };
 
-  //* useQuery 사용해서 town 데이터 불러오기
-  //* => 해당 town의 data들
+  //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery(['data', value], getTownData);
   // console.log('data:', data);
-
-  //* town데이터 creator 와 내 id가 같으면 그 item을 출력
   const myPostList = data?.filter(
     (item: any) => item.creator === authService.currentUser?.uid
   );
-  // console.log('myPostList', myPostList);
+  console.log('myPostList', myPostList);
 
   return (
     <TownWrap>
@@ -45,7 +48,7 @@ const Town = ({ value }: { value: string }) => {
   );
 };
 
-export default Town;
+export default CollectorCategory;
 
 const TownWrap = styled.div`
   width: 300px;

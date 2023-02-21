@@ -69,7 +69,7 @@ export default function Mypage() {
         <Seo title="My" />
         <h1>마이페이지입니다</h1>
       </MyTextDiv>
-      <Link href={'//main?city=제주전체'}>
+      <Link href={'/main?city=제주전체'}>
         {authService.currentUser ? (
           <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
         ) : null}
@@ -86,12 +86,16 @@ export default function Mypage() {
       ))}
       <MyKeywordContainer>키워드</MyKeywordContainer>
       {/* 구분하기 위해 임의로 라인 그었습니다! */}
-      <MyPostListBox>
-        <MyPostList />
-      </MyPostListBox>
-      <CollectionListBox>
-        <CollectionList key={uuidv4()} postData={data} />
-      </CollectionListBox>
+      <div>
+        <MyPostListBox>
+          <div>내 게시물</div>
+          <MyPostList />
+        </MyPostListBox>
+        <CollectionListBox>
+          <div>저장된 게시물</div>
+          <CollectionList postData={data} />
+        </CollectionListBox>
+      </div>
     </MyContainer>
   );
 }
@@ -124,9 +128,11 @@ const MyKeywordContainer = styled.div`
 
 const CollectionListBox = styled.div`
   border: solid 1px tomato;
+  display: flex;
+  flex-direction: row;
 `;
 const MyPostListBox = styled.div`
   border: solid 1px tomato;
-  width: 100px;
-  height: 100px;
+  display: flex;
+  flex-direction: row;
 `;
