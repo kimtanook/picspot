@@ -4,30 +4,27 @@ import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
 import { authService } from '@/firebase';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { signOut } from 'firebase/auth';
-import { customAlert } from '@/utils/alerts';
-import { useState } from 'react';
 import CollectionList from '@/components/mypage/CollectionList';
 import { uuidv4 } from '@firebase/util';
 import MyPostList from '@/components/mypage/MyPostList';
+import { useState } from 'react';
 
-export default function Mypage() {
-  // console.log(authService.currentUser?.displayName);
-  // console.log(authService.currentUser?.photoURL);
+interface propsType {
+  followingCount: number;
+  followerCount: number;
+}
+type ProfileItemProps = {
+  nickname: string;
+  image: string;
+  followingCount: number;
+  followerCount: number;
+};
+
+export default function Mypage({ followingCount, followerCount }: propsType) {
   const [currentUser, setCurrentUser] = useState(false);
 
-  // 로그아웃
-  const logOut = () => {
-    signOut(authService).then(() => {
-      // Sign-out successful.
-      localStorage.clear();
-      setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
-    });
-  };
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
   //* useQuery 사용해서 following 데이터 불러오기
@@ -63,62 +60,49 @@ export default function Mypage() {
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   return (
-    <MyContainer>
+    <>
+      <Seo title="My" />
       <Header />
-      <MyTextDiv>
-        <Seo title="My" />
-        <h1>마이페이지입니다</h1>
-      </MyTextDiv>
-      <Link href={'/main?city=제주전체'}>
-        {authService.currentUser ? (
-          <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
-        ) : null}
-      </Link>
-      <MyProfileContainer>
-        <Profile />
-      </MyProfileContainer>
-      <h3>팔로잉 중인사람</h3>
-      {followingUser?.map((item: any) => (
-        <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-          <div>{item.userName}</div>
-          <Image src={item.userImg} alt="image" height={100} width={100} />
+      <MyContainer>
+        <MyProfileContainer>
+          <Profile />
+        </MyProfileContainer>
+        <h3>팔로잉 중인사람</h3>
+        {followingUser?.map((item: any) => (
+          <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
+            <div>{item.userName}</div>
+            <Image src={item.userImg} alt="image" height={100} width={100} />
+          </div>
+        ))}
+        <MyKeywordContainer>키워드</MyKeywordContainer>
+        {/* 구분하기 위해 임의로 라인 그었습니다! */}
+        <div>
+          <MyPostListBox>
+            <div>내 게시물</div>
+            <MyPostList />
+          </MyPostListBox>
+          <CollectionListBox>
+            <div>저장된 게시물</div>
+            <CollectionList postData={data} />
+          </CollectionListBox>
         </div>
-      ))}
-      <MyKeywordContainer>키워드</MyKeywordContainer>
-      {/* 구분하기 위해 임의로 라인 그었습니다! */}
-      <div>
-        <MyPostListBox>
-          <div>내 게시물</div>
-          <MyPostList />
-        </MyPostListBox>
-        <CollectionListBox>
-          <div>저장된 게시물</div>
-          <CollectionList postData={data} />
-        </CollectionListBox>
-      </div>
-    </MyContainer>
+      </MyContainer>
+    </>
   );
 }
+
 const MyContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 55vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
-const MyTextDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-const LogoutButton = styled.button``;
-
 const MyProfileContainer = styled.div`
-  display: flex;
-  justify-content: center;
+  width: 600px;
+  height: 200px;
 `;
 
 const MyKeywordContainer = styled.div`
