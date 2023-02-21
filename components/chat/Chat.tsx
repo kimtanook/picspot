@@ -17,6 +17,7 @@ const Chat = () => {
   const [connected, setConnected] = useState<boolean>(false);
   const [chat, setChat] = useState<IMessage[]>([]);
   const [toggle, setToggle] = useState(false);
+
   const onChangeRoom = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRoomName(event.target.value);
   };

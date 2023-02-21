@@ -1,10 +1,10 @@
+// import HomeCategory from './HomeCategory';
+// import HomePost from './HomePost';
+import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
-
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import ModalLogin from '@/components/ModalLogin';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
@@ -12,27 +12,32 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData, visibleReset } from '@/api';
 import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
-import { signOut } from 'firebase/auth';
-import { customAlert } from '@/utils/alerts';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
+import { CustomModal } from '@/components/common/CustomModal';
+import ModalMaps from '@/components/detail/ModalMaps';
 
 export default function Main() {
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  const [closeModal, setCloseModal] = useState(false);
+  const [closeLoginModal, setCloseLoginModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
+  const [isModalActive, setIsModalActive] = useState(false);
+  const onClickToggleMapModal = useCallback(() => {
+    setIsModalActive(!isModalActive);
+  }, [isModalActive]);
   const router = useRouter();
   const nowUser = authService.currentUser;
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
-      setCloseModal(!closeModal);
+      setCloseLoginModal(!closeLoginModal);
       return;
     }
     if (authService.currentUser) {
@@ -43,7 +48,6 @@ export default function Main() {
   const onClickChatToggle = () => {
     if (!authService.currentUser) {
       alert('로그인을 해주세요.');
-      closeModalButton();
       return;
     }
     if (
@@ -54,20 +58,7 @@ export default function Main() {
     }
     setChatToggle(true);
   };
-  // 로그인 모달 창 버튼
-  const closeModalButton = () => {
-    setCloseModal(!closeModal);
-  };
 
-  // 로그아웃
-  const logOut = () => {
-    signOut(authService).then(() => {
-      // Sign-out successful.
-      localStorage.clear();
-      setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
-    });
-  };
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
 
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
@@ -130,119 +121,134 @@ export default function Main() {
   }, [nowUser, router]);
 
   return (
-    <>
-      <div>
-        <Seo title="Home" />
-        {/* 로그인, 로그아웃 버튼 */}
-        {closeModal && <ModalLogin closeModal={closeModalButton} />}
-        {currentUser ? (
-          <LoginButton onClick={logOut}>로그아웃</LoginButton>
-        ) : (
-          <LoginButton onClick={closeModalButton}>로그인</LoginButton>
-        )}
-        {/* 마이페이지 버튼 */}
-        <Link href={'/mypage'}>
-          {authService.currentUser?.displayName
-            ? `${authService.currentUser?.displayName}의 프로필`
-            : '프로필'}
-        </Link>
-      </div>
-      {isOpenModal && (
-        <Modal
-          onClickToggleModal={onClickToggleModal}
-          setOpenModal={setOpenModal}
-        >
-          <div>children</div>
-        </Modal>
-      )}
-      <Search
-        searchOptionRef={searchOptionRef}
-        searchValue={searchValue}
-        onChangeSearchValue={onChangeSearchValue}
-      />
-      <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
-        <Categories value={selectCity} onChange={onChangeSelectCity}>
-          <option value="제주전체">제주전체</option>
-          <option value="제주시">제주시</option>
-          <option value="서귀포시">서귀포시</option>
-        </Categories>
-        {selectCity === '제주시' ? (
-          <Categories value={selectTown} onChange={onChangeSelectTown}>
-            <option value="">읍면동전체</option>
-            <option value="애월읍">애월읍</option>
-            <option value="남원읍">남원읍</option>
+    <MainContainer>
+      <Seo title="Home" />
+      <MainHeaderdiv>
+        <Header />
+        <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
+          <Categories value={selectCity} onChange={onChangeSelectCity}>
+            <option value="제주전체">제주전체</option>
+            <option value="제주시">제주시</option>
+            <option value="서귀포시">서귀포시</option>
           </Categories>
-        ) : selectCity === '서귀포시' ? (
-          <Categories value={selectTown} onChange={onChangeSelectTown}>
-            <option value="">읍면동전체</option>
-            <option value="표선면">표선면</option>
-            <option value="대정읍">대정읍</option>
-          </Categories>
-        ) : (
-          <Categories value={selectTown} onChange={onChangeSelectTown}>
-            <option value="">읍면동전체</option>
-            <option value="표선면">표선면</option>
-            <option value="대정읍">대정읍</option>
-            <option value="애월읍">애월읍</option>
-            <option value="남원읍">남원읍</option>
-          </Categories>
-        )}
-        <Categories>지역</Categories>
-        <Categories>팔로우</Categories>
+          {selectCity === '제주시' ? (
+            <Categories value={selectTown} onChange={onChangeSelectTown}>
+              <option value="">읍면동전체</option>
+              <option value="애월읍">애월읍</option>
+              <option value="남원읍">남원읍</option>
+            </Categories>
+          ) : selectCity === '서귀포시' ? (
+            <Categories value={selectTown} onChange={onChangeSelectTown}>
+              <option value="">읍면동전체</option>
+              <option value="표선면">표선면</option>
+              <option value="대정읍">대정읍</option>
+            </Categories>
+          ) : (
+            <Categories value={selectTown} onChange={onChangeSelectTown}>
+              <option value="">읍면동전체</option>
+              <option value="표선면">표선면</option>
+              <option value="대정읍">대정읍</option>
+              <option value="애월읍">애월읍</option>
+              <option value="남원읍">남원읍</option>
+            </Categories>
+          )}
+          <Categories>지역</Categories>
+          <Categories>팔로우</Categories>
+        </div>
+
+        <Search
+          searchOptionRef={searchOptionRef}
+          searchValue={searchValue}
+          onChangeSearchValue={onChangeSearchValue}
+        />
         <PostFormButton onClick={onClickToggleModal}>
-          게시물 작성
+          + 나의 스팟 추가
         </PostFormButton>
-      </div>
-      <h1>{selectCity === 'undefined' ? '로딩중입니다.' : selectCity}</h1>
-      <div>
-        {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
-        {status === 'loading' ? (
-          <div>로딩중입니다.</div>
-        ) : status === 'error' ? (
-          <div>데이터를 불러오지 못했습니다.</div>
-        ) : (
-          <div>
-            <GridBox>
-              {data?.pages.map((data) =>
-                data?.map((item: any) => (
-                  <ItemBox key={uuidv4()}>
-                    <Content item={item} />
-                  </ItemBox>
-                ))
-              )}
-            </GridBox>
-          </div>
+      </MainHeaderdiv>
+      <MainBodydiv>
+        {isOpenModal && (
+          <Modal
+            onClickToggleModal={onClickToggleModal}
+            setOpenModal={setOpenModal}
+          >
+            <div>children</div>
+          </Modal>
         )}
-        <ChatWrap>
-          <div>{chatToggle ? <Chat /> : null}</div>
-          <ChatToggleBtn onClick={onClickChatToggle}>
-            {chatToggle ? '닫기' : '열기'}
-          </ChatToggleBtn>
-        </ChatWrap>
-        {/* <SearchPlace /> */}
-      </div>
-    </>
+
+        <h1>{selectCity === 'undefined' ? '로딩중입니다.' : selectCity}</h1>
+        <div>
+          {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
+          {status === 'loading' ? (
+            <div>로딩중입니다.</div>
+          ) : status === 'error' ? (
+            <div>데이터를 불러오지 못했습니다.</div>
+          ) : (
+            <div>
+              <GridBox>
+                {data?.pages.map((data) =>
+                  data?.map((item: any) => (
+                    <ItemBox key={uuidv4()}>
+                      <Content item={item} />
+                    </ItemBox>
+                  ))
+                )}
+              </GridBox>
+            </div>
+          )}
+
+          <ChatWrap>
+            <div>{chatToggle ? <Chat /> : null}</div>
+            <ChatToggleBtn onClick={onClickChatToggle}>
+              {chatToggle ? '닫기' : '열기'}
+            </ChatToggleBtn>
+          </ChatWrap>
+        </div>
+        <MapModalBtn onClick={onClickToggleMapModal}>
+          지도에서 핀 보기
+        </MapModalBtn>
+
+        {isModalActive ? (
+          <CustomModal
+            modal={isModalActive}
+            setModal={setIsModalActive}
+            width="1200"
+            height="700"
+            element={<ModalMaps />}
+          />
+        ) : (
+          ''
+        )}
+      </MainBodydiv>
+    </MainContainer>
   );
 }
-const LoginButton = styled.button``;
-const MypageButton = styled.button``;
+
+const MainContainer = styled.div``;
+
+const MainHeaderdiv = styled.div`
+  display: flex;
+  align-items: center;
+  height: 80px;
+`;
+
+const PostFormButton = styled.button`
+  border-radius: 20px;
+  color: cornflowerblue;
+  border: 1px solid cornflowerblue;
+  background-color: none;
+  width: 130px;
+  height: 25px;
+  cursor: pointer;
+`;
+
+const MainBodydiv = styled.div``;
 
 const Categories = styled.select`
   background-color: tomato;
   width: 100px;
   height: 40px;
 `;
-const PostFormButton = styled.button`
-  background-color: tomato;
-  width: 100px;
-  height: 40px;
-`;
 
-const ImageBox = styled.div`
-  border: tomato 1px solid;
-  display: flex;
-  flex-direction: row;
-`;
 const GridBox = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -250,7 +256,7 @@ const GridBox = styled.div`
   margin: 10px;
 `;
 const ItemBox = styled.div`
-  background-color: aqua;
+  background-color: pink;
   height: 250px;
   margin: 10px;
 `;
@@ -265,12 +271,26 @@ const ChatWrap = styled.div`
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
-  background-color: aqua;
-  left: 85%;
-  top: 85%;
+  background-color: cornflowerblue;
+  left: 90%;
+  top: 90%;
   border-radius: 50%;
   border: none;
-
   width: 50px;
   height: 50px;
+`;
+
+const MapModalBtn = styled.button`
+  background-color: cornflowerblue;
+  border: 0px;
+  border-radius: 7px;
+  padding: 5px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  position: fixed;
+  bottom: 10px;
+  width: 100px;
+  right: 50%;
+  left: 50%;
 `;
