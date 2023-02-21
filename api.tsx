@@ -18,9 +18,8 @@ import {
   setDoc,
   arrayUnion,
   arrayRemove,
-  getDoc,
 } from 'firebase/firestore';
-import { dbService } from './firebase';
+import { authService, dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
 // startAt() 또는 startAfter()메서드를 사용하여 쿼리의 시작점을 정의합니다. startAt()메서드는 시작점을 포함하고, startAfter() 메서드는 시작점을 제외합니다.
@@ -135,44 +134,11 @@ export const getData = async () => {
   return response;
 };
 
-//* 스토어에서 collection데이터 불러오기
-export const getCollection = async () => {
-  const response: any = [];
-
-  const querySnapshot = await getDocs(collection(dbService, 'collection'));
-  querySnapshot.forEach((doc) => {
-    response.push({ id: doc.id, ...doc.data() });
-  });
-  console.log('collection데이터를 불러왔습니다.');
-
-  return response;
-};
-
 //* 스토어에 데이터 추가하기
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
   console.log('데이터가 추가되었습니다.');
 };
-
-//* 스토어에 collection 컬렉션 데이터 추가하기
-export const addCollectionData: any = (data: any) => {
-  setDoc(
-    doc(dbService, 'collection', data.uid),
-    {
-      collector: arrayUnion(data.collector),
-    },
-    { merge: true }
-  );
-  console.log('게시물이 저장되었습니다');
-};
-//* 스토어에 collection 컬렉션 데이터 삭제하기
-export const deleteCollectionData: any = (data: any) => {
-  updateDoc(doc(dbService, 'collection', data.uid), {
-    collector: arrayRemove(data.collector),
-  }),
-    console.log('게시물이 저장되었습니다');
-};
-
 //* 스토어에 데이터 삭제하기
 export const deleteData: any = (docId: any) => {
   deleteDoc(doc(dbService, 'post', docId));
@@ -185,7 +151,7 @@ export const updateData: any = (data: any) => {
   console.log('데이터가 수정되었습니다.');
 };
 
-// 댓글 가져오기
+//* 댓글 가져오기
 export const getComment = async ({ queryKey }: any) => {
   const [, postId] = queryKey;
   const response: any = [];
@@ -200,7 +166,7 @@ export const getComment = async ({ queryKey }: any) => {
   return response;
 };
 
-// 댓글 추가
+//* 댓글 추가
 export const addComment = async (item: any) => {
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
@@ -208,7 +174,7 @@ export const addComment = async (item: any) => {
   );
 };
 
-// 댓글 삭제
+//* 댓글 삭제
 
 export const deleteComment = async (item: any) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
@@ -219,6 +185,40 @@ export const postCounter: any = async (item: any) => {
   await updateDoc(doc(dbService, 'post', item), {
     clickCounter: increment(1),
   });
+};
+
+//* collection 데이터 불러오기
+export const getCollection = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'collection'));
+  querySnapshot.forEach((doc) => {
+    response.push({ uid: doc.id, ...doc.data() });
+  });
+  console.log('collection데이터를 불러왔습니다.');
+
+  return response;
+};
+
+//* collection  데이터 추가하기
+export const addCollectionData: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'collection', data.uid),
+    {
+      collector: arrayUnion(data.collector),
+      uid: data.uid,
+    },
+    { merge: true }
+  );
+  console.log('게시물이 저장되었습니다');
+};
+
+//* collection  데이터 삭제하기
+export const deleteCollectionData: any = (data: any) => {
+  updateDoc(doc(dbService, 'collection', data.uid), {
+    collector: arrayRemove(data.collector),
+  }),
+    console.log('게시물이 저장되었습니다');
 };
 
 //* 팔로잉 추가하기

@@ -20,6 +20,11 @@ const Header = () => {
 export default Header;
 
 const Nav = styled.div`
+  position: fixed;
+  top: 0;
+  /* width: 100%; */
+  left: 0;
+  right: 0;
   height: 70px;
 `;
 const Title = styled.h1`
