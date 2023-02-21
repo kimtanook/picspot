@@ -1,3 +1,4 @@
+import Header from '@/components/Header';
 import {
   addCollectionData,
   deleteCollectionData,
@@ -147,6 +148,7 @@ const Post = ({ id }: any) => {
         <button onClick={deleteCollection}> collection 빼기</button>
       )}
       <Seo title="Detail" />
+      <Header />
       {detailData
         .filter((item: any) => {
           return item.id === id;

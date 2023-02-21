@@ -6,7 +6,7 @@ import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { customAlert } from '@/utils/alerts';
 
-const imgFile = '/profile-img.png';
+const imgFile = '/profileicon.svg';
 
 const Profile = () => {
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;

@@ -1,3 +1,4 @@
+import Header from '@/components/Header';
 import { getFollwing, getUser } from '@/api';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
@@ -45,12 +46,10 @@ export default function Mypage() {
 
   return (
     <MyContainer>
+      <Header />
       <MyTextDiv>
         <Seo title="My" />
         <h1>마이페이지입니다</h1>
-        <Link href={'/main'}>
-          <ToMainpage>메인페이지로 돌아가기</ToMainpage>
-        </Link>
       </MyTextDiv>
       <MyProfileContainer>
         <Profile />
