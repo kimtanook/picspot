@@ -1,7 +1,10 @@
+// import HomeCategory from './HomeCategory';
+// import HomePost from './HomePost';
+import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import styled from 'styled-components';
 import ModalLogin from '@/components/ModalLogin';
@@ -14,40 +17,42 @@ import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
+import { CustomModal } from '@/components/common/CustomModal';
+import ModalMaps from '@/components/detail/ModalMaps';
 
 export default function Main() {
   // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
 
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  const [closeModal, setCloseModal] = useState(false);
+  const [closeLoginModal, setCloseLoginModal] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
+  const [isModalActive, setIsModalActive] = useState(false);
+  const onClickToggleMapModal = useCallback(() => {
+    setIsModalActive(!isModalActive);
+  }, [isModalActive]);
   const router = useRouter();
   const nowUser = authService.currentUser;
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
-      setCloseModal(!closeModal);
+      setCloseLoginModal(!closeLoginModal);
       return;
     }
     if (authService.currentUser) {
       setOpenModal(!isOpenModal);
     }
   };
-
-  const onClickChatToggle = () => {
-    setChatToggle(!chatToggle);
-  };
   // 로그인 모달 창 버튼
-  const closeModalButton = () => {
-    setCloseModal(!closeModal);
+  const closeLoginModalButton = () => {
+    setCloseLoginModal(!closeLoginModal);
   };
 
   // 로그아웃
@@ -59,6 +64,11 @@ export default function Main() {
       customAlert('로그아웃에 성공하였습니다!');
     });
   };
+
+  const onClickChatToggle = () => {
+    setChatToggle(!chatToggle);
+  };
+
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
 
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
@@ -123,19 +133,33 @@ export default function Main() {
     <>
       <div>
         <Seo title="Home" />
-        {/* 로그인, 로그아웃 버튼 */}
-        {closeModal && <ModalLogin closeModal={closeModalButton} />}
-        {currentUser ? (
-          <LoginButton onClick={logOut}>로그아웃</LoginButton>
-        ) : (
-          <LoginButton onClick={closeModalButton}>로그인</LoginButton>
-        )}
-        {/* 마이페이지 버튼 */}
-        <Link href={'/mypage'}>
-          {authService.currentUser?.displayName
-            ? `${authService.currentUser?.displayName}의 프로필`
-            : '프로필'}
-        </Link>
+        <Header />
+        {/* 로그인, 로그아웃, 마이페이지 버튼 */}
+        {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
+        <Profile onClick={() => setIsProfileOpen(!isProfileOpen)}>
+          {authService.currentUser?.photoURL ? (
+            <ProfileImg src={authService.currentUser?.photoURL} />
+          ) : (
+            <ProfileImg src="/profileicon.svg" />
+          )}
+        </Profile>
+        {isProfileOpen === true ? (
+          <Menu>
+            {currentUser ? (
+              <MenuItem onClick={() => router.push('/mypage')}>
+                {' '}
+                마이페이지
+              </MenuItem>
+            ) : (
+              <MenuItem hidden onClick={() => router.push('/mypage')} />
+            )}
+            {currentUser ? (
+              <MenuItem onClick={logOut}>로그아웃</MenuItem>
+            ) : (
+              <MenuItem onClick={closeLoginModalButton}>로그인</MenuItem>
+            )}
+          </Menu>
+        ) : null}
       </div>
       {isOpenModal && (
         <Modal
@@ -210,10 +234,21 @@ export default function Main() {
         </ChatToggleBtn>
         {/* <SearchPlace /> */}
       </div>
+      <MapModalBtn onClick={onClickToggleMapModal}>지도열기</MapModalBtn>;
+      {isModalActive ? (
+        <CustomModal
+          modal={isModalActive}
+          setModal={setIsModalActive}
+          width="1200"
+          height="700"
+          element={<ModalMaps />}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 }
-const LoginButton = styled.button``;
 
 const Categories = styled.select`
   background-color: tomato;
@@ -226,11 +261,6 @@ const PostFormButton = styled.button`
   height: 40px;
 `;
 
-const ImageBox = styled.div`
-  border: tomato 1px solid;
-  display: flex;
-  flex-direction: row;
-`;
 const GridBox = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -252,4 +282,57 @@ const ChatToggleBtn = styled.button`
 
   width: 50px;
   height: 50px;
+`;
+const Profile = styled.div`
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  background-color: white;
+  cursor: pointer;
+`;
+
+const ProfileImg = styled.img`
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  object-fit: cover;
+`;
+
+const Menu = styled.div`
+  width: 100px;
+  height: 85px;
+  position: absolute;
+  top: 95px;
+  right: 20px;
+  background-color: orange;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px orange;
+  text-align: center;
+  color: white;
+  font-family: GmarketSans;
+
+  z-index: 6000;
+`;
+
+const MenuItem = styled.p`
+  cursor: pointer;
+`;
+
+const MapModalBtn = styled.button`
+  background-color: cornflowerblue;
+  border: 0px;
+  border-radius: 7px;
+  padding: 5px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  position: fixed;
+  bottom: 10px;
+  width: 80px;
+  right: 50%;
+  left: 50%;
 `;

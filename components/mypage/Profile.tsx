@@ -8,7 +8,7 @@ import { customAlert } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { updateUser } from '@/api';
 
-const imgFile = '/profile-img.png';
+const imgFile = '/profileicon.svg';
 
 const Profile = () => {
   // console.log(authService.currentUser?.uid);
