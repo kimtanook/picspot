@@ -19,7 +19,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
-import { dbService } from './firebase';
+import { authService, dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
 // startAt() 또는 startAfter()메서드를 사용하여 쿼리의 시작점을 정의합니다. startAt()메서드는 시작점을 포함하고, startAfter() 메서드는 시작점을 제외합니다.
@@ -207,6 +207,7 @@ export const addCollectionData: any = (data: any) => {
     doc(dbService, 'collection', data.uid),
     {
       collector: arrayUnion(data.collector),
+      uid: data.uid,
     },
     { merge: true }
   );

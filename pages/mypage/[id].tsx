@@ -1,4 +1,5 @@
 import { getData, deleteData, updataData, getFollwing, getUser } from '@/api';
+import CollectionList from '@/components/mypage/CollectionList';
 import PostList from '@/components/mypage/PostList';
 import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
@@ -97,7 +98,7 @@ export default function Mypage() {
     .find((item: any) => {
       return item.follow;
     })?.follow;
-  // console.log('selectId: ', selectId);
+  console.log('selectId: ', selectId);
 
   //? userData의 uid를 배열에 담았습니다.
   const selectdId2 = userData?.map((item: any) => {
@@ -107,13 +108,13 @@ export default function Mypage() {
 
   //? 팔로잉한 사람 uid와 userData의 uid의 교집합을 배열에 담았습니다.
   const selectdId3 = selectId?.filter((item: any) => selectdId2.includes(item));
-  console.log('selectdId3: ', selectdId3);
+  // console.log('selectdId3: ', selectdId3);
 
   //? userData와 selectId3의 교집합을 배열에 담았습니다.
   const selectId4 = userData?.filter((item: any) =>
     selectdId3?.includes(item.uid)
   );
-  console.log('selectId4: ', selectId4);
+  // console.log('selectId4: ', selectId4);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
@@ -146,14 +147,7 @@ export default function Mypage() {
         />
       </MyProfileListContainer>
       <MyKeywordContainer>키워드</MyKeywordContainer>
-      {/* <CollectionList 
-        editState={editState}
-        data={data}
-        setEditImgUpload={setEditImgUpload}
-        setEditTitle={setEditTitle}
-        onClickUpdateData={onClickUpdateData}
-        onClickDeleteData={onClickDeleteData}
-      /> */}
+      <CollectionList postData={data} />
     </MyContainer>
   );
 }
