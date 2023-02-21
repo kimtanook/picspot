@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import WhisperChat from './WhisperChat';
 
 const ChatItem = ({
   myName,
@@ -8,49 +7,41 @@ const ChatItem = ({
   socketServer,
   setChat,
 }: {
-  myName: string;
+  myName: string | null | undefined;
   item: IMessage;
   socketServer: string;
   setChat: any;
 }) => {
   const [userMenuToggle, setUserMenuToggle] = useState(false);
-  const [whisperToggle, setWhisperToggle] = useState(false);
   const onClickUserMenuToggle = () => {
-    if (item.user === myName || item.user === '입장 알림!') {
-      return;
-    }
+    // if (item.user === myName || item.user === '입장 알림!') {
+    //   return;
+    // }
     setUserMenuToggle(!userMenuToggle);
   };
 
-  const onClickWhisperToggle = () => {
+  const onClickWhisper = () => {
     setUserMenuToggle(false);
-    setWhisperToggle(true);
   };
   return (
     <div>
       {userMenuToggle ? (
         <WhisperBox>
           <div>{item.user}</div>
-          <div onClick={onClickWhisperToggle}>귓속말</div>
+          <div onClick={onClickWhisper}>귓속말</div>
           <div>정보보기</div>
           <div onClick={() => setUserMenuToggle(false)}>닫기</div>
         </WhisperBox>
       ) : null}
-      {whisperToggle ? (
-        <WhisperChat
-          id={item.id}
-          user={myName}
-          socketServer={socketServer}
-          setWhisperToggle={setWhisperToggle}
-          setChat={setChat}
-        />
-      ) : null}
+
       <ChatItemBox>
         <UserName onClick={onClickUserMenuToggle} value={item.id}>
           <div>{item.user === myName ? '나' : item.user}</div>
         </UserName>
-        <ChatMessage>{item?.message}</ChatMessage>
-        <Time> {item.time}</Time>
+        <div>
+          <Time> {item.time}</Time>
+          <ChatMessage>{item?.message}</ChatMessage>
+        </div>
       </ChatItemBox>
     </div>
   );
@@ -76,7 +67,7 @@ const UserName = styled.button`
   padding: 3px;
   border-radius: 10px;
   color: white;
-  width: 100px;
+  width: 70px;
   text-align: center;
 `;
 const ChatMessage = styled.div`
@@ -84,7 +75,7 @@ const ChatMessage = styled.div`
   margin: 5px;
   padding: 3px;
   border-radius: 10px;
-  width: 200px;
+  width: 180px;
   text-align: center;
   font-size: 12px;
 `;
@@ -94,7 +85,7 @@ const Time = styled.div`
   padding: 3px;
   border-radius: 10px;
   color: white;
-  width: 60px;
+  width: 180px;
   text-align: center;
-  font-size: 10px;
+  font-size: 8px;
 `;

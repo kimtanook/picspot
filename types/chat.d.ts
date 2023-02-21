@@ -3,5 +3,10 @@ declare interface RoomsType {
 }
 
 declare interface IMessage {
-  [key: string]: string;
+  id?: string;
+  room?: string;
+  user?: string | null | undefined;
+  message?: string;
+  time?: string;
+  messageType?: string;
 }

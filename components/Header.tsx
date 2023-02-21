@@ -24,7 +24,9 @@ const Header = () => {
     }
   }, [nowUser]);
   return (
-    <Nav>
+    <HeaderContainer>
+      {/* 로그인, 로그아웃, 마이페이지 버튼 */}
+      {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
       <Link href="/" style={{ color: 'black', textDecorationLine: 'none' }}>
         <Title
           onClick={() => {
@@ -50,23 +52,23 @@ const Header = () => {
           <ProfileImg src="/profileicon.svg" />
         </Profile>
       )}
-    </Nav>
+    </HeaderContainer>
   );
 };
+
 export default Header;
-const Nav = styled.div`
-  /* position: fixed; */
+
+const HeaderContainer = styled.div`
+  width: 1440px;
+  position: fixed;
   display: flex;
   justify-content: space-between;
   height: 70px;
-  width: 80px;
+  z-index: 10;
 `;
-const Title = styled.h1`
-  box-shadow: inset 0 -3px 0 0 red;
-  box-shadow: none;
-  font-size: 40px;
+const Title = styled.div`
   font-weight: 900;
-  margin-left: 30px;
+  font-size: 24px;
   cursor: pointer;
 `;
 const Profile = styled.div`

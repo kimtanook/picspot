@@ -1,9 +1,14 @@
-// import HomeCategory from './HomeCategory';
-// import HomePost from './HomePost';
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import { v4 as uuidv4 } from 'uuid';
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
@@ -18,12 +23,9 @@ import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 
 export default function Main() {
-  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
-
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(false);
   const [searchOption, setSearchOption] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
@@ -33,7 +35,6 @@ export default function Main() {
     setIsModalActive(!isModalActive);
   }, [isModalActive]);
   const router = useRouter();
-  const nowUser = authService.currentUser;
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
@@ -46,7 +47,17 @@ export default function Main() {
   };
 
   const onClickChatToggle = () => {
-    setChatToggle(!chatToggle);
+    if (!authService.currentUser) {
+      alert('로그인을 해주세요.');
+      return;
+    }
+    if (
+      chatToggle &&
+      confirm('닫으시면 지금까지의 대화내용이 사라집니다. 닫으시겠습니까?')
+    ) {
+      return setChatToggle(false);
+    }
+    setChatToggle(true);
   };
 
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
@@ -63,7 +74,7 @@ export default function Main() {
       query: { city: '제주전체' },
     });
   };
-  console.log('searchValue : ', searchValue);
+
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectTown('');
@@ -76,10 +87,10 @@ export default function Main() {
     setSelectCity(event.target.value);
   };
   // [카테고리] 타운 카테고리 onChange
-  const onChangeSelectTown = (event: ChangeEvent<HTMLSelectElement>) => {
+  const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
-    setSelectTown(event.target.value);
+    setSelectTown(event.currentTarget.value);
   };
 
   // 무한 스크롤
@@ -102,150 +113,206 @@ export default function Main() {
   });
 
   useEffect(() => {
-    if (authService.currentUser) {
-      setCurrentUser(true);
-    }
     setSelectCity(`${router.query.city}`);
     visibleReset();
-  }, [nowUser, router]);
+    setChatToggle(false);
+  }, [router]);
 
   return (
     <MainContainer>
       <Seo title="Home" />
+      <CityCategoryWrap>
+        <CityCategory value={selectCity} onChange={onChangeSelectCity}>
+          <option value="제주전체">제주전체</option>
+          <option value="제주시">제주시</option>
+          <option value="서귀포시">서귀포시</option>
+        </CityCategory>
+      </CityCategoryWrap>
+      <Header />
       <MainHeaderdiv>
-        <Header />
-        <div style={{ display: 'flex', gap: '10px', padding: '10px' }}>
-          <Categories value={selectCity} onChange={onChangeSelectCity}>
-            <option value="제주전체">제주전체</option>
-            <option value="제주시">제주시</option>
-            <option value="서귀포시">서귀포시</option>
-          </Categories>
-          {selectCity === '제주시' ? (
-            <Categories value={selectTown} onChange={onChangeSelectTown}>
-              <option value="">읍면동전체</option>
-              <option value="애월읍">애월읍</option>
-              <option value="남원읍">남원읍</option>
-            </Categories>
-          ) : selectCity === '서귀포시' ? (
-            <Categories value={selectTown} onChange={onChangeSelectTown}>
-              <option value="">읍면동전체</option>
-              <option value="표선면">표선면</option>
-              <option value="대정읍">대정읍</option>
-            </Categories>
-          ) : (
-            <Categories value={selectTown} onChange={onChangeSelectTown}>
-              <option value="">읍면동전체</option>
-              <option value="표선면">표선면</option>
-              <option value="대정읍">대정읍</option>
-              <option value="애월읍">애월읍</option>
-              <option value="남원읍">남원읍</option>
-            </Categories>
-          )}
-          <Categories>지역</Categories>
-          <Categories>팔로우</Categories>
-        </div>
-
-        <Search
-          searchOptionRef={searchOptionRef}
-          searchValue={searchValue}
-          onChangeSearchValue={onChangeSearchValue}
-        />
-        <PostFormButton onClick={onClickToggleModal}>
-          + 나의 스팟 추가
-        </PostFormButton>
+        <SearchAndForm>
+          <PostFormButton onClick={onClickToggleModal}>
+            + 나의 스팟 추가
+          </PostFormButton>
+          <Search
+            searchOptionRef={searchOptionRef}
+            searchValue={searchValue}
+            onChangeSearchValue={onChangeSearchValue}
+          />
+        </SearchAndForm>
       </MainHeaderdiv>
-      <MainBodydiv>
-        {isOpenModal && (
-          <Modal
-            onClickToggleModal={onClickToggleModal}
-            setOpenModal={setOpenModal}
-          >
-            <div>children</div>
-          </Modal>
-        )}
-        <h1>{selectCity === 'undefined' ? '로딩중입니다.' : selectCity}</h1>
-        <div>
-          {/* 아래는 무한 스크롤 테스트 코드입니다. 차후, 메인페이지 디자인에 따라 바뀔 예정입니다. */}
-          {status === 'loading' ? (
-            <div>로딩중입니다.</div>
-          ) : status === 'error' ? (
-            <div>데이터를 불러오지 못했습니다.</div>
+      <CategoriesWrap>
+        <TownCategory>
+          {selectCity === '제주시' ? (
+            <div>
+              <TownBtn onClick={onClickSelectTown} value="애월읍">
+                애월읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="남원읍">
+                남원읍
+              </TownBtn>
+            </div>
+          ) : selectCity === '서귀포시' ? (
+            <div>
+              <TownBtn onClick={onClickSelectTown} value="표선면">
+                표선면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="대정읍">
+                대정읍
+              </TownBtn>
+            </div>
           ) : (
             <div>
-              <GridBox>
-                {data?.pages.map((data) =>
-                  data?.map((item: any) => (
-                    <ItemBox key={uuidv4()}>
-                      <Content item={item} />
-                    </ItemBox>
-                  ))
-                )}
-              </GridBox>
+              <TownBtn onClick={onClickSelectTown} value="표선면">
+                표선면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="대정읍">
+                대정읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="애월읍">
+                애월읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="남원읍">
+                남원읍
+              </TownBtn>
             </div>
           )}
+        </TownCategory>
+      </CategoriesWrap>
 
-          {chatToggle ? <Chat /> : null}
+      {isOpenModal && (
+        <Modal
+          onClickToggleModal={onClickToggleModal}
+          setOpenModal={setOpenModal}
+        >
+          <div>children</div>
+        </Modal>
+      )}
+
+      <div>
+        {/* 무한 스크롤 */}
+        {status === 'loading' ? (
+          <div>로딩중입니다.</div>
+        ) : status === 'error' ? (
+          <div>데이터를 불러오지 못했습니다.</div>
+        ) : (
+          <GridBox>
+            {data?.pages.map((data) =>
+              data?.map((item: any) => (
+                <ItemBox key={uuidv4()}>
+                  <Content item={item} />
+                </ItemBox>
+              ))
+            )}
+          </GridBox>
+        )}
+
+        <ChatWrap>
+          <div>{chatToggle ? <Chat /> : null}</div>
           <ChatToggleBtn onClick={onClickChatToggle}>
             {chatToggle ? '닫기' : '열기'}
           </ChatToggleBtn>
-          {/* <SearchPlace /> */}
-        </div>
-        <MapModalBtn onClick={onClickToggleMapModal}>
-          지도에서 핀 보기
-        </MapModalBtn>
+        </ChatWrap>
+      </div>
+      <MapModalBtn onClick={onClickToggleMapModal}>
+        지도에서 핀 보기
+      </MapModalBtn>
 
-        {isModalActive ? (
-          <CustomModal
-            modal={isModalActive}
-            setModal={setIsModalActive}
-            width="1200"
-            height="700"
-            element={<ModalMaps />}
-          />
-        ) : (
-          ''
-        )}
-      </MainBodydiv>
+      {isModalActive ? (
+        <CustomModal
+          modal={isModalActive}
+          setModal={setIsModalActive}
+          width="1200"
+          height="700"
+          element={<ModalMaps />}
+        />
+      ) : (
+        ''
+      )}
     </MainContainer>
   );
 }
 
-const MainContainer = styled.div``;
-
-const MainHeaderdiv = styled.div`
-  display: flex;
-  align-items: center;
-  height: 80px;
+const MainContainer = styled.div`
+  width: 1440px;
+  margin: auto;
 `;
 
+const MainHeaderdiv = styled.div`
+  position: relative;
+  width: 1440px;
+`;
+const SearchAndForm = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-left: 65%;
+  width: 440px;
+`;
 const PostFormButton = styled.button`
   border-radius: 20px;
-  color: cornflowerblue;
+  color: #1882ff;
   border: 1px solid cornflowerblue;
-  background-color: none;
-  width: 130px;
-  height: 25px;
+  background-color: white;
+  cursor: pointer;
+  width: 121.16px;
+  height: 31px;
+  z-index: 101;
+`;
+
+const CategoriesWrap = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+`;
+const CityCategoryWrap = styled.div`
+  width: 1440px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const CityCategory = styled.select`
+  font-size: 24px;
+  border: none;
+  border-radius: 20px;
+  height: 40px;
+  z-index: 100;
+`;
+const TownCategory = styled.div`
+  margin-top: 40px;
+`;
+const TownBtn = styled.button`
+  background-color: #dcdcdc;
+  width: 66px;
+  height: 26px;
+  margin: 3px;
+  border: none;
+  border-radius: 52px;
   cursor: pointer;
 `;
 
-const MainBodydiv = styled.div``;
-
-const Categories = styled.select`
-  background-color: tomato;
-  width: 100px;
-  height: 40px;
-`;
-
 const GridBox = styled.div`
+  background-color: gray;
+  margin-top: 80px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  height: 100px;
-  margin: 10px;
+  grid-template-columns: repeat(4, 252px);
+  justify-content: center;
 `;
 const ItemBox = styled.div`
   background-color: pink;
-  height: 250px;
   margin: 10px;
+`;
+const ChatWrap = styled.div`
+  /* background-color: red; */
+  position: fixed;
+  left: 80%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 520px;
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
@@ -254,7 +321,6 @@ const ChatToggleBtn = styled.button`
   top: 90%;
   border-radius: 50%;
   border: none;
-
   width: 50px;
   height: 50px;
 `;
