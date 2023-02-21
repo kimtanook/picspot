@@ -19,6 +19,8 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 
 export default function Main() {
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeModal, setCloseModal] = useState(false);
