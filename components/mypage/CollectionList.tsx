@@ -1,4 +1,4 @@
-import { getCollection, getData } from '@/api';
+import { getCollection, getData, getTownData, getTownDataJeju } from '@/api';
 import { authService } from '@/firebase';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
@@ -21,35 +21,75 @@ const CollectionList = ({ postData }: any) => {
     );
   });
   //* 내 id와 맞는 collector의 uid값 출력
-  const collectorID = collectorList?.map((item: any) => {
+  const collectorId = collectorList?.map((item: any) => {
     return item.uid;
   });
 
   //* postData의 id가 collection uid와 같다면 postData id 출력하기
   const postId = postData?.filter((item: any) =>
-    collectorID?.includes(item.id)
+    collectorId?.includes(item.id)
   );
 
+  //* useQuery 사용해서 category 데이터 불러오기
+  const { data: categoryCollectionData } = useQuery(
+    ['categoryCollectionData'],
+    getTownDataJeju
+  );
+  // console.log('categoryCollectionData', categoryCollectionData);
+
+  //* 우도에서 가져온 데이터에서 내가 작성한 포스터들만 가져왔다.
+  const a = categoryCollectionData?.map((item: any) => {
+    if (item.creator === authService.currentUser?.uid) {
+      return item.id;
+    }
+  });
+  // * 우도에서 가져온 데이터를 post 데이터와 교집합하여 데이터를 꺼냄
+  const categoryId = postData?.filter((item: any) => a?.includes(item.id));
+  // console.log('이게맞나', categoryId);
+
+  // console.log('first', a);
+
+  const b = categoryCollectionData?.map((item: any) => {
+    return item.id;
+  });
+
+  //* 우도와 내가 collection한 데이터의 교집합
+  const collectCategoryId = collectorId?.filter((item: any) =>
+    a?.includes(item)
+  );
+  // console.log('collectCategoryId', collectCategoryId);
+
+  //* 우도와 내 collection의 교집합의 postData
+  const collectCategoryIds = postData?.filter((item: any) =>
+    b?.includes(item.id)
+  );
+
+  // console.log('collectCategoryIdsssss', collectCategoryIds);
   return (
     <>
+      {categoryId?.map((item: any) => (
+        <div>{item.town}</div>
+      ))}
       <button onClick={() => setToggle(!toggle)}>collection 게시물</button>
       {toggle ? (
         <Div key={uuidv4()}>
-          {postId?.map((item: any) => (
-            <Link href={`/detail/${item.id}`} key={uuidv4()}>
-              <CollectionBox key={uuidv4()}>
-                <div key={uuidv4()}>{item.title}</div>
-                <div key={uuidv4()}>{item.nickname}</div>
-                <div key={uuidv4()}>{item.town}</div>
-                <Image
-                  src={item.imgUrl}
-                  alt="image"
-                  height={100}
-                  width={100}
-                  key={uuidv4()}
-                />
-              </CollectionBox>
-            </Link>
+          {collectCategoryIds?.map((item: any) => (
+            <div>
+              <Link href={`/detail/${item.id}`} key={uuidv4()}>
+                <CollectionBox key={uuidv4()}>
+                  <div key={uuidv4()}>{item.title}</div>
+                  <div key={uuidv4()}>{item.nickname}</div>
+
+                  <Image
+                    src={item.imgUrl}
+                    alt="image"
+                    height={100}
+                    width={100}
+                    key={uuidv4()}
+                  />
+                </CollectionBox>
+              </Link>
+            </div>
           ))}
         </Div>
       ) : (

@@ -12,10 +12,11 @@ import { customAlert } from '@/utils/alerts';
 import { useState } from 'react';
 import CollectionList from '@/components/mypage/CollectionList';
 import { uuidv4 } from '@firebase/util';
+import MyPostList from '@/components/mypage/MyPostList';
 
 export default function Mypage() {
-  console.log(authService.currentUser?.displayName);
-  console.log(authService.currentUser?.photoURL);
+  // console.log(authService.currentUser?.displayName);
+  // console.log(authService.currentUser?.photoURL);
   const [currentUser, setCurrentUser] = useState(false);
 
   // 로그아웃
@@ -85,6 +86,9 @@ export default function Mypage() {
       ))}
       <MyKeywordContainer>키워드</MyKeywordContainer>
       {/* 구분하기 위해 임의로 라인 그었습니다! */}
+      <MyPostListBox>
+        <MyPostList />
+      </MyPostListBox>
       <CollectionListBox>
         <CollectionList key={uuidv4()} postData={data} />
       </CollectionListBox>
@@ -120,4 +124,9 @@ const MyKeywordContainer = styled.div`
 
 const CollectionListBox = styled.div`
   border: solid 1px tomato;
+`;
+const MyPostListBox = styled.div`
+  border: solid 1px tomato;
+  width: 100px;
+  height: 100px;
 `;
