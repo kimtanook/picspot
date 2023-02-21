@@ -50,7 +50,7 @@ const PostForm = ({ setOpenModal }: any) => {
   let userState: any = {
     uid: authService?.currentUser?.uid,
     userName: authService?.currentUser?.displayName,
-    userImg: authService?.currentUser?.photoURL,
+    userImg: '/plusimage.png',
   };
 
   //* useMutation 사용해서 포스트 추가하기
@@ -119,8 +119,8 @@ const PostForm = ({ setOpenModal }: any) => {
         onAddData(postState, {
           onSuccess: () => {
             console.log('포스트 추가 요청 성공');
-            setOpenModal(false);
             queryClient.invalidateQueries('infiniteData');
+            setOpenModal(false);
           },
           onError: () => {
             console.log('포스트 추가 요청 실패');
@@ -130,7 +130,6 @@ const PostForm = ({ setOpenModal }: any) => {
           {
             onSuccess: () => {
               console.log('유저 추가 요청 성공');
-              queryClient.invalidateQueries('infiniteData');
             },
             onError: () => {
               console.log('유저 추가 요청 실패');

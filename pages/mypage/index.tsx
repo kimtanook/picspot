@@ -59,7 +59,7 @@ export default function Mypage() {
       {followingUser?.map((item: any) => (
         <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
           <div>{item.userName}</div>
-          <Image src="/plusimage.png" alt="image" height={100} width={100} />
+          <Image src={item.userImg} alt="image" height={100} width={100} />
         </div>
       ))}
 
