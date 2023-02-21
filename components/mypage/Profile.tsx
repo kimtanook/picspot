@@ -3,33 +3,32 @@ import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
 import { authService, storageService } from '@/firebase';
 import { updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
-import { getAuth } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
+import { customAlert } from '@/utils/alerts';
+import { useMutation } from 'react-query';
+import { updateUser } from '@/api';
 
-type ProfileItem = {
-  image: string;
-  nickname: string;
-};
-
-const imgProfile = 'https://t1.daumcdn.net/cfile/tistory/2513B53E55DB206927';
+const imgFile = '/profileicon.svg';
 
 const Profile = () => {
-  const initialState = {
-    nickname: authService?.currentUser?.displayName as string,
-    image: imgProfile,
+  // console.log(authService.currentUser?.uid);
+
+  //* useMutation 사용해서 user 데이터 수정하기
+  const { mutate: onUpdateUser } = useMutation(updateUser);
+
+  let editUser: any = {
+    uid: authService.currentUser?.uid,
+    userName: '',
+    userImg: '',
   };
 
-  const [profile, setProfile] = useState<ProfileItem>(initialState);
-  const [imgFile, setImgFile] = useState<string>(
-    authService?.currentUser?.photoURL as string
-  );
+  const profileimg = authService?.currentUser?.photoURL ?? imgFile;
+  const [imgEdit, setImgEdit] = useState<string>(profileimg);
   const [nicknameEdit, setNicknameEdit] = useState<string>(
     authService?.currentUser?.displayName as string
   );
   const imgRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  const auth = getAuth();
-  const user = auth.currentUser?.uid!;
 
   // 프로필 수정하기
   const [editmode, setEdit] = useState(false);
@@ -47,37 +46,131 @@ const Profile = () => {
       reader.onloadend = () => {
         const resultImg = reader.result;
         localStorage.setItem('imgURL', resultImg as string);
-        setImgFile(resultImg as string);
+        setImgEdit(resultImg as string);
       };
     }
   };
+  // 프로필 사진 삭제
+  const deleteImgFile = async () => {
+    await updateProfile(authService?.currentUser!, {
+      displayName: nicknameEdit,
+      photoURL: '',
+    })
+      .then((res) => {})
+      .catch((error) => {
+        console.log(error);
+      });
+    setImgEdit(imgFile as string);
+  };
 
   // 전체 프로필 수정을 완료하기
+  const profileEditComplete = async () => {
+    const imgRef = ref(
+      storageService,
+      `${authService.currentUser?.uid}${uuidv4()}`
+    );
+
+    const imgDataUrl = localStorage.getItem('imgURL');
+    let downloadUrl;
+    if (imgDataUrl) {
+      const response = await uploadString(imgRef, imgDataUrl, 'data_url');
+      downloadUrl = await getDownloadURL(response.ref);
+    }
+
+    editUser = {
+      ...editUser,
+      userName: nicknameEdit,
+      userImg: downloadUrl,
+    };
+    onUpdateUser(editUser, {
+      onSuccess: () => {
+        console.log('유저수정 요청 성공');
+      },
+      onError: () => {
+        console.log('유저수정 요청 실패');
+      },
+    });
+
+    await updateProfile(authService?.currentUser!, {
+      displayName: nicknameEdit,
+      photoURL: downloadUrl ?? null,
+    })
+      .then((res) => {
+        customAlert('프로필 수정 완료하였습니다!');
+      })
+      .then(() => {
+        setEdit(!editmode);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   // 전체 프로필 수정을 취소하기
+  const profileEditCancle = () => {
+    setImgEdit(authService?.currentUser?.photoURL as string);
+    setNicknameEdit(authService?.currentUser?.displayName as string);
+    setEdit(!editmode);
+  };
 
   const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNicknameEdit(e.target.value);
   };
+
   return (
     <ProfileContainer>
+      {/* 사진 */}
       <ProfilePhotoContainer>
-        <>
-          <ProfilePhotoBtn>
-            <ProfilePhotoLabel htmlFor="changePhoto">
-              파일선택
-            </ProfilePhotoLabel>
-          </ProfilePhotoBtn>
-          <ProfilePhotoInput
-            id="changePhoto"
-            type="file"
-            placeholder="파일선택"
-            onChange={saveImgFile}
-          />
-        </>
+        <ProfileImage img={imgEdit}></ProfileImage>
+        {editmode ? (
+          <>
+            <ProfilePhotoBtn>
+              <ProfilePhotoLabel htmlFor="changePhoto">
+                파일선택
+              </ProfilePhotoLabel>
+            </ProfilePhotoBtn>
+            <button onClick={deleteImgFile}>삭제</button>
+            <ProfilePhotoInput
+              hidden
+              id="changePhoto"
+              type="file"
+              placeholder="파일선택"
+              onChange={saveImgFile}
+              ref={imgRef}
+            />
+          </>
+        ) : (
+          ''
+        )}
       </ProfilePhotoContainer>
-      <ProfileNicknameContainer></ProfileNicknameContainer>
+      {/* 닉네임 */}
+      <ProfileNicknameContainer>
+        {editmode ? (
+          <ProfileNicknameEdit
+            onChange={handleNicknameChange}
+            ref={nameRef}
+            defaultValue={authService.currentUser?.displayName!}
+          />
+        ) : (
+          <>
+            {' '}
+            <ProfileNickname>
+              {authService.currentUser?.displayName}
+            </ProfileNickname>
+          </>
+        )}
+      </ProfileNicknameContainer>
+      {/* 프로필 수정 */}
       <ProfileEditContainer>
-        <ProfileEditBtn></ProfileEditBtn>
+        <div hidden={!editmode}>
+          <ProfileEditCancle onClick={profileEditCancle}>
+            취소
+          </ProfileEditCancle>
+        </div>
+        {editmode ? (
+          <ProfileEditBtn onClick={profileEditComplete}>적용</ProfileEditBtn>
+        ) : (
+          <ProfileEditBtn onClick={profileEdit}>수정</ProfileEditBtn>
+        )}
       </ProfileEditContainer>
     </ProfileContainer>
   );
@@ -85,43 +178,55 @@ const Profile = () => {
 export default Profile;
 
 const ProfileContainer = styled.div`
-  border: 1px solid black;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
+const ProfileImage = styled.div<{ img: string }>`
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background-size: cover;
+  background-image: url(${(props) => props.img});
+  background-position: center center;
+  box-shadow: 2px 2px 1px black;
+`;
 const ProfilePhotoContainer = styled.div`
-  border: 1px solid pink;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-const ProfilePhotoBtn = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const ProfilePhotoBtn = styled.button``;
 const ProfilePhotoLabel = styled.label`
   cursor: pointer;
   padding: 20px;
 `;
-const ProfilePhotoInput = styled.input`
-  height: 30px;
-  margin-top: 7px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
-`;
+const ProfilePhotoInput = styled.input``;
 const ProfileNicknameContainer = styled.div`
-  border: 1px solid orange;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
+const ProfileNicknameEdit = styled.input`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ProfileNickname = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ProfileEditContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const ProfileEditCancle = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;

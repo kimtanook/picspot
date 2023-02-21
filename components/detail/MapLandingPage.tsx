@@ -1,4 +1,3 @@
-import LandingPage from './Maps';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';
@@ -27,7 +26,7 @@ const MapLandingPage = ({
 
   return (
     <StyleContainer>
-      <StlyedForm onSubmit={handleSubmit}>
+      <StyledForm onSubmit={handleSubmit}>
         <StyledInfo>{infoDiv}</StyledInfo>
         <StyledInput
           placeholder="제주도 지역명을 검색해주세요."
@@ -38,7 +37,7 @@ const MapLandingPage = ({
         <CustomButton width="60px" borderRadius="30px" height="35px">
           검색
         </CustomButton>
-      </StlyedForm>
+      </StyledForm>
 
       <Maps
         searchPlace={place ? place : searchCategory}
@@ -60,7 +59,7 @@ const StyleContainer = styled.div`
   justify-content: center;
 `;
 
-const StlyedForm = styled.form`
+const StyledForm = styled.form`
   position: absolute;
   top: 10px;
   z-index: 999;

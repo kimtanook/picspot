@@ -33,7 +33,6 @@ export const visibleReset = () => {
 };
 export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
   const [_, option, value, town, city] = queryKey;
-
   const getData: { [key: string]: string }[] = [];
   let q;
 
@@ -46,7 +45,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(4),
+        limit(8),
         startAfter(lastVisible)
       );
     } else if (value) {
@@ -55,7 +54,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         orderBy(option),
         startAt(value),
         endAt(value + '\uf8ff'),
-        limit(8)
+        limit(20)
       );
     } else {
       if (town && lastVisible) {
@@ -63,7 +62,7 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(4),
+          limit(8),
           startAfter(lastVisible)
         );
       } else if (town) {
@@ -71,37 +70,37 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
           collection(dbService, 'post'),
           where('town', '==', town),
           orderBy('createdAt', 'desc'),
-          limit(8)
+          limit(20)
         );
       } else {
-        if (city && lastVisible) {
+        if (city !== '제주전체' && lastVisible) {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(4),
+            limit(8),
             startAfter(lastVisible)
           );
-        } else if (city) {
+        } else if (city !== '제주전체') {
           q = query(
             collection(dbService, 'post'),
             where('city', '==', city),
             orderBy('createdAt', 'desc'),
-            limit(8)
+            limit(20)
           );
         } else {
           if (lastVisible) {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(4),
+              limit(8),
               startAfter(lastVisible)
             );
           } else {
             q = query(
               collection(dbService, 'post'),
               orderBy('createdAt', 'desc'),
-              limit(8)
+              limit(20)
             );
           }
         }
@@ -147,7 +146,7 @@ export const deleteData: any = (docId: any) => {
 };
 
 //* 스토어에 데이터 수정하기
-export const updataData: any = (data: any) => {
+export const updateData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
@@ -279,4 +278,10 @@ export const getUser = async () => {
   console.log('유저 데이터를 불러왔습니다.');
 
   return response;
+};
+
+//* 유저 수정하기
+export const updateUser: any = (data: any) => {
+  updateDoc(doc(dbService, 'user', data.uid), data);
+  console.log('유저가 수정되었습니다.');
 };

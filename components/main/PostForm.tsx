@@ -18,7 +18,7 @@ const PostForm = ({ setOpenModal }: any) => {
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState();
 
-  //! category 클릭, 검색 시 map이동에 관한 통합 state
+  //* category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
 
   const fileInput: any = useRef();
@@ -50,7 +50,7 @@ const PostForm = ({ setOpenModal }: any) => {
   let userState: any = {
     uid: authService?.currentUser?.uid,
     userName: authService?.currentUser?.displayName,
-    userImg: authService?.currentUser?.photoURL,
+    userImg: '/plusimage.png',
   };
 
   //* useMutation 사용해서 포스트 추가하기
