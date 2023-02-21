@@ -14,8 +14,8 @@ import CollectionList from '@/components/mypage/CollectionList';
 import { uuidv4 } from '@firebase/util';
 
 export default function Mypage() {
-  console.log(authService.currentUser?.displayName);
-  console.log(authService.currentUser?.photoURL);
+  // console.log(authService.currentUser?.displayName);
+  // console.log(authService.currentUser?.photoURL);
   const [currentUser, setCurrentUser] = useState(false);
 
   // 로그아웃
