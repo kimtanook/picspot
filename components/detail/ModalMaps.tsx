@@ -1,7 +1,13 @@
 import { getData } from '@/api';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
+import {
+  CustomOverlayMap,
+  Map,
+  MapMarker,
+  MapTypeControl,
+  ZoomControl,
+} from 'react-kakao-maps-sdk';
 import { useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -27,8 +33,10 @@ const ModalMaps = () => {
           width: '1200px',
           height: '600px',
         }}
-        level={9} // 지도의 확대 레벨
+        level={10} // 지도의 확대 레벨
       >
+        <MapTypeControl position={kakao.maps.ControlPosition.TOPRIGHT} />
+        <ZoomControl position={kakao.maps.ControlPosition.RIGHT} />
         {data
           // .filter((item: any) => item.town === '우도')
           .map((item: any) => {
