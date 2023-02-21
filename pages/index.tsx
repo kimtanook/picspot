@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
@@ -62,7 +62,6 @@ function Landing() {
     </LandingWrap>
   );
 }
-const LoginButton = styled.button``;
 
 export default Landing;
 

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Header = () => {
   return (
     <Nav>
-      <Link href={'/main'}>
+      <Link href="/main" style={{ color: 'black', textDecorationLine: 'none' }}>
         <Title
           onClick={() => {
             // sessionStorage.clear();
@@ -22,13 +22,7 @@ export default Header;
 const Nav = styled.div`
   height: 70px;
 `;
-
 const Title = styled.h1`
-  color: black;
-  :hover {
-    text-decoration-line: none;
-    color: black;
-  }
   box-shadow: inset 0 -3px 0 0 red;
   box-shadow: none;
   font-size: 40px;
