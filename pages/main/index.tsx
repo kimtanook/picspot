@@ -300,6 +300,10 @@ const ProfileImg = styled.img`
   height: 70px;
   border-radius: 50px;
   object-fit: cover;
+  position: fixed;
+  top: 10;
+  left: 80;
+  right: 20;
 `;
 
 const Menu = styled.div`
