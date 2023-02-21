@@ -36,7 +36,6 @@ const Auth = (props: Props): JSX.Element => {
     await signInWithEmailAndPassword(authService, email, password)
       .then((res) => {
         customAlert('로그인에 성공하였습니다!');
-        // Cookies.set('userID', 'qkrdbwls', { expires: 10000 });
         props.closeModal();
       })
       .catch(() => {
@@ -46,50 +45,23 @@ const Auth = (props: Props): JSX.Element => {
       });
   };
 
-  // useEffect(() => {
-  //   //아이디 저장 체크할 경우 실행
-  //           if(Cookies.save_id){
-  //               setUserInfo(prev => {return {...prev, id : Cookies.get('save_id')}});
-  //               setSaveId(true);
-  //           }
-  //   }
-
-  //           if(saveId === true){ //아이디 저장 체크일 때
-  //               setUserInfo(prev => {return {...prev, id: cookies.save_id}});
-
-  //               if(cookies.save_id){ //이미 저장되어 있을 때
-  //                   let cookie_id = Cookies.get('save_id')
-
-  //                   if(userInfo.id !== cookie_id){ //쿠키에 저장된 아이디가 다를 때(30일)
-  //                       Cookies.set('save_id', userInfo.id, {path: '/', expires: 30});
-  //                   }
-  //               }else{
-  //                   Cookies.set('save_id', userInfo.id, {path:'/', expires: 30});
-  //               }
-  //           }else{
-  //               if(cookies.save_id){
-  //                   removeCookie('save_id');
-  //               }
-  //           }
-
-  //       const handleOnChange = (e) => {
-  //           setSaveId(e.target.checked);
-  //       }
-
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
       <LoginTextDiv>
-        <h2>로그인하고, 제주사진 꿀팁 알아보세요!</h2>
+        <div>
+          <b>픽스팟에 로그인</b> 하고, <br></br>
+          제주 인생샷 알아보세요!
+        </div>
       </LoginTextDiv>
+
       <form>
         <LoginEmailPwContainer>
-          <div>E-mail</div>
           <LoginEmailInput
             {...register('email', {
-              required: '이메일을 올바르게 입력해주세요.',
+              required: '*등록되지 않은 아이디예요',
               pattern: {
                 value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                message: '이메일을 올바르게 입력해주세요.',
+                message: '*등록되지 않은 아이디예요',
               },
             })}
             name="email"
@@ -97,7 +69,20 @@ const Auth = (props: Props): JSX.Element => {
             id="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            placeholder="이메일을 입력해주세요"
+            placeholder="이메일을 입력 해주세요"
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                onClickLoginHandler(e);
+              }
+            }}
+          />
+          <LoginPwInput
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="비밀번호를 입력 해주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
                 onClickLoginHandler(e);
@@ -105,183 +90,117 @@ const Auth = (props: Props): JSX.Element => {
             }}
           />
           <AuthWarn>{errors?.email?.message}</AuthWarn>
-          <LoginPwTextDiv>
-            <div>Password</div>
-          </LoginPwTextDiv>
-          <LoginPwInput
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="비밀번호를 입력해주세요"
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                onClickLoginHandler(e);
-              }
-            }}
-          />
         </LoginEmailPwContainer>
-        {/* <LoginRememberContainer>
-          <LoginRememberCheck
-            type="checkbox"
-            id="checkbox"
-            name="checkbox"
-            checked={isRemember}
-            onChange={handleOnChange}
-          />
-          <LoginRememberText htmlFor="checkbox">아이디 저장</LoginRememberText>
-        </LoginRememberContainer> */}
+
         <LoginBtnContainer>
           <LoginBtn
             type="submit"
             disabled={authenticating}
             onClick={(e) => onClickLoginHandler(e)}
           >
-            <div>Login</div>
+            <div>로그인 하기</div>
           </LoginBtn>
         </LoginBtnContainer>
       </form>
-      <LoginOtherModal>
-        <PwForgotContainer onClick={props.forgotModalButton}>
-          <LoginCheckSignDiv>비밀번호 찾기</LoginCheckSignDiv>
-        </PwForgotContainer>
-        <PwForgotBetweenLoginCheck>|</PwForgotBetweenLoginCheck>
-        <LoginCheckContainer onClick={props.changeModalButton}>
-          <LoginCheckSignDiv> 회원가입</LoginCheckSignDiv>
-        </LoginCheckContainer>
-      </LoginOtherModal>
 
-      <LoginOtherMethod>
-        <LoginSimpleLine>
-          <div>간편로그인</div>
-        </LoginSimpleLine>
+      <PwForgotContainer onClick={props.forgotModalButton}>
+        <LoginCheckSignDiv>아이디/패스워드를 잊으셨나요?</LoginCheckSignDiv>
+      </PwForgotContainer>
 
-        <LoginGoogleContainer>
-          <AuthSocial closeModal={props.closeModal} />
-        </LoginGoogleContainer>
-      </LoginOtherMethod>
+      <LoginGoogleContainer>
+        <AuthSocial closeModal={props.closeModal} />
+      </LoginGoogleContainer>
+
+      <LoginCheckContainer onClick={props.changeModalButton}>
+        <LoginCheckSignDiv>회원가입</LoginCheckSignDiv>
+      </LoginCheckContainer>
     </LoginContainer>
   );
 };
 
 const LoginContainer = styled.div`
-  border: 1px solid black;
-  background-color: white;
-  width: 500px;
-  height: 460px;
-  margin: 23vh auto;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  /* z-index: 999999999999999999; */
+  background-color: #ffffff;
+  /* padding: 40px; */
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
 
 const LoginTextDiv = styled.div`
-  display: flex;
-  justify-content: center;
+  margin-top: 1vh;
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 138.5%;
   text-align: center;
+  color: #212121;
 `;
 
 const LoginEmailPwContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 300px;
-  height: 150px;
+  width: 90%;
   margin: 0 auto;
   margin-top: 30px;
 `;
 
 const LoginEmailInput = styled.input`
-  height: 30px;
-  margin-top: 10px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
-`;
-
-const AuthWarn = styled.p`
-  color: brandRed;
-  font-size: 13px;
-  font-weight: 700px;
-`;
-
-const LoginPwTextDiv = styled.div`
-  margin-top: 10px;
+  height: 48px;
+  padding-left: 10px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
 `;
 
 const LoginPwInput = styled.input`
-  height: 30px;
-  margin-top: 10px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
+  height: 48px;
+  padding-left: 10px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  margin-top: 30px;
 `;
-// const LoginRememberContainer = styled.div`
-//   height: 30px;
-//   margin-top: 10px;
-//   padding-left: 5px;
-//   background-color: white;
-//   border: 2px solid white;
-//   border-radius: 5px;
-// `;
 
-// const LoginRememberText = styled.label`
-//   display: flex;
-// `;
-// const LoginRememberCheck = styled.input`
-//   display: flex;
-//   justify-content: center;
-// `;
+const AuthWarn = styled.p`
+  color: red;
+  font-size: 12px;
+  font-weight: 700px;
+`;
 
 const LoginBtnContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 90%;
 `;
 
 const LoginBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 400px;
-  border: 1px solid black;
-  border-radius: 15px;
+  height: 48px;
+  border: transparent;
   margin-top: 20px;
   transition: 0.1s;
-  &:active {
-    background-color: black;
-  }
+  background-color: #1882ff;
+  color: white;
   &:hover {
     cursor: pointer;
-    outline: solid 2px Red;
   }
 `;
-const LoginOtherModal = styled.div`
-  padding: 5px;
-  justify-content: center;
-  display: flex;
-`;
+
 const PwForgotContainer = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
   transition: color 0.2s ease-in;
-
-  &:hover {
-    color: Red;
-  }
+  margin-top: 10px;
+  color: #1882ff;
 `;
 
-const PwForgotBetweenLoginCheck = styled.span`
+const LoginGoogleContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 30px;
 `;
 
 const LoginCheckContainer = styled.span`
@@ -290,48 +209,14 @@ const LoginCheckContainer = styled.span`
   align-items: center;
   padding: 10px;
   transition: color 0.2s ease-in;
-
-  &:hover {
-    color: Red;
-  }
+  margin-top: 10px;
+  color: #1882ff;
 `;
 
 const LoginCheckSignDiv = styled.div`
-  cursor: grab;
-`;
-
-const LoginOtherMethod = styled.div``;
-const LoginSimpleLine = styled.div`
-  display: flex;
-  flex-basis: 100%;
-  align-items: center;
-  margin: 0px 0px;
-  ::before {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 1);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-  ::after {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 10);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-`;
-
-const LoginGoogleContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 80px;
-  margin-bottom: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
 `;
 
 export default Auth;
