@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Header = () => {
   return (
     <Nav>
-      <Link href="/main" style={{ color: 'black', textDecorationLine: 'none' }}>
+      <Link href="/" style={{ color: 'black', textDecorationLine: 'none' }}>
         <Title
           onClick={() => {
             // sessionStorage.clear();
