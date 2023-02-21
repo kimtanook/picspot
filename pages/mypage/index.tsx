@@ -7,10 +7,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
+import { signOut } from 'firebase/auth';
+import { customAlert } from '@/utils/alerts';
+import { useState } from 'react';
 
 export default function Mypage() {
   console.log(authService.currentUser?.displayName);
   console.log(authService.currentUser?.photoURL);
+  const [currentUser, setCurrentUser] = useState(false);
+
+  // 로그아웃
+  const logOut = () => {
+    signOut(authService).then(() => {
+      // Sign-out successful.
+      localStorage.clear();
+      setCurrentUser(false);
+      customAlert('로그아웃에 성공하였습니다!');
+    });
+  };
 
   //* useQuery 사용해서 following 데이터 불러오기
   const {
@@ -51,6 +65,11 @@ export default function Mypage() {
         <Seo title="My" />
         <h1>마이페이지입니다</h1>
       </MyTextDiv>
+      <Link href={'/'}>
+        {authService.currentUser ? (
+          <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+        ) : null}
+      </Link>
       <MyProfileContainer>
         <Profile />
       </MyProfileContainer>
@@ -81,8 +100,7 @@ const MyTextDiv = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-const ToMainpage = styled.button``;
+const LogoutButton = styled.button``;
 
 const MyProfileContainer = styled.div`
   display: flex;

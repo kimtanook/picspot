@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Header = () => {
   return (
     <Nav>
-      <Link href="/main" style={{ color: 'black', textDecorationLine: 'none' }}>
+      <Link href="/" style={{ color: 'black', textDecorationLine: 'none' }}>
         <Title
           onClick={() => {
             // sessionStorage.clear();
@@ -20,6 +20,11 @@ const Header = () => {
 export default Header;
 
 const Nav = styled.div`
+  position: fixed;
+  top: 0;
+  /* width: 100%; */
+  left: 0;
+  right: 0;
   height: 70px;
 `;
 const Title = styled.h1`
