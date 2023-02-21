@@ -74,18 +74,17 @@ const AuthSignUp = (props: Props) => {
   };
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
-      <SignUpTextDiv>
-        <h1>회원가입</h1>
-      </SignUpTextDiv>
+      <StHeder onClick={props.changeModalButton}> 〈 돌아가기 </StHeder>
+
+      <SignUpTextDiv>회원가입하기</SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpEmailPwContainer>
-          <div>E-mail</div>
           <SignUpEmailInput
             {...register('email', {
-              required: '이메일을 올바르게 입력해주세요.',
+              required: '*올바른 이메일 형식을 입력해주세요',
               pattern: {
                 value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                message: '이메일을 올바르게 입력해주세요.',
+                message: '*올바른 이메일 형식을 입력해주세요',
               },
             })}
             name="email"
@@ -102,9 +101,6 @@ const AuthSignUp = (props: Props) => {
             autoFocus
           />
           <AuthWarn>{errors?.email?.message}</AuthWarn>
-          <SignUpPwTextDiv>
-            <div>Password</div>
-          </SignUpPwTextDiv>
 
           <SignUpPwInput
             {...register('password', {
@@ -112,13 +108,13 @@ const AuthSignUp = (props: Props) => {
               minLength: {
                 value: 8,
                 message:
-                  '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                  '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
               },
               pattern: {
                 value:
                   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
                 message:
-                  '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                  '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
               },
             })}
             name="password"
@@ -135,16 +131,12 @@ const AuthSignUp = (props: Props) => {
           />
           <AuthWarn>{errors?.password?.message}</AuthWarn>
 
-          <SignUpPwConfirm>
-            <div>Password Confirm</div>
-          </SignUpPwConfirm>
           <SignUpPwConfirmInput
             {...register('confirm', {
               required: '비밀번호를 입력해주세요.',
               minLength: {
                 value: 8,
-                message:
-                  '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                message: '입력하신 비밀번호와 일치하지 않아요',
               },
             })}
             autoComplete="new-password"
@@ -153,7 +145,7 @@ const AuthSignUp = (props: Props) => {
             id="confirm"
             value={confirm}
             onChange={(event) => setConfirm(event.target.value)}
-            placeholder="다시 입력해주세요"
+            placeholder="비밀번호를 다시한번 입력해 주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
                 handleSubmit(onSubmit);
@@ -162,9 +154,6 @@ const AuthSignUp = (props: Props) => {
           />
           <AuthWarn>{errors?.confirm?.message}</AuthWarn>
 
-          <NicknameDiv>
-            <div>Nickname</div>
-          </NicknameDiv>
           <NicknameInput
             minLength={2}
             name="username"
@@ -172,7 +161,7 @@ const AuthSignUp = (props: Props) => {
             id="username"
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
-            placeholder="별명을 입력해주세요"
+            placeholder="닉네임을 입력해 주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
                 handleSubmit(onSubmit);
@@ -182,26 +171,16 @@ const AuthSignUp = (props: Props) => {
           <AuthWarn>{errors?.nickname?.message}</AuthWarn>
         </SignUpEmailPwContainer>
       </form>
+
       <SignUpBtnContainer>
         <SignUpBtn
           onClick={handleSubmit(onSubmit)}
           type="submit"
           disabled={registering}
         >
-          <div>SignUp</div>
+          <div>회원가입 완료</div>
         </SignUpBtn>
       </SignUpBtnContainer>
-      <SignUpOtherMethod>
-        <SignUpOrLine>
-          <div>OR</div>
-        </SignUpOrLine>
-        <SignUpGoogleGitContainer>
-          <AuthSocial closeModal={props.closeModal} />
-        </SignUpGoogleGitContainer>
-      </SignUpOtherMethod>
-      <SignUpCheckContainer onClick={props.changeModalButton}>
-        <SignUpCheckSign>이미 회원이신가요?</SignUpCheckSign>
-      </SignUpCheckContainer>
     </SignUpContainer>
   );
 };
@@ -209,34 +188,40 @@ const AuthSignUp = (props: Props) => {
 export default AuthSignUp;
 
 const SignUpContainer = styled.div`
-  background-color: #e9ecef;
-  background-color: white;
-  width: 500px;
-  height: 480px;
-  margin: 23vh auto;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  width: 400px;
+  height: 500px;
+  padding: 30px 30px 30px 30px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
+
+const StHeder = styled.header`
+  cursor: pointer;
+  color: #1882ff;
+  font-size: 14px;
+`;
+
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 30px;
+  font-size: 24px;
+  font-weight: 700;
 `;
+
 const SignUpEmailPwContainer = styled.form`
   display: flex;
   flex-direction: column;
-  width: 300px;
-  height: 250px;
+  width: 90%;
   margin: 0 auto;
-  /* margin-top: 20px; */
+  margin-top: 30px;
 `;
+
 const SignUpEmailInput = styled.input`
-  height: 30px;
-  margin-top: 7px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
+  height: 48px;
+  padding-left: 10px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
 `;
 
 const AuthWarn = styled.p`
@@ -244,111 +229,45 @@ const AuthWarn = styled.p`
   font-size: 13px;
   font-weight: 700px;
 `;
-// const SignUpPwContainer = styled.div``;
 
-const SignUpPwTextDiv = styled.div`
-  margin-top: 10px;
-`;
 const SignUpPwInput = styled.input`
-  height: 30px;
-  margin-top: 7px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
+  height: 48px;
+  padding-left: 10px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
 `;
-const SignUpPwConfirm = styled.div`
-  margin-top: 10px;
-`;
+
 const SignUpPwConfirmInput = styled.input`
-  height: 30px;
-  margin-top: 7px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
+  height: 48px;
+  padding-left: 10px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
 `;
-const NicknameDiv = styled.div`
-  margin-top: 10px;
-`;
+
 const NicknameInput = styled.input`
-  height: 30px;
-  margin-top: 7px;
-  padding-left: 5px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 5px;
+  height: 48px;
+  padding-left: 10px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
 `;
+
 const SignUpBtnContainer = styled.div`
-  border: 1px solid black;
   display: flex;
-  margin-top: 100px;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 90%;
 `;
+
 const SignUpBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30px;
-  width: 90px;
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 15px;
-  transition: 0.03s;
-  /* &:active {
-    background-color: black;
-  } */
+  height: 48px;
+  border: transparent;
+  transition: 0.1s;
+  background-color: #1882ff;
+  color: white;
   &:hover {
     cursor: pointer;
-    outline: solid 2px red;
   }
-`;
-const SignUpOtherMethod = styled.div``;
-const SignUpOrLine = styled.div`
-  display: flex;
-  flex-basis: 100%;
-  align-items: center;
-  margin: 25px 25px;
-  ::before {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 1);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-  ::after {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 10);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-`;
-const SignUpGoogleGitContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 80px;
-`;
-
-const SignUpCheckContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  transition: color 0.2s ease-in;
-
-  &:hover {
-    color: Red;
-  }
-`;
-const SignUpCheckSign = styled.div`
-  cursor: grab;
 `;
