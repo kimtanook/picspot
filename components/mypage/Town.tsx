@@ -10,6 +10,7 @@ import { isTemplateExpression } from 'typescript';
 
 const Town = ({ value, setMore, more }: any) => {
   const [townName, setTownName] = useState('');
+  const [scroll, setScroll] = useState(true);
 
   //* post town 기준 데이터 가져오기
   const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
@@ -39,40 +40,95 @@ const Town = ({ value, setMore, more }: any) => {
   const myPostList = data?.filter(
     (item: any) => item.creator === authService.currentUser?.uid
   );
-  // console.log('myPostList', myPostList);
+  console.log('myPostList', myPostList);
+  const a = myPostList?.map((item: any) => item.town);
 
-  const myPostListMore = myPostList?.filter((item: any) => item.town === value);
-  console.log('myPostListMore', myPostListMore);
-  console.log('townName', townName);
+  const onClickBtn = () => {
+    setMore(false);
+    setTownName(a);
+  };
+  // console.log('a', a);
+
+  const myPostListMore = myPostList?.map((item: any) => item.town);
+  // console.log('myPostListMore', myPostListMore);
+  console.log('value', value);
+  // console.log('myPostListMore', myPostListMore);
+  // const good = myPostListMore.includes(value);
+  // console.log(good);
+  // console.log('townName', townName);
+
+  // //* postData의 id가 collection uid와 같다면 postData id 출력하기
+  // const postId = postData?.filter((item: any) =>
+  //   collectorId?.includes(item.id)
+  // );
+
+  const MyPickMore = myPostList?.filter((item: any) => value.includes(item.id));
+  const onClickTest = () => {
+    setTownName(value);
+    console.log('townName', townName);
+    setMore(false);
+  };
+  //* 클릭한 town에 맞는 데이터들
+  const onClickMoreData = myPostList?.filter((item: any) => {
+    if (townName === item.town) {
+      return item;
+    }
+  });
+  console.log('onClickMoreData', onClickMoreData);
+
   return (
     <div>
-      {more ? (
-        <TownWrap>
-          <PostTownTitle>
-            <MyPostTownTitle>{value}</MyPostTownTitle>
-          </PostTownTitle>
+      {/* {more ? ( */}
 
+      <TownWrap>
+        <PostTownTitle>
+          <MyPostTownTitle>{value}</MyPostTownTitle>
+        </PostTownTitle>
+        {scroll ? (
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '-10px' }}>
               {myPostList?.map((item: any) => (
-                <MyCollectItem item={item} />
+                <>
+                  <MyCollectItem item={item} />
+                </>
               ))}
             </Masonry>
           </MySpotImg>
-          <MoreBtn onClick={() => setMore(false)}>more</MoreBtn>
-        </TownWrap>
-      ) : (
-        <>
-          <PostTownTitle>
-            <MyPostTownTitle>{value}</MyPostTownTitle>
-          </PostTownTitle>
-          {myPostListMore?.map((item: any) => (
-            <>
-              <MorePost item={item} />
-            </>
-          ))}
-        </>
-      )}
+        ) : (
+          <MoreMySpotImg>
+            <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+              {myPostList?.map((item: any) => (
+                <>
+                  <MyCollectItem item={item} />
+                </>
+              ))}
+            </Masonry>
+          </MoreMySpotImg>
+        )}
+
+        <MoreBtn
+          onClick={() => {
+            setScroll(!scroll);
+          }}
+        >
+          more
+        </MoreBtn>
+      </TownWrap>
+
+      {/* // ) : ( */}
+      {/* <>
+          <Testdiv>
+            <MyPostTownTitle>{townName}</MyPostTownTitle>
+            <Masonry columnsCount={4} style={{ gap: '10px' }}>
+              {onClickMoreData?.map((item: any) => (
+                <MorePostList>
+                  <MorePost item={item} />
+                </MorePostList>
+              ))}
+            </Masonry>
+          </Testdiv>
+        </> */}
+      {/* )} */}
     </div>
   );
 };
@@ -88,7 +144,7 @@ const TownWrap = styled.div`
 `;
 const PostTownTitle = styled.div`
   height: 43px;
-  border-bottom: 2px solid #212121;
+  border-bottom: 1px solid #212121;
 `;
 
 const MyPostTownTitle = styled.div`
@@ -106,6 +162,13 @@ const MySpotImg = styled.div`
   overflow: hidden;
   display: grid;
 `;
+const MoreMySpotImg = styled.div`
+  width: 390px;
+  margin-top: 24px;
+  height: 256px;
+  overflow: scroll;
+  display: grid;
+`;
 
 const MoreBtn = styled.button`
   width: 35px;
@@ -113,8 +176,6 @@ const MoreBtn = styled.button`
   font-weight: 400;
   font-size: 14px;
   line-height: 25px;
-  align-items: center;
-  text-align: center;
   text-decoration-line: underline;
   float: right;
   margin-top: 20px;
@@ -125,4 +186,13 @@ const MoreBtn = styled.button`
     font-size: 15px;
     transition: all 0.3s;
   }
+`;
+
+const MorePostList = styled.div`
+  width: 1180px;
+`;
+
+const Testdiv = styled.div`
+  margin: auto;
+  width: 1188px;
 `;

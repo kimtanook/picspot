@@ -4,8 +4,10 @@ import styled from 'styled-components';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import MyCollectPost from './MyCollectPost';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { useState } from 'react';
 
 const CollectionCategory = ({ value, postData, collectionData }: any) => {
+  const [scroll, setScroll] = useState(true);
   //* post CollectionCategory 기준 데이터 가져오기
   const getTownDatas = async ({ queryKey }: { queryKey: string[] }) => {
     const [_, town] = queryKey;
@@ -55,14 +57,31 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
       <PostTownTitle>
         <CollectorTownTitle>{value}</CollectorTownTitle>
       </PostTownTitle>
-      <MySpotImg>
-        <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-          {myColelctList?.map((item: any) => (
-            <MyCollectPost item={item} />
-          ))}
-        </Masonry>
-      </MySpotImg>
-      <MoreBtn>more</MoreBtn>
+      {scroll ? (
+        <MySpotImg>
+          <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+            {myColelctList?.map((item: any) => (
+              <MyCollectPost item={item} />
+            ))}
+          </Masonry>
+        </MySpotImg>
+      ) : (
+        <MoreMySpotImg>
+          <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+            {myColelctList?.map((item: any) => (
+              <MyCollectPost item={item} />
+            ))}
+          </Masonry>
+        </MoreMySpotImg>
+      )}
+
+      <MoreBtn
+        onClick={() => {
+          setScroll(!scroll);
+        }}
+      >
+        more
+      </MoreBtn>
     </TownWrap>
   );
 };
@@ -79,7 +98,7 @@ const TownWrap = styled.div`
 
 const PostTownTitle = styled.div`
   height: 43px;
-  border-bottom: 2px solid #212121;
+  border-bottom: 1px solid #212121;
 `;
 const CollectorTownTitle = styled.div`
   font-family: 'Noto Sans CJK KR';
@@ -95,6 +114,13 @@ const MySpotImg = styled.div`
   margin-top: 24px;
   height: 256px;
   overflow: hidden;
+  display: grid;
+`;
+const MoreMySpotImg = styled.div`
+  width: 390px;
+  margin-top: 24px;
+  height: 256px;
+  overflow: scroll;
   display: grid;
 `;
 
