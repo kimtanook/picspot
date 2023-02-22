@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ChangeEvent,
@@ -145,6 +146,9 @@ export default function Main() {
         <TownCategory>
           {selectCity === '제주시' ? (
             <div>
+              <TownBtn onClick={onClickSelectTown} value="">
+                제주시
+              </TownBtn>
               <TownBtn onClick={onClickSelectTown} value="애월읍">
                 애월읍
               </TownBtn>
@@ -154,6 +158,9 @@ export default function Main() {
             </div>
           ) : selectCity === '서귀포시' ? (
             <div>
+              <TownBtn onClick={onClickSelectTown} value="">
+                서귀포시
+              </TownBtn>
               <TownBtn onClick={onClickSelectTown} value="표선면">
                 표선면
               </TownBtn>
@@ -163,6 +170,9 @@ export default function Main() {
             </div>
           ) : (
             <div>
+              <TownBtn onClick={onClickSelectTown} value="">
+                제주전체
+              </TownBtn>
               <TownBtn onClick={onClickSelectTown} value="표선면">
                 표선면
               </TownBtn>
@@ -197,13 +207,24 @@ export default function Main() {
           <div>데이터를 불러오지 못했습니다.</div>
         ) : (
           <GridBox>
-            {data?.pages.map((data) =>
-              data?.map((item: any) => (
-                <ItemBox key={uuidv4()}>
-                  <Content item={item} />
-                </ItemBox>
-              ))
-            )}
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{
+                600: 1,
+                900: 2,
+                1366: 3,
+                1440: 4,
+              }}
+            >
+              <Masonry columnsCount={4}>
+                {data?.pages.map((data) =>
+                  data?.map((item: any) => (
+                    <ItemBox key={uuidv4()}>
+                      <Content item={item} />
+                    </ItemBox>
+                  ))
+                )}
+              </Masonry>
+            </ResponsiveMasonry>
           </GridBox>
         )}
 
@@ -215,7 +236,10 @@ export default function Main() {
         </ChatWrap>
       </div>
       <MapModalBtn onClick={onClickToggleMapModal}>
-        지도에서 핀 보기
+        <div>
+          <PinImg src="/pin.png" />
+        </div>
+        <div>지도에서 핀 보기</div>
       </MapModalBtn>
 
       {isModalActive ? (
@@ -241,12 +265,24 @@ const MainContainer = styled.div`
 const MainHeaderdiv = styled.div`
   position: relative;
   width: 1440px;
+  @media only screen and (max-width: 1366px) {
+    width: 1300px;
+  }
+  @media only screen and (max-width: 1280px) {
+    width: 1180px;
+  }
+  @media only screen and (max-width: 900px) {
+    width: 900px;
+  }
+  @media only screen and (max-width: 600px) {
+    width: 680px;
+  }
 `;
 const SearchAndForm = styled.div`
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
-  margin-left: 65%;
+  margin-left: 60%;
   width: 440px;
 `;
 const PostFormButton = styled.button`
@@ -257,7 +293,7 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
-  z-index: 101;
+  z-index: 2;
 `;
 
 const CategoriesWrap = styled.div`
@@ -275,14 +311,16 @@ const CityCategoryWrap = styled.div`
   align-items: center;
 `;
 const CityCategory = styled.select`
+  background-color: inherit;
   font-size: 24px;
   border: none;
   border-radius: 20px;
   height: 40px;
-  z-index: 100;
+  z-index: 2;
 `;
 const TownCategory = styled.div`
   margin-top: 40px;
+  margin-bottom: 13px;
 `;
 const TownBtn = styled.button`
   background-color: #dcdcdc;
@@ -295,18 +333,22 @@ const TownBtn = styled.button`
 `;
 
 const GridBox = styled.div`
-  background-color: gray;
-  margin-top: 80px;
-  display: grid;
-  grid-template-columns: repeat(4, 252px);
-  justify-content: center;
+  margin: auto;
+  width: 1188px;
+  @media only screen and (max-width: 1366px) {
+    width: 1000px;
+  }
+  @media only screen and (max-width: 900px) {
+    width: 560px;
+  }
+  @media only screen and (max-width: 600px) {
+    width: 380px;
+  }
 `;
 const ItemBox = styled.div`
-  background-color: pink;
-  margin: 10px;
+  margin: 0px 5px 20px 5px;
 `;
 const ChatWrap = styled.div`
-  /* background-color: red; */
   position: fixed;
   left: 80%;
   top: 70%;
@@ -326,16 +368,22 @@ const ChatToggleBtn = styled.button`
 `;
 
 const MapModalBtn = styled.button`
-  background-color: cornflowerblue;
-  border: 0px;
-  border-radius: 7px;
-  padding: 5px;
-  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid #1882ff;
+  border-radius: 52px;
+  color: #1882ff;
   font-weight: 700;
   cursor: pointer;
   position: fixed;
-  bottom: 10px;
-  width: 100px;
-  right: 50%;
-  left: 50%;
+  width: 121px;
+  height: 36px;
+  left: calc(50% - 121px / 2 - 0.5px);
+  bottom: 42px;
+`;
+const PinImg = styled.img`
+  margin-right: 3px;
 `;

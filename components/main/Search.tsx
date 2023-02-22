@@ -37,7 +37,6 @@ const SearchWrap = styled.div`
   width: 24px;
   margin-right: 4px;
   transition: 1s;
-  z-index: 101;
   :hover {
     width: 300px;
     transition: 1s;
