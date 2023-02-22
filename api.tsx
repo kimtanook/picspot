@@ -43,8 +43,10 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
       q = query(
         collection(dbService, 'post'),
         orderBy(option),
-        startAt(value),
-        endAt(value + '\uf8ff'),
+        startAt((option === 'address' ? '제주특별자치도 ' : '') + value),
+        endAt(
+          (option === 'address' ? '제주특별자치도 ' : '') + value + '\uf8ff'
+        ),
         limit(8),
         startAfter(lastVisible)
       );
@@ -52,8 +54,10 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
       q = query(
         collection(dbService, 'post'),
         orderBy(option),
-        startAt(value),
-        endAt(value + '\uf8ff'),
+        startAt((option === 'address' ? '제주특별자치도 ' : '') + value),
+        endAt(
+          (option === 'address' ? '제주특별자치도 ' : '') + value + '\uf8ff'
+        ),
         limit(20)
       );
     } else {
