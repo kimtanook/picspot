@@ -255,6 +255,10 @@ const Chat = () => {
 
 export default Chat;
 const ComponentContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-5%, -105%);
   height: 400px;
   background-color: #80a2ff;
   border-radius: 15px;
@@ -363,12 +367,8 @@ const CloseServer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   height: 300px;
+  width: 250px;
 `;
 const NoServerImg = styled.img`
   width: 70px;

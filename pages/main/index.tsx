@@ -329,11 +329,9 @@ const ItemBox = styled.div`
 `;
 const ChatWrap = styled.div`
   position: fixed;
-  left: 10%;
-  top: 70%;
+  left: 3%;
+  top: 90%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  height: 460px;
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
@@ -344,6 +342,7 @@ const ChatToggleBtn = styled.button`
   border-radius: 50%;
   width: 50px;
   height: 50px;
+  cursor: pointer;
 `;
 
 const MapModalBtn = styled.button`
