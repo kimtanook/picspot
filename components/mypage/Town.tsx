@@ -37,10 +37,14 @@ const Town = ({ value }: { value: string }) => {
 
   return (
     <TownWrap>
-      <div>{value}</div>
-      {myPostList?.map((item: any) => (
-        <MyCollectItem item={item} />
-      ))}
+      <PostTown>
+        <PostTownTitle>{value}</PostTownTitle>
+      </PostTown>
+      <MySpotImg>
+        {myPostList?.map((item: any) => (
+          <MyCollectItem item={item} />
+        ))}
+      </MySpotImg>
     </TownWrap>
   );
 };
@@ -48,7 +52,27 @@ const Town = ({ value }: { value: string }) => {
 export default Town;
 
 const TownWrap = styled.div`
-  width: 300px;
-  height: 300px;
+  width: 338px;
+  height: 352px;
+
   border: solid 1px tomato;
+`;
+
+const PostTownTitle = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: left;
+  letter-spacing: -0.015em;
+`;
+
+const PostTown = styled.div`
+  height: 43px;
+  border-bottom: 2px solid #212121;
+`;
+const MySpotImg = styled.div`
+  width: 337.39px;
+  height: 256px;
 `;

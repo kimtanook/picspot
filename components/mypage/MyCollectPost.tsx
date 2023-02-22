@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 export default function MyCollectPost({
@@ -7,7 +8,7 @@ export default function MyCollectPost({
 }) {
   return (
     <div>
-      <div>{item?.title}</div>
+      <Image src={item?.imgUrl} alt="image" height={100} width={162.48} />
     </div>
   );
 }

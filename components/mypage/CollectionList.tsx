@@ -76,28 +76,6 @@ import Town from './Town';
 import CollectionCategory from './CollectionCategory';
 
 const CollectionList = ({ postData }: any) => {
-  //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery('data', getData);
-  // //* 전체에서 가져온 데이터에서 내가 작성한 포스터들만 가져왔다.
-  // const myCollectList = data?.map((item: any) => {
-  //   if (item.creator === authService.currentUser?.uid) {
-  //     return item.id;
-  //   }
-  // });
-
-  // // * 포스터 data중 내가 만든 것
-  // const categoryId = data?.filter((item: any) =>
-  //   myCollectList?.includes(item.id)
-  // );
-  // const myCollectPost = categoryId?.filter((item: any) => {
-  //   return item.town;
-  // });
-  // const myCollectPostTown = myCollectPost?.map((item: any) => {
-  //   return item.town;
-  // });
-  // const myCollectTownArr = [...new Set(myCollectPostTown)];
-  // console.log('게시물들', myCollectTownArr);
-
   //* useQuery 사용해서 collection 데이터 불러오기
   const { data: collectionData } = useQuery('collectiondata', getCollection);
   //* collector들 닉네임 뽑아오기

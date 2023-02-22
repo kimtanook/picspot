@@ -24,6 +24,7 @@ type ProfileItemProps = {
 
 export default function Mypage({ followingCount, followerCount }: propsType) {
   const [currentUser, setCurrentUser] = useState(false);
+  const [onSpot, setOnSpot] = useState(true);
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
@@ -67,24 +68,29 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
         <MyProfileContainer>
           <Profile />
         </MyProfileContainer>
-        <h3>팔로잉 중인사람</h3>
         {followingUser?.map((item: any) => (
           <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
             <div>{item.userName}</div>
             <Image src={item.userImg} alt="image" height={100} width={100} />
           </div>
         ))}
-        <MyKeywordContainer>키워드</MyKeywordContainer>
-        {/* 구분하기 위해 임의로 라인 그었습니다! */}
-        <div>
-          <MyPostListBox>
-            <div>내 게시물</div>
-            <MyPostList />
-          </MyPostListBox>
-          <CollectionListBox>
-            <div>저장된 게시물</div>
-            <CollectionList postData={data} />
-          </CollectionListBox>
+        {/* 내 게시물과 저장한 게시물입니다 */}
+        <div style={{ width: '1068px', height: '755px' }}>
+          <div>
+            <button onClick={() => setOnSpot(true)}>게시한 스팟</button>
+            <button onClick={() => setOnSpot(false)}>저장한 스팟</button>
+          </div>
+          <div>
+            {onSpot ? (
+              <MyPostListBox>
+                <MyPostList />
+              </MyPostListBox>
+            ) : (
+              <CollectionListBox>
+                <CollectionList postData={data} />
+              </CollectionListBox>
+            )}
+          </div>
         </div>
       </MyContainer>
     </>
@@ -93,7 +99,7 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
 
 const MyContainer = styled.div`
   width: 100%;
-  height: 55vh;
+  /* height: 55vh; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -105,18 +111,15 @@ const MyProfileContainer = styled.div`
   height: 200px;
 `;
 
-const MyKeywordContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 const CollectionListBox = styled.div`
   border: solid 1px tomato;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 `;
 const MyPostListBox = styled.div`
   border: solid 1px tomato;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 `;

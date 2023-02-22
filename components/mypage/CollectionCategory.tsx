@@ -51,10 +51,14 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
 
   return (
     <TownWrap>
-      <div>{value}</div>
-      {myColelctList?.map((item: any) => (
-        <MyCollectPost item={item} />
-      ))}
+      <PostTown>
+        <CollectorTownTitle>{value}</CollectorTownTitle>
+      </PostTown>
+      <MySpotImg>
+        {myColelctList?.map((item: any) => (
+          <MyCollectPost item={item} />
+        ))}
+      </MySpotImg>
     </TownWrap>
   );
 };
@@ -65,4 +69,23 @@ const TownWrap = styled.div`
   width: 300px;
   height: 300px;
   border: solid 1px tomato;
+`;
+
+const CollectorTownTitle = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: left;
+  letter-spacing: -0.015em;
+`;
+
+const PostTown = styled.div`
+  height: 43px;
+  border-bottom: 2px solid #212121;
+`;
+const MySpotImg = styled.div`
+  width: 337.39px;
+  height: 256px;
 `;
