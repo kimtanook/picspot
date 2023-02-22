@@ -6,6 +6,7 @@ import { addData, visibleReset } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import styled from 'styled-components';
 import MapLandingPage from '../detail/MapLandingPage';
+import { v4 as uuidv4 } from 'uuid';
 
 const PostForm = ({ setOpenModal }: any) => {
   const queryClient = useQueryClient();
@@ -42,6 +43,8 @@ const PostForm = ({ setOpenModal }: any) => {
     nickname: nickname,
   };
 
+  // console.log('imgUpload: ', imageUpload);
+
   //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData } = useMutation(addData);
 
@@ -60,6 +63,8 @@ const PostForm = ({ setOpenModal }: any) => {
       setImageUpload(result);
     };
   };
+
+  // console.log('imgUpload: ', imageUpload);
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -88,7 +93,8 @@ const PostForm = ({ setOpenModal }: any) => {
       return;
     }
 
-    const imageRef = ref(storageService, `images/${imageUpload.name}`);
+    const imageRef = ref(storageService, `images/${uuidv4()}`);
+    console.log('imageRef: ', imageRef);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');
