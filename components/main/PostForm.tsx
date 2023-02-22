@@ -2,7 +2,7 @@ import { authService, storageService } from '@/firebase';
 import { useRef, useState } from 'react';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
-import { addData } from '@/api';
+import { addData, visibleReset } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import styled from 'styled-components';
 import MapLandingPage from '../detail/MapLandingPage';
@@ -40,12 +40,6 @@ const PostForm = ({ setOpenModal }: any) => {
     long: saveLatLng.La,
     address: saveAddress,
     nickname: nickname,
-  };
-
-  let userState: any = {
-    uid: authService?.currentUser?.uid,
-    userName: authService?.currentUser?.displayName,
-    userImg: '/plusimage.png',
   };
 
   //* useMutation 사용해서 포스트 추가하기
@@ -115,6 +109,7 @@ const PostForm = ({ setOpenModal }: any) => {
         });
       });
     });
+    visibleReset();
   };
 
   //* 카테고리버튼 눌렀을 때 실행하는 함수
