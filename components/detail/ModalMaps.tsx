@@ -60,7 +60,6 @@ const ModalMaps = () => {
                     ></StOverLayClose>
                     <StOverLayWrap>
                       <StOverLayTitle>{item.title}</StOverLayTitle>
-
                       <Link href={`/detail/${item.id}`} rel="noreferrer">
                         <StOverLayImg>
                           <StOverLayImgSrc
@@ -69,8 +68,13 @@ const ModalMaps = () => {
                             height={150}
                             width={150}
                           />
+                          <StOverLayHoverWrap>
+                            <StOveLayHoverIcon>이동 아이콘</StOveLayHoverIcon>
+                            <StOverLayHoverText>글 보러가기</StOverLayHoverText>
+                          </StOverLayHoverWrap>
                         </StOverLayImg>
                       </Link>
+
                       <StOverLayAddress>
                         {item.address.slice(7, 20)}
                       </StOverLayAddress>
@@ -107,23 +111,21 @@ const StOverLayTitle = styled.div`
 `;
 
 const StOverLayImg = styled.div`
-  position: absolute;
-  overflow: hidden;
+  position: relative;
   width: 100%;
+  height: 150px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 `;
 
 const StOverLayImgSrc = styled(Image)`
   width: 100%;
   cursor: pointer;
-  :hover {
-    opacity: 0.8;
-  }
 `;
 const StOverLayAddress = styled.div`
   color: gray;
   font-size: 15px;
   position: relative;
-  margin-top: 160px;
+  margin-top: 10px;
   text-align: center;
 `;
 
@@ -145,56 +147,46 @@ const StOverLayClose = styled.div`
   background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
   :hover {
     cursor: pointer;
-
     width: 17px;
     height: 17px;
     border-radius: 25px;
   }
 `;
 
-// const StOverLayInfo = styled.div`
-//   width: 144px;
-//   height: 300px;
-//   border-radius: 5px;
-//   border-bottom: 2px solid #ccc;
-//   border-right: 1px solid #ccc;
-//   overflow: hidden;
-//   background: #fff;
-//   position: absolute;
+const StOverLayHoverWrap = styled.div`
+  color: #fff;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 150px;
+  padding: 20px;
 
-//   :nth-child(1) {
-//     border: 0;
-//     box-shadow: 0px 1px 2px #888;
-//   }
-//   ::after {
-//     content: '';
-//     position: absolute;
-//     margin-left: -12px;
-//     left: 50%;
-//     bottom: 0;
-//     width: 22px;
-//     height: 12px;
-//     background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
-//   }
-//   .link {
-//     color: #5085bb;
-//   }
-// `;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
 
-// const StOverLayBody = styled.div`
-//   position: relative;
-//   overflow: hidden;
-//   cursor: inherit;
-// `;
+  :hover {
+    opacity: 1;
+  }
+`;
 
-// const StOverLayEllipsis = styled.div`
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: nowrap;
-// `;
+const StOveLayHoverIcon = styled.h3`
+  font-size: 16px;
+  padding-bottom: 0.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-align: center;
+`;
 
-// const StOverLayLink = styled.a`
-//   color: inherit;
-//   text-decoration: none;
-// `;
+const StOverLayHoverText = styled.h2`
+  font-size: 16px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+`;
 export default ModalMaps;

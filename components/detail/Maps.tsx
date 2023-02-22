@@ -22,16 +22,16 @@ const Maps = ({
       const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
-        level: 9,
+        level: 4,
       };
       const map = new kakao.maps.Map(container, options);
       const geocoder = new kakao.maps.services.Geocoder();
 
       //----------------------------줌 레벨 및 스카이뷰/----------------------------
-      const mapTypeControl = new kakao.maps.MapTypeControl();
-      map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-      const zoomControl = new kakao.maps.ZoomControl();
-      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+      // const mapTypeControl = new kakao.maps.MapTypeControl();
+      // map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+      // const zoomControl = new kakao.maps.ZoomControl();
+      // map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       //----------------------------장소 검색/----------------------------
 
@@ -108,7 +108,7 @@ const Maps = ({
   // console.log('saveLatLng', saveLatLng);
   // console.log('saveAddress', saveAddress);
 
-  return <div id="map" style={{ width: '100%', height: '400px' }}></div>;
+  return <div id="map" style={{ width: '550px', height: '550px' }}></div>;
 };
 
 export default Maps;

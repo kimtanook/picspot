@@ -22,6 +22,8 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
+import PostForm from '@/components/main/PostForm';
+import ModalLogin from '@/components/ModalLogin';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -32,9 +34,14 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const [isModalActive, setIsModalActive] = useState(false);
+  const [isModalPostActive, setIsModalPostActive] = useState(false);
   const onClickToggleMapModal = useCallback(() => {
     setIsModalActive(!isModalActive);
   }, [isModalActive]);
+  const onClickTogglePostModal = useCallback(() => {
+    setIsModalPostActive(!isModalPostActive);
+  }, [isModalPostActive]);
+
   const router = useRouter();
 
   const onClickToggleModal = () => {
@@ -132,9 +139,20 @@ export default function Main() {
       <Header />
       <MainHeaderdiv>
         <SearchAndForm>
-          <PostFormButton onClick={onClickToggleModal}>
+          <PostFormButton onClick={onClickTogglePostModal}>
             + 나의 스팟 추가
           </PostFormButton>
+          {isModalPostActive ? (
+            <CustomModal
+              modal={isModalPostActive}
+              setModal={setIsModalPostActive}
+              width="1200"
+              height="600"
+              element={<PostForm />}
+            />
+          ) : (
+            ''
+          )}
           <Search
             searchOptionRef={searchOptionRef}
             searchValue={searchValue}

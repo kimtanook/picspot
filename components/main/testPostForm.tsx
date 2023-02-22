@@ -4,7 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { addData } from '@/api';
 import Dropdown from '../mypage/Dropdown';
-import SearchPlace from '../detail/SearchPlace';
+
 import styled from 'styled-components';
 
 //! postState 타입 해결
