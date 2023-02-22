@@ -75,7 +75,7 @@ const ModalStyled = styled.div`
   .modalBody {
     position: absolute;
     color: black;
-    width: 800px;
+    width: 400px;
     height: 75%;
     padding: 30px 30px 30px 30px;
     z-index: 999;
