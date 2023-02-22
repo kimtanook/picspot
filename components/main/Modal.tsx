@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import PostForm from './PostForm';
 
-const Modal = ({ onClickToggleModal, setOpenModal }: any) => {
+const Modal = ({ setOpenModal }: any) => {
   return (
     <ModalContainer>
       <StDialogBox open>
