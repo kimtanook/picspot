@@ -225,7 +225,13 @@ export default function Main() {
           <ChatWrap>
             <div>{chatToggle ? <Chat /> : null}</div>
             <ChatToggleBtn onClick={onClickChatToggle}>
-              {chatToggle ? '닫기' : '열기'}
+              {chatToggle ? (
+                '닫기'
+              ) : (
+                <ChatLogoWrap>
+                  <ChatLogo src="/chat-logo.png" />
+                </ChatLogoWrap>
+              )}
             </ChatToggleBtn>
           </ChatWrap>
         </div>
@@ -247,6 +253,11 @@ export default function Main() {
         ) : (
           ''
         )}
+        <TopBtn
+          onClick={() => scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+        >
+          TOP
+        </TopBtn>
       </MainContainer>
     </>
   );
@@ -318,19 +329,19 @@ const ItemBox = styled.div`
 `;
 const ChatWrap = styled.div`
   position: fixed;
-  left: 80%;
-  top: 70%;
+  left: 10%;
+  top: 65%;
   transform: translate(-50%, -50%);
   width: 300px;
-  height: 520px;
+  height: 460px;
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
-  background-color: cornflowerblue;
-  left: 90%;
+  background-color: inherit;
+  border: 3px solid #1882ff;
+  left: 5%;
   top: 90%;
   border-radius: 50%;
-  border: none;
   width: 50px;
   height: 50px;
 `;
@@ -354,4 +365,29 @@ const MapModalBtn = styled.button`
 `;
 const PinImg = styled.img`
   margin-right: 3px;
+`;
+const ChatLogoWrap = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const ChatLogo = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+const TopBtn = styled.button`
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background-color: #feb819;
+  color: white;
+  position: fixed;
+  top: 90%;
+  left: 85%;
+  cursor: pointer;
+  transition: 0.3s;
+  :hover {
+    background-color: #fed474;
+  }
+  /* transform: translate(-50%, -50%); */
 `;
