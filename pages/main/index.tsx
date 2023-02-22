@@ -330,7 +330,7 @@ const ItemBox = styled.div`
 const ChatWrap = styled.div`
   position: fixed;
   left: 10%;
-  top: 65%;
+  top: 70%;
   transform: translate(-50%, -50%);
   width: 300px;
   height: 460px;
