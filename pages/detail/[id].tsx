@@ -1,18 +1,17 @@
 import Header from '@/components/Header';
-import {
-  getData,
-  postCounter,
-} from '@/api';
+import { getData, getUser, postCounter } from '@/api';
 import Seo from '@/components/Seo';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/CommentList';
-import FollowingButton from '@/components/detail/FollowingButton';
+import FollowingButton from '@/components/detail/detailLeft/FollowingButton';
 import { authService } from '@/firebase';
 import DetailBox from '@/components/detail/DetailBox';
 import DetailMap from '@/components/detail/DetailMap';
-import CollectionButton from '@/components/detail/CollectionButton';
+import CollectionButton from '@/components/detail/detailLeft/CollectionButton';
+import DetailImg from '@/components/detail/detailLeft/DetailImg';
+import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 
 const Post = ({ id }: any) => {
   //* DetailMap state
@@ -57,8 +56,12 @@ const Post = ({ id }: any) => {
   //* collection 저장 state
   const [isOpen, setIsOpen] = useState(false);
 
-  //* useQuery 사용해서 데이터 불러오기
+  //* useQuery 사용해서 포스트 데이터 불러오기
   const { data: detail, isLoading, isError } = useQuery('detailData', getData);
+
+  //* useQuery 사용해서 유저 데이터 불러오기
+  // const { data: user } = useQuery('data', getUser);
+  // console.log('user: ', user);
 
   const queryClient = useQueryClient();
 
@@ -68,6 +71,7 @@ const Post = ({ id }: any) => {
       queryClient.invalidateQueries('detailData');
     },
   });
+
   //* 변화된 counting 값 인지
   useEffect(() => {
     countMutate(id);
@@ -77,29 +81,20 @@ const Post = ({ id }: any) => {
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   return (
-    <>
+    <StDetailContainer>
       <Seo title="Detail" />
+      <Header />
+
       {detail
-        .filter((item: any) => {
+        ?.filter((item: any) => {
           return item.id === id;
         })
         .map((item: any) => (
-          <div key={item.id}>
-            <StDetailBox>
-              <DetailMap
-                item={item}
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                inputToggle={inputToggle}
-                searchCategory={searchCategory}
-                saveLatLng={saveLatLng}
-                setSaveLatLng={setSaveLatLng}
-                saveAddress={saveAddress}
-                setSaveAddress={setSaveAddress}
-                setPlace={setPlace}
-                place={place}
-              />
-              <DetailBox
+          <StDetailContents key={item.id}>
+            <StImgAndProfileAndFollowingAndCollection>
+              <DetailImg item={item} />
+
+              {/* <DetailBox
                 item={item}
                 inputToggle={inputToggle}
                 setInputToggle={setInputToggle}
@@ -119,23 +114,76 @@ const Post = ({ id }: any) => {
                 onClickEditTown={onClickEditTown}
                 setSaveLatLng={setSaveLatLng}
                 setSaveAddress={setSaveAddress}
+              /> */}
+
+              <StProfileAndFollowingAndCollection>
+                <StProfileAndFollwing>
+                  <DetailProfile item={item} />
+                  <FollowingButton item={item} />
+                </StProfileAndFollwing>
+
+                <CollectionButton item={item} />
+              </StProfileAndFollowingAndCollection>
+            </StImgAndProfileAndFollowingAndCollection>
+
+            <StDetailAndMapAndComment>
+              <DetailMap
+                item={item}
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
+                inputToggle={inputToggle}
+                searchCategory={searchCategory}
+                saveLatLng={saveLatLng}
+                setSaveLatLng={setSaveLatLng}
+                saveAddress={saveAddress}
+                setSaveAddress={setSaveAddress}
+                setPlace={setPlace}
+                place={place}
               />
-              <FollowingButton item={item} />
-              <CollectionButton item={item} />
-            </StDetailBox>
-          </div>
+
+              <CommentList postId={id} />
+            </StDetailAndMapAndComment>
+          </StDetailContents>
         ))}
-      <CommentList postId={id} />
-    </>
+    </StDetailContainer>
   );
 };
 
 export default Post;
 
-const StDetailBox = styled.div`
-  border: 1px solid black;
-  padding: 0px;
-  margin: 10px;
+const StDetailContainer = styled.div`
+  width: 1440px;
+  margin: auto;
+`;
+
+const StDetailContents = styled.div`
+  position: relative;
+  top: 50px;
+  margin: auto;
+  height: 500px;
+  display: flex;
+  width: 80%;
+`;
+
+const StImgAndProfileAndFollowingAndCollection = styled.div`
+  width: 35%;
+`;
+
+const StProfileAndFollowingAndCollection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 10%;
+`;
+
+const StProfileAndFollwing = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const StDetailAndMapAndComment = styled.div`
+  width: 50%;
 `;
 
 //* SSR방식으로 server에서 id 값 보내기

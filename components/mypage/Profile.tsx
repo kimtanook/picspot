@@ -79,7 +79,6 @@ const Profile = () => {
       downloadUrl = await getDownloadURL(response.ref);
     }
 
-    //* 프로필 변경 시 user 수정하기
     editUser = {
       ...editUser,
       userName: nicknameEdit,
@@ -131,8 +130,8 @@ const Profile = () => {
     <ProfileContainer>
       {/* 사진 */}
       <ProfileEdit>
-      <div>
-        <ProfileImage img={imgEdit}></ProfileImage>
+        <div>
+          <ProfileImage img={imgEdit}></ProfileImage>
           {editmode ? (
             <>
               <ProfilePhotoBtn>
@@ -140,7 +139,9 @@ const Profile = () => {
                   파일선택
                 </ProfilePhotoLabel>
               </ProfilePhotoBtn>
-              <ProfilePhotoDeleteBtn onClick={deleteImgFile}>삭제</ProfilePhotoDeleteBtn>
+              <ProfilePhotoDeleteBtn onClick={deleteImgFile}>
+                삭제
+              </ProfilePhotoDeleteBtn>
               <ProfilePhotoInput
                 hidden
                 id="changePhoto"
@@ -153,38 +154,51 @@ const Profile = () => {
           ) : (
             ''
           )}
-      {/* 프로필 수정 */}
-        <div hidden={!editmode} >
-          <ProfileEditCancle onClick={profileEditCancle}>
-            취소
-          </ProfileEditCancle>
-        </div>
-        {editmode ? (
-          <ProfileCompleteBtn onClick={profileEditComplete}>적용</ProfileCompleteBtn>
-        ) : (
-          <ProfileEditBtn onClick={profileEdit}>내 정보 변경  > </ProfileEditBtn>
-        )}
+          {/* 프로필 수정 */}
+          <div hidden={!editmode}>
+            <ProfileEditCancle onClick={profileEditCancle}>
+              취소
+            </ProfileEditCancle>
+          </div>
+          {editmode ? (
+            <ProfileCompleteBtn onClick={profileEditComplete}>
+              적용
+            </ProfileCompleteBtn>
+          ) : (
+            <ProfileEditBtn onClick={profileEdit}>내 정보 변경 </ProfileEditBtn>
+          )}
         </div>
       </ProfileEdit>
       <ProfileText>
         <ProfileTextdiv>
           {/* 닉네임 */}
-          {editmode ? (<ProfileNicknameEdit onChange={handleNicknameChange} ref={nameRef} defaultValue={authService.currentUser?.displayName!}/>) : (
-                    <>
-                      {' '}
-                      <ProfileNickname>{authService.currentUser?.displayName}님</ProfileNickname>
-                    </>
-                  )}
-              <Link href={'/main?city=제주전체'}>{authService.currentUser ? (<LogoutButton onClick={logOut}>로그아웃</LogoutButton>) : null}</Link>
+          {editmode ? (
+            <ProfileNicknameEdit
+              onChange={handleNicknameChange}
+              ref={nameRef}
+              defaultValue={authService.currentUser?.displayName!}
+            />
+          ) : (
+            <>
+              {' '}
+              <ProfileNickname>
+                {authService.currentUser?.displayName}님
+              </ProfileNickname>
+            </>
+          )}
+          <Link href={'/main?city=제주전체'}>
+            {authService.currentUser ? (
+              <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+            ) : null}
+          </Link>
         </ProfileTextdiv>
 
-            <Follow>
-              <MyProfileFollowing>팔로잉</MyProfileFollowing>
-              {/* <div>{followingCount}곳</div> */}
-              <MyProfileFollower>팔로워</MyProfileFollower>
-              {/* <div>{followerCount}+</div> */}
-            </Follow>
-
+        <Follow>
+          <MyProfileFollowing>팔로잉</MyProfileFollowing>
+          {/* <div>{followingCount}곳</div> */}
+          <MyProfileFollower>팔로워</MyProfileFollower>
+          {/* <div>{followerCount}+</div> */}
+        </Follow>
       </ProfileText>
     </ProfileContainer>
   );
@@ -192,11 +206,12 @@ const Profile = () => {
 export default Profile;
 
 const ProfileContainer = styled.div`
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 `;
 const ProfileEdit = styled.div`
-padding-right: 15px;`;
+  padding-right: 15px;
+`;
 const ProfileImage = styled.div<{ img: string }>`
   width: 100px;
   height: 100px;
@@ -207,9 +222,11 @@ const ProfileImage = styled.div<{ img: string }>`
   box-shadow: 2px 2px 1px black;
 `;
 const ProfilePhotoBtn = styled.button`
-  cursor: pointer;`;
+  cursor: pointer;
+`;
 const ProfilePhotoDeleteBtn = styled.button`
-  cursor: pointer;`;
+  cursor: pointer;
+`;
 const ProfilePhotoLabel = styled.label`
   cursor: pointer;
 `;
@@ -236,7 +253,6 @@ const ProfileEditBtn = styled.button`
   cursor: pointer;
 `;
 
-
 const ProfileText = styled.div`
   padding-left: 15px;
 `;
@@ -245,15 +261,15 @@ const ProfileTextdiv = styled.div`
   place-items: flex-end;
 `;
 const ProfileNicknameEdit = styled.input`
-width:70px;
-height:25px;
+  width: 70px;
+  height: 25px;
 `;
 const ProfileNickname = styled.div`
   padding-top: 20px;
 `;
 const LogoutButton = styled.button`
   color: gray;
-  background-color:transparent;
+  background-color: transparent;
   border: none;
   text-decoration-line: underline;
   font-size: 10pt;
@@ -265,24 +281,22 @@ const Follow = styled.div`
   margin-top: 10px;
 `;
 const MyProfileFollowing = styled.div`
-border-radius: 20px;
-background-color: #f8f8f8;
-padding: 10%;
-font-size: 10pt;
-width: 50px;
-height: 50px;
-margin-right: 10px;
-text-align: center;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  padding: 10%;
+  font-size: 10pt;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  text-align: center;
 `;
 const MyProfileFollower = styled.div`
-border-radius: 20px;
-background-color: #f8f8f8;
-padding: 10%;
-font-size: 10pt;
-width: 50px;
-height: 50px;
-margin-left: 10px;
-text-align: center;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  padding: 10%;
+  font-size: 10pt;
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+  text-align: center;
 `;
-
-
