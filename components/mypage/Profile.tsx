@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
 import { authService, storageService } from '@/firebase';
-import { updateProfile } from 'firebase/auth';
+import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { customAlert } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { updateUser } from '@/api';
+import Link from 'next/link';
 
 const imgFile = '/profileicon.svg';
 
@@ -27,6 +28,7 @@ const Profile = () => {
   const [nicknameEdit, setNicknameEdit] = useState<string>(
     authService?.currentUser?.displayName as string
   );
+  const [currentUser, setCurrentUser] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -116,75 +118,85 @@ const Profile = () => {
   const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNicknameEdit(e.target.value);
   };
-
+  // 로그아웃
+  const logOut = () => {
+    signOut(authService).then(() => {
+      // Sign-out successful.
+      localStorage.clear();
+      setCurrentUser(false);
+      customAlert('로그아웃에 성공하였습니다!');
+    });
+  };
   return (
     <ProfileContainer>
       {/* 사진 */}
-      <ProfilePhotoContainer>
+      <ProfileEdit>
+      <div>
         <ProfileImage img={imgEdit}></ProfileImage>
-        {editmode ? (
-          <>
-            <ProfilePhotoBtn>
-              <ProfilePhotoLabel htmlFor="changePhoto">
-                파일선택
-              </ProfilePhotoLabel>
-            </ProfilePhotoBtn>
-            <button onClick={deleteImgFile}>삭제</button>
-            <ProfilePhotoInput
-              hidden
-              id="changePhoto"
-              type="file"
-              placeholder="파일선택"
-              onChange={saveImgFile}
-              ref={imgRef}
-            />
-          </>
-        ) : (
-          ''
-        )}
-      </ProfilePhotoContainer>
-      {/* 닉네임 */}
-      <ProfileNicknameContainer>
-        {editmode ? (
-          <ProfileNicknameEdit
-            onChange={handleNicknameChange}
-            ref={nameRef}
-            defaultValue={authService.currentUser?.displayName!}
-          />
-        ) : (
-          <>
-            {' '}
-            <ProfileNickname>
-              {authService.currentUser?.displayName}
-            </ProfileNickname>
-          </>
-        )}
-      </ProfileNicknameContainer>
+          {editmode ? (
+            <>
+              <ProfilePhotoBtn>
+                <ProfilePhotoLabel htmlFor="changePhoto">
+                  파일선택
+                </ProfilePhotoLabel>
+              </ProfilePhotoBtn>
+              <ProfilePhotoDeleteBtn onClick={deleteImgFile}>삭제</ProfilePhotoDeleteBtn>
+              <ProfilePhotoInput
+                hidden
+                id="changePhoto"
+                type="file"
+                placeholder="파일선택"
+                onChange={saveImgFile}
+                ref={imgRef}
+              />
+            </>
+          ) : (
+            ''
+          )}
       {/* 프로필 수정 */}
-      <ProfileEditContainer>
-        <div hidden={!editmode}>
+        <div hidden={!editmode} >
           <ProfileEditCancle onClick={profileEditCancle}>
             취소
           </ProfileEditCancle>
         </div>
         {editmode ? (
-          <ProfileEditBtn onClick={profileEditComplete}>적용</ProfileEditBtn>
+          <ProfileCompleteBtn onClick={profileEditComplete}>적용</ProfileCompleteBtn>
         ) : (
-          <ProfileEditBtn onClick={profileEdit}>수정</ProfileEditBtn>
+          <ProfileEditBtn onClick={profileEdit}>내 정보 변경  > </ProfileEditBtn>
         )}
-      </ProfileEditContainer>
+        </div>
+      </ProfileEdit>
+      <ProfileText>
+        <ProfileTextdiv>
+          {/* 닉네임 */}
+          {editmode ? (<ProfileNicknameEdit onChange={handleNicknameChange} ref={nameRef} defaultValue={authService.currentUser?.displayName!}/>) : (
+                    <>
+                      {' '}
+                      <ProfileNickname>{authService.currentUser?.displayName}님</ProfileNickname>
+                    </>
+                  )}
+              <Link href={'/main?city=제주전체'}>{authService.currentUser ? (<LogoutButton onClick={logOut}>로그아웃</LogoutButton>) : null}</Link>
+        </ProfileTextdiv>
+
+            <Follow>
+              <MyProfileFollowing>팔로잉</MyProfileFollowing>
+              {/* <div>{followingCount}곳</div> */}
+              <MyProfileFollower>팔로워</MyProfileFollower>
+              {/* <div>{followerCount}+</div> */}
+            </Follow>
+
+      </ProfileText>
     </ProfileContainer>
   );
 };
 export default Profile;
 
 const ProfileContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+display: flex;
+justify-content: center;
 `;
+const ProfileEdit = styled.div`
+padding-right: 15px;`;
 const ProfileImage = styled.div<{ img: string }>`
   width: 100px;
   height: 100px;
@@ -194,46 +206,83 @@ const ProfileImage = styled.div<{ img: string }>`
   background-position: center center;
   box-shadow: 2px 2px 1px black;
 `;
-const ProfilePhotoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const ProfilePhotoBtn = styled.button``;
+const ProfilePhotoBtn = styled.button`
+  cursor: pointer;`;
+const ProfilePhotoDeleteBtn = styled.button`
+  cursor: pointer;`;
 const ProfilePhotoLabel = styled.label`
   cursor: pointer;
-  padding: 20px;
 `;
 const ProfilePhotoInput = styled.input``;
-const ProfileNicknameContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const ProfileNicknameEdit = styled.input`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ProfileNickname = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ProfileEditContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 const ProfileEditCancle = styled.button`
+  cursor: pointer;
+`;
+const ProfileCompleteBtn = styled.button`
+  padding: 1px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 const ProfileEditBtn = styled.button`
+  border: none;
+  background-color: transparent;
+  color: cornflowerblue;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 15px;
+  padding-left: 15px;
+  cursor: pointer;
 `;
+
+
+const ProfileText = styled.div`
+  padding-left: 15px;
+`;
+const ProfileTextdiv = styled.div`
+  display: flex;
+  place-items: flex-end;
+`;
+const ProfileNicknameEdit = styled.input`
+width:70px;
+height:25px;
+`;
+const ProfileNickname = styled.div`
+  padding-top: 20px;
+`;
+const LogoutButton = styled.button`
+  color: gray;
+  background-color:transparent;
+  border: none;
+  text-decoration-line: underline;
+  font-size: 10pt;
+  cursor: pointer;
+`;
+const Follow = styled.div`
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 10px;
+`;
+const MyProfileFollowing = styled.div`
+border-radius: 20px;
+background-color: #f8f8f8;
+padding: 10%;
+font-size: 10pt;
+width: 50px;
+height: 50px;
+margin-right: 10px;
+text-align: center;
+`;
+const MyProfileFollower = styled.div`
+border-radius: 20px;
+background-color: #f8f8f8;
+padding: 10%;
+font-size: 10pt;
+width: 50px;
+height: 50px;
+margin-left: 10px;
+text-align: center;
+`;
+
+
