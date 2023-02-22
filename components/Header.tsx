@@ -59,13 +59,13 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.div`
-  width: 1440px;
-  margin: auto;
   position: fixed;
+  /* width: 1440px; */
+  margin: auto;
   display: flex;
   justify-content: space-between;
   height: 70px;
-  z-index: 10;
+  z-index: 3;
 `;
 const Title = styled.div`
   font-weight: 900;
@@ -73,8 +73,13 @@ const Title = styled.div`
   cursor: pointer;
 `;
 const ProfileImg = styled.img`
+  position: fixed;
+  left: 86%;
   border-radius: 50%;
   width: 30px;
   height: 30px;
   cursor: pointer;
+  @media only screen and (max-width: 1440px) {
+    left: 95%;
+  }
 `;
