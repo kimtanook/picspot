@@ -32,10 +32,12 @@ function ModalLogin(props: Props) {
   const changeModalButton = () => {
     setSignUpModal(!signUpModal);
   };
+
   // 비밀번호 찾기 모달 창
   const forgotModalButton = () => {
     setForgotModal(!forgotModal);
   };
+
   return (
     <ModalStyled onClick={closeModal}>
       {forgotModal ? (
@@ -66,17 +68,17 @@ const ModalStyled = styled.div`
   height: 100%;
   background-color: gray;
   display: flex;
-  z-index: 1000000;
+  z-index: 1000;
   justify-content: center;
   align-items: center;
 
   .modalBody {
     position: absolute;
     color: black;
-    width: 400px;
-    height: 500px;
+    width: 800px;
+    height: 75%;
     padding: 30px 30px 30px 30px;
-    z-index: 13;
+    z-index: 999;
     text-align: left;
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);

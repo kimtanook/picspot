@@ -112,7 +112,7 @@ const Auth = (props: Props): JSX.Element => {
       </LoginGoogleContainer>
 
       <LoginCheckContainer onClick={props.changeModalButton}>
-        <LoginCheckSignDiv>회원가입</LoginCheckSignDiv>
+        <LoginCheckSignDiv>회원가입 하기</LoginCheckSignDiv>
       </LoginCheckContainer>
     </LoginContainer>
   );
@@ -120,16 +120,14 @@ const Auth = (props: Props): JSX.Element => {
 
 const LoginContainer = styled.div`
   background-color: #ffffff;
-  /* padding: 40px; */
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
 
 const LoginTextDiv = styled.div`
-  margin-top: 1vh;
+  margin-top: 5vh;
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
+  font-size: 40px;
   line-height: 138.5%;
   text-align: center;
   color: #212121;
@@ -140,28 +138,29 @@ const LoginEmailPwContainer = styled.div`
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 100px;
 `;
 
 const LoginEmailInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
+  height: 80px;
+  padding-left: 40px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
+  font-size: 25px;
 `;
 
 const LoginPwInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
+  height: 80px;
+  padding-left: 40px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
-  margin-top: 30px;
+  margin-top: 40px;
+  font-size: 25px;
 `;
 
 const AuthWarn = styled.p`
   color: red;
-  font-size: 12px;
-  font-weight: 700px;
+  font-size: 20px;
 `;
 
 const LoginBtnContainer = styled.div`
@@ -169,18 +168,20 @@ const LoginBtnContainer = styled.div`
   flex-direction: column;
   margin: 0 auto;
   width: 90%;
+  margin-top: 40px;
 `;
 
 const LoginBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
+  height: 80px;
   border: transparent;
-  margin-top: 20px;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
+  font-size: 25px;
+
   &:hover {
     cursor: pointer;
   }
@@ -192,7 +193,7 @@ const PwForgotContainer = styled.span`
   align-items: center;
   padding: 10px;
   transition: color 0.2s ease-in;
-  margin-top: 10px;
+  margin-top: 30px;
   color: #1882ff;
 `;
 
@@ -200,7 +201,7 @@ const LoginGoogleContainer = styled.div`
   display: flex;
   width: 90%;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 70px;
 `;
 
 const LoginCheckContainer = styled.span`
@@ -209,14 +210,14 @@ const LoginCheckContainer = styled.span`
   align-items: center;
   padding: 10px;
   transition: color 0.2s ease-in;
-  margin-top: 10px;
+  margin-top: 30px;
   color: #1882ff;
 `;
 
 const LoginCheckSignDiv = styled.div`
   cursor: pointer;
-  font-size: 14px;
   text-decoration: underline;
+  font-size: 25px;
 `;
 
 export default Auth;

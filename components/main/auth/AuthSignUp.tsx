@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  updateProfile,
-} from 'firebase/auth';
-import AuthSocial from './AuthSocial';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
+import { useMutation } from 'react-query';
+import { addUser } from '@/api';
 
 interface AuthForm {
   email: string;
@@ -21,7 +18,17 @@ interface Props {
   closeModal: () => void;
 }
 
+//* user 초기 데이터
+let userState: any = {
+  uid: '',
+  userName: '',
+  userImg: '/profileicon.svg',
+};
+
 const AuthSignUp = (props: Props) => {
+  //* useMutation 사용해서 유저 추가하기
+  const { mutate: onAddUser } = useMutation(addUser);
+
   const [registering, setRegistering] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -45,12 +52,29 @@ const AuthSignUp = (props: Props) => {
 
     setRegistering(true);
     await createUserWithEmailAndPassword(authService, data.email, data.password)
-      .then((res) => {
+      .then(() => {
         updateProfile(authService?.currentUser!, {
           displayName: nickname,
         });
+        userState = {
+          ...userState,
+          uid: authService.currentUser?.uid,
+          userName: nickname,
+        };
         customAlert('회원가입을 축하합니다!');
         props.closeModal();
+      })
+      .then(() => {
+        //* 회원가입 시 user 추가하기
+        onAddUser(userState),
+          {
+            onSuccess: () => {
+              console.log('유저추가 요청 성공');
+            },
+            onError: () => {
+              console.log('유저추가 요청 실패');
+            },
+          };
       })
       .catch((error) => {
         if (error.code.includes('auth/weak-password')) {
@@ -189,8 +213,8 @@ export default AuthSignUp;
 
 const SignUpContainer = styled.div`
   background-color: #ffffff;
-  width: 400px;
-  height: 500px;
+  width: 800px;
+  height: 75%;
   padding: 30px 30px 30px 30px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
@@ -198,15 +222,16 @@ const SignUpContainer = styled.div`
 const StHeder = styled.header`
   cursor: pointer;
   color: #1882ff;
-  font-size: 14px;
+  font-size: 25px;
 `;
 
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 30px;
-  font-size: 24px;
+  font-size: 40px;
   font-weight: 700;
+  margin-top: 5vh;
 `;
 
 const SignUpEmailPwContainer = styled.form`
@@ -214,41 +239,47 @@ const SignUpEmailPwContainer = styled.form`
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 100px;
 `;
 
 const SignUpEmailInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
+  height: 80px;
+  padding-left: 40px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
+  font-size: 25px;
+`;
+
+const SignUpPwInput = styled.input`
+  height: 80px;
+  padding-left: 40px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  font-size: 25px;
+  margin-top: 15px;
+`;
+
+const SignUpPwConfirmInput = styled.input`
+  height: 80px;
+  padding-left: 40px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  font-size: 25px;
+  margin-top: 15px;
+`;
+
+const NicknameInput = styled.input`
+  height: 80px;
+  padding-left: 40px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  font-size: 25px;
+  margin-top: 15px;
 `;
 
 const AuthWarn = styled.p`
   color: red;
-  font-size: 13px;
-  font-weight: 700px;
-`;
-
-const SignUpPwInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-`;
-
-const SignUpPwConfirmInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-`;
-
-const NicknameInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
+  font-size: 20px;
 `;
 
 const SignUpBtnContainer = styled.div`
@@ -256,17 +287,19 @@ const SignUpBtnContainer = styled.div`
   flex-direction: column;
   margin: 0 auto;
   width: 90%;
+  margin-top: 40px;
 `;
 
 const SignUpBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
+  height: 80px;
   border: transparent;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
+  font-size: 25px;
   &:hover {
     cursor: pointer;
   }

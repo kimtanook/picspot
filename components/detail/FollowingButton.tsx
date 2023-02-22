@@ -54,7 +54,6 @@ const FollowingButton = ({ item }: any) => {
     isError,
   } = useQuery('followingData', getFollwing);
 
-  //* 해당 게시물에 대하여 팔로우한 사람은 팔로우 삭제 버튼이 팔로우 하지 않은 사람은 팔로우 추가 버튼을 보이도록 하기
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
   const authFollowingUid = followingData
     ?.filter((item: any) => {
@@ -65,7 +64,7 @@ const FollowingButton = ({ item }: any) => {
     })?.follow;
   // console.log('authFollowingUid: ', authFollowingUid);
 
-  //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다. -> 팔로우가 있는 유저
+  //* 팔로우가 있는 유저가 처음 들어왔을때 팔로잉 상태를 최신화했습니다.
   useEffect(() => {
     if (authFollowingUid?.indexOf(item.creator) === -1) {
       setFollwingUserAndCreatorUidState(false);
@@ -74,7 +73,7 @@ const FollowingButton = ({ item }: any) => {
     }
   }, [authFollowingUid, item.creator]);
 
-  //? 페이지에 처음 들어왔을때 팔로잉 상태를 최신화했습니다. -> 팔로우가 없는 유저
+  //* 팔로우가 없는 유저가 처음 페이지에 들어왔을때 팔로잉 상태를 최신화했습니다.
   useEffect(() => {
     if (authFollowingUid === undefined) {
       setFollwingUserAndCreatorUidState(false);
@@ -84,19 +83,26 @@ const FollowingButton = ({ item }: any) => {
   if (isLoading) return <h1>로딩중 입니다</h1>;
   if (isError) return <h1>통신이 불안정합니다</h1>;
 
-  return (
-    <div>
-      {follwingUserAndCreatorUidState ? (
-        <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
-          팔로잉 삭제
-        </StFollowingBtn>
-      ) : (
-        <StFollowingBtn onClick={() => onClickFollowingBtn(item)}>
-          팔로잉
-        </StFollowingBtn>
-      )}
-    </div>
-  );
+  //* 팔로우한 사람은 팔로우 삭제 버튼이 팔로우 하지 않은 사람은 팔로우 추가 버튼을 보이도록 하기
+  //* 비회원 or 자기 자신 포스트에는 팔로잉 버튼이 안보이도록 하기
+  if (
+    authService.currentUser &&
+    authService.currentUser?.uid !== item.creator
+  ) {
+    return (
+      <div>
+        {follwingUserAndCreatorUidState ? (
+          <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
+            팔로잉 삭제
+          </StFollowingBtn>
+        ) : (
+          <StFollowingBtn onClick={() => onClickFollowingBtn(item)}>
+            팔로잉
+          </StFollowingBtn>
+        )}
+      </div>
+    );
+  }
 };
 
 export default FollowingButton;
