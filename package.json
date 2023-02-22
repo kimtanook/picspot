@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@next/font": "13.1.6",
+    "@types/react-responsive-masonry": "^2.1.0",
     "@types/uuid": "^9.0.0",
     "babel-plugin-styled-components": "^2.0.7",
     "eslint": "8.33.0",
@@ -26,7 +27,7 @@
     "react-icons": "^4.7.1",
     "react-kakao-maps-sdk": "^1.1.6",
     "react-query": "^3.39.3",
-    "react-query": "^3.39.3",
+    "react-responsive-masonry": "^2.1.7",
     "socket.io": "^4.6.0",
     "socket.io-client": "^4.6.0",
     "styled-components": "^5.3.6",

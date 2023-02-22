@@ -1,17 +1,24 @@
 import { getData } from '@/api';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
-import { useQuery, useQueryClient } from 'react-query';
+import {
+  CustomOverlayMap,
+  Map,
+  MapMarker,
+  MapTypeControl,
+  useMap,
+  ZoomControl,
+} from 'react-kakao-maps-sdk';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
-
+import MapPanTo from './MapPanTo';
 const ModalMaps = () => {
   const { data, isLoading, isError } = useQuery('detailData', getData);
-  const queryClient = useQueryClient();
   const [isOpen, setIsOpen]: any = useState(false);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+
   console.log('data', data);
 
   return (
@@ -25,23 +32,18 @@ const ModalMaps = () => {
         style={{
           // 지도의 크기
           width: '1200px',
-          height: '600px',
+          height: '700px',
         }}
-        level={9} // 지도의 확대 레벨
+        level={10} // 지도의 확대 레벨
       >
+        <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
+        <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
         {data
           // .filter((item: any) => item.town === '우도')
           .map((item: any) => {
             return (
               <div key={item.id}>
-                <MapMarker
-                  key={item.id}
-                  position={{
-                    lat: item.lat,
-                    lng: item.long,
-                  }}
-                  onClick={() => setIsOpen(item)}
-                />
+                <MapPanTo item={item} setIsOpen={setIsOpen} />
                 {isOpen && isOpen.id === item.id && (
                   <CustomOverlayMap
                     position={{
@@ -76,16 +78,15 @@ const ModalMaps = () => {
                             <StOverLayCounter>
                               조회수 : {item.clickCounter}
                             </StOverLayCounter>
-                            <div>
-                              <a
-                                href="https://www.kakaocorp.com/main"
-                                target="_blank"
-                                className="link"
-                                rel="noreferrer"
-                              >
-                                페이지이동(기능추가예정)
-                              </a>
-                            </div>
+
+                            <StOverLayLink
+                              href={`/detail/${item.id}`}
+                              target="_blank"
+                              className="link"
+                              rel="noreferrer"
+                            >
+                              자세히보기
+                            </StOverLayLink>
                           </StOverLayDesc>
                         </StOverLayBody>
                       </StOverLayInfo>
@@ -196,5 +197,10 @@ const StOverLayImg = styled.div`
   border: 1px solid #ddd;
   color: #888;
   overflow: hidden;
+`;
+
+const StOverLayLink = styled.a`
+  color: inherit;
+  text-decoration: none;
 `;
 export default ModalMaps;
