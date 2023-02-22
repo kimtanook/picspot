@@ -24,6 +24,7 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
+import Loading from '@/components/common/Loading';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -196,7 +197,7 @@ export default function Main() {
         <div>
           {/* 무한 스크롤 */}
           {status === 'loading' ? (
-            <div>로딩중입니다.</div>
+            <Loading />
           ) : status === 'error' ? (
             <div>데이터를 불러오지 못했습니다.</div>
           ) : (
