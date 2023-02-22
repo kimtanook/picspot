@@ -74,6 +74,7 @@ import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Town from './Town';
 import CollectionCategory from './CollectionCategory';
+import Masonry from 'react-responsive-masonry';
 
 const CollectionList = ({ postData }: any) => {
   //* useQuery 사용해서 collection 데이터 불러오기
@@ -106,15 +107,15 @@ const CollectionList = ({ postData }: any) => {
   // console.log('게시물들', myCollectionTownArr);
   return (
     <>
-      {myCollectionTownArr?.map((item: any) => (
-        <div>
+      <Masonry columnsCount={3} style={{ gap: '45px' }}>
+        {myCollectionTownArr?.map((item: any) => (
           <CollectionCategory
             value={item}
             postData={postData}
             collectionData={collectionData}
           />
-        </div>
-      ))}
+        ))}
+      </Masonry>
     </>
   );
 };

@@ -3,8 +3,14 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import MyCollectItem from './MyCollectItem';
+import Masonry from 'react-responsive-masonry';
+import MorePost from './MorePost';
+import { useState } from 'react';
+import { isTemplateExpression } from 'typescript';
 
-const Town = ({ value }: { value: string }) => {
+const Town = ({ value, setMore, more }: any) => {
+  const [townName, setTownName] = useState('');
+
   //* post town 기준 데이터 가져오기
   const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
     const [_, town] = queryKey;
@@ -35,44 +41,88 @@ const Town = ({ value }: { value: string }) => {
   );
   // console.log('myPostList', myPostList);
 
+  const myPostListMore = myPostList?.filter((item: any) => item.town === value);
+  console.log('myPostListMore', myPostListMore);
+  console.log('townName', townName);
   return (
-    <TownWrap>
-      <PostTown>
-        <PostTownTitle>{value}</PostTownTitle>
-      </PostTown>
-      <MySpotImg>
-        {myPostList?.map((item: any) => (
-          <MyCollectItem item={item} />
-        ))}
-      </MySpotImg>
-    </TownWrap>
+    <div>
+      {more ? (
+        <TownWrap>
+          <PostTownTitle>
+            <MyPostTownTitle>{value}</MyPostTownTitle>
+          </PostTownTitle>
+
+          <MySpotImg>
+            <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+              {myPostList?.map((item: any) => (
+                <MyCollectItem item={item} />
+              ))}
+            </Masonry>
+          </MySpotImg>
+          <MoreBtn onClick={() => setMore(false)}>more</MoreBtn>
+        </TownWrap>
+      ) : (
+        <>
+          <PostTownTitle>
+            <MyPostTownTitle>{value}</MyPostTownTitle>
+          </PostTownTitle>
+          {myPostListMore?.map((item: any) => (
+            <>
+              <MorePost item={item} />
+            </>
+          ))}
+        </>
+      )}
+    </div>
   );
 };
 
 export default Town;
 
 const TownWrap = styled.div`
-  width: 338px;
+  width: 365px;
   height: 352px;
 
-  border: solid 1px tomato;
+  margin: 0px 1px 30px 1px;
+  padding-right: 25px;
 `;
-
 const PostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 30px;
-  text-align: left;
-  letter-spacing: -0.015em;
-`;
-
-const PostTown = styled.div`
   height: 43px;
   border-bottom: 2px solid #212121;
 `;
+
+const MyPostTownTitle = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-size: 20px;
+  line-height: 30px;
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+`;
 const MySpotImg = styled.div`
-  width: 337.39px;
+  width: 390px;
+  margin-top: 24px;
   height: 256px;
+  overflow: hidden;
+  display: grid;
+`;
+
+const MoreBtn = styled.button`
+  width: 35px;
+  height: 22px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 25px;
+  align-items: center;
+  text-align: center;
+  text-decoration-line: underline;
+  float: right;
+  margin-top: 20px;
+  border: none;
+  background-color: white;
+  /* border-bottom: 1px solid #555555; */
+  :hover {
+    font-size: 15px;
+    transition: all 0.3s;
+  }
 `;

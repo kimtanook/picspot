@@ -10,6 +10,7 @@ import CollectionList from '@/components/mypage/CollectionList';
 import { uuidv4 } from '@firebase/util';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
+import Masonry from 'react-responsive-masonry';
 
 interface propsType {
   followingCount: number;
@@ -25,6 +26,7 @@ type ProfileItemProps = {
 export default function Mypage({ followingCount, followerCount }: propsType) {
   const [currentUser, setCurrentUser] = useState(false);
   const [onSpot, setOnSpot] = useState(true);
+  const [more, setMore]: any = useState(true);
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
@@ -74,25 +76,31 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
             <Image src={item.userImg} alt="image" height={100} width={100} />
           </div>
         ))}
-        {/* 내 게시물과 저장한 게시물입니다 */}
-        <div style={{ width: '1068px', height: '755px' }}>
-          <div>
-            <button onClick={() => setOnSpot(true)}>게시한 스팟</button>
-            <button onClick={() => setOnSpot(false)}>저장한 스팟</button>
-          </div>
-          <div>
-            {onSpot ? (
-              <MyPostListBox>
-                <MyPostList />
-              </MyPostListBox>
-            ) : (
-              <CollectionListBox>
-                <CollectionList postData={data} />
-              </CollectionListBox>
-            )}
-          </div>
-        </div>
       </MyContainer>
+      {/* 내 게시물과 저장한 게시물입니다 */}
+      <AllMyPostList>
+        <div style={{ paddingBottom: '10px' }}>
+          {onSpot ? (
+            <>
+              <BlackBtn onClick={() => setOnSpot(true)}>게시한 스팟</BlackBtn>
+              <GrayBtn onClick={() => setOnSpot(false)}>저장한 스팟</GrayBtn>
+            </>
+          ) : (
+            <>
+              <GrayBtn onClick={() => setOnSpot(true)}>게시한 스팟</GrayBtn>
+              <BlackBtn onClick={() => setOnSpot(false)}>저장한 스팟</BlackBtn>
+            </>
+          )}
+        </div>
+
+        <GridBox>
+          {onSpot ? (
+            <MyPostList more={more} setMore={setMore} />
+          ) : (
+            <CollectionList postData={data} />
+          )}
+        </GridBox>
+      </AllMyPostList>
     </>
   );
 }
@@ -111,15 +119,45 @@ const MyProfileContainer = styled.div`
   height: 200px;
 `;
 
-const CollectionListBox = styled.div`
-  border: solid 1px tomato;
-  display: flex;
-  flex-direction: row;
+const AllMyPostList = styled.div`
+  margin: auto;
+  width: 1188px;
+`;
+
+const GridBox = styled.div`
+  width: 1188px;
+  margin-top: 19px;
+  display: inline-flex;
+
   justify-content: space-between;
 `;
-const MyPostListBox = styled.div`
-  border: solid 1px tomato;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+
+const GrayBtn = styled.button`
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  background-color: white;
+  color: #8e8e93;
+  border-bottom: 3px solid #8e8e93;
+  padding-bottom: 5px;
+  margin-right: 20px;
+  line-height: 30px;
+  letter-spacing: -0.015em;
+  :hover {
+    border-bottom: 3.5px solid #212121;
+    color: #212121;
+    transition: all 0.3s;
+  }
+`;
+const BlackBtn = styled.button`
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  background-color: white;
+  color: #212121;
+  border-bottom: 3.5px solid #212121;
+  padding-bottom: 5px;
+  margin-right: 20px;
+  line-height: 30px;
+  letter-spacing: -0.015em;
 `;

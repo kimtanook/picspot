@@ -1,21 +1,16 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
-export default function MyCollectItem({
-  item,
-}: {
-  item: { [key: string]: string };
-}) {
+export default function MorePost({ item }: any) {
   return (
     <Link href={`/detail/${item.id}`}>
-      <MyPostImg src={item.imgUrl} />
+      <h1>더보기 기능 구현할 예정입니다!!</h1>
+      <CollectionImg src={item.imgUrl} />
     </Link>
   );
 }
-
-const MyPostImg = styled.img`
+const CollectionImg = styled.img`
   width: 170px;
   margin-bottom: 10px;
   :hover {

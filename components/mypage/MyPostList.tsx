@@ -7,8 +7,9 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Town from './Town';
+import Masonry from 'react-responsive-masonry';
 
-const MyPostList = () => {
+const MyPostList = ({ setMore, more }: any) => {
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
   //* 전체에서 가져온 데이터에서 내가 작성한 포스터들만 가져왔다.
@@ -34,11 +35,13 @@ const MyPostList = () => {
 
   return (
     <>
-      {myCollectTownArr?.map((item: any) => (
-        <div>
-          <Town value={item} />
-        </div>
-      ))}
+      <Masonry columnsCount={3} style={{ gap: '45px' }}>
+        {myCollectTownArr?.map((item: any) => (
+          <div>
+            <Town value={item} more={more} setMore={setMore} />
+          </div>
+        ))}
+      </Masonry>
     </>
   );
 };
