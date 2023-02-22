@@ -7,7 +7,7 @@ import {
   uploadString,
 } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
-import { addData, addUser } from '@/api';
+import { addData, addUser, visibleReset } from '@/api';
 import Dropdown from '../mypage/Dropdown';
 import styled from 'styled-components';
 import MapLandingPage from '../detail/MapLandingPage';
@@ -126,6 +126,7 @@ const PostForm = ({ setOpenModal }: any) => {
             console.log('포스트 추가 요청 실패');
           },
         });
+
         onAddUser(userState),
           {
             onSuccess: () => {
@@ -137,6 +138,7 @@ const PostForm = ({ setOpenModal }: any) => {
           };
       });
     });
+    visibleReset();
   };
 
   //* 카테고리버튼 눌렀을 때 실행하는 함수

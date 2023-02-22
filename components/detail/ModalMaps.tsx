@@ -1,5 +1,6 @@
 import { getData } from '@/api';
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import {
   CustomOverlayMap,
@@ -52,44 +53,30 @@ const ModalMaps = () => {
                       lng: item.long,
                     }}
                   >
+                    <StOverLayClose
+                      className="close"
+                      onClick={() => setIsOpen(false)}
+                      title="닫기"
+                    ></StOverLayClose>
                     <StOverLayWrap>
-                      <StOverLayInfo>
-                        <StOverLayTitle>
-                          {item.title}
-                          <StOverLayClose
-                            className="close"
-                            onClick={() => setIsOpen(false)}
-                            title="닫기"
-                          ></StOverLayClose>
-                        </StOverLayTitle>
-                        <StOverLayBody>
-                          <StOverLayImg>
-                            <Image
-                              src={item.imgUrl}
-                              alt="image"
-                              height={100}
-                              width={100}
-                            />
-                          </StOverLayImg>
-                          <StOverLayDesc>
-                            <StOverLayEllipsis>
-                              {item.address}
-                            </StOverLayEllipsis>
-                            <StOverLayCounter>
-                              조회수 : {item.clickCounter}
-                            </StOverLayCounter>
+                      <StOverLayTitle>{item.title}</StOverLayTitle>
 
-                            <StOverLayLink
-                              href={`/detail/${item.id}`}
-                              target="_blank"
-                              className="link"
-                              rel="noreferrer"
-                            >
-                              자세히보기
-                            </StOverLayLink>
-                          </StOverLayDesc>
-                        </StOverLayBody>
-                      </StOverLayInfo>
+                      <Link href={`/detail/${item.id}`} rel="noreferrer">
+                        <StOverLayImg>
+                          <StOverLayImgSrc
+                            src={item.imgUrl}
+                            alt="image"
+                            height={150}
+                            width={150}
+                          />
+                        </StOverLayImg>
+                      </Link>
+                      <StOverLayAddress>
+                        {item.address.slice(7, 20)}
+                      </StOverLayAddress>
+                      <StOverLayCounter>
+                        {item.clickCounter} view
+                      </StOverLayCounter>
                     </StOverLayWrap>
                   </CustomOverlayMap>
                 )}
@@ -102,105 +89,112 @@ const ModalMaps = () => {
 };
 
 const StOverLayWrap = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: 50px;
-  width: 288px;
-  height: 132px;
-  margin-left: -144px;
-  text-align: left;
+  width: 172px;
+  height: 256px;
+  margin-top: -300px;
+  background-color: white;
+  box-shadow: 2.5px 5px 5px gray;
+  border-radius: 3px;
   overflow: hidden;
-  font-size: 12px;
-  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
-  line-height: 1.5;
-  padding: 0;
-  margin: 20;
-`;
-
-const StOverLayInfo = styled.div`
-  width: 286px;
-  height: 120px;
-  border-radius: 5px;
-  border-bottom: 2px solid #ccc;
-  border-right: 1px solid #ccc;
-  overflow: hidden;
-  background: #fff;
-
-  :nth-child(1) {
-    border: 0;
-    box-shadow: 0px 1px 2px #888;
-  }
-  ::after {
-    content: '';
-    position: absolute;
-    margin-left: -12px;
-    left: 50%;
-    bottom: 0;
-    width: 22px;
-    height: 12px;
-    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
-  }
-  .link {
-    color: #5085bb;
-  }
 `;
 
 const StOverLayTitle = styled.div`
-  padding: 5px 0 0 10px;
+  padding: 15px 0 0 10px;
   height: 30px;
-  background: #eee;
-  border-bottom: 1px solid #ddd;
+  text-align: center;
   font-size: 18px;
   font-weight: bold;
 `;
 
+const StOverLayImg = styled.div`
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+`;
+
+const StOverLayImgSrc = styled(Image)`
+  width: 100%;
+  cursor: pointer;
+  :hover {
+    opacity: 0.8;
+  }
+`;
+const StOverLayAddress = styled.div`
+  color: gray;
+  font-size: 15px;
+  position: relative;
+  margin-top: 160px;
+  text-align: center;
+`;
+
+const StOverLayCounter = styled.div`
+  font-size: 15px;
+  color: cornflowerblue;
+  font-weight: 600;
+  text-align: center;
+`;
+
 const StOverLayClose = styled.div`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #888;
+  top: -330px;
+  right: 45%;
+  border-radius: 25px;
   width: 17px;
   height: 17px;
+
   background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
   :hover {
     cursor: pointer;
+
+    width: 17px;
+    height: 17px;
+    border-radius: 25px;
   }
 `;
 
-const StOverLayBody = styled.div`
-  position: relative;
-  overflow: hidden;
-  cursor: inherit;
-`;
+// const StOverLayInfo = styled.div`
+//   width: 144px;
+//   height: 300px;
+//   border-radius: 5px;
+//   border-bottom: 2px solid #ccc;
+//   border-right: 1px solid #ccc;
+//   overflow: hidden;
+//   background: #fff;
+//   position: absolute;
 
-const StOverLayDesc = styled.div`
-  position: relative;
-  margin: 13px 0 0 90px;
-  height: 75px;
-`;
-const StOverLayEllipsis = styled.div`
-  overflow: hidden;
-  /* text-overflow: ellipsis; */
-  white-space: nowrap;
-`;
-const StOverLayCounter = styled.div`
-  font-size: 11px;
-  color: #888;
-  margin-top: -2px;
-`;
-const StOverLayImg = styled.div`
-  position: absolute;
-  top: 6px;
-  left: 5px;
-  width: 73px;
-  height: 71px;
-  border: 1px solid #ddd;
-  color: #888;
-  overflow: hidden;
-`;
+//   :nth-child(1) {
+//     border: 0;
+//     box-shadow: 0px 1px 2px #888;
+//   }
+//   ::after {
+//     content: '';
+//     position: absolute;
+//     margin-left: -12px;
+//     left: 50%;
+//     bottom: 0;
+//     width: 22px;
+//     height: 12px;
+//     background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+//   }
+//   .link {
+//     color: #5085bb;
+//   }
+// `;
 
-const StOverLayLink = styled.a`
-  color: inherit;
-  text-decoration: none;
-`;
+// const StOverLayBody = styled.div`
+//   position: relative;
+//   overflow: hidden;
+//   cursor: inherit;
+// `;
+
+// const StOverLayEllipsis = styled.div`
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// `;
+
+// const StOverLayLink = styled.a`
+//   color: inherit;
+//   text-decoration: none;
+// `;
 export default ModalMaps;

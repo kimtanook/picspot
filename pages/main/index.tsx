@@ -149,11 +149,27 @@ export default function Main() {
               <TownBtn onClick={onClickSelectTown} value="">
                 제주시
               </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="구좌읍">
+                구좌읍
+              </TownBtn>
               <TownBtn onClick={onClickSelectTown} value="애월읍">
                 애월읍
               </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="남원읍">
-                남원읍
+
+              <TownBtn onClick={onClickSelectTown} value="우도면">
+                우도면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="추자면">
+                추자면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="한경면">
+                한경면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="한림읍">
+                한림읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="조천읍">
+                조천읍
               </TownBtn>
             </div>
           ) : selectCity === '서귀포시' ? (
@@ -167,11 +183,23 @@ export default function Main() {
               <TownBtn onClick={onClickSelectTown} value="대정읍">
                 대정읍
               </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="성산읍">
+                성산읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="안덕면">
+                안덕면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="남원읍">
+                남원읍
+              </TownBtn>
             </div>
           ) : (
             <div>
               <TownBtn onClick={onClickSelectTown} value="">
                 제주전체
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="구좌읍">
+                구좌읍
               </TownBtn>
               <TownBtn onClick={onClickSelectTown} value="표선면">
                 표선면
@@ -184,6 +212,27 @@ export default function Main() {
               </TownBtn>
               <TownBtn onClick={onClickSelectTown} value="남원읍">
                 남원읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="성산읍">
+                성산읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="안덕면">
+                안덕면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="우도면">
+                우도면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="추자면">
+                추자면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="한경면">
+                한경면
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="한림읍">
+                한림읍
+              </TownBtn>
+              <TownBtn onClick={onClickSelectTown} value="조천읍">
+                조천읍
               </TownBtn>
             </div>
           )}
