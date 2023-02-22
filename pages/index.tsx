@@ -56,7 +56,7 @@ function Landing() {
             })
           }
         >
-          제주전체
+          지역 상관없이 제주도 사진 탐색하기 {'>'}
         </SkipButton>
       </LandContainer>
     </LandingWrap>
@@ -84,6 +84,7 @@ const LandContainer = styled.div`
 `;
 const LandingTitle = styled.div`
   margin-top: 50px;
+  font-size: 24px;
 `;
 const LandTop = styled.div`
   position: absolute;
@@ -109,21 +110,13 @@ const LandBottom = styled.div`
 `;
 const SkipButton = styled.div`
   position: absolute;
-  top: 80%;
+  top: 90%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid black;
-  border-radius: 15px;
-  width: 72px;
+  width: 220px;
   height: 36px;
-  line-height: 36px;
+  color: #1882ff;
+  font-size: 14px;
   text-align: center;
-  transition: 0.3s;
-  :hover {
-    cursor: pointer;
-    background-color: #007924;
-    border: 1px solid white;
-    color: white;
-    transition: 0.3s;
-  }
+  cursor: pointer;
 `;
