@@ -213,8 +213,8 @@ export default AuthSignUp;
 
 const SignUpContainer = styled.div`
   background-color: #ffffff;
-  width: 400px;
-  height: 500px;
+  width: 800px;
+  height: 75%;
   padding: 30px 30px 30px 30px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
@@ -222,15 +222,16 @@ const SignUpContainer = styled.div`
 const StHeder = styled.header`
   cursor: pointer;
   color: #1882ff;
-  font-size: 14px;
+  font-size: 25px;
 `;
 
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 30px;
-  font-size: 24px;
+  font-size: 40px;
   font-weight: 700;
+  margin-top: 5vh;
 `;
 
 const SignUpEmailPwContainer = styled.form`
@@ -238,41 +239,47 @@ const SignUpEmailPwContainer = styled.form`
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 100px;
 `;
 
 const SignUpEmailInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
+  height: 80px;
+  padding-left: 40px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
+  font-size: 25px;
+`;
+
+const SignUpPwInput = styled.input`
+  height: 80px;
+  padding-left: 40px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  font-size: 25px;
+  margin-top: 15px;
+`;
+
+const SignUpPwConfirmInput = styled.input`
+  height: 80px;
+  padding-left: 40px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  font-size: 25px;
+  margin-top: 15px;
+`;
+
+const NicknameInput = styled.input`
+  height: 80px;
+  padding-left: 40px;
+  background-color: #fbfbfb;
+  border: 1px solid #8e8e93;
+  font-size: 25px;
+  margin-top: 15px;
 `;
 
 const AuthWarn = styled.p`
   color: red;
-  font-size: 13px;
-  font-weight: 700px;
-`;
-
-const SignUpPwInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-`;
-
-const SignUpPwConfirmInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-`;
-
-const NicknameInput = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
+  font-size: 20px;
 `;
 
 const SignUpBtnContainer = styled.div`
@@ -280,17 +287,19 @@ const SignUpBtnContainer = styled.div`
   flex-direction: column;
   margin: 0 auto;
   width: 90%;
+  margin-top: 40px;
 `;
 
 const SignUpBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
+  height: 80px;
   border: transparent;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
+  font-size: 25px;
   &:hover {
     cursor: pointer;
   }

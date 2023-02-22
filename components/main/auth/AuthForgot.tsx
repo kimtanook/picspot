@@ -22,6 +22,7 @@ const AuthForgot = (props: Props): JSX.Element => {
         alert('이메일에 링크를 보냈습니다');
         setSent(true);
         setSending(false);
+        props.forgotModalButton();
       })
       .catch((error) => {
         alert('이메일 보내기에 실패하였습니다');
@@ -32,35 +33,40 @@ const AuthForgot = (props: Props): JSX.Element => {
 
   return (
     <ForgotPwContainer onClick={(e) => e.stopPropagation()}>
-      <h3>비밀번호를 찾기 위해</h3>
+      <StHeder onClick={props.forgotModalButton}> 〈 돌아가기 </StHeder>
+
       {sent ? (
         <div>이미 당신의 이메일로 보냈습니다</div>
       ) : (
         <>
           <ForgotText>
-            <h3>사용자의 이메일을 입력해주세요</h3>
+            비밀번호를 찾기 위해 <br></br>
+            사용자의 이메일을 입력해주세요
           </ForgotText>
-          <ResetPwForm>
-            <ResetPwInput
-              type="email"
-              name="email"
-              id="email"
-              placeholder="이메일을 작성해주세요"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </ResetPwForm>
-          <ResetPwBtn disabled={sending} onClick={() => resetPasswordRequest()}>
-            Send Email
-          </ResetPwBtn>
-          <ForgotOtherMethod>
-            <ForgotOrLine>
-              <div>OR</div>
-            </ForgotOrLine>
-            <LoginReturnContainer onClick={props.forgotModalButton}>
-              <LoginReturnDiv>로그인으로 돌아가기</LoginReturnDiv>
-            </LoginReturnContainer>
-          </ForgotOtherMethod>
+
+          <ResetContainer>
+            <ResetPwForm>
+              <ResetPwInput
+                type="email"
+                name="email"
+                id="email"
+                placeholder="가입하신 이메일로 입력해주세요"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </ResetPwForm>
+
+            <ResetPwBtn
+              disabled={sending}
+              onClick={() => resetPasswordRequest()}
+            >
+              메일 전송 〉
+            </ResetPwBtn>
+          </ResetContainer>
+
+          <LoginReturnButton onClick={props.forgotModalButton}>
+            로그인하러 가기
+          </LoginReturnButton>
         </>
       )}
     </ForgotPwContainer>
@@ -68,86 +74,75 @@ const AuthForgot = (props: Props): JSX.Element => {
 };
 
 const ForgotPwContainer = styled.div`
-  background-color: white;
-  width: 350px;
-  height: 200px;
-  margin: 0 auto;
-  margin-top: 200px;
-  padding: 40px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  background-color: #ffffff;
+  width: 800px;
+  height: 50%;
+  padding: 30px 30px 30px 30px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+`;
+
+const StHeder = styled.header`
+  cursor: pointer;
+  color: #1882ff;
+  font-size: 25px;
+`;
+
+const ForgotText = styled.div`
+  margin-top: 30px;
+  font-size: 40px;
+  font-weight: 700;
+  margin-top: 5vh;
   text-align: center;
 `;
-const ForgotText = styled.div`
-  margin-top: 10px;
-`;
-const ResetPwForm = styled.form`
-  margin-top: 20px;
-`;
-const ResetPwInput = styled.input`
-  width: 250px;
-  height: 20px;
-  padding: 5px;
-  border: 2px solid white;
-  border-radius: 5px;
-`;
-const ResetPwBtn = styled.button`
-  margin-top: 20px;
-  height: 30px;
-  width: 130px;
-  font-weight: 600;
-  border-radius: 10px;
-  border: 1px solid white;
-  color: Red;
-  &:hover {
-    border: 3px solid Red;
-  }
-`;
-const ForgotOtherMethod = styled.div``;
-const ForgotOrLine = styled.div`
+
+const ResetContainer = styled.div`
+  width: 80%;
   display: flex;
-  flex-basis: 100%;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin: 25px 25px;
-  ::before {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 1);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
-  ::after {
-    content: '';
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 10);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 5px;
-  }
+  border: 1px solid #8e8e93;
+  margin: auto;
+  margin-top: 100px;
+  height: 80px;
 `;
 
-const LoginReturnContainer = styled.div`
+const ResetPwForm = styled.form``;
+
+const ResetPwInput = styled.input`
+  width: 400px;
+  height: 60px;
+  border: 1px solid white;
+  margin-left: 40px;
+  font-size: 18px;
+`;
+
+const ResetPwBtn = styled.button`
+  width: 200px;
+  height: 60px;
+  font-weight: 600;
+  border: 1px solid white;
+  background-color: #1882ff;
+  color: white;
+  margin-right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+`;
+
+const LoginReturnButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  transition: color 0.2s ease-in;
-
-  &:hover {
-    color: Red;
-  }
-`;
-
-const LoginReturnDiv = styled.div`
-  cursor: grab;
+  height: 80px;
+  border: transparent;
+  transition: 0.1s;
+  background-color: #8e8e93;
+  color: white;
+  font-size: 25px;
+  cursor: pointer;
+  margin: auto;
+  margin-top: 100px;
+  width: 80%;
 `;
 
 export default AuthForgot;
