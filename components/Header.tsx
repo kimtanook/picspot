@@ -17,6 +17,7 @@ const Header = ({
   const [closeLoginModal, setCloseLoginModal] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const router = useRouter();
+  console.log('router : ', router.route);
   const nowUser = authService.currentUser;
   // 로그인 모달 창 버튼
   const closeLoginModalButton = () => {
@@ -43,11 +44,13 @@ const Header = ({
           <img src="/logo.png" />
         </Title>
       </Link>
-      <CityCategory value={selectCity} onChange={onChangeSelectCity}>
-        <option value="제주전체">제주전체</option>
-        <option value="제주시">제주시</option>
-        <option value="서귀포시">서귀포시</option>
-      </CityCategory>
+      {router.route === '/main' ? (
+        <CityCategory value={selectCity} onChange={onChangeSelectCity}>
+          <option value="제주전체">제주전체</option>
+          <option value="제주시">제주시</option>
+          <option value="서귀포시">서귀포시</option>
+        </CityCategory>
+      ) : null}
       {/* 로그인, 로그아웃, 마이페이지 버튼 */}
       {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
       {currentUser ? (
