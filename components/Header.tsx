@@ -78,7 +78,6 @@ export default Header;
 
 const HeaderContainer = styled.div`
   background-color: white;
-  /* position: relative; */
   display: flex;
   width: 1440px;
   margin: auto;
