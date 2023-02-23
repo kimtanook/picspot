@@ -28,7 +28,8 @@ function ModalProfile(props: Props) {
     props.editProfileModal();
   }
   const [saveInformation, setSaveInformation] = useState<boolean>(false);
-  const [nicknamePwToggle, setNicknamePwToggle] = useState(false);
+  const [nicknameToggle, setNicknameToggle] = useState(false);
+  const [pwToggle, setPwToggle] = useState(false);
   const [newNickname, setNewNickname] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
@@ -63,12 +64,7 @@ function ModalProfile(props: Props) {
       });
     props.setImgEdit(imgFile as string);
   };
-  const onClickToggleModal = () => {
-    if (!authService.currentUser) {
-      setNicknamePwToggle(!nicknamePwToggle);
-      return;
-    }
-  };
+
   // 전체 프로필 수정을 완료하기
   //  const profileEditComplete = async () => {
   //   const imgRef = ref(
@@ -78,10 +74,7 @@ function ModalProfile(props: Props) {
 
   // 프로필 사진 변경 후 변경 사항 유지하기
   const saveImgFile = () => {
-    console.log('사진 클릭');
-    console.log(imgRef.current);
     if (imgRef.current?.files) {
-      console.log('이프문 통과');
       const file = imgRef.current.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -136,11 +129,13 @@ function ModalProfile(props: Props) {
   return (
     <ModalStyled onClick={editProfileModal}>
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
+        {/* 좌측 상단 취소 버튼 */}
         <StHeder onClick={props.profileEditCancle}> 〈 취소 </StHeder>
         <ProfileContainerForm onSubmit={handleSubmit(onSubmit)}>
           <ProfileTextDiv>
             <b>회원정보 변경</b>
           </ProfileTextDiv>
+          {/* 사진 변경 또는 삭제 */}
           <div>
             <ProfilePhotoDeleteBtn onClick={deleteImgFile}>
               <div>
@@ -170,79 +165,98 @@ function ModalProfile(props: Props) {
               onChange={saveImgFile}
               ref={imgRef}
             />
-            <NicknameToggleBtn onClick={onClickToggleModal}>
-              닉네임 변경하기
+            {/* 닉네임 변경 */}
+            <NicknameToggleBtn
+              onClick={() => {
+                setNicknameToggle((e) => !e);
+              }}
+            >
+              <div>닉네임 변경하기</div>
+              {nicknameToggle ? 'V' : '>'}
             </NicknameToggleBtn>
-            <EditNicknameInput
-              minLength={2}
-              name="username"
-              type="username"
-              id="username"
-              value={newNickname}
-              ref={nameRef}
-              defaultValue={authService.currentUser?.displayName!}
-              onChange={(event) => setNewNickname(event.target.value)}
-              placeholder="닉네임을 입력해 주세요"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  handleSubmit(onSubmit);
-                }
-              }}
-            />
+            {nicknameToggle && (
+              <EditNicknameInput
+                minLength={2}
+                name="username"
+                type="username"
+                id="username"
+                value={newNickname}
+                ref={nameRef}
+                defaultValue={authService.currentUser?.displayName!}
+                onChange={(event) => setNewNickname(event.target.value)}
+                placeholder="닉네임을 입력해 주세요"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              />
+            )}
+
             <ProfileWarn>{errors?.nickname?.message}</ProfileWarn>
-            <PwToggleBtn onClick={onClickToggleModal}>
+            {/* 비밀번호 변경 */}
+            <PwToggleBtn
+              onClick={() => {
+                setPwToggle((e) => !e);
+              }}
+            >
               <div>비밀번호 변경하기</div>
-              <div></div>
+              {pwToggle ? 'V' : '>'}
             </PwToggleBtn>
-            <EditPwInput
-              {...register('newPassword', {
-                required: '비밀번호를 입력해주세요.',
-                minLength: {
-                  value: 8,
-                  message:
-                    '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
-                },
-                pattern: {
-                  value:
-                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                  message:
-                    '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
-                },
-              })}
-              name="password"
-              type="password"
-              id="password"
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
-              placeholder="비밀번호를 입력해주세요"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  handleSubmit(onSubmit);
-                }
-              }}
-            />
+            {pwToggle && (
+              <EditPwInput
+                {...register('newPassword', {
+                  required: '비밀번호를 입력해주세요.',
+                  minLength: {
+                    value: 8,
+                    message:
+                      '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                    message:
+                      '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                  },
+                })}
+                name="password"
+                type="password"
+                id="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                placeholder="비밀번호를 입력해주세요"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              />
+            )}
+
             <ProfileWarn>{errors?.newPassword?.message}</ProfileWarn>
-            <EditPwConfirmInput
-              {...register('confirm', {
-                required: '비밀번호를 입력해주세요.',
-                minLength: {
-                  value: 8,
-                  message: '입력하신 비밀번호와 일치하지 않아요',
-                },
-              })}
-              autoComplete="new-password"
-              name="confirm"
-              type="password"
-              id="confirm"
-              value={confirm}
-              onChange={(event) => setConfirm(event.target.value)}
-              placeholder="비밀번호를 다시한번 입력해 주세요"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  handleSubmit(onSubmit);
-                }
-              }}
-            />
+            {pwToggle && (
+              <EditPwConfirmInput
+                {...register('confirm', {
+                  required: '비밀번호를 입력해주세요.',
+                  minLength: {
+                    value: 8,
+                    message: '입력하신 비밀번호와 일치하지 않아요',
+                  },
+                })}
+                autoComplete="new-password"
+                name="confirm"
+                type="password"
+                id="confirm"
+                value={confirm}
+                onChange={(event) => setConfirm(event.target.value)}
+                placeholder="비밀번호를 다시한번 입력해 주세요"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              />
+            )}
             <ProfileWarn>{errors?.confirm?.message}</ProfileWarn>
           </EditProfileContainer>
           <SaveEditBtnContainer>
@@ -361,6 +375,11 @@ const NicknameToggleBtn = styled.button`
   height: 24px;
   z-index: 2;
   font-size: 16px;
+  display: 'flex';
+  justify-content: 'space-between';
+  align-items: 'center';
+  padding: '10px';
+  box-sizing: 'border-box';
 `;
 
 const EditNicknameInput = styled.input`
@@ -377,6 +396,11 @@ const PwToggleBtn = styled.button`
   height: 24px;
   z-index: 2;
   font-size: 16px;
+  display: 'flex';
+  justify-content: 'space-between';
+  align-items: 'center';
+  padding: '10px';
+  box-sizing: 'border-box';
 `;
 
 const EditPwInput = styled.input`

@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import Masonry from 'react-responsive-masonry';
+import { convertTypeAcquisitionFromJson } from 'typescript';
 
 export default function Mypage() {
   const [currentUser, setCurrentUser] = useState(false);
@@ -44,8 +45,8 @@ export default function Mypage() {
   );
 
   // 팔로잉 하는 사람 숫자
-  const followingCount = authFollowingUid.length;
-
+  const followingCount = authFollowingUid?.length;
+  console.log(followingCount);
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
