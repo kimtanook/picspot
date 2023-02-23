@@ -1,8 +1,21 @@
-const Content = () => {
+import Image from 'next/image';
+import Link from 'next/link';
+import styled from 'styled-components';
+
+const Content = ({ item }: any) => {
+  // console.log('item : ', item);
   return (
-    <div>
-      <div>Content component</div>
-    </div>
+    <Link href={`/detail/${item.id}`}>
+      <ImageWrap>
+        <PostImage src={item?.imgUrl} />
+      </ImageWrap>
+    </Link>
   );
 };
 export default Content;
+const ImageWrap = styled.div`
+  margin: 0 5px 0 5px;
+`;
+const PostImage = styled.img`
+  width: 100%;
+`;

@@ -1,38 +1,87 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PicSpot 픽스팟 (픽쳐를 픽한 스팟)
 
-## Getting Started
+> ### 🌼 소개
+>
+> ### PicSpot은 Picture Pick Spot의 약자로, 가고 싶은 여행지 혹은 여행 중에 사진 스팟을 지도를 통해 위치를 간편하게 찾을 수 있는 페이지입니다.
+>
+> #### 🏠[HomePage](http://52.78.216.230/) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔗[NOTION](https://www.notion.so/TEAM-2-_FAMILY-784e6ae20d7c499fa9df5620592f5d93)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📐[Figma](https://www.figma.com/file/9cv3rhM9sjGuRCgVGxOLPD/Project_%ED%94%BD%EC%8A%A4%ED%8C%9F?node-id=0%3A1&t=N5kTxggsQwbvT68F-0)
 
-First, run the development server:
+<br>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+<center>
+<p align='center'>
+<img width='100%' src=''>소개사진준비중
+</p>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<div>
+<img src='https://img.shields.io/badge/React-v18.2.0-blue?logo=React'/>
+  <img src='https://img.shields.io/badge/Next.js-v13.1.6-000000?logo=Next.js'/>
+  <img src='https://img.shields.io/badge/firebase-9.17.1-764ABC?logo=firebase'/>
+  <img src='https://img.shields.io/badge/typescript-4.9.5-3178C6?logo=typescript'/>
+  <img src='https://img.shields.io/badge/socket.io-4.6.0-010101?logo=socket.io'/>
+  <img src='https://img.shields.io/badge/reactquery-3.39.3-FF4154?logo=reactquery'/>
+    <img src="https://img.shields.io/badge/StyledComponents-5.3.6-DB7093??style=flat-square&logo=styled-components&logoColor=white" alt="styled-components badge" />
+ </div>
+</center>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🌼 개발 기간
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### 2022.02.06. ~ 2023.03.13. (5 weeks)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<br>
 
-## Learn More
+## 🌼 팀원 구성 (총 6명)
 
-To learn more about Next.js, take a look at the following resources:
+- Front-end : 김인섭(Leader), 임재영(Vice Leader), 김도훈, 박유진, 이기동
+- Designer : 김승연
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<br>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🌼 프로젝트 기술 스택
 
-## Deploy on Vercel
+- 프레임워크 / 언어
+  - NextJS
+  - TypeScript
+- 라이브러리
+  - react-kakao-maps-sdk
+  - socket.io-client (socket.io를 사용하기 위한 클라이언트 라이브러리)
+  - socket.io (socket.io를 사용하기 위한 서버 라이브러리)
+  - styled-components
+  - babel-plugin-styled-components
+  - sweetalert2
+  - firebase
+  - uuid
+  - react-bottom-scroll-listener
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+## 🌼 프로젝트 아키텍처
+
+## <img width='100%' src='https://user-images.githubusercontent.com/117061219/220918966-d9956894-846d-4ccd-be43-3f1dc27808be.png'>
+
+## 🌼 주요기능
+
+1. 랜딩 : 가고 싶은 위치 선택
+
+2. 메인 : 위치별로 사진으로 장소 추천
+
+3. 검색 : 지역 검색 가능
+
+4. 지도 : 추천 장소 리스트들을 지도에서 조회
+
+5. 팔로잉 : 내가 누군가를 구독하는 것
+
+---
+
+## 🌼 주요 페이지
+
+|             <h4>랜딩 페이지</h4>             |          <h4>메인 페이지</h4>           |          <h4>검색결과 페이지</h4>           |        <h4>상세검색결과 페이지</h4>        |           <h4>상세 페이지</h4>            |
+| :------------------------------------------: | :-------------------------------------: | :-----------------------------------------: | :----------------------------------------: | :---------------------------------------: |
+| <img width="277" alt="ㅣlandingpage" src=""> | <img width="277" alt="mainpage" src=""> | <img width="277" alt="selectResult" src=""> | <img width="277" alt="placeDetail" src=""> | <img width="277" alt="detailPage" src=""> |
+
+|        <h4>지도 페이지</h4>        |          <h4>팔로잉 페이지</h4>          |         <h4>마이 페이지</h4>          |         <h4>정보수정 페이지</h4>          |          <h4>로그인 페이지</h4>          |
+| :--------------------------------: | :--------------------------------------: | :-----------------------------------: | :---------------------------------------: | :--------------------------------------: |
+| <img width="277" alt="map" src=""> | <img width="277" alt="following" src=""> | <img width="277" alt="mypage" src=""> | <img width="277" alt="mypageedit" src=""> | <img width="277" alt="loginpage" src=""> |
