@@ -24,10 +24,11 @@ function Profile() {
     (item: { [key: string]: string }) => item.uid === userId
   )[0];
 
+  // 다른 사용자의 팔로잉을 보여주기 위한 filter
   const FollowingData = getFollowingData?.filter(
     (item: { [key: string]: string }) => item.uid === userId
   );
-  console.log('getFollowingData : ', getFollowingData);
+  console.log('getUserData : ', getUserData);
   return (
     <>
       <Seo title="My" />

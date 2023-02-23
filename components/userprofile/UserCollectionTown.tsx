@@ -21,19 +21,21 @@ const UserCollectionTown = ({ value, postUid }: any) => {
     querySnapshot.forEach((doc) => {
       response.push({ id: doc.id, ...doc.data() });
     });
-    console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
 
     return response;
   };
 
   const { data } = useQuery(['getPostTownData', value], getTownData);
+
+  // 가져온 게시글 데이터와 컬렉션 Uid와 같은 게시글 추출
   const collectionData = data?.filter((item: any) =>
     postUid?.includes(item.id)
   );
+
+  // town과 현재 town value가 같은 게시글 추출
   const townSameValueData = collectionData?.filter(
     (item: any) => item.town === value
   );
-  console.log('townSameValueData : ', townSameValueData);
   return (
     <TownWrap>
       <PostTownTitle>
