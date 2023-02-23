@@ -23,7 +23,7 @@ function CommentItem({
         { postId, commentId: item.id },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries('comments');
+            setTimeout(() => queryClient.invalidateQueries('comments'), 500);
           },
         }
       );
