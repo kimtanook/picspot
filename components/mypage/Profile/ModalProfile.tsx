@@ -65,13 +65,6 @@ function ModalProfile(props: Props) {
     props.setImgEdit(imgFile as string);
   };
 
-  // 전체 프로필 수정을 완료하기
-  //  const profileEditComplete = async () => {
-  //   const imgRef = ref(
-  //     storageService,
-  //     `${authService.currentUser?.uid}${uuidv4()}`
-  //   );
-
   // 프로필 사진 변경 후 변경 사항 유지하기
   const saveImgFile = () => {
     if (imgRef.current?.files) {
@@ -166,14 +159,20 @@ function ModalProfile(props: Props) {
               ref={imgRef}
             />
             {/* 닉네임 변경 */}
-            <NicknameToggleBtn
+            <NicknameToggleContainer
               onClick={() => {
                 setNicknameToggle((e) => !e);
               }}
             >
-              <div>닉네임 변경하기</div>
-              {nicknameToggle ? 'V' : '>'}
-            </NicknameToggleBtn>
+              <NicknameToggleText>
+                닉네임 변경하기
+                {nicknameToggle ? (
+                  <CloseNicknameToggleImg src="/under-arrow.png" />
+                ) : (
+                  <OpenNicknameToggleImg src="/right-arrow.png" />
+                )}
+              </NicknameToggleText>
+            </NicknameToggleContainer>
             {nicknameToggle && (
               <EditNicknameInput
                 minLength={2}
@@ -192,17 +191,23 @@ function ModalProfile(props: Props) {
                 }}
               />
             )}
-
             <ProfileWarn>{errors?.nickname?.message}</ProfileWarn>
+
             {/* 비밀번호 변경 */}
-            <PwToggleBtn
+            <PwToggleContainer
               onClick={() => {
                 setPwToggle((e) => !e);
               }}
             >
-              <div>비밀번호 변경하기</div>
-              {pwToggle ? 'V' : '>'}
-            </PwToggleBtn>
+              <PwToggleText>
+                비밀번호 변경하기
+                {pwToggle ? (
+                  <ClosePwToggleImg src="/under-arrow.png" />
+                ) : (
+                  <OpenPwToggleImg src="/right-arrow.png" />
+                )}
+              </PwToggleText>
+            </PwToggleContainer>
             {pwToggle && (
               <EditPwInput
                 {...register('newPassword', {
@@ -232,8 +237,8 @@ function ModalProfile(props: Props) {
                 }}
               />
             )}
-
             <ProfileWarn>{errors?.newPassword?.message}</ProfileWarn>
+            {/* 비밀번호 확인 */}
             {pwToggle && (
               <EditPwConfirmInput
                 {...register('confirm', {
@@ -313,6 +318,19 @@ const StHeder = styled.header`
   color: #1882ff;
   font-size: 14px;
 `;
+const ProfilePhotoDeleteBtn = styled.div`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+const CancleImg = styled.img`
+  margin-left: 100px;
+`;
+const ProfilePhotoLabel = styled.label`
+  cursor: pointer;
+`;
+const ProfilePhotoInput = styled.input``;
+
 const ProfileTextDiv = styled.div`
   margin-top: 1vh;
   font-family: 'Noto Sans CJK KR';
@@ -355,7 +373,6 @@ const ProfilePhotoHover = styled.div<{ img: string }>`
       rgba(33, 33, 33, 0.6),
       rgba(33, 33, 33, 0.6)
     );
-
     color: white;
   }
 `;
@@ -367,54 +384,114 @@ const EditProfileContainer = styled.div`
   margin: 0 auto;
   margin-top: 30px;
 `;
-const NicknameToggleBtn = styled.button`
-  border: none;
+const NicknameToggleContainer = styled.div`
   background-color: transparent;
-  cursor: pointer;
-  width: 130px;
+  width: 470px;
   height: 24px;
   z-index: 2;
-  font-size: 16px;
   display: 'flex';
-  justify-content: 'space-between';
-  align-items: 'center';
   padding: '10px';
   box-sizing: 'border-box';
+  cursor: pointer;
 `;
-
+const NicknameToggleText = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 700;
+  font-weight: bold;
+  line-height: 24px;
+  letter-spacing: -0.025em;
+  color: #212121;
+`;
+const OpenNicknameToggleImg = styled.img`
+  position: absolute;
+  width: 12.03px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
+`;
+const CloseNicknameToggleImg = styled.img`
+  position: absolute;
+  width: 18px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
+`;
 const EditNicknameInput = styled.input`
   height: 48px;
   padding-left: 10px;
   background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
+  border: 1px solid #1882ff;
+  margin-top: 8px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: right center;
+  background-position-x: 440px;
 `;
-const PwToggleBtn = styled.button`
-  border: none;
+const PwToggleContainer = styled.div`
   background-color: transparent;
-  cursor: pointer;
-  width: 130px;
+  width: 470px;
   height: 24px;
   z-index: 2;
-  font-size: 16px;
   display: 'flex';
-  justify-content: 'space-between';
-  align-items: 'center';
   padding: '10px';
   box-sizing: 'border-box';
+  cursor: pointer;
+`;
+const PwToggleText = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 700;
+  font-weight: bold;
+  line-height: 24px;
+  letter-spacing: -0.025em;
+  color: #212121;
+`;
+const OpenPwToggleImg = styled.img`
+  position: absolute;
+  width: 12.03px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
+`;
+const ClosePwToggleImg = styled.img`
+  position: absolute;
+  width: 18px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
 `;
 
 const EditPwInput = styled.input`
   height: 48px;
   padding-left: 10px;
   background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-  margin-top: 30px;
+  border: 1px solid #1882ff;
+  margin-top: 8px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: right center;
+  background-position-x: 440px;
 `;
 const EditPwConfirmInput = styled.input`
   height: 48px;
   padding-left: 10px;
   background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
+  border: 1px solid #1882ff;
+
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: right center;
+  background-position-x: 440px;
 `;
 const ProfileWarn = styled.p`
   color: red;
@@ -425,7 +502,9 @@ const SaveEditBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  width: 90%;
+  width: 42%;
+  bottom: 120px;
+  position: fixed;
 `;
 const SaveEditBtn = styled.button`
   display: flex;
@@ -441,15 +520,3 @@ const SaveEditBtn = styled.button`
     cursor: pointer;
   }
 `;
-const ProfilePhotoDeleteBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-const CancleImg = styled.img`
-  margin-left: 100px;
-`;
-const ProfilePhotoLabel = styled.label`
-  cursor: pointer;
-`;
-const ProfilePhotoInput = styled.input``;
