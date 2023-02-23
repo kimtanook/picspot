@@ -28,8 +28,8 @@ const Post = ({ id }: any) => {
   const [place, setPlace] = useState('');
   const onClickEditTown = (e: any) => {
     setPlace('');
-    setEditTown(e.target.innerText);
-    setSearchCategory(e.target.innerText);
+    setEditTown(e.target.value);
+    setSearchCategory(e.target.value);
   };
 
   //* DetailBox state
@@ -38,7 +38,7 @@ const Post = ({ id }: any) => {
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
-  const [imageUpload, setImageUpload]: any = useState(null);
+  // const [imageUpload, setImageUpload]: any = useState(null);
 
   let editState = {
     title: editTitle,
@@ -56,6 +56,28 @@ const Post = ({ id }: any) => {
 
   //* collection 저장 state
   const [isOpen, setIsOpen] = useState(false);
+
+  //////////////////////////////////////////////////////////////////////////
+  const [imageUpload, setImageUpload]: any = useState(null); //! 이미지 업로드 상태값
+  const editImg = { imgUrl: '' }; //! 이미지 수정 시 보내주는 데이터
+
+  const [editBtnToggle, setEditBtnToggle]: any = useState(false); //! 수정 토글 상태값
+
+  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
+
+  //! 데이터 수정 시 보내주는 데이터
+  let editData = {
+    title: editTitle,
+    content: editContent,
+    city: editCity,
+    town: editTown,
+    lat: saveLatLng.Ma,
+    long: saveLatLng.La,
+    address: saveAddress,
+  };
 
   //* useQuery 사용해서 포스트 데이터 불러오기
   const { data: detail, isLoading, isError } = useQuery('detailData', getData);
@@ -93,7 +115,12 @@ const Post = ({ id }: any) => {
         .map((item: any) => (
           <StDetailContents key={item.id}>
             <StImgAndProfileAndFollowingAndCollection>
-              <DetailImg item={item} />
+              <DetailImg
+                item={item}
+                imageUpload={imageUpload}
+                setImageUpload={setImageUpload}
+                editImg={editImg}
+              />
 
               {/* <DetailBox
                 item={item}
@@ -128,10 +155,31 @@ const Post = ({ id }: any) => {
             </StImgAndProfileAndFollowingAndCollection>
 
             <StListAndMapAndComment>
-              <DetailList item={item} />
+              <DetailList
+                item={item}
+                editBtnToggle={editBtnToggle}
+                onClickEditToggle={onClickEditToggle}
+                editTitle={editTitle}
+                setEditTitle={setEditTitle}
+                editContent={editContent}
+                setEditContent={setEditContent}
+                editCity={editCity}
+                setEditCity={setEditCity}
+                editTown={editTown}
+                setEditTown={setEditTown}
+                onClickEditTown={onClickEditTown}
+                editData={editData}
+                saveLatLng={saveLatLng}
+                setSaveLatLng={setSaveLatLng}
+                saveAddress={saveAddress}
+                setSaveAddress={setSaveAddress}
+                setEditBtnToggle={setEditBtnToggle}
+              />
 
               <DetailMap
                 item={item}
+                editBtnToggle={editBtnToggle}
+                setEditBtnToggle={setEditBtnToggle}
                 setIsOpen={setIsOpen}
                 isOpen={isOpen}
                 inputToggle={inputToggle}
