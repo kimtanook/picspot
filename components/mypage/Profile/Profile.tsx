@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { authService, storageService } from '@/firebase';
 import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
@@ -8,12 +8,31 @@ import { customAlert } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { updateUser } from '@/api';
 import Link from 'next/link';
+import ModalProfile from './ModalProfile';
 
 const imgFile = '/profileicon.svg';
 
 const Profile = () => {
-  // console.log(authService.currentUser?.uid);
+  const profileimg = authService?.currentUser?.photoURL ?? imgFile;
+  const [editProfileModal, setEditProfileModal] = useState(false);
+  const [imgEdit, setImgEdit] = useState<string>(profileimg);
+  const [currentUser, setCurrentUser] = useState(false);
+  const [nicknameEdit, setNicknameEdit] = useState<string>(
+    authService?.currentUser?.displayName as string
+  );
+  const [userImg, setUserImg] = useState<string | null>(null);
+  const nowUser = authService.currentUser;
+  const imgRef = useRef<HTMLInputElement>(null);
 
+  // 프로필 수정하기
+  // const profileEdit = () => {
+  //   localStorage.removeItem('imgURL');
+  //   setEditProfileModal(!editProfileModal);
+  // };
+
+  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setNicknameEdit(e.target.value);
+  // };
   //* useMutation 사용해서 user 데이터 수정하기
   const { mutate: onUpdateUser } = useMutation(updateUser);
 
@@ -23,21 +42,17 @@ const Profile = () => {
     userImg: '',
   };
 
-  const profileimg = authService?.currentUser?.photoURL ?? imgFile;
-  const [imgEdit, setImgEdit] = useState<string>(profileimg);
-  const [nicknameEdit, setNicknameEdit] = useState<string>(
-    authService?.currentUser?.displayName as string
-  );
-  const [currentUser, setCurrentUser] = useState(false);
-  const imgRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-
-  // 프로필 수정하기
-  const [editmode, setEdit] = useState(false);
-  const profileEdit = () => {
-    localStorage.removeItem('imgURL');
-    setEdit(!editmode);
+  // 프로필 수정 모달 창 버튼
+  const editProfileModalButton = () => {
+    setEditProfileModal(!editProfileModal);
   };
+
+  useEffect(() => {
+    if (authService.currentUser) {
+      setCurrentUser(true);
+      setUserImg(authService.currentUser.photoURL);
+    }
+  }, [nowUser]);
 
   // 프로필 사진 변경 후 변경 사항 유지하기
   const saveImgFile = () => {
@@ -51,18 +66,6 @@ const Profile = () => {
         setImgEdit(resultImg as string);
       };
     }
-  };
-  // 프로필 사진 삭제
-  const deleteImgFile = async () => {
-    await updateProfile(authService?.currentUser!, {
-      displayName: nicknameEdit,
-      photoURL: '',
-    })
-      .then((res) => {})
-      .catch((error) => {
-        console.log(error);
-      });
-    setImgEdit(imgFile as string);
   };
 
   // 전체 프로필 수정을 완료하기
@@ -101,21 +104,18 @@ const Profile = () => {
         customAlert('프로필 수정 완료하였습니다!');
       })
       .then(() => {
-        setEdit(!editmode);
+        setEditProfileModal(!editProfileModal);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   // 전체 프로필 수정을 취소하기
   const profileEditCancle = () => {
-    setImgEdit(authService?.currentUser?.photoURL as string);
+    setImgEdit((authService?.currentUser?.photoURL as string) ?? imgFile);
     setNicknameEdit(authService?.currentUser?.displayName as string);
-    setEdit(!editmode);
-  };
-
-  const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNicknameEdit(e.target.value);
+    setEditProfileModal(!editProfileModal);
   };
   // 로그아웃
   const logOut = () => {
@@ -128,64 +128,35 @@ const Profile = () => {
   };
   return (
     <ProfileContainer>
-      {/* 사진 */}
+      {/* 프로필 수정 버튼 props */}
+      {editProfileModal && (
+        <ModalProfile
+          profileEditCancle={profileEditCancle}
+          profileEditComplete={profileEditComplete}
+          editProfileModal={editProfileModalButton}
+          imgEdit={imgEdit}
+          setImgEdit={setImgEdit}
+          nicknameEdit={nicknameEdit}
+          saveImgFile={saveImgFile}
+        />
+      )}
       <ProfileEdit>
+        {/* 사진 */}
         <div>
           <ProfileImage img={imgEdit}></ProfileImage>
-          {editmode ? (
-            <>
-              <ProfilePhotoBtn>
-                <ProfilePhotoLabel htmlFor="changePhoto">
-                  파일선택
-                </ProfilePhotoLabel>
-              </ProfilePhotoBtn>
-              <ProfilePhotoDeleteBtn onClick={deleteImgFile}>
-                삭제
-              </ProfilePhotoDeleteBtn>
-              <ProfilePhotoInput
-                hidden
-                id="changePhoto"
-                type="file"
-                placeholder="파일선택"
-                onChange={saveImgFile}
-                ref={imgRef}
-              />
-            </>
-          ) : (
-            ''
-          )}
           {/* 프로필 수정 */}
-          <div hidden={!editmode}>
-            <ProfileEditCancle onClick={profileEditCancle}>
-              취소
-            </ProfileEditCancle>
-          </div>
-          {editmode ? (
-            <ProfileCompleteBtn onClick={profileEditComplete}>
-              적용
-            </ProfileCompleteBtn>
-          ) : (
-            <ProfileEditBtn onClick={profileEdit}>내 정보 변경 </ProfileEditBtn>
-          )}
+          <ProfileEditBtn onClick={editProfileModalButton}>
+            내 정보 변경 {'>'}{' '}
+          </ProfileEditBtn>
         </div>
       </ProfileEdit>
       <ProfileText>
         <ProfileTextdiv>
           {/* 닉네임 */}
-          {editmode ? (
-            <ProfileNicknameEdit
-              onChange={handleNicknameChange}
-              ref={nameRef}
-              defaultValue={authService.currentUser?.displayName!}
-            />
-          ) : (
-            <>
-              {' '}
-              <ProfileNickname>
-                {authService.currentUser?.displayName}님
-              </ProfileNickname>
-            </>
-          )}
+          <ProfileNickname>
+            {authService.currentUser?.displayName}님
+          </ProfileNickname>
+          {/* 로그아웃 */}
           <Link href={'/main?city=제주전체'}>
             {authService.currentUser ? (
               <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
@@ -208,95 +179,85 @@ export default Profile;
 const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
+
 const ProfileEdit = styled.div`
   padding-right: 15px;
 `;
 const ProfileImage = styled.div<{ img: string }>`
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
+  width: 150px;
+  height: 150px;
+  border-radius: 100px;
   background-size: cover;
   background-image: url(${(props) => props.img});
   background-position: center center;
-  box-shadow: 2px 2px 1px black;
 `;
-const ProfilePhotoBtn = styled.button`
-  cursor: pointer;
-`;
-const ProfilePhotoDeleteBtn = styled.button`
-  cursor: pointer;
-`;
-const ProfilePhotoLabel = styled.label`
-  cursor: pointer;
-`;
-const ProfilePhotoInput = styled.input``;
-const ProfileEditCancle = styled.button`
-  cursor: pointer;
-`;
-const ProfileCompleteBtn = styled.button`
-  padding: 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
+
 const ProfileEditBtn = styled.button`
   border: none;
   background-color: transparent;
-  color: cornflowerblue;
+  color: #1882ff;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
   padding-top: 15px;
-  padding-left: 15px;
+  padding-left: 35px;
   cursor: pointer;
 `;
 
 const ProfileText = styled.div`
   padding-left: 15px;
+  width: 60%;
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
   place-items: flex-end;
 `;
-const ProfileNicknameEdit = styled.input`
-  width: 70px;
-  height: 25px;
-`;
 const ProfileNickname = styled.div`
   padding-top: 20px;
+  width: 150px;
+  height: 36px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  text-align: center;
 `;
 const LogoutButton = styled.button`
-  color: gray;
-  background-color: transparent;
+  color: #8e8e93;
   border: none;
+  background-color: transparent;
   text-decoration-line: underline;
-  font-size: 10pt;
+  font-weight: 400;
+  font-size: 14px;
+  width: 80px;
+  height: 40px;
+
   cursor: pointer;
 `;
 const Follow = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 35% 35%;
   margin-top: 10px;
 `;
 const MyProfileFollowing = styled.div`
+  color: 5B5B5F;
   border-radius: 20px;
   background-color: #f8f8f8;
-  padding: 10%;
-  font-size: 10pt;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
+  padding: 7%;
+  font-size: 18pt;
+  width: 90px;
+  height: 85px;
   text-align: center;
 `;
 const MyProfileFollower = styled.div`
+  color: 5B5B5F;
   border-radius: 20px;
   background-color: #f8f8f8;
-  padding: 10%;
-  font-size: 10pt;
-  width: 50px;
-  height: 50px;
-  margin-left: 10px;
+  padding: 7%;
+  font-size: 18pt;
+  width: 90px;
+  height: 85px;
   text-align: center;
 `;

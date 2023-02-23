@@ -15,7 +15,7 @@ interface AuthForm {
 }
 interface Props {
   changeModalButton: () => void;
-  closeModal: () => void;
+  closeLoginModal: () => void;
 }
 
 //* user 초기 데이터
@@ -62,7 +62,7 @@ const AuthSignUp = (props: Props) => {
           userName: nickname,
         };
         customAlert('회원가입을 축하합니다!');
-        props.closeModal();
+        props.closeLoginModal();
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
@@ -89,7 +89,7 @@ const AuthSignUp = (props: Props) => {
         }
         if (error.code.includes('auth/invalid-display-name-in-use')) {
           setRegistering(false);
-          alert('별명이 이미 존재합니다');
+          alert('닉네임이 이미 존재합니다');
           return;
         }
         setRegistering(false);

@@ -14,7 +14,7 @@ const Search = ({
     <SearchWrap>
       <SearchImage src="/search.svg" />
       <Select ref={searchOptionRef}>
-        <option value="userName">닉네임</option>
+        <option value="address">주소</option>
         <option value="title">제목</option>
       </Select>
       <SearchInput
@@ -41,6 +41,10 @@ const SearchWrap = styled.div`
     width: 300px;
     transition: 1s;
   }
+  & > input :focus {
+    background-color: aqua;
+    transition: 1s;
+  }
 `;
 const Select = styled.select`
   border: none;
@@ -53,6 +57,10 @@ const SearchInput = styled.input`
   border-radius: 10px;
   margin-right: 5px;
   width: 200px;
+  :focus {
+    width: 300px;
+    transition: 1s;
+  }
 `;
 const SearchImage = styled.img`
   width: 15px;

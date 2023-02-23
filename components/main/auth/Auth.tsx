@@ -1,17 +1,16 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import styled from 'styled-components';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
 import { customAlert } from '@/utils/alerts';
-// import Cookies from 'js-cookie';
 
 interface AuthForm {
   email: string;
 }
 interface Props {
-  closeModal: () => void;
+  closeLoginModal: () => void;
   changeModalButton: () => void;
   forgotModalButton: () => void;
 }
@@ -36,7 +35,7 @@ const Auth = (props: Props): JSX.Element => {
     await signInWithEmailAndPassword(authService, email, password)
       .then((res) => {
         customAlert('로그인에 성공하였습니다!');
-        props.closeModal();
+        props.closeLoginModal();
       })
       .catch(() => {
         alert('로그인 실패, 다시 입력해주세요');
@@ -108,7 +107,7 @@ const Auth = (props: Props): JSX.Element => {
       </PwForgotContainer>
 
       <LoginGoogleContainer>
-        <AuthSocial closeModal={props.closeModal} />
+        <AuthSocial closeModal={props.closeLoginModal} />
       </LoginGoogleContainer>
 
       <LoginCheckContainer onClick={props.changeModalButton}>
