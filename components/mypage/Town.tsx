@@ -51,6 +51,7 @@ const Town = ({ value }: any) => {
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '-10px' }}>
               {myPostList?.map((item: any) => (
+                <MyCollectItem key={uuidv4()} item={item} />
               ))}
             </Masonry>
           </MySpotImg>
