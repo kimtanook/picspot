@@ -50,10 +50,13 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
           { ...data, imgUrl: response },
           {
             onSuccess: () => {
+              setTimeout(
+                () => queryClient.invalidateQueries('detailData'),
+                500
+              );
               console.log('수정 요청 성공');
               customAlert('수정을 완료하였습니다!');
               setImageUpload(null);
-              queryClient.invalidateQueries('detailData');
             },
             onError: () => {
               console.log('수정 요청 실패');

@@ -38,5 +38,10 @@ const StProfileImg = styled.img`
 `;
 
 const StProfileName = styled.div`
-  /* font-size: 10px; */
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;

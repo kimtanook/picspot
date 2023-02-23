@@ -27,7 +27,7 @@ const DetailList = ({
   setSaveAddress,
   setEditBtnToggle,
 }: any) => {
-  console.log('item.id', item.id);
+  // console.log('item.id', item.id);
   // console.log(editTitle);
   // console.log(editContent);
   // console.log(editCity);
@@ -67,17 +67,17 @@ const DetailList = ({
     }
 
     if (editContent === '') {
-      alert('내용을 입력해주세요');
+      customAlert('내용을 입력해주세요');
       return;
     }
 
     if (editCity === '' || editTown === '') {
-      alert('카테고리를 입력해주세요');
+      customAlert('카테고리를 입력해주세요');
       return;
     }
 
     if (saveLatLng === undefined || saveAddress === undefined) {
-      alert('지도에 마커를 찍어주세요');
+      customAlert('지도에 마커를 찍어주세요');
       return;
     }
 
@@ -149,7 +149,8 @@ const DetailList = ({
           </StAddress>
         </StCityAndTownAndAddress>
         <StContent>
-          Tip | <span style={{ marginLeft: 20 }}>{item.content}</span>
+          <StTipSpan>Tip |</StTipSpan>
+          <StContentSpan>{item.content}</StContentSpan>
         </StContent>
       </StListContainer>
     );
@@ -268,6 +269,9 @@ const StTitle = styled.div`
   font-size: 30px;
   margin-right: 20px;
   width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const StTitleInput = styled.input`
@@ -368,4 +372,16 @@ const StContentInput = styled.input`
   padding-left: 10px;
   margin-left: 20px;
   border: transparent;
+`;
+
+const StTipSpan = styled.span`
+  width: 50px;
+`;
+
+const StContentSpan = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 20px;
+  margin-right: 20px;
 `;
