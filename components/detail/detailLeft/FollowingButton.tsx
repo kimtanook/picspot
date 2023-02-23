@@ -64,8 +64,14 @@ const FollowingButton = ({ item }: any) => {
     })?.follow;
   // console.log('authFollowingUid: ', authFollowingUid);
 
-  //* 팔로우가 있는 유저가 처음 들어왔을때 팔로잉 상태를 최신화했습니다.
+  //! 기능
+  //* 팔로잉을 한 유저가 페이지에 들어왔을때 팔로잉 취소버튼이,
+  //* 팔로잉을 하지 않은 유저가 페이지에 들어왔을때 팔로잉 버튼이 보이도록 했습니다.
   useEffect(() => {
+    //! 로직 : indexOf 사용
+    //* 내가 팔로잉한 사람들의 uid가 들어가 배열안에
+    //* 해당 게시물을 만든 사람의 uid가 있는 인덱스를 뽑았습니다.
+    //* 만약 uid가 없다면 팔로잉 버튼을 있다면 팔로잉 취소 버튼이 보이도록 했습니다.
     if (authFollowingUid?.indexOf(item.creator) === -1) {
       setFollwingUserAndCreatorUidState(false);
     } else {
@@ -92,18 +98,24 @@ const FollowingButton = ({ item }: any) => {
     return (
       <StFollowingContainer>
         {follwingUserAndCreatorUidState ? (
-          <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
+          <StFollowingBtn
+            onClick={() => onClickDeleteFollwing(item)}
+            style={{ width: 80 }}
+          >
             팔로잉 삭제
           </StFollowingBtn>
         ) : (
-          <StFollowingBtn onClick={() => onClickFollowingBtn(item)}>
+          <StFollowingBtn
+            onClick={() => onClickFollowingBtn(item)}
+            style={{ width: 60 }}
+          >
             팔로잉
           </StFollowingBtn>
         )}
       </StFollowingContainer>
     );
   }
-  // return <div></div>;
+  return <div></div>;
 };
 
 export default FollowingButton;
@@ -116,7 +128,7 @@ const StFollowingContainer = styled.div`
 const StFollowingBtn = styled.div`
   background-color: #8e8e93;
   border-radius: 30px;
-  width: 60px;
+  /* width: 60px; */
   height: 20px;
   text-align: center;
   color: white;

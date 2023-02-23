@@ -1,17 +1,15 @@
-import React, {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import { useForm } from 'react-hook-form';
 import { authService, storageService } from '@/firebase';
+import { uploadString, getDownloadURL, ref } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
+import { updateUser } from '@/api';
+import { useMutation } from 'react-query';
 
 const imgFile = '/profileicon.svg';
 
@@ -41,7 +39,6 @@ function ModalProfile(props: Props) {
   );
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
-  // const [error, setError] = useState<string>('');
 
   const imgRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -91,47 +88,98 @@ function ModalProfile(props: Props) {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<SaveForm>({
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
-
+  let editUser: any = {
+    uid: authService.currentUser?.uid,
+    userName: '',
+    userImg: '',
+  };
+  const { mutate: onUpdateUser } = useMutation(updateUser);
   const onSubmit = async (data: SaveForm) => {
-    setError('nickname', { type: 'nickname', message: '씨펄은 진주다ㅣ' });
     if (data.newPassword !== data.confirm) {
       alert('비밀번호가 일치하지 않습니다.');
-      // setError('비밀번호가 일치하지 않습니다');
       return;
     }
-    // if (error !== '') setError('');
-    setSaveInformation(true);
-    await updatePassword(authService?.currentUser!, newPassword)
-      .then((res) => {
-        updateProfile(authService?.currentUser!, {
-          displayName: newNickname,
-        });
-        customAlert('회원정보 변경에 성공하였습니다!');
-        props.editProfileModal();
+    const imgRef = ref(
+      storageService,
+      `${authService.currentUser?.uid}${uuidv4()}`
+    );
+    const imgDataUrl = localStorage.getItem('imgURL');
+    let downloadUrl;
+    if (imgDataUrl) {
+      const response = await uploadString(imgRef, imgDataUrl, 'data_url');
+      downloadUrl = await getDownloadURL(response.ref);
+    }
+    editUser = {
+      ...editUser,
+      userName: data.nickname,
+      userImg: downloadUrl,
+    };
+    onUpdateUser(editUser, {
+      onSuccess: () => {
+        console.log('유저수정 요청 성공');
+      },
+      onError: () => {
+        console.log('유저수정 요청 실패');
+      },
+    });
+
+    if (nicknameToggle && !pwToggle) {
+      await updateProfile(authService?.currentUser!, {
+        displayName: data.nickname,
+        photoURL: downloadUrl ?? '',
       })
-      .catch((error) => {
-        if (error.code.includes('auth/weak-password')) {
-          setSaveInformation(false);
-          alert('비밀번호는 6자 이상이어야 합니다.');
-          return;
-        }
-        if (error.code.includes('auth/invalid-display-name-in-use')) {
-          setSaveInformation(false);
-          alert('이미 사용중인 닉네임이예요');
-          return;
-        }
-        setSaveInformation(false);
-        alert('등록할 수 없습니다. 다시 시도해주세요');
-        // setError('Failed Change Profile');
+        .then((res) => {
+          editProfileModal();
+          customAlert('프로필 수정 완료하였습니다!');
+        })
+
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (!nicknameToggle && pwToggle) {
+      await updateProfile(authService?.currentUser!, {
+        photoURL: downloadUrl ?? '',
+      }).catch((error) => {
+        console.log(error);
       });
+      await updatePassword(authService?.currentUser!, data.newPassword).then(
+        (res) => {
+          editProfileModal();
+          customAlert('프로필 수정 완료하였습니다!');
+        }
+      );
+    } else if (nicknameToggle && pwToggle) {
+      await updateProfile(authService?.currentUser!, {
+        displayName: data.nickname,
+        photoURL: downloadUrl ?? '',
+      }).catch((error) => {
+        console.log(error);
+      });
+      await updatePassword(authService?.currentUser!, data.newPassword)
+        .then((res) => {
+          editProfileModal();
+          customAlert('프로필 수정 완료하였습니다!');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (!nicknameToggle && !pwToggle) {
+      await updateProfile(authService?.currentUser!, {
+        photoURL: downloadUrl ?? '',
+      })
+        .then((res) => {
+          editProfileModal();
+          customAlert('프로필 수정 완료하였습니다!');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
-  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setNickname(e.target.value);
-  // };
+
   return (
     <ModalStyled onClick={editProfileModal}>
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
@@ -187,23 +235,14 @@ function ModalProfile(props: Props) {
             {nicknameToggle && (
               <EditNicknameInput
                 {...register('nickname', {
+                  required: '닉넴',
                   minLength: {
                     value: 2,
                     message: '2글자 이상의 닉네임으로 정해주세요',
                   },
                 })}
-                name="nickname"
-                type="nickname"
-                id="nickname"
-                ref={nameRef}
                 defaultValue={authService.currentUser?.displayName!}
-                onChange={(event) => setNewNickname(event.target.value)}
                 placeholder="닉네임을 입력해 주세요"
-                // onKeyUp={(e) => {
-                //   if (e.key === 'Enter') {
-                //     handleSubmit(onSubmit);
-                //   }
-                // }}
               />
             )}
             <ProfileWarn>{errors?.nickname?.message}</ProfileWarn>
@@ -228,28 +267,19 @@ function ModalProfile(props: Props) {
                 {...register('newPassword', {
                   required: '비밀번호를 입력해주세요.',
                   minLength: {
-                    value: 8,
+                    value: 7,
                     message:
-                      '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                      '*7~20자리 숫자 내 영문 숫자 특수문자 혼합 비밀번호를 입력해주세요',
                   },
                   pattern: {
                     value:
-                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{7,20}$/,
                     message:
-                      '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                      '*7~20자리 숫자 내 영문 숫자 특수문자 혼합 비밀번호를 입력해주세요',
                   },
                 })}
-                name="password"
                 type="password"
-                id="password"
-                value={newPassword}
-                onChange={(event) => setNewPassword(event.target.value)}
                 placeholder="비밀번호를 입력해주세요"
-                // onKeyUp={(e) => {
-                //   if (e.key === 'Enter') {
-                //     handleSubmit(onSubmit);
-                //   }
-                // }}
               />
             )}
             <ProfileWarn>{errors?.newPassword?.message}</ProfileWarn>
@@ -259,22 +289,12 @@ function ModalProfile(props: Props) {
                 {...register('confirm', {
                   required: '비밀번호를 입력해주세요.',
                   minLength: {
-                    value: 8,
+                    value: 7,
                     message: '입력하신 비밀번호와 일치하지 않아요',
                   },
                 })}
-                autoComplete="new-password"
-                name="confirm"
                 type="password"
-                id="confirm"
-                value={confirm}
-                onChange={(event) => setConfirm(event.target.value)}
                 placeholder="비밀번호를 다시한번 입력해 주세요"
-                // onKeyUp={(e) => {
-                //   if (e.key === 'Enter') {
-                //     handleSubmit(onSubmit);
-                //   }
-                // }}
               />
             )}
             <ProfileWarn>{errors?.confirm?.message}</ProfileWarn>
@@ -283,7 +303,7 @@ function ModalProfile(props: Props) {
             <SaveEditBtn
               type="submit"
               disabled={saveInformation}
-              // onClick={props.profileEditComplete}
+              // onClick={testBTN}
             >
               <div>회원정보 저장</div>
             </SaveEditBtn>

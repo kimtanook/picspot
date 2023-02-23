@@ -3,7 +3,7 @@ import { authService } from '@/firebase';
 
 import { useQuery } from 'react-query';
 import Masonry from 'react-responsive-masonry';
-
+import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 
 const MyPostList = ({ setMore, more }: any) => {
@@ -26,14 +26,18 @@ const MyPostList = ({ setMore, more }: any) => {
   const myCollectPostTown = myCollectPost?.map((item: any) => {
     return item.town;
   });
-  //* map돌린 배열에서 중복된 값 합치기
-  const myCollectTownArr = [...new Set(myCollectPostTown)];
+  //* 배열에서 중복된 값 합치기
+  const myCollectTownArr = myCollectPostTown?.filter(
+    (element: any, index: any) => {
+      return myCollectPostTown?.indexOf(element) === index;
+    }
+  );
 
   return (
     <>
       <Masonry columnsCount={3} style={{ gap: '45px' }}>
         {myCollectTownArr?.map((item: any) => (
-          <div>
+          <div key={uuidv4()}>
             <Town value={item} more={more} setMore={setMore} />
           </div>
         ))}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-const Maps = ({
+const DetailMaps = ({
   searchPlace,
   saveLatLng,
   setSaveLatLng,
@@ -22,16 +22,16 @@ const Maps = ({
       const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
-        level: 4,
+        level: 5,
       };
       const map = new kakao.maps.Map(container, options);
       const geocoder = new kakao.maps.services.Geocoder();
 
       //----------------------------줌 레벨 및 스카이뷰/----------------------------
-      // const mapTypeControl = new kakao.maps.MapTypeControl();
-      // map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-      // const zoomControl = new kakao.maps.ZoomControl();
-      // map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+      const mapTypeControl = new kakao.maps.MapTypeControl();
+      map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+      const zoomControl = new kakao.maps.ZoomControl();
+      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       //----------------------------장소 검색/----------------------------
 
@@ -50,9 +50,9 @@ const Maps = ({
           }
           map.setBounds(bounds);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          alert(' 제주도 지역명을 검색해주세요.');
+          // alert(' 제주도 지역명을 검색해주세요.');
         } else if (status === kakao.maps.services.Status.ERROR) {
-          alert('에러입니다.');
+          // alert('에러입니다.');
         }
       }
 
@@ -108,7 +108,7 @@ const Maps = ({
   // console.log('saveLatLng', saveLatLng);
   // console.log('saveAddress', saveAddress);
 
-  return <div id="map" style={{ width: '620px', height: '650px' }}></div>;
+  return <div id="map" style={{ width: '100%', height: '200px' }}></div>;
 };
 
-export default Maps;
+export default DetailMaps;

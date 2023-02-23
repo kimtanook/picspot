@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { authService, storageService } from '@/firebase';
 import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
@@ -27,15 +27,6 @@ const Profile = ({ followingCount }: propsType) => {
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
   console.log(followingCount);
-  // 프로필 수정하기
-  // const profileEdit = () => {
-  //   localStorage.removeItem('imgURL');
-  //   setEditProfileModal(!editProfileModal);
-  // };
-
-  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setNicknameEdit(e.target.value);
-  // };
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -204,15 +195,12 @@ const ProfileEditBtn = styled.button`
 const ProfileText = styled.div`
   padding-right: 30px;
   width: 100%;
-  /* border: 1px solid; */
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
-  /* place-items: flex-end; */
-  /* border: 1px solid; */
 `;
 const ProfileNickname = styled.span`
   width: 70%;
@@ -222,7 +210,6 @@ const ProfileNickname = styled.span`
   font-size: 24px;
   text-align: left;
   padding-left: 20px;
-  /* border: 1px solid; */
 `;
 const LogoutButton = styled.button`
   color: #8e8e93;
@@ -240,7 +227,6 @@ const Follow = styled.div`
   justify-content: center;
   align-items: center;
   gap: 16px;
-  /* border: 1px solid; */
 `;
 const MyProfileFollowing = styled.div`
   border-radius: 20px;

@@ -58,14 +58,14 @@ export default function Mypage() {
         <MyProfileContainer>
           <Profile followingCount={followingCount} />
         </MyProfileContainer>
-        {followingUser?.map((item: any) => (
+        {/* {followingUser?.map((item: any) => (
           <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
             <Link href={`/userprofile/${item.uid}`}>
               <div>{item.userName}</div>
               <Image src={item.userImg} alt="image" height={100} width={100} />
             </Link>
           </div>
-        ))}
+        ))} */}
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>

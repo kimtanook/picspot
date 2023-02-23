@@ -33,7 +33,7 @@ const AuthSocial = (props: Props): JSX.Element => {
           ...userState,
           uid: authService.currentUser?.uid,
           userName: authService.currentUser?.displayName,
-          userImg: authService.currentUser?.photoURL,
+          userImg: '/profileicon.svg',
         };
         props.closeModal();
         customAlert('로그인에 성공하였습니다!');
