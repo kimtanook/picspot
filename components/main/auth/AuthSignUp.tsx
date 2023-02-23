@@ -55,6 +55,7 @@ const AuthSignUp = (props: Props) => {
       .then(() => {
         updateProfile(authService?.currentUser!, {
           displayName: nickname,
+          photoURL: '/profileicon.svg',
         });
         userState = {
           ...userState,

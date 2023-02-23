@@ -32,8 +32,8 @@ const StProfileCotainer = styled.div`
 
 const StProfileImg = styled.img`
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   margin-right: 10px;
 `;
 
