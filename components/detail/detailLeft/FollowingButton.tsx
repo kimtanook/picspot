@@ -103,7 +103,7 @@ const FollowingButton = ({ item }: any) => {
       </StFollowingContainer>
     );
   }
-  // return <div></div>;
+  return <div></div>;
 };
 
 export default FollowingButton;
