@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { authService } from '@/firebase';
 import styled from 'styled-components';
+import { customAlert } from '@/utils/alerts';
 
 const CommentList = ({ postId }: postId) => {
   const queryClient = useQueryClient();
@@ -29,6 +30,9 @@ const CommentList = ({ postId }: postId) => {
     event.preventDefault();
     if (!authService.currentUser) {
       return alert('로그인 후 댓글을 남겨보세요!');
+    } else if (comment.length > 30) {
+      customAlert('30자를 초과했어요.');
+      return;
     } else if (comment) {
       commentMutate(
         { postId, submitCommentData },
@@ -98,6 +102,7 @@ const StInput = styled.input`
   border: transparent;
   height: 20px;
   width: 70%;
+  padding-left: 20px;
 `;
 
 const StInputBtnContainer = styled.div`
@@ -106,13 +111,13 @@ const StInputBtnContainer = styled.div`
 
 const StInputBtn = styled.button`
   cursor: pointer;
-  background-color: #4cb2f6;
+  background-color: #1882ff;
   color: white;
   border-radius: 5px;
   width: 80px;
   height: 25px;
   text-align: center;
-  font-size: 12px;
   margin-left: 10px;
   border: transparent;
+  margin-right: 10px;
 `;
