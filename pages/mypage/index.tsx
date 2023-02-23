@@ -75,7 +75,7 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>
-        <div style={{ paddingBottom: '10px' }}>
+        <div style={{ padding: '40px 0px 10px 0px' }}>
           {onSpot ? (
             <>
               <BlackBtn onClick={() => setOnSpot(true)}>게시한 스팟</BlackBtn>
