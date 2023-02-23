@@ -26,7 +26,6 @@ const Profile = ({ followingCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
-  const imgRef = useRef<HTMLInputElement>(null);
 
   // 프로필 수정하기
   // const profileEdit = () => {

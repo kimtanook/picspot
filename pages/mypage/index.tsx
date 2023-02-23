@@ -12,7 +12,6 @@ import { useState } from 'react';
 import Masonry from 'react-responsive-masonry';
 import Link from 'next/link';
 
-
 export default function Mypage() {
   const [currentUser, setCurrentUser] = useState(false);
   const [onSpot, setOnSpot] = useState(true);
@@ -104,6 +103,7 @@ const MyContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-top: 64px;
 `;
 const MyProfileContainer = styled.div`
   width: 600px;

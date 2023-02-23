@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
@@ -30,7 +36,9 @@ function ModalProfile(props: Props) {
   const [saveInformation, setSaveInformation] = useState<boolean>(false);
   const [nicknameToggle, setNicknameToggle] = useState(false);
   const [pwToggle, setPwToggle] = useState(false);
-  const [newNickname, setNewNickname] = useState<string>('');
+  const [newNickname, setNewNickname] = useState<string>(
+    authService?.currentUser?.displayName as string
+  );
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -118,7 +126,9 @@ function ModalProfile(props: Props) {
         setError('Failed Change Profile');
       });
   };
-
+  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setNickname(e.target.value);
+  // };
   return (
     <ModalStyled onClick={editProfileModal}>
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
@@ -160,6 +170,8 @@ function ModalProfile(props: Props) {
             />
             {/* 닉네임 변경 */}
             <NicknameToggleContainer
+              // ref={nameRef}
+              // value={newNickname || props.nicknameEdit}
               onClick={() => {
                 setNicknameToggle((e) => !e);
               }}
@@ -176,9 +188,9 @@ function ModalProfile(props: Props) {
             {nicknameToggle && (
               <EditNicknameInput
                 minLength={2}
-                name="username"
+                name="newNickname"
                 type="username"
-                id="username"
+                id="newNickname"
                 value={newNickname}
                 ref={nameRef}
                 defaultValue={authService.currentUser?.displayName!}
@@ -333,7 +345,7 @@ const ProfilePhotoInput = styled.input``;
 
 const ProfileTextDiv = styled.div`
   margin-top: 1vh;
-  font-family: 'Noto Sans CJK KR';
+  /* font-family: 'Noto Sans CJK KR'; */
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
@@ -502,7 +514,7 @@ const SaveEditBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  width: 42%;
+  width: 470px;
   bottom: 120px;
   position: fixed;
 `;
