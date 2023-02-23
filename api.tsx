@@ -149,7 +149,7 @@ export const deleteData: any = (docId: any) => {
 };
 
 //* 스토어에 데이터 수정하기
-export const updataData: any = (data: any) => {
+export const updateData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
