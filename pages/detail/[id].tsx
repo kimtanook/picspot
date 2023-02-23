@@ -1,8 +1,5 @@
 import Header from '@/components/Header';
 import {
-  addCollectionData,
-  deleteCollectionData,
-  getCollection,
   getData,
   postCounter,
 } from '@/api';

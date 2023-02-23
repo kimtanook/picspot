@@ -174,72 +174,77 @@ const Chat = () => {
                     />
                   ))
                 ) : (
-                  <div>No Chat Messages</div>
+                  <div style={{ textAlign: 'center' }}>
+                    {roomName}방에 입장하셨습니다.
+                  </div>
                 )}
               </ChatListBox>
-              <div>현재 방</div>
-              <div>
-                {roomName} / {chatUsers}명
-              </div>
-              {/* <select>
-                <option>상대</option>
-                <option value={roomName} id={roomName}>
+              <InfoWrap>
+                <RoomUserCount>
                   {roomName}
-                </option>
-                {chatUsers?.map((item: any) => (
-                  <option key={uuidv4()} value={item.id}>
-                    {socketId === item.id ? '나' : item.user}
-                  </option>
-                ))}
-              </select> */}
-              <form>
-                <input
-                  value={message}
-                  onChange={onChangeMessage}
-                  autoFocus
-                  placeholder={
-                    connected ? `${roomName}에게 보내기` : 'Connecting...🕐'
-                  }
-                />
-                <button type="submit" color="primary" onClick={submitMessage}>
-                  Send
-                </button>
-              </form>
-              <button onClick={onClickRoomList} type="button">
-                방 목록
-              </button>
+                  {' 방'} {'|'} {chatUsers ?? '??'}
+                  {' 명'}
+                </RoomUserCount>
+                <form>
+                  <MessageInput
+                    value={message}
+                    onChange={onChangeMessage}
+                    autoFocus
+                    placeholder={
+                      connected ? `${roomName}에게 보내기` : 'Connecting...🕐'
+                    }
+                  />
+                  <SendBtn
+                    type="submit"
+                    color="primary"
+                    onClick={submitMessage}
+                  >
+                    Send
+                  </SendBtn>
+                </form>
+                <RoomListBtn onClick={onClickRoomList} type="button">
+                  방 목록
+                </RoomListBtn>
+              </InfoWrap>
             </div>
           ) : (
             <RoomSelect>
-              <div>열린 방</div>
-              <OpenRoom>
-                {openPublicRooms.length ? (
-                  <RoomList>
-                    {openPublicRooms?.map((item: { room: string }) => (
-                      <div key={uuidv4()}>
-                        <RoomName value={item.room} onClick={onClickRoom}>
-                          {item.room}
-                        </RoomName>
-                      </div>
-                    ))}
-                  </RoomList>
-                ) : (
-                  '없음'
-                )}
-              </OpenRoom>
-              <RoomForm>
-                <div>{authService.currentUser?.displayName}</div>
-                <input
-                  value={roomName}
-                  onChange={onChangeRoom}
-                  autoFocus
-                  placeholder={
-                    connected ? '방 만들기 (8자)' : 'Connecting...🕐'
-                  }
-                  maxLength={8}
-                />
-                <button onClick={submitRoomName}>입장</button>
-              </RoomForm>
+              {openPublicRooms.length ? (
+                <div>
+                  <OpenRoom>
+                    <div>열린 방</div>
+                    <RoomList>
+                      {openPublicRooms?.map((item: { room: string }) => (
+                        <div key={uuidv4()}>
+                          <RoomName value={item.room} onClick={onClickRoom}>
+                            {item.room}
+                          </RoomName>
+                        </div>
+                      ))}
+                    </RoomList>
+                  </OpenRoom>
+                  <RoomForm>
+                    <UserDisplayName>
+                      {authService.currentUser?.displayName}
+                    </UserDisplayName>
+                    <RoomInput
+                      value={roomName}
+                      onChange={onChangeRoom}
+                      autoFocus
+                      placeholder={
+                        connected ? '방 만들기 (8자)' : 'Connecting...🕐'
+                      }
+                      maxLength={8}
+                    />
+                    <EnterBtn onClick={submitRoomName}>입장</EnterBtn>
+                  </RoomForm>
+                </div>
+              ) : (
+                <CloseServer>
+                  <NoServerImg src="/no-server.png" />
+                  <div>서버연결 없음</div>
+                </CloseServer>
+              )}
             </RoomSelect>
           )}
         </RoomSelectContainer>
@@ -250,8 +255,12 @@ const Chat = () => {
 
 export default Chat;
 const ComponentContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-5%, -105%);
   height: 400px;
-  background-color: #00ff26;
+  background-color: #80a2ff;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -262,14 +271,67 @@ const ChatListBox = styled.div`
   display: flex;
   flex-direction: column-reverse;
   height: 300px;
+  width: 250px;
   overflow-y: scroll;
+  background-color: white;
+  border-radius: 16px;
+`;
+const InfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+const RoomUserCount = styled.div`
+  background-color: white;
+  margin: 5px;
+  width: 200px;
+  text-align: center;
+  border-radius: 8px;
+`;
+const MessageInput = styled.input`
+  border: none;
+  height: 20px;
+  border-radius: 8px;
+`;
+const SendBtn = styled.button`
+  background-color: #c9d8ff;
+  color: #2c2c2c;
+  border: none;
+  border-radius: 8px;
+  width: 50px;
+  height: 20px;
+  margin: 5px;
+  transition: 0.3s;
+  cursor: pointer;
+  :hover {
+    transition: 0.3s;
+    background-color: #4176ff;
+    color: white;
+  }
+`;
+const RoomListBtn = styled.button`
+  background-color: #c9d8ff;
+  color: #2c2c2c;
+  border: none;
+  border-radius: 8px;
+  width: 70px;
+  height: 20px;
+  margin: 5px;
+  transition: 0.3s;
+  cursor: pointer;
+  :hover {
+    transition: 0.3s;
+    background-color: white;
+  }
 `;
 const RoomSelectContainer = styled.div`
-  padding: 5px;
+  padding: 10px;
   height: 120px;
 `;
 const RoomSelect = styled.div`
   background-color: white;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   align-items: 'center';
@@ -279,21 +341,78 @@ const RoomForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-top: 10px solid #80a2ff;
 `;
 const OpenRoom = styled.div`
   display: flex;
+  flex-direction: column;
   overflow-y: scroll;
   width: 250px;
 `;
 const RoomList = styled.div`
   display: flex;
   flex-direction: column;
+  height: 250px;
+`;
+const RoomInput = styled.input`
+  border: none;
+  border-radius: 4px;
+  background-color: #e1e1e1;
+  height: 20px;
+  padding-left: 10px;
+`;
+const CloseServer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   height: 300px;
+  width: 250px;
+`;
+const NoServerImg = styled.img`
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
 `;
 
 const RoomName = styled.button`
-  background-color: #bebebe;
+  background-color: #6790ff;
+  color: white;
+  border: none;
+  border-radius: 16px;
   width: 120px;
+  height: 20px;
   margin: 5px;
   text-align: center;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: #3a5ab1;
+  }
+`;
+const UserDisplayName = styled.div`
+  font-weight: 700;
+  font-size: 24px;
+  color: #4176ff;
+  border-radius: 4px;
+  width: 100px;
+  height: 24px;
+  line-height: 24px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+`;
+const EnterBtn = styled.button`
+  border: none;
+  margin: 5px;
+  width: 50px;
+  height: 24px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
 `;

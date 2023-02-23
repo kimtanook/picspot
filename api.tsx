@@ -43,8 +43,10 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
       q = query(
         collection(dbService, 'post'),
         orderBy(option),
-        startAt(value),
-        endAt(value + '\uf8ff'),
+        startAt((option === 'address' ? '제주특별자치도 ' : '') + value),
+        endAt(
+          (option === 'address' ? '제주특별자치도 ' : '') + value + '\uf8ff'
+        ),
         limit(8),
         startAfter(lastVisible)
       );
@@ -52,8 +54,10 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
       q = query(
         collection(dbService, 'post'),
         orderBy(option),
-        startAt(value),
-        endAt(value + '\uf8ff'),
+        startAt((option === 'address' ? '제주특별자치도 ' : '') + value),
+        endAt(
+          (option === 'address' ? '제주특별자치도 ' : '') + value + '\uf8ff'
+        ),
         limit(20)
       );
     } else {
@@ -107,7 +111,6 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
       }
     }
   }
-
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     getData.push({ id: doc.id, ...doc.data() });
@@ -146,7 +149,7 @@ export const deleteData: any = (docId: any) => {
 };
 
 //* 스토어에 데이터 수정하기
-export const updateData: any = (data: any) => {
+export const updataData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
   console.log('데이터가 수정되었습니다.');
 };
@@ -285,3 +288,40 @@ export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);
   console.log('유저가 수정되었습니다.');
 };
+
+//* post town 기준 데이터 가져오기
+export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
+  const [town] = queryKey;
+  const response: any = [];
+  let q = query(
+    collection(dbService, 'post'),
+    where('town', '==', '우도'),
+    orderBy('createdAt', 'desc')
+  );
+
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+  console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
+
+  return response;
+};
+// //* post town 기준 데이터 가져오기
+// export const getTownDataJeju = async ({ queryKey }: { queryKey: string[] }) => {
+//   const [_, town] = queryKey;
+//   const response: any = [];
+//   let q = query(
+//     collection(dbService, 'post'),
+//     where('town', '==', town),
+//     orderBy('createdAt', 'desc')
+//   );
+
+//   const querySnapshot = await getDocs(q);
+//   querySnapshot.forEach((doc) => {
+//     response.push({ id: doc.id, ...doc.data() });
+//   });
+//   console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
+
+//   return response;
+// };
