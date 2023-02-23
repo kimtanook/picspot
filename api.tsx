@@ -283,6 +283,12 @@ export const getUser = async () => {
   return response;
 };
 
+//* 유저 수정하기
+export const updateUser: any = (data: any) => {
+  updateDoc(doc(dbService, 'user', data.uid), data);
+  console.log('유저가 수정되었습니다.');
+};
+
 //* post town 기준 데이터 가져오기
 export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
   const [town] = queryKey;
