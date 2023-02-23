@@ -191,7 +191,6 @@ export default function Main() {
             <div>children</div>
           </Modal>
         )}
-
         <div>
           {/* 무한 스크롤 */}
           {status === 'loading' ? (

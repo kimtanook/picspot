@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 import CollectionCategory from './CollectionCategory';
 import Masonry from 'react-responsive-masonry';
@@ -12,7 +13,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const CollectionList = ({ postData }: any) => {
   //* useQuery 사용해서 collection 데이터 불러오기
-  const { data: collectionData } = useQuery('collectiondata', getCollection);
+  const { data: collectionData } = useQuery('collectiondata2', getCollection);
+
   //* collector들 닉네임 뽑아오기
   //* collector에서 내 id를 가진 값 찾기
   const collectorList = collectionData?.filter((item: any) => {
