@@ -84,7 +84,7 @@ const Post = ({ id }: any) => {
   return (
     <StDetailContainer>
       <Seo title="Detail" />
-      <Header />
+      <Header selectCity={undefined} onChangeSelectCity={undefined} />
 
       {detail
         ?.filter((item: any) => {
