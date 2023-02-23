@@ -162,21 +162,21 @@ const Post = ({ id }: any) => {
 export default Post;
 
 const StDetailContainer = styled.div`
-  width: 1440px;
-  margin: auto;
+  /* width: 1440px;
+  margin: auto; */
 `;
 
 const StDetailContents = styled.div`
   position: relative;
   top: 50px;
-  margin: auto;
+  /* margin: auto; */
   display: flex;
   justify-content: center;
-  width: 80%;
+  /* width: 80%; */
 `;
 
 const StImgAndProfileAndFollowingAndCollection = styled.div`
-  width: 30%;
+  /* width: 30%; */
   margin-right: 20px;
 `;
 
@@ -194,7 +194,7 @@ const StProfileAndFollwing = styled.div`
 `;
 
 const StListAndMapAndComment = styled.div`
-  width: 50%;
+  /* width: 50%; */
 `;
 
 //* SSR방식으로 server에서 id 값 보내기
