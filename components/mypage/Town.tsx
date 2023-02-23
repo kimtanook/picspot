@@ -6,6 +6,7 @@ import MyCollectItem from './MyCollectItem';
 import Masonry from 'react-responsive-masonry';
 import MorePost from './MorePost';
 import { useState } from 'react';
+import { uuidv4 } from '@firebase/util';
 import { isTemplateExpression } from 'typescript';
 
 const Town = ({ value, setMore, more }: any) => {
@@ -42,8 +43,6 @@ const Town = ({ value, setMore, more }: any) => {
   // console.log('myPostList', myPostList);
 
   const myPostListMore = myPostList?.filter((item: any) => item.town === value);
-  console.log('myPostListMore', myPostListMore);
-  console.log('townName', townName);
   return (
     <div>
       {more ? (
@@ -55,7 +54,7 @@ const Town = ({ value, setMore, more }: any) => {
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '-10px' }}>
               {myPostList?.map((item: any) => (
-                <MyCollectItem item={item} />
+                <MyCollectItem key={uuidv4()} item={item} />
               ))}
             </Masonry>
           </MySpotImg>

@@ -253,8 +253,8 @@ export default function Main() {
 }
 
 const MainContainer = styled.div`
-  width: 1440px;
-  margin: auto;
+  /* width: 1440px;
+  margin: auto; */
 `;
 
 const SearchAndForm = styled.div`

@@ -169,8 +169,8 @@ const Chat = () => {
                       key={uuidv4()}
                       myName={authService.currentUser?.displayName}
                       item={chat}
-                      socketServer={socketServer}
-                      setChat={setChat}
+                      // socketServer={socketServer}
+                      // setChat={setChat}
                     />
                   ))
                 ) : (

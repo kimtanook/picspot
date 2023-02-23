@@ -17,7 +17,6 @@ const Header = ({
   const [closeLoginModal, setCloseLoginModal] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const router = useRouter();
-  console.log('router : ', router.route);
   const nowUser = authService.currentUser;
   // 로그인 모달 창 버튼
   const closeLoginModalButton = () => {
