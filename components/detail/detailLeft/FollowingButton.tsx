@@ -90,7 +90,7 @@ const FollowingButton = ({ item }: any) => {
     authService.currentUser?.uid !== item.creator
   ) {
     return (
-      <div>
+      <StFollowingContainer>
         {follwingUserAndCreatorUidState ? (
           <StFollowingBtn onClick={() => onClickDeleteFollwing(item)}>
             팔로잉 삭제
@@ -100,13 +100,30 @@ const FollowingButton = ({ item }: any) => {
             팔로잉
           </StFollowingBtn>
         )}
-      </div>
+      </StFollowingContainer>
     );
   }
+  // return <div></div>;
 };
 
 export default FollowingButton;
 
-const StFollowingBtn = styled.button`
-  color: red;
+const StFollowingContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StFollowingBtn = styled.div`
+  background-color: #8e8e93;
+  border-radius: 30px;
+  width: 60px;
+  height: 20px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  padding-top: 5px;
+  :hover {
+    background-color: #4cb2f6;
+  }
+  font-size: 12px;
 `;

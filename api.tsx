@@ -197,6 +197,7 @@ export const getCollection = async () => {
   const querySnapshot = await getDocs(collection(dbService, 'collection'));
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
+    // console.log('doc.id: ', doc.id);
   });
   console.log('collection데이터를 불러왔습니다.');
 
@@ -204,12 +205,12 @@ export const getCollection = async () => {
 };
 
 //* collection  데이터 추가하기
-export const addCollectionData: any = (data: any) => {
+export const addCollectionData: any = ({ uid, collector }: any) => {
   setDoc(
-    doc(dbService, 'collection', data.uid),
+    doc(dbService, 'collection', uid),
     {
-      collector: arrayUnion(data.collector),
-      uid: data.uid,
+      collector: arrayUnion(collector),
+      uid: uid,
     },
     { merge: true }
   );
@@ -217,11 +218,11 @@ export const addCollectionData: any = (data: any) => {
 };
 
 //* collection  데이터 삭제하기
-export const deleteCollectionData: any = (data: any) => {
-  updateDoc(doc(dbService, 'collection', data.uid), {
-    collector: arrayRemove(data.collector),
+export const deleteCollectionData: any = ({ uid, collector }: any) => {
+  updateDoc(doc(dbService, 'collection', uid), {
+    collector: arrayRemove(collector),
   }),
-    console.log('게시물이 저장되었습니다');
+    console.log('게시물이 삭제되었습니다');
 };
 
 //* 팔로잉 추가하기
