@@ -66,8 +66,8 @@ const AuthSocial = (props: Props): JSX.Element => {
         <Image
           src="/google.svg"
           alt="image"
-          width={50}
-          height={50}
+          width={30}
+          height={30}
           style={{ position: 'absolute' }}
         />
 
@@ -84,14 +84,14 @@ const GoogleBtn = styled.button`
   }
 
   width: 100%;
-  height: 80px;
+  height: 40px;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 30px;
   padding: 5px;
   border: 1px solid #8e8e93;
-  font-size: 25px;
+  font-size: 15px;
 `;
 
 const StTextBox = styled.div`

@@ -7,7 +7,7 @@ import {
   ZoomControl,
 } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import MapLandingPage from './MapLandingPage';
+import MapLandingPage from '../MapLandingPage';
 
 const DetailMap = ({
   item,
@@ -49,9 +49,9 @@ const DetailMap = ({
         style={{
           // 지도의 크기
           width: '100%',
-          height: '450px',
+          height: '200px',
         }}
-        level={6} // 지도의 확대 레벨
+        level={11} // 지도의 확대 레벨
       >
         <MapMarker
           position={{
@@ -108,10 +108,7 @@ const DetailMap = ({
 
 export default DetailMap;
 
-const StMapContainer = styled.div`
-  border-bottom: 1px solid black;
-  padding: 10px;
-`;
+const StMapContainer = styled.div``;
 
 const StOverLayWrap = styled.div`
   position: absolute;

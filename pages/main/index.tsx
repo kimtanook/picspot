@@ -1,10 +1,12 @@
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ChangeEvent,
+  Dispatch,
   MouseEvent,
+  SetStateAction,
   useCallback,
   useEffect,
   useRef,
@@ -24,6 +26,7 @@ import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import ModalLogin from '@/components/ModalLogin';
+import Loading from '@/components/common/Loading';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -119,10 +122,8 @@ export default function Main() {
       },
     }
   );
-  // 스크롤이 바닥을 찍으면 발생하는 이벤트
-  useBottomScrollListener(() => {
-    fetchNextPage();
-  });
+  // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
+  useBottomScrollListener(fetchNextPage, { offset: 300 });
 
   useEffect(() => {
     setSelectCity(`${router.query.city}`);
@@ -131,17 +132,10 @@ export default function Main() {
   }, [router]);
 
   return (
-    <MainContainer>
+    <>
       <Seo title="Home" />
-      <CityCategoryWrap>
-        <CityCategory value={selectCity} onChange={onChangeSelectCity}>
-          <option value="제주전체">제주전체</option>
-          <option value="제주시">제주시</option>
-          <option value="서귀포시">서귀포시</option>
-        </CityCategory>
-      </CityCategoryWrap>
-      <Header />
-      <MainHeaderdiv>
+      <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
+      <MainContainer>
         <SearchAndForm>
           <PostFormButton onClick={onClickTogglePostModal}>
             + 나의 스팟 추가
@@ -153,129 +147,129 @@ export default function Main() {
             onChangeSearchValue={onChangeSearchValue}
           />
         </SearchAndForm>
-      </MainHeaderdiv>
-      <CategoriesWrap>
-        <TownCategory>
-          {selectCity === '제주시' ? (
-            <div>
-              <TownBtn onClick={onClickSelectTown} value="">
-                제주시
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="구좌읍">
-                구좌읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="애월읍">
-                애월읍
-              </TownBtn>
 
-              <TownBtn onClick={onClickSelectTown} value="우도면">
-                우도면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="추자면">
-                추자면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="한경면">
-                한경면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="한림읍">
-                한림읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="조천읍">
-                조천읍
-              </TownBtn>
-            </div>
-          ) : selectCity === '서귀포시' ? (
-            <div>
-              <TownBtn onClick={onClickSelectTown} value="">
-                서귀포시
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="표선면">
-                표선면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="대정읍">
-                대정읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="성산읍">
-                성산읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="안덕면">
-                안덕면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="남원읍">
-                남원읍
-              </TownBtn>
-            </div>
+        <CategoriesWrap>
+          <TownCategory>
+            {selectCity === '제주시' ? (
+              <div>
+                <TownBtn onClick={onClickSelectTown} value="">
+                  제주시
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="구좌읍">
+                  구좌읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="애월읍">
+                  애월읍
+                </TownBtn>
+
+                <TownBtn onClick={onClickSelectTown} value="우도면">
+                  우도면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="추자면">
+                  추자면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한경면">
+                  한경면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한림읍">
+                  한림읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="조천읍">
+                  조천읍
+                </TownBtn>
+              </div>
+            ) : selectCity === '서귀포시' ? (
+              <div>
+                <TownBtn onClick={onClickSelectTown} value="">
+                  서귀포시
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="표선면">
+                  표선면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="대정읍">
+                  대정읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="성산읍">
+                  성산읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="안덕면">
+                  안덕면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="남원읍">
+                  남원읍
+                </TownBtn>
+              </div>
+            ) : (
+              <div>
+                <TownBtn onClick={onClickSelectTown} value="">
+                  제주전체
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="구좌읍">
+                  구좌읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="표선면">
+                  표선면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="대정읍">
+                  대정읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="애월읍">
+                  애월읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="남원읍">
+                  남원읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="성산읍">
+                  성산읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="안덕면">
+                  안덕면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="우도면">
+                  우도면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="추자면">
+                  추자면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한경면">
+                  한경면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한림읍">
+                  한림읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="조천읍">
+                  조천읍
+                </TownBtn>
+              </div>
+            )}
+          </TownCategory>
+        </CategoriesWrap>
+
+        {isOpenModal && (
+          <Modal
+            onClickToggleModal={onClickToggleModal}
+            setOpenModal={setOpenModal}
+          >
+            <div>children</div>
+          </Modal>
+        )}
+
+        {isOpenModal && (
+          <Modal
+            onClickToggleModal={onClickToggleModal}
+            setOpenModal={setOpenModal}
+          >
+            <div>children</div>
+          </Modal>
+        )}
+        <div>
+          {/* 무한 스크롤 */}
+          {status === 'loading' ? (
+            <Loading />
+          ) : status === 'error' ? (
+            <div>데이터를 불러오지 못했습니다.</div>
           ) : (
-            <div>
-              <TownBtn onClick={onClickSelectTown} value="">
-                제주전체
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="구좌읍">
-                구좌읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="표선면">
-                표선면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="대정읍">
-                대정읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="애월읍">
-                애월읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="남원읍">
-                남원읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="성산읍">
-                성산읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="안덕면">
-                안덕면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="우도면">
-                우도면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="추자면">
-                추자면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="한경면">
-                한경면
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="한림읍">
-                한림읍
-              </TownBtn>
-              <TownBtn onClick={onClickSelectTown} value="조천읍">
-                조천읍
-              </TownBtn>
-            </div>
-          )}
-        </TownCategory>
-      </CategoriesWrap>
-
-      {isOpenModal && (
-        <Modal
-          onClickToggleModal={onClickToggleModal}
-          setOpenModal={setOpenModal}
-        >
-          <div>children</div>
-        </Modal>
-      )}
-
-      <div>
-        {/* 무한 스크롤 */}
-        {status === 'loading' ? (
-          <div>로딩중입니다.</div>
-        ) : status === 'error' ? (
-          <div>데이터를 불러오지 못했습니다.</div>
-        ) : (
-          <GridBox>
-            <ResponsiveMasonry
-              columnsCountBreakPoints={{
-                600: 1,
-                900: 2,
-                1366: 3,
-                1440: 4,
-              }}
-            >
+            <GridBox>
               <Masonry columnsCount={4}>
                 {data?.pages.map((data) =>
                   data?.map((item: any) => (
@@ -285,75 +279,77 @@ export default function Main() {
                   ))
                 )}
               </Masonry>
-            </ResponsiveMasonry>
-          </GridBox>
+            </GridBox>
+          )}
+
+          <ChatWrap>
+            <div>{chatToggle ? <Chat /> : null}</div>
+            <ChatToggleBtn onClick={onClickChatToggle}>
+              {chatToggle ? (
+                '닫기'
+              ) : (
+                <ChatLogoWrap>
+                  <ChatLogo src="/chat-logo.png" />
+                </ChatLogoWrap>
+              )}
+            </ChatToggleBtn>
+          </ChatWrap>
+        </div>
+
+        {isModalPostActive ? (
+          <CustomModal
+            modal={isModalPostActive}
+            setModal={setIsModalPostActive}
+            width="950"
+            height="632"
+            element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
+          />
+        ) : (
+          ''
+        )}
+        {isModalActive ? (
+          <CustomModal
+            modal={isModalActive}
+            setModal={setIsModalActive}
+            width="1200"
+            height="700"
+            element={<ModalMaps />}
+          />
+        ) : (
+          ''
         )}
 
-        <ChatWrap>
-          <div>{chatToggle ? <Chat /> : null}</div>
-          <ChatToggleBtn onClick={onClickChatToggle}>
-            {chatToggle ? '닫기' : '열기'}
-          </ChatToggleBtn>
-        </ChatWrap>
-      </div>
-      <MapModalBtn onClick={onClickToggleMapModal}>
-        <div>
-          <PinImg src="/pin.png" />
-        </div>
-        <div>지도에서 핀 보기</div>
-      </MapModalBtn>
-      {isModalPostActive ? (
-        <CustomModal
-          modal={isModalPostActive}
-          setModal={setIsModalPostActive}
-          width="950"
-          height="632"
-          element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
-        />
-      ) : (
-        ''
-      )}
-      {isModalActive ? (
-        <CustomModal
-          modal={isModalActive}
-          setModal={setIsModalActive}
-          width="1200"
-          height="700"
-          element={<ModalMaps />}
-        />
-      ) : (
-        ''
-      )}
-    </MainContainer>
+        <MapModalBtn onClick={onClickToggleMapModal}>
+          <div>
+            <PinImg src="/pin.png" />
+          </div>
+          <div>지도에서 핀 보기</div>
+        </MapModalBtn>
+
+        <TopBtn
+          onClick={() => scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+        >
+          TOP
+        </TopBtn>
+      </MainContainer>
+    </>
   );
 }
 
 const MainContainer = styled.div`
-  width: 1440px;
-  margin: auto;
+  /* width: 1440px;
+  margin: auto; */
 `;
 
-const MainHeaderdiv = styled.div`
-  position: relative;
-  width: 1440px;
-  @media only screen and (max-width: 1366px) {
-    width: 1300px;
-  }
-  @media only screen and (max-width: 1280px) {
-    width: 1180px;
-  }
-  @media only screen and (max-width: 900px) {
-    width: 900px;
-  }
-  @media only screen and (max-width: 600px) {
-    width: 680px;
-  }
-`;
 const SearchAndForm = styled.div`
   display: flex;
+  position: absolute;
+  top: 16px;
+  left: 70px;
   flex-direction: row-reverse;
   align-items: center;
-  margin-left: 60%;
+  margin-top: 10px;
+  margin-left: 55%;
   width: 440px;
 `;
 const PostFormButton = styled.button`
@@ -364,7 +360,6 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
-  z-index: 2;
 `;
 
 const CategoriesWrap = styled.div`
@@ -374,24 +369,10 @@ const CategoriesWrap = styled.div`
   align-items: center;
   margin: auto;
 `;
-const CityCategoryWrap = styled.div`
-  width: 1440px;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const CityCategory = styled.select`
-  background-color: inherit;
-  font-size: 24px;
-  border: none;
-  border-radius: 20px;
-  height: 40px;
-  z-index: 2;
-`;
+
 const TownCategory = styled.div`
-  margin-top: 40px;
-  margin-bottom: 13px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 `;
 const TownBtn = styled.button`
   background-color: #dcdcdc;
@@ -406,36 +387,26 @@ const TownBtn = styled.button`
 const GridBox = styled.div`
   margin: auto;
   width: 1188px;
-  @media only screen and (max-width: 1366px) {
-    width: 1000px;
-  }
-  @media only screen and (max-width: 900px) {
-    width: 560px;
-  }
-  @media only screen and (max-width: 600px) {
-    width: 380px;
-  }
 `;
 const ItemBox = styled.div`
   margin: 0px 5px 20px 5px;
 `;
 const ChatWrap = styled.div`
   position: fixed;
-  left: 80%;
-  top: 70%;
+  left: 3%;
+  top: 90%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  height: 520px;
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
-  background-color: cornflowerblue;
-  left: 90%;
+  background-color: inherit;
+  border: 3px solid #1882ff;
+  left: 5%;
   top: 90%;
   border-radius: 50%;
-  border: none;
   width: 50px;
   height: 50px;
+  cursor: pointer;
 `;
 
 const MapModalBtn = styled.button`
@@ -457,4 +428,28 @@ const MapModalBtn = styled.button`
 `;
 const PinImg = styled.img`
   margin-right: 3px;
+`;
+const ChatLogoWrap = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const ChatLogo = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+const TopBtn = styled.button`
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background-color: #feb819;
+  color: white;
+  position: fixed;
+  top: 90%;
+  left: 85%;
+  cursor: pointer;
+  transition: 0.3s;
+  :hover {
+    background-color: #fed474;
+  }
 `;

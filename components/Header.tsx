@@ -1,12 +1,18 @@
 import { authService } from '@/firebase';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import ModalLogin from '@/components/ModalLogin';
 import { useRouter } from 'next/router';
 
-const Header = () => {
+const Header = ({
+  selectCity,
+  onChangeSelectCity,
+}: {
+  selectCity: string | undefined;
+  onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
+}) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
@@ -25,8 +31,7 @@ const Header = () => {
   }, [nowUser]);
   return (
     <HeaderContainer>
-      {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-      {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
+      {/* picspot */}
       <Link href="/" style={{ color: 'black', textDecorationLine: 'none' }}>
         <Title
           onClick={() => {
@@ -34,22 +39,35 @@ const Header = () => {
             localStorage.clear();
           }}
         >
-          Picspot
+          <img src="/logo.png" />
         </Title>
       </Link>
+      {router.route === '/main' ? (
+        <CityCategory value={selectCity} onChange={onChangeSelectCity}>
+          <option value="제주전체">제주전체</option>
+          <option value="제주시">제주시</option>
+          <option value="서귀포시">서귀포시</option>
+        </CityCategory>
+      ) : null}
       {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-      {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
+      {closeLoginModal && (
+        <ModalLogin closeLoginModal={closeLoginModalButton} />
+      )}
       {currentUser ? (
         <div onClick={() => router.push('/mypage')}>
-          {userImg ? (
-            <ProfileImg src={userImg} />
-          ) : (
-            <ProfileImg src="/profileicon.svg" />
-          )}
+          <Profile>
+            {userImg ? (
+              <ProfileImg src={userImg} />
+            ) : (
+              <ProfileImg src="/profileicon.svg" />
+            )}
+          </Profile>
         </div>
       ) : (
         <div onClick={closeLoginModalButton}>
-          <ProfileImg src="/profileicon.svg" />
+          <Profile>
+            <ProfileImg src="/profileicon.svg" />
+          </Profile>
         </div>
       )}
     </HeaderContainer>
@@ -59,27 +77,49 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.div`
-  position: fixed;
-  /* width: 1440px; */
-  margin: auto;
+  background-color: white;
   display: flex;
+  width: 1440px;
+  margin: auto;
+  padding: 0 37px 0 37px;
   justify-content: space-between;
+  align-items: center;
+  text-align: center;
   height: 70px;
-  z-index: 3;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.08);
+  @media only screen and (max-width: 1400px) {
+    width: 1200px;
+  }
+  @media only screen and (max-width: 900px) {
+    width: 760px;
+    margin-left: 35%;
+  }
+  @media only screen and (max-width: 600px) {
+    width: 380px;
+  }
 `;
 const Title = styled.div`
+  width: 107px;
   font-weight: 900;
   font-size: 24px;
   cursor: pointer;
 `;
+
+const CityCategory = styled.select`
+  text-align: center;
+  background-color: inherit;
+  font-size: 24px;
+  border: none;
+  border-radius: 20px;
+  height: 40px;
+`;
+const Profile = styled.div`
+  width: 107px;
+  background-color: inherit;
+`;
 const ProfileImg = styled.img`
-  position: fixed;
-  left: 86%;
   border-radius: 50%;
   width: 30px;
   height: 30px;
   cursor: pointer;
-  @media only screen and (max-width: 1440px) {
-    left: 95%;
-  }
 `;
