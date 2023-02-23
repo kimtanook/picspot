@@ -8,8 +8,8 @@ import MorePost from './MorePost';
 import { useState } from 'react';
 import { isTemplateExpression } from 'typescript';
 
-const Town = ({ value, setMore, more }: any) => {
-  const [townName, setTownName] = useState('');
+const Town = ({ value }: any) => {
+  const [scroll, setScroll] = useState(true);
 
   //* post town 기준 데이터 가져오기
   const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
@@ -33,46 +33,50 @@ const Town = ({ value, setMore, more }: any) => {
   //* useQuery 사용해서 town 데이터 불러오기
   //* => 해당 town의 data들
   const { data } = useQuery(['data', value], getTownData);
-  // console.log('data:', data);
 
   //* town데이터 creator 와 내 id가 같으면 그 item을 출력
   const myPostList = data?.filter(
     (item: any) => item.creator === authService.currentUser?.uid
   );
-  // console.log('myPostList', myPostList);
+  console.log('myPostList', myPostList);
+  const a = myPostList?.map((item: any) => item.town);
 
-  const myPostListMore = myPostList?.filter((item: any) => item.town === value);
-  console.log('myPostListMore', myPostListMore);
-  console.log('townName', townName);
   return (
     <div>
-      {more ? (
-        <TownWrap>
-          <PostTownTitle>
-            <MyPostTownTitle>{value}</MyPostTownTitle>
-          </PostTownTitle>
-
+      <TownWrap>
+        <PostTownTitle>
+          <MyPostTownTitle>{value}</MyPostTownTitle>
+        </PostTownTitle>
+        {scroll ? (
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '-10px' }}>
               {myPostList?.map((item: any) => (
-                <MyCollectItem item={item} />
+                <>
+                  <MyCollectItem item={item} />
+                </>
               ))}
             </Masonry>
           </MySpotImg>
-          <MoreBtn onClick={() => setMore(false)}>more</MoreBtn>
-        </TownWrap>
-      ) : (
-        <>
-          <PostTownTitle>
-            <MyPostTownTitle>{value}</MyPostTownTitle>
-          </PostTownTitle>
-          {myPostListMore?.map((item: any) => (
-            <>
-              <MorePost item={item} />
-            </>
-          ))}
-        </>
-      )}
+        ) : (
+          <MoreMySpotImg>
+            <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+              {myPostList?.map((item: any) => (
+                <>
+                  <MyCollectItem item={item} />
+                </>
+              ))}
+            </Masonry>
+          </MoreMySpotImg>
+        )}
+
+        <MoreBtn
+          onClick={() => {
+            setScroll(!scroll);
+          }}
+        >
+          more
+        </MoreBtn>
+      </TownWrap>
     </div>
   );
 };
@@ -88,7 +92,7 @@ const TownWrap = styled.div`
 `;
 const PostTownTitle = styled.div`
   height: 43px;
-  border-bottom: 2px solid #212121;
+  border-bottom: 1px solid #212121;
 `;
 
 const MyPostTownTitle = styled.div`
@@ -106,6 +110,13 @@ const MySpotImg = styled.div`
   overflow: hidden;
   display: grid;
 `;
+const MoreMySpotImg = styled.div`
+  width: 390px;
+  margin-top: 24px;
+  height: 256px;
+  overflow: scroll;
+  display: grid;
+`;
 
 const MoreBtn = styled.button`
   width: 35px;
@@ -113,16 +124,44 @@ const MoreBtn = styled.button`
   font-weight: 400;
   font-size: 14px;
   line-height: 25px;
-  align-items: center;
-  text-align: center;
   text-decoration-line: underline;
   float: right;
   margin-top: 20px;
   border: none;
   background-color: white;
-  /* border-bottom: 1px solid #555555; */
   :hover {
     font-size: 15px;
     transition: all 0.3s;
   }
 `;
+
+////////////////////////////////? 더보기 more 버튼기능 로직입니다 ( 중간발표 후 작업하겠습니다)//////////////////////////////
+// const [townName, setTownName] = useState('');
+// const onClickBtn = () => {
+//   setMore(false);
+//   setTownName(a);
+// };
+//* postData의 id가 collection uid와 같다면 postData id 출력하기
+// const postId = postData?.filter((item: any) =>
+//   collectorId?.includes(item.id)
+// );
+// return
+//   <Testdiv>
+//     <MyPostTownTitle>{townName}</MyPostTownTitle>
+//     <Masonry columnsCount={4} style={{ gap: '10px' }}>
+//       {onClickMoreData?.map((item: any) => (
+//         <MorePostList>
+//           <MorePost item={item} />
+//         </MorePostList>
+//       ))}
+//     </Masonry>
+//   </Testdiv>
+// </> */}
+// const MorePostList = styled.div`
+//   width: 1180px;
+// `;
+// const Testdiv = styled.div`
+//   margin: auto;
+//   width: 1188px;
+// `;
+////////////////////////////////?////////////////////////////////?////////////////////////////////?

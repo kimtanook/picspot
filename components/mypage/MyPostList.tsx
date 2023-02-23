@@ -1,13 +1,10 @@
-import { getCollection, getData, getTownData, getTownDataJeju } from '@/api';
+import { getData } from '@/api';
 import { authService } from '@/firebase';
-import Image from 'next/image';
+
 import { useQuery } from 'react-query';
-import styled from 'styled-components';
-import Link from 'next/link';
-import { useState } from 'react';
-import { uuidv4 } from '@firebase/util';
-import Town from './Town';
 import Masonry from 'react-responsive-masonry';
+
+import Town from './Town';
 
 const MyPostList = ({ setMore, more }: any) => {
   //* useQuery 사용해서 데이터 불러오기
@@ -31,7 +28,6 @@ const MyPostList = ({ setMore, more }: any) => {
   });
   //* map돌린 배열에서 중복된 값 합치기
   const myCollectTownArr = [...new Set(myCollectPostTown)];
-  // console.log('게시물들', myCollectTownArr);
 
   return (
     <>
