@@ -163,35 +163,35 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
           setPlace={setPlace}
           place={place}
         />
-
-        <StPostFormContentBox>
-          <StPostFormConteTitle>내 스팟 추가하기</StPostFormConteTitle>
-          <StPostFormContentWrap>
-            <div
-              style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}
-            >
-              <Img>
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={handleImageChange}
-                  src={imageUpload}
-                  ref={fileInput}
-                  alt="image"
-                  id="file"
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    display: 'none',
-                  }}
-                />
-                {imageUpload && <SpotImg src={imageUpload} />}
-              </Img>
-            </div>
-            <StPostFormContentTop>
-              <StPostFormContentName>사진정보</StPostFormContentName>
-              <StPostFormCategoryWrap>
-                {/* <StPostFormCategoryBoxWrap>
+        <StPostFormContainer>
+          <StPostFormContentBox>
+            <StPostFormConteTitle>내 스팟 추가하기</StPostFormConteTitle>
+            <StPostFormContentWrap>
+              <div
+                style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}
+              >
+                <Img>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg"
+                    onChange={handleImageChange}
+                    src={imageUpload}
+                    ref={fileInput}
+                    alt="image"
+                    id="file"
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                      display: 'none',
+                    }}
+                  />
+                  {imageUpload && <SpotImg src={imageUpload} />}
+                </Img>
+              </div>
+              <StPostFormContentTop>
+                <StPostFormContentName>사진정보</StPostFormContentName>
+                <StPostFormCategoryWrap>
+                  {/* <StPostFormCategoryBoxWrap>
               <CustomButton
                 width="80px"
                 borderRadius="20px"
@@ -244,37 +244,37 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                 </StPostFormCategoryMain>
               </div>
             </Dropdown> */}
-                <StPostFormSelect onChange={onChange}>
-                  {/* <option value="선택">시 선택</option> */}
-                  <option value="제주시">제주시</option>
-                  <option value="서귀포시">서귀포시</option>
-                </StPostFormSelect>
-                <StPostFormSelect onChange={onChange2}>
-                  {city === '제주시' ? (
-                    <>
-                      <option value="한림읍">한림읍</option>
-                      <option value="조천읍">조천읍</option>
-                      <option value="한경면">한경면</option>
-                      <option value="추자면">추자면</option>
-                      <option value="우도면">우도면</option>
-                      <option value="구좌읍">구좌읍</option>
-                      <option value="애월읍">애월읍</option>
-                    </>
-                  ) : city === '서귀포시' ? (
-                    <>
-                      <option value="표선면">표선면</option>
-                      <option value="대정읍">대정읍</option>
-                      <option value="남원읍">남원읍</option>
-                      <option value="성산읍">성산읍</option>
-                      <option value="안덕면">안덕면</option>
-                    </>
-                  ) : (
-                    ''
-                  )}
-                </StPostFormSelect>
-              </StPostFormCategoryWrap>
+                  <StPostFormSelect onChange={onChange}>
+                    {/* <option value="선택">시 선택</option> */}
+                    <option value="제주시">제주시</option>
+                    <option value="서귀포시">서귀포시</option>
+                  </StPostFormSelect>
+                  <StPostFormSelect onChange={onChange2}>
+                    {city === '제주시' ? (
+                      <>
+                        <option value="한림읍">한림읍</option>
+                        <option value="조천읍">조천읍</option>
+                        <option value="한경면">한경면</option>
+                        <option value="추자면">추자면</option>
+                        <option value="우도면">우도면</option>
+                        <option value="구좌읍">구좌읍</option>
+                        <option value="애월읍">애월읍</option>
+                      </>
+                    ) : city === '서귀포시' ? (
+                      <>
+                        <option value="표선면">표선면</option>
+                        <option value="대정읍">대정읍</option>
+                        <option value="남원읍">남원읍</option>
+                        <option value="성산읍">성산읍</option>
+                        <option value="안덕면">안덕면</option>
+                      </>
+                    ) : (
+                      ''
+                    )}
+                  </StPostFormSelect>
+                </StPostFormCategoryWrap>
 
-              {/* <div>
+                {/* <div>
             <h4>카테고리를 골라주세요</h4>
             <button onClick={onClickTown}>조천읍</button>
             <button onClick={onClickTown}>제주시</button>
@@ -289,77 +289,78 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
             <button onClick={onClickTown}>우도</button>
             <button onClick={onClickTown}>마라도</button>
           </div>   */}
-              <StPostFormButton>
-                <CustomButton
-                  width="100px"
-                  backgroundColor="white"
-                  color="#1882FF"
-                  borderRadius="0px"
-                  border="1px solid #1882FF"
-                  height="33px"
-                >
-                  이미지 회전
-                </CustomButton>
-                <CustomButton
-                  width="116px"
-                  backgroundColor="white"
-                  color="#1882FF"
-                  borderRadius="0px"
-                  border="1px solid #1882FF"
-                  height="33px"
-                >
-                  다시 등록하기
-                </CustomButton>
-              </StPostFormButton>
-            </StPostFormContentTop>
-          </StPostFormContentWrap>
+                <StPostFormButton>
+                  <CustomButton
+                    width="100px"
+                    backgroundColor="white"
+                    color="#1882FF"
+                    borderRadius="0px"
+                    border="1px solid #1882FF"
+                    height="33px"
+                  >
+                    이미지 회전
+                  </CustomButton>
+                  <CustomButton
+                    width="116px"
+                    backgroundColor="white"
+                    color="#1882FF"
+                    borderRadius="0px"
+                    border="1px solid #1882FF"
+                    height="33px"
+                  >
+                    다시 등록하기
+                  </CustomButton>
+                </StPostFormButton>
+              </StPostFormContentTop>
+            </StPostFormContentWrap>
 
-          <StPostFormInputWrap>
-            <StPostFormInputTitle>제목</StPostFormInputTitle>
-            <StPostFormInput
-              placeholder="사진을 소개하는 제목을 적어주세요!"
-              maxLength={20}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setInputCount(e.target.value.length);
-              }}
-            />
-            <StPostFormInputCount>
-              <span>{inputCount}</span>
-              <span>/20 자</span>
-            </StPostFormInputCount>
-            <StPostFormInputTitle>내용</StPostFormInputTitle>
-            <StPostFormTextareaWrap>
-              <StPostFormTextarea
-                placeholder="사진의 구도, 촬영장소로 가는 방법, 촬영시간 등 꿀팁을 적어주세요.!"
-                maxLength={100}
+            <StPostFormInputWrap>
+              <StPostFormInputTitle>제목</StPostFormInputTitle>
+              <StPostFormInput
+                placeholder="사진을 소개하는 제목을 적어주세요!"
+                maxLength={20}
                 onChange={(e) => {
-                  setContent(e.target.value);
-                  setTextareaCount(e.target.value.length);
+                  setTitle(e.target.value);
+                  setInputCount(e.target.value.length);
                 }}
               />
-              <StPostFormTextareaCount>
-                <span>{textareaCount}</span>
-                <span>/100 자</span>
-              </StPostFormTextareaCount>
-            </StPostFormTextareaWrap>
-          </StPostFormInputWrap>
-          <StPostFormUploadButton>
-            <CustomButton
-              width="400px"
-              height="48px"
-              borderRadius="0px"
-              color="white"
-              backgroundColor="#1882FF"
-              margin="0px 0px 0px 5px"
-              onClick={onClickAddData}
+              <StPostFormInputCount>
+                <span>{inputCount}</span>
+                <span>/20 자</span>
+              </StPostFormInputCount>
+              <StPostFormInputTitle>내용</StPostFormInputTitle>
+              <StPostFormTextareaWrap>
+                <StPostFormTextarea
+                  placeholder="사진의 구도, 촬영장소로 가는 방법, 촬영시간 등 꿀팁을 적어주세요.!"
+                  maxLength={100}
+                  onChange={(e) => {
+                    setContent(e.target.value);
+                    setTextareaCount(e.target.value.length);
+                  }}
+                />
+                <StPostFormTextareaCount>
+                  <span>{textareaCount}</span>
+                  <span>/100 자</span>
+                </StPostFormTextareaCount>
+              </StPostFormTextareaWrap>
+            </StPostFormInputWrap>
+            <StPostFormUploadButton>
+              <CustomButton
+                width="400px"
+                height="48px"
+                borderRadius="0px"
+                color="white"
+                backgroundColor="#1882FF"
+                margin="0px 0px 0px 5px"
+                onClick={onClickAddData}
 
-              // border="0px"
-            >
-              업로드하기
-            </CustomButton>
-          </StPostFormUploadButton>
-        </StPostFormContentBox>
+                // border="0px"
+              >
+                업로드하기
+              </CustomButton>
+            </StPostFormUploadButton>
+          </StPostFormContentBox>
+        </StPostFormContainer>
       </StPostFormWrap>
     </>
   );
@@ -370,11 +371,19 @@ export default PostForm;
 const StPostFormWrap = styled.div`
   display: flex;
   /* background-color: Red; */
-  width: 1100px;
-  justify-content: space-evenly;
+  width: 1200px;
+  /* justify-content: space-; */
   /* align-items: center; */
   /* background-color: yellow; */
   /* border: 1px solid black; */
+`;
+
+const StPostFormContainer = styled.div`
+  /* background-color: green; */
+  /* height: 300px; */
+  /* width: 400px; */
+  /* margin-top: -330px; */
+  padding: 0px 60px;
 `;
 
 const StPostFormConteTitle = styled.h4`
@@ -405,6 +414,7 @@ const StPostFormContentTop = styled.div`
   align-items: center;
   margin-top: -30px;
   margin-left: -10px;
+  padding: 5px;
 `;
 
 const StPostFormContentName = styled.span`

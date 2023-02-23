@@ -108,7 +108,7 @@ const Maps = ({
   // console.log('saveLatLng', saveLatLng);
   // console.log('saveAddress', saveAddress);
 
-  return <div id="map" style={{ width: '670px', height: '650px' }}></div>;
+  return <div id="map" style={{ width: '620px', height: '650px' }}></div>;
 };
 
 export default Maps;

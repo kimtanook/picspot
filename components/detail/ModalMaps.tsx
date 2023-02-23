@@ -76,15 +76,16 @@ const ModalMaps = () => {
                           </StOverLayHoverWrap>
                         </StOverLayImg>
                       </Link>
-
-                      <StOverLayAddress>
-                        <SearchImage1 src="/spot_icon.svg" />{' '}
-                        {item.address.slice(7, 20)}
-                      </StOverLayAddress>
-                      <StOverLayCounter>
-                        <SearchImage2 src="/view_icon.svg" />{' '}
-                        {item.clickCounter} view
-                      </StOverLayCounter>
+                      <StOverLayContetnsWrap>
+                        <StOverLayAddress>
+                          <SearchImage1 src="/spot_icon.svg" />{' '}
+                          {item.address.slice(7, 20)}
+                        </StOverLayAddress>
+                        <StOverLayCounter>
+                          <SearchImage2 src="/view_icon.svg" />{' '}
+                          {item.clickCounter} view
+                        </StOverLayCounter>
+                      </StOverLayContetnsWrap>
                     </StOverLayWrap>
                   </CustomOverlayMap>
                 )}
@@ -104,7 +105,7 @@ const StOverLayWrap = styled.div`
   box-shadow: 2.5px 5px 5px gray;
   border-radius: 3px;
   overflow: hidden;
-  position: relative;
+  /* position: relative; */
 `;
 
 const StOverLayTitle = styled.div`
@@ -125,23 +126,6 @@ const StOverLayImg = styled.div`
 const StOverLayImgSrc = styled(Image)`
   width: 100%;
   cursor: pointer;
-`;
-const StOverLayAddress = styled.div`
-  color: gray;
-  font-size: 15px;
-  position: relative;
-  margin-top: 13px;
-  text-align: left;
-  margin-left: 28px;
-`;
-
-const StOverLayCounter = styled.div`
-  font-size: 16px;
-  color: cornflowerblue;
-  font-weight: 600;
-  text-align: left;
-  margin-left: 32px;
-  margin-top: 3px;
 `;
 
 const StOverLayClose = styled.div`
@@ -198,23 +182,40 @@ const StOverLayHoverText = styled.h2`
   text-transform: uppercase;
 `;
 
+const StOverLayContetnsWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 15px;
+  margin-left: 5px;
+`;
+
+const StOverLayAddress = styled.div`
+  color: gray;
+  font-size: 15px;
+`;
+
+const StOverLayCounter = styled.div`
+  font-size: 16px;
+  color: cornflowerblue;
+  font-weight: 600;
+  text-align: left;
+`;
+
 const SearchImage = styled.img`
   width: 30px;
   height: 30px;
   margin-right: 10px;
   margin-left: 5px;
+  font-size: 20px;
 `;
 const SearchImage1 = styled.img`
-  width: 17px;
-  height: 17px;
-  position: absolute;
-  left: -18px;
+  width: 20px;
+  height: 15px;
 `;
 const SearchImage2 = styled.img`
-  width: 25px;
-  height: 14px;
-  position: absolute;
-  left: 6px;
-  /* bottom: 0.1px; */
+  width: 20px;
+  height: 12px;
 `;
 export default ModalMaps;

@@ -300,7 +300,7 @@ export default function Main() {
           <CustomModal
             modal={isModalPostActive}
             setModal={setIsModalPostActive}
-            width="1080"
+            width="1100"
             height="632"
             element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
           />

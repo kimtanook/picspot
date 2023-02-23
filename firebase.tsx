@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAm1Oo1wlRi_pfmI4hiS_Z-xSURpgsSrX0',
-  authDomain: 'testpicspot.firebaseapp.com',
-  projectId: 'testpicspot',
-  storageBucket: 'testpicspot.appspot.com',
-  messagingSenderId: '110955419725',
-  appId: '1:110955419725:web:7fad0ffe45eb75af49e404',
+  apiKey: 'AIzaSyC3lI52U435rGzI0LQQ8RcSziDW_9pV8pM',
+  authDomain: 'ts-todoself.firebaseapp.com',
+  projectId: 'ts-todoself',
+  storageBucket: 'ts-todoself.appspot.com',
+  messagingSenderId: '772320960122',
+  appId: '1:772320960122:web:9c0b5f6445d950151ba5c3',
 };
 
 const app = initializeApp(firebaseConfig);
