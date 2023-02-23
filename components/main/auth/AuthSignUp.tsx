@@ -179,6 +179,13 @@ const AuthSignUp = (props: Props) => {
           <AuthWarn>{errors?.confirm?.message}</AuthWarn>
 
           <NicknameInput
+            {...register('nickname', {
+              required: '닉네임를 입력해주세요.',
+              minLength: {
+                value: 2,
+                message: '2글자이상 입력해씨펄',
+              },
+            })}
             minLength={2}
             name="username"
             type="username"

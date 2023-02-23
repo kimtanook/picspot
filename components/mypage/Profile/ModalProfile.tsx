@@ -41,7 +41,7 @@ function ModalProfile(props: Props) {
   );
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  // const [error, setError] = useState<string>('');
 
   const imgRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -91,16 +91,19 @@ function ModalProfile(props: Props) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SaveForm>({ mode: 'onBlur' });
+    setError,
+  } = useForm<SaveForm>({
+    mode: 'onBlur',
+  });
 
   const onSubmit = async (data: SaveForm) => {
+    setError('nickname', { type: 'nickname', message: '씨펄은 진주다ㅣ' });
     if (data.newPassword !== data.confirm) {
       alert('비밀번호가 일치하지 않습니다.');
-      setError('비밀번호가 일치하지 않습니다');
+      // setError('비밀번호가 일치하지 않습니다');
       return;
     }
-    if (error !== '') setError('');
-
+    // if (error !== '') setError('');
     setSaveInformation(true);
     await updatePassword(authService?.currentUser!, newPassword)
       .then((res) => {
@@ -123,7 +126,7 @@ function ModalProfile(props: Props) {
         }
         setSaveInformation(false);
         alert('등록할 수 없습니다. 다시 시도해주세요');
-        setError('Failed Change Profile');
+        // setError('Failed Change Profile');
       });
   };
   // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -140,24 +143,22 @@ function ModalProfile(props: Props) {
           </ProfileTextDiv>
           {/* 사진 변경 또는 삭제 */}
           <div>
-            <ProfilePhotoDeleteBtn onClick={deleteImgFile}>
-              <div>
-                <CancleImg src="/cancle-button.png" />
-              </div>
+            <ProfilePhotoDeleteBtn>
+              <CancleImg src="/cancle-button.png" onClick={deleteImgFile} />
+              <ProfilePhotoLabel htmlFor="changePhoto">
+                <ProfilePhoto img={props.imgEdit}>
+                  <ProfilePhotoHover img={props.imgEdit}>
+                    <Image
+                      src={'/gallery.png'}
+                      alt="gallery"
+                      width={19.5}
+                      height={19.5}
+                    />
+                    <span>프로필 사진 변경</span>
+                  </ProfilePhotoHover>
+                </ProfilePhoto>
+              </ProfilePhotoLabel>
             </ProfilePhotoDeleteBtn>
-            <ProfilePhotoLabel htmlFor="changePhoto">
-              <ProfilePhoto img={props.imgEdit}>
-                <ProfilePhotoHover img={props.imgEdit}>
-                  <Image
-                    src={'/gallery.png'}
-                    alt="gallery"
-                    width={19.5}
-                    height={19.5}
-                  />
-                  <span>프로필 사진 변경</span>
-                </ProfilePhotoHover>
-              </ProfilePhoto>
-            </ProfilePhotoLabel>
           </div>
           <EditProfileContainer>
             <ProfilePhotoInput
@@ -170,8 +171,6 @@ function ModalProfile(props: Props) {
             />
             {/* 닉네임 변경 */}
             <NicknameToggleContainer
-              // ref={nameRef}
-              // value={newNickname || props.nicknameEdit}
               onClick={() => {
                 setNicknameToggle((e) => !e);
               }}
@@ -187,20 +186,24 @@ function ModalProfile(props: Props) {
             </NicknameToggleContainer>
             {nicknameToggle && (
               <EditNicknameInput
-                minLength={2}
-                name="newNickname"
-                type="username"
-                id="newNickname"
-                value={newNickname}
+                {...register('nickname', {
+                  minLength: {
+                    value: 2,
+                    message: '2글자 이상의 닉네임으로 정해주세요',
+                  },
+                })}
+                name="nickname"
+                type="nickname"
+                id="nickname"
                 ref={nameRef}
                 defaultValue={authService.currentUser?.displayName!}
                 onChange={(event) => setNewNickname(event.target.value)}
                 placeholder="닉네임을 입력해 주세요"
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSubmit(onSubmit);
-                  }
-                }}
+                // onKeyUp={(e) => {
+                //   if (e.key === 'Enter') {
+                //     handleSubmit(onSubmit);
+                //   }
+                // }}
               />
             )}
             <ProfileWarn>{errors?.nickname?.message}</ProfileWarn>
@@ -242,11 +245,11 @@ function ModalProfile(props: Props) {
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
                 placeholder="비밀번호를 입력해주세요"
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSubmit(onSubmit);
-                  }
-                }}
+                // onKeyUp={(e) => {
+                //   if (e.key === 'Enter') {
+                //     handleSubmit(onSubmit);
+                //   }
+                // }}
               />
             )}
             <ProfileWarn>{errors?.newPassword?.message}</ProfileWarn>
@@ -267,11 +270,11 @@ function ModalProfile(props: Props) {
                 value={confirm}
                 onChange={(event) => setConfirm(event.target.value)}
                 placeholder="비밀번호를 다시한번 입력해 주세요"
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSubmit(onSubmit);
-                  }
-                }}
+                // onKeyUp={(e) => {
+                //   if (e.key === 'Enter') {
+                //     handleSubmit(onSubmit);
+                //   }
+                // }}
               />
             )}
             <ProfileWarn>{errors?.confirm?.message}</ProfileWarn>
@@ -280,7 +283,7 @@ function ModalProfile(props: Props) {
             <SaveEditBtn
               type="submit"
               disabled={saveInformation}
-              onClick={props.profileEditComplete}
+              // onClick={props.profileEditComplete}
             >
               <div>회원정보 저장</div>
             </SaveEditBtn>
@@ -297,26 +300,28 @@ const ModalStyled = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: gray;
   display: flex;
   z-index: 1000000;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
   .modalBody {
-    position: absolute;
+    position: relative;
     color: black;
     width: 70%;
     max-width: 524px;
-    height: 70%;
+    height: 695px;
     max-height: 695px;
     padding: 30px 30px 30px 30px;
     z-index: 13;
     text-align: left;
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    overflow-y: auto;
   }
 `;
 const ProfileContainerForm = styled.form`
@@ -334,9 +339,15 @@ const ProfilePhotoDeleteBtn = styled.div`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  position: relative;
+  width: 120px;
+  height: 120px;
 `;
 const CancleImg = styled.img`
-  margin-left: 100px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  z-index: 999999;
 `;
 const ProfilePhotoLabel = styled.label`
   cursor: pointer;
@@ -344,8 +355,9 @@ const ProfilePhotoLabel = styled.label`
 const ProfilePhotoInput = styled.input``;
 
 const ProfileTextDiv = styled.div`
-  margin-top: 1vh;
-  /* font-family: 'Noto Sans CJK KR'; */
+  margin-top: 61px;
+  margin-bottom: 16px;
+  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
@@ -394,10 +406,10 @@ const EditProfileContainer = styled.div`
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
-  margin-top: 30px;
 `;
 const NicknameToggleContainer = styled.div`
   background-color: transparent;
+  margin-top: 36px;
   width: 470px;
   height: 24px;
   z-index: 2;
@@ -415,21 +427,20 @@ const NicknameToggleText = styled.div`
   line-height: 24px;
   letter-spacing: -0.025em;
   color: #212121;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 const OpenNicknameToggleImg = styled.img`
-  position: absolute;
   width: 12.03px;
-  height: 15px;
-  left: 510px;
-  top: 267px;
+  height: 22px;
+  padding-right: 10px;
   background: transparent;
 `;
 const CloseNicknameToggleImg = styled.img`
-  position: absolute;
-  width: 18px;
-  height: 15px;
-  left: 510px;
-  top: 267px;
+  width: 22px;
+  height: 12px;
+  padding-right: 10px;
   background: transparent;
 `;
 const EditNicknameInput = styled.input`
@@ -463,21 +474,20 @@ const PwToggleText = styled.div`
   line-height: 24px;
   letter-spacing: -0.025em;
   color: #212121;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 const OpenPwToggleImg = styled.img`
-  position: absolute;
   width: 12.03px;
-  height: 15px;
-  left: 510px;
-  top: 267px;
+  height: 22px;
+  padding-right: 10px;
   background: transparent;
 `;
 const ClosePwToggleImg = styled.img`
-  position: absolute;
-  width: 18px;
-  height: 15px;
-  left: 510px;
-  top: 267px;
+  width: 22px;
+  height: 12px;
+  padding-right: 10px;
   background: transparent;
 `;
 
@@ -516,7 +526,11 @@ const SaveEditBtnContainer = styled.div`
   margin: 0 auto;
   width: 470px;
   bottom: 120px;
-  position: fixed;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 64px;
+  margin-bottom: 64px;
 `;
 const SaveEditBtn = styled.button`
   display: flex;

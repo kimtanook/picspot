@@ -26,7 +26,7 @@ const Profile = ({ followingCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
-
+  console.log(followingCount);
   // 프로필 수정하기
   // const profileEdit = () => {
   //   localStorage.removeItem('imgURL');
@@ -144,14 +144,13 @@ const Profile = ({ followingCount }: propsType) => {
         <ProfileTextdiv>
           {/* 닉네임 */}
           <ProfileNickname>
-            {authService.currentUser?.displayName}님
+            {authService.currentUser?.displayName}님{/* 로그아웃 */}
+            <Link href={'/main?city=제주전체'}>
+              {authService.currentUser ? (
+                <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+              ) : null}
+            </Link>
           </ProfileNickname>
-          {/* 로그아웃 */}
-          <Link href={'/main?city=제주전체'}>
-            {authService.currentUser ? (
-              <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
-            ) : null}
-          </Link>
         </ProfileTextdiv>
 
         <Follow>
@@ -177,7 +176,8 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileEdit = styled.div`
-  padding-right: 15px;
+  /* margin-left: 15px; */
+  /* border: 1px solid; */
 `;
 const ProfileImage = styled.div<{ img: string }>`
   width: 150px;
@@ -202,21 +202,27 @@ const ProfileEditBtn = styled.button`
 `;
 
 const ProfileText = styled.div`
-  padding-left: 15px;
-  width: 60%;
+  padding-right: 30px;
+  width: 100%;
+  /* border: 1px solid; */
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
-  place-items: flex-end;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  /* place-items: flex-end; */
+  /* border: 1px solid; */
 `;
-const ProfileNickname = styled.div`
-  padding-top: 20px;
-  width: 150px;
+const ProfileNickname = styled.span`
+  width: 70%;
   height: 36px;
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
-  text-align: center;
+  text-align: left;
+  padding-left: 20px;
+  /* border: 1px solid; */
 `;
 const LogoutButton = styled.button`
   color: #8e8e93;
@@ -230,14 +236,16 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 const Follow = styled.div`
-  display: grid;
-  grid-template-columns: 35% 35%;
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  /* border: 1px solid; */
 `;
 const MyProfileFollowing = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
-  padding: 7%;
+  padding: 11px 20px;
   width: 90px;
   height: 85px;
   text-align: center;
@@ -251,13 +259,13 @@ const FollowingText = styled.div`
 const FollowingCount = styled.div`
   color: #212121;
   font-size: 24px;
-  padding: 10px;
+  padding: 11px 20px;
 `;
 
 const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
-  padding: 7%;
+  padding: 11px 20px;
   width: 90px;
   height: 85px;
   text-align: center;
