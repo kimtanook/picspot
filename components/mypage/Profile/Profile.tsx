@@ -12,7 +12,11 @@ import ModalProfile from './ModalProfile';
 
 const imgFile = '/profileicon.svg';
 
-const Profile = () => {
+interface propsType {
+  followingCount: number;
+}
+
+const Profile = ({ followingCount }: propsType) => {
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [editProfileModal, setEditProfileModal] = useState(false);
   const [imgEdit, setImgEdit] = useState<string>(profileimg);
@@ -53,20 +57,6 @@ const Profile = () => {
       setUserImg(authService.currentUser.photoURL);
     }
   }, [nowUser]);
-
-  // 프로필 사진 변경 후 변경 사항 유지하기
-  const saveImgFile = () => {
-    if (imgRef.current?.files) {
-      const file = imgRef.current.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        const resultImg = reader.result;
-        localStorage.setItem('imgURL', resultImg as string);
-        setImgEdit(resultImg as string);
-      };
-    }
-  };
 
   // 전체 프로필 수정을 완료하기
   const profileEditComplete = async () => {
@@ -137,7 +127,6 @@ const Profile = () => {
           imgEdit={imgEdit}
           setImgEdit={setImgEdit}
           nicknameEdit={nicknameEdit}
-          saveImgFile={saveImgFile}
         />
       )}
       <ProfileEdit>
@@ -165,10 +154,14 @@ const Profile = () => {
         </ProfileTextdiv>
 
         <Follow>
-          <MyProfileFollowing>팔로잉</MyProfileFollowing>
-          {/* <div>{followingCount}곳</div> */}
-          <MyProfileFollower>팔로워</MyProfileFollower>
-          {/* <div>{followerCount}+</div> */}
+          <MyProfileFollowing>
+            <FollowingText>팔로잉</FollowingText>
+            <FollowingCount>{followingCount}</FollowingCount>
+          </MyProfileFollowing>
+          <MyProfileFollower>
+            <FollowerText>팔로워</FollowerText>
+            <FollowerCount>준비중</FollowerCount>
+          </MyProfileFollower>
         </Follow>
       </ProfileText>
     </ProfileContainer>
@@ -233,7 +226,6 @@ const LogoutButton = styled.button`
   font-size: 14px;
   width: 80px;
   height: 40px;
-
   cursor: pointer;
 `;
 const Follow = styled.div`
@@ -242,22 +234,40 @@ const Follow = styled.div`
   margin-top: 10px;
 `;
 const MyProfileFollowing = styled.div`
-  color: 5B5B5F;
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 7%;
-  font-size: 18pt;
   width: 90px;
   height: 85px;
   text-align: center;
 `;
-const MyProfileFollower = styled.div`
+
+const FollowingText = styled.div`
   color: 5B5B5F;
+  font-size: 20px;
+  padding-top: 10px;
+`;
+const FollowingCount = styled.div`
+  color: #212121;
+  font-size: 24px;
+  padding: 10px;
+`;
+
+const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 7%;
-  font-size: 18pt;
   width: 90px;
   height: 85px;
   text-align: center;
+`;
+const FollowerText = styled.div`
+  color: 5B5B5F;
+  font-size: 20px;
+  padding-top: 10px;
+`;
+const FollowerCount = styled.div`
+  color: #212121;
+  font-size: 20px;
+  padding: 10px;
 `;
