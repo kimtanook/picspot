@@ -36,11 +36,9 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
     isLoading,
     isError,
   } = useQuery('followingData', getFollwing);
-  // console.log('followingData: ', followingData);
 
   //* useQuery 사용해서 userData 데이터 불러오기
   const { data: userData } = useQuery('userData', getUser);
-  // console.log('userData: ', userData);
 
   //* 팔로잉한 사람 프로필 닉네임 뽑아오기
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
@@ -51,13 +49,11 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
     ?.find((item: any) => {
       return item.follow;
     })?.follow;
-  // console.log('authFollowingUid: ', authFollowingUid);
 
   //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
   const followingUser = userData?.filter((item: any) =>
     authFollowingUid?.includes(item.uid)
   );
-  // console.log('followingUser: ', followingUser);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;

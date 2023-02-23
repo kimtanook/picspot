@@ -27,30 +27,22 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
     return response;
   };
 
-  //* useQuery 사용해서 town 데이터 불러오기
+  //* useQuery 사용해서 내가 컬렉션한 포스터의 town의 모든 postData들
   const { data } = useQuery(['data', value], getTownDatas);
-  // console.log('data:', data);
-  //!
 
-  //* collector에서 내 id를 가진 값 찾기
+  //* 모든 collection중 내가 collector에 내이름이 있는(내가 선택한) 포스터들
   const collectorList = collectionData?.filter((item: any) => {
-    return item.collector.find((item: any) =>
+    return item.collector?.find((item: any) =>
       authService.currentUser?.uid.includes(item)
     );
   });
-  //* 내 id와 맞는 collector의 uid값 출력
-  const collectorId = collectorList?.map((item: any) => {
-    return item.uid;
-  });
 
-  //* postData의 id가 collection uid와 같다면 postData id 출력하기
-  const postId = postData?.filter((item: any) =>
-    collectorId?.includes(item.id)
+  //* 내가 담은 collection의 uid값
+  const myCollectionUid = collectorList?.map((item: any) => item.uid);
+  //* 모든 포스터들 중 내가 담은 collection의 uid와 비교허여 일치하는 값
+  const MyCollectionTownItem = data?.filter((item: any) =>
+    myCollectionUid?.includes(item.id)
   );
-  // console.log('collectorID', postId);
-  //* town데이터 postId가 내 postID의 id와 같은 data만 추력
-  const myColelctList = data?.filter((item: any) => item.uid === postId.id);
-  // console.log('myColelctList', myColelctList);
 
   return (
     <TownWrap>
@@ -60,7 +52,7 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
       {scroll ? (
         <MySpotImg>
           <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-            {myColelctList?.map((item: any) => (
+            {MyCollectionTownItem?.map((item: any) => (
               <MyCollectPost item={item} />
             ))}
           </Masonry>
@@ -68,7 +60,7 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
       ) : (
         <MoreMySpotImg>
           <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-            {myColelctList?.map((item: any) => (
+            {MyCollectionTownItem?.map((item: any) => (
               <MyCollectPost item={item} />
             ))}
           </Masonry>
@@ -137,7 +129,6 @@ const MoreBtn = styled.button`
   margin-top: 20px;
   border: none;
   background-color: white;
-  /* border-bottom: 1px solid #555555; */
   :hover {
     font-size: 15px;
     transition: all 0.3s;

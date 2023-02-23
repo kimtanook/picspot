@@ -8,8 +8,7 @@ import MorePost from './MorePost';
 import { useState } from 'react';
 import { isTemplateExpression } from 'typescript';
 
-const Town = ({ value, setMore, more }: any) => {
-  const [townName, setTownName] = useState('');
+const Town = ({ value }: any) => {
   const [scroll, setScroll] = useState(true);
 
   //* post town 기준 데이터 가져오기
@@ -34,7 +33,6 @@ const Town = ({ value, setMore, more }: any) => {
   //* useQuery 사용해서 town 데이터 불러오기
   //* => 해당 town의 data들
   const { data } = useQuery(['data', value], getTownData);
-  // console.log('data:', data);
 
   //* town데이터 creator 와 내 id가 같으면 그 item을 출력
   const myPostList = data?.filter(
@@ -43,43 +41,8 @@ const Town = ({ value, setMore, more }: any) => {
   console.log('myPostList', myPostList);
   const a = myPostList?.map((item: any) => item.town);
 
-  const onClickBtn = () => {
-    setMore(false);
-    setTownName(a);
-  };
-  // console.log('a', a);
-
-  const myPostListMore = myPostList?.map((item: any) => item.town);
-  // console.log('myPostListMore', myPostListMore);
-  console.log('value', value);
-  // console.log('myPostListMore', myPostListMore);
-  // const good = myPostListMore.includes(value);
-  // console.log(good);
-  // console.log('townName', townName);
-
-  // //* postData의 id가 collection uid와 같다면 postData id 출력하기
-  // const postId = postData?.filter((item: any) =>
-  //   collectorId?.includes(item.id)
-  // );
-
-  const MyPickMore = myPostList?.filter((item: any) => value.includes(item.id));
-  const onClickTest = () => {
-    setTownName(value);
-    console.log('townName', townName);
-    setMore(false);
-  };
-  //* 클릭한 town에 맞는 데이터들
-  const onClickMoreData = myPostList?.filter((item: any) => {
-    if (townName === item.town) {
-      return item;
-    }
-  });
-  console.log('onClickMoreData', onClickMoreData);
-
   return (
     <div>
-      {/* {more ? ( */}
-
       <TownWrap>
         <PostTownTitle>
           <MyPostTownTitle>{value}</MyPostTownTitle>
@@ -114,21 +77,6 @@ const Town = ({ value, setMore, more }: any) => {
           more
         </MoreBtn>
       </TownWrap>
-
-      {/* // ) : ( */}
-      {/* <>
-          <Testdiv>
-            <MyPostTownTitle>{townName}</MyPostTownTitle>
-            <Masonry columnsCount={4} style={{ gap: '10px' }}>
-              {onClickMoreData?.map((item: any) => (
-                <MorePostList>
-                  <MorePost item={item} />
-                </MorePostList>
-              ))}
-            </Masonry>
-          </Testdiv>
-        </> */}
-      {/* )} */}
     </div>
   );
 };
@@ -181,18 +129,39 @@ const MoreBtn = styled.button`
   margin-top: 20px;
   border: none;
   background-color: white;
-  /* border-bottom: 1px solid #555555; */
   :hover {
     font-size: 15px;
     transition: all 0.3s;
   }
 `;
 
-const MorePostList = styled.div`
-  width: 1180px;
-`;
-
-const Testdiv = styled.div`
-  margin: auto;
-  width: 1188px;
-`;
+////////////////////////////////? 더보기 more 버튼기능 로직입니다 ( 중간발표 후 작업하겠습니다)//////////////////////////////
+// const [townName, setTownName] = useState('');
+// const onClickBtn = () => {
+//   setMore(false);
+//   setTownName(a);
+// };
+//* postData의 id가 collection uid와 같다면 postData id 출력하기
+// const postId = postData?.filter((item: any) =>
+//   collectorId?.includes(item.id)
+// );
+// return
+//   <Testdiv>
+//     <MyPostTownTitle>{townName}</MyPostTownTitle>
+//     <Masonry columnsCount={4} style={{ gap: '10px' }}>
+//       {onClickMoreData?.map((item: any) => (
+//         <MorePostList>
+//           <MorePost item={item} />
+//         </MorePostList>
+//       ))}
+//     </Masonry>
+//   </Testdiv>
+// </> */}
+// const MorePostList = styled.div`
+//   width: 1180px;
+// `;
+// const Testdiv = styled.div`
+//   margin: auto;
+//   width: 1188px;
+// `;
+////////////////////////////////?////////////////////////////////?////////////////////////////////?

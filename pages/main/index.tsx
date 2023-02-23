@@ -200,24 +200,24 @@ export default function Main() {
             <div>데이터를 불러오지 못했습니다.</div>
           ) : (
             <GridBox>
-              <ResponsiveMasonry
+              {/* <ResponsiveMasonry
                 columnsCountBreakPoints={{
                   600: 1,
                   900: 2,
                   1366: 3,
                   1440: 4,
                 }}
-              >
-                <Masonry columnsCount={4}>
-                  {data?.pages.map((data) =>
-                    data?.map((item: any) => (
-                      <ItemBox key={uuidv4()}>
-                        <Content item={item} />
-                      </ItemBox>
-                    ))
-                  )}
-                </Masonry>
-              </ResponsiveMasonry>
+              > */}
+              <Masonry columnsCount={4}>
+                {data?.pages.map((data) =>
+                  data?.map((item: any) => (
+                    <ItemBox key={uuidv4()}>
+                      <Content item={item} />
+                    </ItemBox>
+                  ))
+                )}
+              </Masonry>
+              {/* </ResponsiveMasonry> */}
             </GridBox>
           )}
 
@@ -313,7 +313,7 @@ const TownBtn = styled.button`
 const GridBox = styled.div`
   margin: auto;
   width: 1188px;
-  @media only screen and (max-width: 1366px) {
+  /* @media only screen and (max-width: 1366px) {
     width: 1000px;
   }
   @media only screen and (max-width: 900px) {
@@ -321,7 +321,7 @@ const GridBox = styled.div`
   }
   @media only screen and (max-width: 600px) {
     width: 380px;
-  }
+  } */
 `;
 const ItemBox = styled.div`
   margin: 0px 5px 20px 5px;
