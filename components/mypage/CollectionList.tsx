@@ -5,7 +5,6 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 import CollectionCategory from './CollectionCategory';
 import Masonry from 'react-responsive-masonry';
