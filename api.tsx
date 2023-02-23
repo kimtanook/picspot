@@ -19,7 +19,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
-import { authService, dbService } from './firebase';
+import { dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
 // startAt() 또는 startAfter()메서드를 사용하여 쿼리의 시작점을 정의합니다. startAt()메서드는 시작점을 포함하고, startAfter() 메서드는 시작점을 제외합니다.
@@ -132,7 +132,6 @@ export const getData = async () => {
   querySnapshot.forEach((doc) => {
     response.push({ id: doc.id, ...doc.data() });
   });
-  console.log('데이터를 불러왔습니다.');
 
   return response;
 };
@@ -140,18 +139,15 @@ export const getData = async () => {
 //* 스토어에 데이터 추가하기
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
-  console.log('데이터가 추가되었습니다.');
 };
 //* 스토어에 데이터 삭제하기
 export const deleteData: any = (docId: any) => {
   deleteDoc(doc(dbService, 'post', docId));
-  console.log('데이터가 삭제되었습니다.');
 };
 
 //* 스토어에 데이터 수정하기
 export const updateData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
-  console.log('데이터가 수정되었습니다.');
 };
 
 //* 댓글 가져오기
@@ -197,9 +193,7 @@ export const getCollection = async () => {
   const querySnapshot = await getDocs(collection(dbService, 'collection'));
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
-    // console.log('doc.id: ', doc.id);
   });
-  console.log('collection데이터를 불러왔습니다.');
 
   return response;
 };
@@ -214,20 +208,17 @@ export const addCollectionData: any = ({ uid, collector }: any) => {
     },
     { merge: true }
   );
-  console.log('게시물이 저장되었습니다');
 };
 
 //* collection  데이터 삭제하기
 export const deleteCollectionData: any = ({ uid, collector }: any) => {
   updateDoc(doc(dbService, 'collection', uid), {
     collector: arrayRemove(collector),
-  }),
-    console.log('게시물이 삭제되었습니다');
+  });
 };
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
@@ -235,16 +226,13 @@ export const addFollowing: any = (data: any) => {
     },
     { merge: true }
   );
-  console.log('팔로잉이 추가되었습니다');
 };
 
 //* 팔로잉 삭제하기
 export const deleteFollwing: any = (data: any) => {
-  // console.log('data: ', data);
   updateDoc(doc(dbService, 'following', data.uid), {
     follow: arrayRemove(data.creator),
   });
-  console.log('팔로잉이 삭제되었습니다');
 };
 
 //* 팔로잉 가져오기
@@ -255,20 +243,17 @@ export const getFollwing = async () => {
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
   });
-  console.log('팔로잉 데이터를 불러왔습니다.');
 
   return response;
 };
 
 //* 유저 추가하기
 export const addUser: any = (data: any) => {
-  // console.log('data: ', data);
   setDoc(doc(dbService, 'user', data.uid), {
     uid: data.uid,
     userName: data.userName,
     userImg: data.userImg,
   });
-  console.log('유저 추가되었습니다');
 };
 
 //* 유저 가져오기
@@ -279,7 +264,6 @@ export const getUser = async () => {
   querySnapshot.forEach((doc) => {
     response.push({ ...doc.data() });
   });
-  console.log('유저 데이터를 불러왔습니다.');
 
   return response;
 };
@@ -287,7 +271,6 @@ export const getUser = async () => {
 //* 유저 수정하기
 export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);
-  console.log('유저가 수정되었습니다.');
 };
 
 //* post town 기준 데이터 가져오기
@@ -304,25 +287,6 @@ export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
   querySnapshot.forEach((doc) => {
     response.push({ id: doc.id, ...doc.data() });
   });
-  console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
 
   return response;
 };
-// //* post town 기준 데이터 가져오기
-// export const getTownDataJeju = async ({ queryKey }: { queryKey: string[] }) => {
-//   const [_, town] = queryKey;
-//   const response: any = [];
-//   let q = query(
-//     collection(dbService, 'post'),
-//     where('town', '==', town),
-//     orderBy('createdAt', 'desc')
-//   );
-
-//   const querySnapshot = await getDocs(q);
-//   querySnapshot.forEach((doc) => {
-//     response.push({ id: doc.id, ...doc.data() });
-//   });
-//   console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
-
-//   return response;
-// };

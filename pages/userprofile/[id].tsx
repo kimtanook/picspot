@@ -1,11 +1,9 @@
 import { getFollwing, getUser } from '@/api';
 import Header from '@/components/Header';
-import MyPostList from '@/components/mypage/MyPostList';
 import Seo from '@/components/Seo';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import CollectionList from '@/components/mypage/CollectionList';
 import styled from 'styled-components';
 import UserPostList from '@/components/userprofile/UserPostList';
 import UserCollectionList from '@/components/userprofile/UserCollectionList';
@@ -28,7 +26,6 @@ function Profile() {
   const FollowingData = getFollowingData?.filter(
     (item: { [key: string]: string }) => item.uid === userId
   );
-  console.log('getUserData : ', getUserData);
   return (
     <>
       <Seo title="My" />

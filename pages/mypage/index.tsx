@@ -4,16 +4,12 @@ import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
 import { getData, getFollwing, getUser } from '@/api';
 import { authService } from '@/firebase';
-import Image from 'next/image';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
-import Masonry from 'react-responsive-masonry';
-import Link from 'next/link';
 
 export default function Mypage() {
-  const [currentUser, setCurrentUser] = useState(false);
   const [onSpot, setOnSpot] = useState(true);
   const [more, setMore]: any = useState(true);
 

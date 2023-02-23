@@ -1,9 +1,7 @@
 import { getCollection, getData } from '@/api';
-import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import { v4 as uuidv4 } from 'uuid';
 import UserCollectionTown from './UserCollectionTown';
-import Masonry from 'react-responsive-masonry';
 
 const UserCollectionList = ({ userId }: { userId: string }) => {
   //* useQuery 사용해서 collection 데이터 불러오기
@@ -39,11 +37,9 @@ const UserCollectionList = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      {/* <Masonry columnsCount={3} style={{ gap: '45px' }}> */}
       {uniqueTownArray?.map((item: any) => (
         <UserCollectionTown key={uuidv4()} value={item} postUid={postUid} />
       ))}
-      {/* </Masonry> */}
     </>
   );
 };

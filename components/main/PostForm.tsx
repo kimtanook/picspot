@@ -3,12 +3,10 @@ import { useRef, useState } from 'react';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, visibleReset } from '@/api';
-import Dropdown from '../mypage/Dropdown';
 import styled from 'styled-components';
 import MapLandingPage from '../detail/MapLandingPage';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
-import { kMaxLength } from 'buffer';
 const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const queryClient = useQueryClient();
 
@@ -24,7 +22,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const [textareaCount, setTextareaCount] = useState(0);
 
   //* 드롭다운 상태
-  const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [city, setCity] = useState('제주시');
   const [town, setTown] = useState('구좌읍');
   const [title, setTitle] = useState('');
@@ -47,8 +44,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
     nickname: nickname,
   };
 
-  // console.log('imgUpload: ', imageUpload);
-
   //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData } = useMutation(addData);
 
@@ -67,8 +62,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
       setImageUpload(result);
     };
   };
-
-  // console.log('imgUpload: ', imageUpload);
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -98,10 +91,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
     }
 
     const imageRef = ref(storageService, `images/${uuidv4()}`);
-    console.log('imageRef: ', imageRef);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
-        console.log('사진이 업로드 되었습니다.');
         const response = url;
         postState = {
           ...postState,
@@ -109,13 +100,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
         };
         onAddData(postState, {
           onSuccess: () => {
-            console.log('포스트 추가 요청 성공');
             queryClient.invalidateQueries('infiniteData');
             setIsModalPostActive(false);
-          },
-
-          onError: () => {
-            console.log('포스트 추가 요청 실패');
           },
         });
       });

@@ -1,8 +1,8 @@
-import { authService, dbService } from '@/firebase';
+import { dbService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import Masonry from 'react-responsive-masonry';
 import UserItem from './UserItem';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -97,7 +97,6 @@ const MoreBtn = styled.button`
   margin-top: 20px;
   border: none;
   background-color: white;
-  /* border-bottom: 1px solid #555555; */
   :hover {
     font-size: 15px;
     transition: all 0.3s;

@@ -1,12 +1,8 @@
 import { authService, dbService } from '@/firebase';
-import Image from 'next/image';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import MyPostList from './MyPostList';
 import MyCollectItem from './MyCollectItem';
 
 const CollectorCategory = ({ value }: { value: string }) => {
@@ -24,18 +20,15 @@ const CollectorCategory = ({ value }: { value: string }) => {
     querySnapshot.forEach((doc) => {
       response.push({ id: doc.id, ...doc.data() });
     });
-    console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
 
     return response;
   };
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery(['data', value], getTownData);
-  // console.log('data:', data);
   const myPostList = data?.filter(
     (item: any) => item.creator === authService.currentUser?.uid
   );
-  console.log('myPostList', myPostList);
 
   return (
     <TownWrap>

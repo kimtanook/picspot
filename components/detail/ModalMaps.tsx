@@ -18,8 +18,6 @@ const ModalMaps = () => {
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
-  console.log('data', data);
-
   return (
     <div>
       <Map // 지도를 표시할 Container
