@@ -1,13 +1,10 @@
-import { getCollection, getData, getTownData, getTownDataJeju } from '@/api';
+import { getData } from '@/api';
 import { authService } from '@/firebase';
-import Image from 'next/image';
+
 import { useQuery } from 'react-query';
-import styled from 'styled-components';
-import Link from 'next/link';
-import { useState } from 'react';
-import { uuidv4 } from '@firebase/util';
-import Town from './Town';
 import Masonry from 'react-responsive-masonry';
+import { v4 as uuidv4 } from 'uuid';
+import Town from './Town';
 
 const MyPostList = ({ setMore, more }: any) => {
   //* useQuery 사용해서 데이터 불러오기
@@ -29,15 +26,18 @@ const MyPostList = ({ setMore, more }: any) => {
   const myCollectPostTown = myCollectPost?.map((item: any) => {
     return item.town;
   });
-  //* map돌린 배열에서 중복된 값 합치기
-  const myCollectTownArr = [...new Set(myCollectPostTown)];
-  // console.log('게시물들', myCollectTownArr);
+  //* 배열에서 중복된 값 합치기
+  const myCollectTownArr = myCollectPostTown?.filter(
+    (element: any, index: any) => {
+      return myCollectPostTown?.indexOf(element) === index;
+    }
+  );
 
   return (
     <>
       <Masonry columnsCount={3} style={{ gap: '45px' }}>
         {myCollectTownArr?.map((item: any) => (
-          <div>
+          <div key={uuidv4()}>
             <Town value={item} more={more} setMore={setMore} />
           </div>
         ))}

@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 
 const ChatItem = ({
   myName,
   item,
-  socketServer,
-  setChat,
-}: {
+}: // socketServer,
+// setChat,
+{
   myName: string | null | undefined;
   item: IMessage;
-  socketServer: string;
-  setChat: any;
+  // socketServer: string;
+  // setChat: Dispatch<SetStateAction<IMessage[]>>;
 }) => {
   const [userMenuToggle, setUserMenuToggle] = useState(false);
   const onClickUserMenuToggle = () => {

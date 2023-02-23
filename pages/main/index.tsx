@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ChangeEvent,
@@ -24,6 +24,8 @@ import { useRouter } from 'next/router';
 import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
+import PostForm from '@/components/main/PostForm';
+import ModalLogin from '@/components/ModalLogin';
 import Loading from '@/components/common/Loading';
 
 export default function Main() {
@@ -35,9 +37,18 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const [isModalActive, setIsModalActive] = useState(false);
+  const [isModalPostActive, setIsModalPostActive]: any = useState(false);
   const onClickToggleMapModal = useCallback(() => {
     setIsModalActive(!isModalActive);
   }, [isModalActive]);
+
+  // const onClickTogglePostModal = useCallback(() => {
+  //   setIsModalPostActive(!isModalPostActive);
+  // }, [isModalPostActive]);
+
+  const onClickTogglePostModal = () => {
+    setIsModalPostActive(true);
+  };
   const router = useRouter();
 
   const onClickToggleModal = () => {
@@ -126,15 +137,17 @@ export default function Main() {
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
       <MainContainer>
         <SearchAndForm>
-          <PostFormButton onClick={onClickToggleModal}>
+          <PostFormButton onClick={onClickTogglePostModal}>
             + 나의 스팟 추가
           </PostFormButton>
+
           <Search
             searchOptionRef={searchOptionRef}
             searchValue={searchValue}
             onChangeSearchValue={onChangeSearchValue}
           />
         </SearchAndForm>
+
         <CategoriesWrap>
           <TownCategory>
             {selectCity === '제주시' ? (
@@ -142,11 +155,27 @@ export default function Main() {
                 <TownBtn onClick={onClickSelectTown} value="">
                   제주시
                 </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="구좌읍">
+                  구좌읍
+                </TownBtn>
                 <TownBtn onClick={onClickSelectTown} value="애월읍">
                   애월읍
                 </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="남원읍">
-                  남원읍
+
+                <TownBtn onClick={onClickSelectTown} value="우도면">
+                  우도면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="추자면">
+                  추자면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한경면">
+                  한경면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한림읍">
+                  한림읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="조천읍">
+                  조천읍
                 </TownBtn>
               </div>
             ) : selectCity === '서귀포시' ? (
@@ -160,11 +189,23 @@ export default function Main() {
                 <TownBtn onClick={onClickSelectTown} value="대정읍">
                   대정읍
                 </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="성산읍">
+                  성산읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="안덕면">
+                  안덕면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="남원읍">
+                  남원읍
+                </TownBtn>
               </div>
             ) : (
               <div>
                 <TownBtn onClick={onClickSelectTown} value="">
                   제주전체
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="구좌읍">
+                  구좌읍
                 </TownBtn>
                 <TownBtn onClick={onClickSelectTown} value="표선면">
                   표선면
@@ -178,10 +219,40 @@ export default function Main() {
                 <TownBtn onClick={onClickSelectTown} value="남원읍">
                   남원읍
                 </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="성산읍">
+                  성산읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="안덕면">
+                  안덕면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="우도면">
+                  우도면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="추자면">
+                  추자면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한경면">
+                  한경면
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="한림읍">
+                  한림읍
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="조천읍">
+                  조천읍
+                </TownBtn>
               </div>
             )}
           </TownCategory>
         </CategoriesWrap>
+
+        {isOpenModal && (
+          <Modal
+            onClickToggleModal={onClickToggleModal}
+            setOpenModal={setOpenModal}
+          >
+            <div>children</div>
+          </Modal>
+        )}
 
         {isOpenModal && (
           <Modal
@@ -199,24 +270,15 @@ export default function Main() {
             <div>데이터를 불러오지 못했습니다.</div>
           ) : (
             <GridBox>
-              <ResponsiveMasonry
-                columnsCountBreakPoints={{
-                  600: 1,
-                  900: 2,
-                  1366: 3,
-                  1440: 4,
-                }}
-              >
-                <Masonry columnsCount={4}>
-                  {data?.pages.map((data) =>
-                    data?.map((item: any) => (
-                      <ItemBox key={uuidv4()}>
-                        <Content item={item} />
-                      </ItemBox>
-                    ))
-                  )}
-                </Masonry>
-              </ResponsiveMasonry>
+              <Masonry columnsCount={4}>
+                {data?.pages.map((data) =>
+                  data?.map((item: any) => (
+                    <ItemBox key={uuidv4()}>
+                      <Content item={item} />
+                    </ItemBox>
+                  ))
+                )}
+              </Masonry>
             </GridBox>
           )}
 
@@ -233,13 +295,18 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-        <MapModalBtn onClick={onClickToggleMapModal}>
-          <div>
-            <PinImg src="/pin.png" />
-          </div>
-          <div>지도에서 핀 보기</div>
-        </MapModalBtn>
 
+        {isModalPostActive ? (
+          <CustomModal
+            modal={isModalPostActive}
+            setModal={setIsModalPostActive}
+            width="1100"
+            height="632"
+            element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
+          />
+        ) : (
+          ''
+        )}
         {isModalActive ? (
           <CustomModal
             modal={isModalActive}
@@ -251,6 +318,14 @@ export default function Main() {
         ) : (
           ''
         )}
+
+        <MapModalBtn onClick={onClickToggleMapModal}>
+          <div>
+            <PinImg src="/pin.png" />
+          </div>
+          <div>지도에서 핀 보기</div>
+        </MapModalBtn>
+
         <TopBtn
           onClick={() => scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
         >
@@ -262,8 +337,8 @@ export default function Main() {
 }
 
 const MainContainer = styled.div`
-  width: 1440px;
-  margin: auto;
+  /* width: 1440px;
+  margin: auto; */
 `;
 
 const SearchAndForm = styled.div`
@@ -312,15 +387,6 @@ const TownBtn = styled.button`
 const GridBox = styled.div`
   margin: auto;
   width: 1188px;
-  @media only screen and (max-width: 1366px) {
-    width: 1000px;
-  }
-  @media only screen and (max-width: 900px) {
-    width: 560px;
-  }
-  @media only screen and (max-width: 600px) {
-    width: 380px;
-  }
 `;
 const ItemBox = styled.div`
   margin: 0px 5px 20px 5px;
@@ -386,5 +452,4 @@ const TopBtn = styled.button`
   :hover {
     background-color: #fed474;
   }
-  /* transform: translate(-50%, -50%); */
 `;

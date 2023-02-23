@@ -10,14 +10,13 @@ const Header = ({
   selectCity,
   onChangeSelectCity,
 }: {
-  selectCity: string;
-  onChangeSelectCity: ChangeEventHandler<HTMLSelectElement>;
+  selectCity: string | undefined;
+  onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const router = useRouter();
-  // console.log('router : ', router.route);
   const nowUser = authService.currentUser;
   // 로그인 모달 창 버튼
   const closeLoginModalButton = () => {

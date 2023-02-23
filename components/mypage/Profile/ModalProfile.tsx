@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
@@ -21,7 +27,6 @@ interface Props {
   imgEdit: string;
   setImgEdit: Dispatch<SetStateAction<string>>;
   nicknameEdit: string;
-  saveImgFile: () => void;
 }
 
 function ModalProfile(props: Props) {
@@ -29,8 +34,11 @@ function ModalProfile(props: Props) {
     props.editProfileModal();
   }
   const [saveInformation, setSaveInformation] = useState<boolean>(false);
-  const [nicknamePwToggle, setNicknamePwToggle] = useState(false);
-  const [newNickname, setNewNickname] = useState<string>('');
+  const [nicknameToggle, setNicknameToggle] = useState(false);
+  const [pwToggle, setPwToggle] = useState(false);
+  const [newNickname, setNewNickname] = useState<string>(
+    authService?.currentUser?.displayName as string
+  );
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -64,25 +72,10 @@ function ModalProfile(props: Props) {
       });
     props.setImgEdit(imgFile as string);
   };
-  const onClickToggleModal = () => {
-    if (!authService.currentUser) {
-      setNicknamePwToggle(!nicknamePwToggle);
-      return;
-    }
-  };
-  // 전체 프로필 수정을 완료하기
-  //  const profileEditComplete = async () => {
-  //   const imgRef = ref(
-  //     storageService,
-  //     `${authService.currentUser?.uid}${uuidv4()}`
-  //   );
 
   // 프로필 사진 변경 후 변경 사항 유지하기
   const saveImgFile = () => {
-    console.log('사진 클릭');
-    console.log(imgRef.current);
     if (imgRef.current?.files) {
-      console.log('이프문 통과');
       const file = imgRef.current.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -133,15 +126,19 @@ function ModalProfile(props: Props) {
         setError('Failed Change Profile');
       });
   };
-
+  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setNickname(e.target.value);
+  // };
   return (
     <ModalStyled onClick={editProfileModal}>
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
+        {/* 좌측 상단 취소 버튼 */}
         <StHeder onClick={props.profileEditCancle}> 〈 취소 </StHeder>
         <ProfileContainerForm onSubmit={handleSubmit(onSubmit)}>
           <ProfileTextDiv>
             <b>회원정보 변경</b>
           </ProfileTextDiv>
+          {/* 사진 변경 또는 삭제 */}
           <div>
             <ProfilePhotoDeleteBtn onClick={deleteImgFile}>
               <div>
@@ -171,79 +168,112 @@ function ModalProfile(props: Props) {
               onChange={saveImgFile}
               ref={imgRef}
             />
-            <NicknameToggleBtn onClick={onClickToggleModal}>
-              닉네임 변경하기
-            </NicknameToggleBtn>
-            <EditNicknameInput
-              minLength={2}
-              name="username"
-              type="username"
-              id="username"
-              value={newNickname}
-              ref={nameRef}
-              defaultValue={authService.currentUser?.displayName!}
-              onChange={(event) => setNewNickname(event.target.value)}
-              placeholder="닉네임을 입력해 주세요"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  handleSubmit(onSubmit);
-                }
+            {/* 닉네임 변경 */}
+            <NicknameToggleContainer
+              // ref={nameRef}
+              // value={newNickname || props.nicknameEdit}
+              onClick={() => {
+                setNicknameToggle((e) => !e);
               }}
-            />
+            >
+              <NicknameToggleText>
+                닉네임 변경하기
+                {nicknameToggle ? (
+                  <CloseNicknameToggleImg src="/under-arrow.png" />
+                ) : (
+                  <OpenNicknameToggleImg src="/right-arrow.png" />
+                )}
+              </NicknameToggleText>
+            </NicknameToggleContainer>
+            {nicknameToggle && (
+              <EditNicknameInput
+                minLength={2}
+                name="newNickname"
+                type="username"
+                id="newNickname"
+                value={newNickname}
+                ref={nameRef}
+                defaultValue={authService.currentUser?.displayName!}
+                onChange={(event) => setNewNickname(event.target.value)}
+                placeholder="닉네임을 입력해 주세요"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              />
+            )}
             <ProfileWarn>{errors?.nickname?.message}</ProfileWarn>
-            <PwToggleBtn onClick={onClickToggleModal}>
-              <div>비밀번호 변경하기</div>
-              <div></div>
-            </PwToggleBtn>
-            <EditPwInput
-              {...register('newPassword', {
-                required: '비밀번호를 입력해주세요.',
-                minLength: {
-                  value: 8,
-                  message:
-                    '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
-                },
-                pattern: {
-                  value:
-                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                  message:
-                    '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
-                },
-              })}
-              name="password"
-              type="password"
-              id="password"
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
-              placeholder="비밀번호를 입력해주세요"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  handleSubmit(onSubmit);
-                }
+
+            {/* 비밀번호 변경 */}
+            <PwToggleContainer
+              onClick={() => {
+                setPwToggle((e) => !e);
               }}
-            />
+            >
+              <PwToggleText>
+                비밀번호 변경하기
+                {pwToggle ? (
+                  <ClosePwToggleImg src="/under-arrow.png" />
+                ) : (
+                  <OpenPwToggleImg src="/right-arrow.png" />
+                )}
+              </PwToggleText>
+            </PwToggleContainer>
+            {pwToggle && (
+              <EditPwInput
+                {...register('newPassword', {
+                  required: '비밀번호를 입력해주세요.',
+                  minLength: {
+                    value: 8,
+                    message:
+                      '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                    message:
+                      '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                  },
+                })}
+                name="password"
+                type="password"
+                id="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                placeholder="비밀번호를 입력해주세요"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              />
+            )}
             <ProfileWarn>{errors?.newPassword?.message}</ProfileWarn>
-            <EditPwConfirmInput
-              {...register('confirm', {
-                required: '비밀번호를 입력해주세요.',
-                minLength: {
-                  value: 8,
-                  message: '입력하신 비밀번호와 일치하지 않아요',
-                },
-              })}
-              autoComplete="new-password"
-              name="confirm"
-              type="password"
-              id="confirm"
-              value={confirm}
-              onChange={(event) => setConfirm(event.target.value)}
-              placeholder="비밀번호를 다시한번 입력해 주세요"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  handleSubmit(onSubmit);
-                }
-              }}
-            />
+            {/* 비밀번호 확인 */}
+            {pwToggle && (
+              <EditPwConfirmInput
+                {...register('confirm', {
+                  required: '비밀번호를 입력해주세요.',
+                  minLength: {
+                    value: 8,
+                    message: '입력하신 비밀번호와 일치하지 않아요',
+                  },
+                })}
+                autoComplete="new-password"
+                name="confirm"
+                type="password"
+                id="confirm"
+                value={confirm}
+                onChange={(event) => setConfirm(event.target.value)}
+                placeholder="비밀번호를 다시한번 입력해 주세요"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(onSubmit);
+                  }
+                }}
+              />
+            )}
             <ProfileWarn>{errors?.confirm?.message}</ProfileWarn>
           </EditProfileContainer>
           <SaveEditBtnContainer>
@@ -300,9 +330,22 @@ const StHeder = styled.header`
   color: #1882ff;
   font-size: 14px;
 `;
+const ProfilePhotoDeleteBtn = styled.div`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+const CancleImg = styled.img`
+  margin-left: 100px;
+`;
+const ProfilePhotoLabel = styled.label`
+  cursor: pointer;
+`;
+const ProfilePhotoInput = styled.input``;
+
 const ProfileTextDiv = styled.div`
   margin-top: 1vh;
-  font-family: 'Noto Sans CJK KR';
+  /* font-family: 'Noto Sans CJK KR'; */
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
@@ -342,7 +385,6 @@ const ProfilePhotoHover = styled.div<{ img: string }>`
       rgba(33, 33, 33, 0.6),
       rgba(33, 33, 33, 0.6)
     );
-
     color: white;
   }
 `;
@@ -354,44 +396,114 @@ const EditProfileContainer = styled.div`
   margin: 0 auto;
   margin-top: 30px;
 `;
-const NicknameToggleBtn = styled.button`
-  border: none;
+const NicknameToggleContainer = styled.div`
   background-color: transparent;
-  cursor: pointer;
-  width: 130px;
+  width: 470px;
   height: 24px;
   z-index: 2;
-  font-size: 16px;
+  display: 'flex';
+  padding: '10px';
+  box-sizing: 'border-box';
+  cursor: pointer;
 `;
-
+const NicknameToggleText = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 700;
+  font-weight: bold;
+  line-height: 24px;
+  letter-spacing: -0.025em;
+  color: #212121;
+`;
+const OpenNicknameToggleImg = styled.img`
+  position: absolute;
+  width: 12.03px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
+`;
+const CloseNicknameToggleImg = styled.img`
+  position: absolute;
+  width: 18px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
+`;
 const EditNicknameInput = styled.input`
   height: 48px;
   padding-left: 10px;
   background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
+  border: 1px solid #1882ff;
+  margin-top: 8px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: right center;
+  background-position-x: 440px;
 `;
-const PwToggleBtn = styled.button`
-  border: none;
+const PwToggleContainer = styled.div`
   background-color: transparent;
-  cursor: pointer;
-  width: 130px;
+  width: 470px;
   height: 24px;
   z-index: 2;
+  display: 'flex';
+  padding: '10px';
+  box-sizing: 'border-box';
+  cursor: pointer;
+`;
+const PwToggleText = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
   font-size: 16px;
+  font-weight: 700;
+  font-weight: bold;
+  line-height: 24px;
+  letter-spacing: -0.025em;
+  color: #212121;
+`;
+const OpenPwToggleImg = styled.img`
+  position: absolute;
+  width: 12.03px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
+`;
+const ClosePwToggleImg = styled.img`
+  position: absolute;
+  width: 18px;
+  height: 15px;
+  left: 510px;
+  top: 267px;
+  background: transparent;
 `;
 
 const EditPwInput = styled.input`
   height: 48px;
   padding-left: 10px;
   background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-  margin-top: 30px;
+  border: 1px solid #1882ff;
+  margin-top: 8px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: right center;
+  background-position-x: 440px;
 `;
 const EditPwConfirmInput = styled.input`
   height: 48px;
   padding-left: 10px;
   background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
+  border: 1px solid #1882ff;
+
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: right center;
+  background-position-x: 440px;
 `;
 const ProfileWarn = styled.p`
   color: red;
@@ -402,7 +514,9 @@ const SaveEditBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  width: 90%;
+  width: 470px;
+  bottom: 120px;
+  position: fixed;
 `;
 const SaveEditBtn = styled.button`
   display: flex;
@@ -418,15 +532,3 @@ const SaveEditBtn = styled.button`
     cursor: pointer;
   }
 `;
-const ProfilePhotoDeleteBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-const CancleImg = styled.img`
-  margin-left: 100px;
-`;
-const ProfilePhotoLabel = styled.label`
-  cursor: pointer;
-`;
-const ProfilePhotoInput = styled.input``;

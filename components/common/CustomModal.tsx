@@ -40,7 +40,7 @@ const Container = styled.div<{ width: string; height: string }>`
   height: ${(props) => props.height}px;
   padding: 8px;
   background-color: white;
-  border-radius: 8px;
+
   z-index: 2000;
   color: black;
   display: flex;
@@ -48,7 +48,7 @@ const Container = styled.div<{ width: string; height: string }>`
   flex-direction: column;
   align-items: center;
   font-size: 24px;
-  border: 0.3px solid black;
+  border: 1px solid gray;
 `;
 
 const Canvas = styled.div`
@@ -57,7 +57,7 @@ const Canvas = styled.div`
   left: 0;
   width: 100vw;
   height: 200vh;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1;
 `;
 
