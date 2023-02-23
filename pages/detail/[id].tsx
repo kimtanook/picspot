@@ -27,9 +27,6 @@ const Post = ({ id }: any) => {
     setSearchCategory(e.target.value);
   };
 
-  // console.log('saveLatLng: ', saveLatLng);
-  // console.log('saveAddress: ', saveAddress);
-
   //* Text 관련
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
@@ -161,22 +158,16 @@ const Post = ({ id }: any) => {
 
 export default Post;
 
-const StDetailContainer = styled.div`
-  /* width: 1440px;
-  margin: auto; */
-`;
+const StDetailContainer = styled.div``;
 
 const StDetailContents = styled.div`
   position: relative;
   top: 50px;
-  /* margin: auto; */
   display: flex;
   justify-content: center;
-  /* width: 80%; */
 `;
 
 const StImgAndProfileAndFollowingAndCollection = styled.div`
-  /* width: 30%; */
   margin-right: 20px;
 `;
 
@@ -193,9 +184,7 @@ const StProfileAndFollwing = styled.div`
   flex-direction: row;
 `;
 
-const StListAndMapAndComment = styled.div`
-  /* width: 50%; */
-`;
+const StListAndMapAndComment = styled.div``;
 
 //* SSR방식으로 server에서 id 값 보내기
 export async function getServerSideProps(context: { params: any }) {

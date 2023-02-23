@@ -105,8 +105,6 @@ const DetailMaps = ({
       }
     });
   }, [searchPlace]);
-  // console.log('saveLatLng', saveLatLng);
-  // console.log('saveAddress', saveAddress);
 
   return <div id="map" style={{ width: '100%', height: '200px' }}></div>;
 };

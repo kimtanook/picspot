@@ -10,10 +10,6 @@ function CommentItem({
   item: commentItemType;
   postId: string | string[] | undefined;
 }) {
-  // console.log('item: ', item);
-  // console.log('item.userImg: ', item.userImg);
-  // console.log('item.userName: ', item.userName);
-
   const queryClient = useQueryClient();
   const { isLoading, mutate } = useMutation(deleteComment);
 
