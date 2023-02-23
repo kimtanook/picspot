@@ -1,4 +1,9 @@
-import { addCollectionData, deleteCollectionData, getCollection } from '@/api';
+import {
+  addCollectionData,
+  deleteCollectionData,
+  getCollection,
+  visibleReset,
+} from '@/api';
 
 import { useEffect, useState } from 'react';
 
@@ -8,6 +13,12 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 const CollectionButton = ({ item }: any) => {
+  //* 현재 나의 uid
+  const collector = authService.currentUser?.uid;
+  let postId = item.id;
+
+  const queryClient = useQueryClient();
+
   //* collection 저장 토글 state
   const [isCollect, setIsCollect] = useState(true);
   //* useQuery 사용해서 collection 데이터 불러오기
@@ -21,7 +32,7 @@ const CollectionButton = ({ item }: any) => {
   const { mutate: onAddCollection } = useMutation(addCollectionData, {
     onSuccess: () => {
       console.log('collection 저장 성공');
-      // queryClient.invalidateQueries('collectiondata');
+      setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
     onError: () => {
       console.log('collection 요청 실패');
@@ -32,7 +43,7 @@ const CollectionButton = ({ item }: any) => {
   const { mutate: onDeleteCollection } = useMutation(deleteCollectionData, {
     onSuccess: () => {
       console.log('collection 삭제 성공');
-      // queryClient.invalidateQueries('collectiondata');
+      setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
     onError: () => {
       console.log('collection 요청 실패');
@@ -40,7 +51,7 @@ const CollectionButton = ({ item }: any) => {
   });
 
   //* collection 저장 기능입니다.
-  const onClickCollection = (item: any) => {
+  const onClickCollection = () => {
     onAddCollection({
       ...item,
       uid: postId,
@@ -50,7 +61,7 @@ const CollectionButton = ({ item }: any) => {
   };
 
   //* collection 삭제 기능입니다.
-  const deleteCollection = (item: any) => {
+  const deleteCollection = () => {
     onDeleteCollection({
       ...item,
       uid: postId,
@@ -60,7 +71,6 @@ const CollectionButton = ({ item }: any) => {
   };
 
   //* collector필드의 배열값
-  let postId = item.id;
   const collectorUid = collectionData
     ?.filter((item: any) => {
       return item.uid === postId;
@@ -68,10 +78,8 @@ const CollectionButton = ({ item }: any) => {
     .find((item: any) => {
       return item.collector;
     })?.collector;
-  // console.log('collectorUid: ', collectorUid);
 
-  //* 현재 나의 uid
-  const collector = authService.currentUser?.uid;
+  console.log('collectorUid: ', collectorUid);
 
   //* useEffect로 collection 상태 예외처리 하기
   useEffect(() => {
@@ -86,13 +94,17 @@ const CollectionButton = ({ item }: any) => {
   if (isError) return <h1>통신이 불안정합니다</h1>;
   return (
     <StCollectionContainer>
-      <StCollectionText>{collectorUid.length}</StCollectionText>
+      {collectorUid ? (
+        <StCollectionText>{collectorUid.length}</StCollectionText>
+      ) : (
+        0
+      )}
       {isCollect ? (
-        <StCollectionBtn onClick={() => onClickCollection(item)}>
+        <StCollectionBtn onClick={onClickCollection}>
           <Image src="/before_save.svg" alt="image" width={30} height={30} />
         </StCollectionBtn>
       ) : (
-        <StCollectionBtn onClick={() => deleteCollection(item)}>
+        <StCollectionBtn onClick={deleteCollection}>
           <Image src="/save_icon.svg" alt="image" width={30} height={30} />
         </StCollectionBtn>
       )}

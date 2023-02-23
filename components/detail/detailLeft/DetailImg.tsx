@@ -5,7 +5,6 @@ const DetailImg = ({ item }: any) => {
   return (
     <StDetailImgContainer>
       <StDetailImg src={item.imgUrl} alt="image" />
-      {/* <Image src={item.imgUrl} alt="image" height={500} width={500} /> */}
     </StDetailImgContainer>
   );
 };
@@ -14,7 +13,7 @@ export default DetailImg;
 
 const StDetailImgContainer = styled.div`
   background-color: #f1f1f1;
-  height: 100%;
+  height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;

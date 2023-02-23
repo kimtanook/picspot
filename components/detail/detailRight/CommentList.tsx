@@ -1,0 +1,118 @@
+import { addComment, getComment } from '@/api';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import CommentItem from './CommentItem';
+import { v4 as uuidv4 } from 'uuid';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { authService } from '@/firebase';
+import styled from 'styled-components';
+
+const CommentList = ({ postId }: postId) => {
+  const queryClient = useQueryClient();
+  const [comment, setComment] = useState('');
+  const { data, isLoading } = useQuery(['comments', postId], getComment);
+  const { isLoading: commentLoading, mutate: commentMutate } =
+    useMutation(addComment);
+
+  const onChangeComment = (event: ChangeEvent<HTMLInputElement>) => {
+    setComment(event.target.value);
+  };
+
+  const submitCommentData = {
+    creatorUid: authService.currentUser?.uid,
+    userName: authService.currentUser?.displayName,
+    userImg: authService.currentUser?.photoURL,
+    contents: comment,
+    createdAt: Date.now(),
+  };
+
+  const onSubmitComment = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!authService.currentUser) {
+      return alert('로그인 후 댓글을 남겨보세요!');
+    } else if (comment) {
+      commentMutate(
+        { postId, submitCommentData },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries('comments');
+          },
+        }
+      );
+      setComment('');
+    } else {
+      alert('댓글을 입력해주세요!');
+    }
+  };
+
+  if (isLoading) {
+    return <div>로딩중입니다</div>;
+  }
+  return (
+    <StCommentContainer>
+      <StCommentBox>
+        {data.map((item: commentItemType) => (
+          <CommentItem key={uuidv4()} item={item} postId={postId} />
+        ))}
+      </StCommentBox>
+      <StForm onSubmit={onSubmitComment}>
+        <StInput
+          onChange={onChangeComment}
+          value={comment}
+          placeholder={
+            authService.currentUser
+              ? '댓글을 남겨보세요!'
+              : '로그인 후 댓글을 남겨보세요!'
+          }
+          disabled={authService.currentUser ? false : true}
+        />
+        <StInputBtnContainer>
+          <span style={{ color: '#8E8E93', paddingTop: 3 }}>0/30</span>
+          <StInputBtn>댓글 등록</StInputBtn>
+        </StInputBtnContainer>
+      </StForm>
+    </StCommentContainer>
+  );
+};
+export default CommentList;
+
+const StCommentContainer = styled.div``;
+
+const StCommentBox = styled.div`
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+`;
+
+const StForm = styled.form`
+  display: flex;
+  justify-content: space-between;
+  background-color: #f8f8f8;
+  height: 50px;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const StInput = styled.input`
+  background-color: #f8f8f8;
+  border: transparent;
+  height: 20px;
+  width: 70%;
+`;
+
+const StInputBtnContainer = styled.div`
+  display: flex;
+`;
+
+const StInputBtn = styled.button`
+  cursor: pointer;
+  background-color: #4cb2f6;
+  color: white;
+  border-radius: 5px;
+  width: 80px;
+  height: 25px;
+  text-align: center;
+  font-size: 12px;
+  margin-left: 10px;
+  border: transparent;
+`;

@@ -32,11 +32,11 @@ const StProfileCotainer = styled.div`
 
 const StProfileImg = styled.img`
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   margin-right: 10px;
 `;
 
 const StProfileName = styled.div`
-  font-size: 10px;
+  /* font-size: 10px; */
 `;

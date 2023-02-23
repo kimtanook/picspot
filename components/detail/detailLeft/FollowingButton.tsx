@@ -121,7 +121,7 @@ const StFollowingBtn = styled.div`
   text-align: center;
   color: white;
   cursor: pointer;
-  padding-top: 10px;
+  padding-top: 5px;
   :hover {
     background-color: #4cb2f6;
   }

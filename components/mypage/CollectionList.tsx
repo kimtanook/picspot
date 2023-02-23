@@ -11,7 +11,7 @@ const CollectionList = ({ postData }: any) => {
   const [toggle, setToggle]: any = useState(false);
 
   //* useQuery 사용해서 collection 데이터 불러오기
-  const { data: collectionData } = useQuery('collectiondata', getCollection);
+  const { data: collectionData } = useQuery('collectiondata2', getCollection);
 
   //* collector들 닉네임 뽑아오기
   //* collector에서 내 id를 가진 값 찾기

@@ -227,7 +227,7 @@ export default function Main() {
             </ResponsiveMasonry>
           </GridBox>
         )}
-
+  
         <ChatWrap>
           <div>{chatToggle ? <Chat /> : null}</div>
           <ChatToggleBtn onClick={onClickChatToggle}>

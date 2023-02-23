@@ -4,14 +4,15 @@ import Seo from '@/components/Seo';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
-import CommentList from '@/components/detail/CommentList';
+import CommentList from '@/components/detail/detailRight/CommentList';
 import FollowingButton from '@/components/detail/detailLeft/FollowingButton';
 import { authService } from '@/firebase';
 import DetailBox from '@/components/detail/DetailBox';
-import DetailMap from '@/components/detail/DetailMap';
+import DetailMap from '@/components/detail/detailRight/DetailMap';
 import CollectionButton from '@/components/detail/detailLeft/CollectionButton';
 import DetailImg from '@/components/detail/detailLeft/DetailImg';
 import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
+import DetailList from '@/components/detail/detailRight/DetailList';
 
 const Post = ({ id }: any) => {
   //* DetailMap state
@@ -126,7 +127,9 @@ const Post = ({ id }: any) => {
               </StProfileAndFollowingAndCollection>
             </StImgAndProfileAndFollowingAndCollection>
 
-            <StDetailAndMapAndComment>
+            <StListAndMapAndComment>
+              <DetailList item={item} />
+
               <DetailMap
                 item={item}
                 setIsOpen={setIsOpen}
@@ -142,7 +145,7 @@ const Post = ({ id }: any) => {
               />
 
               <CommentList postId={id} />
-            </StDetailAndMapAndComment>
+            </StListAndMapAndComment>
           </StDetailContents>
         ))}
     </StDetailContainer>
@@ -160,13 +163,14 @@ const StDetailContents = styled.div`
   position: relative;
   top: 50px;
   margin: auto;
-  height: 500px;
   display: flex;
+  justify-content: center;
   width: 80%;
 `;
 
 const StImgAndProfileAndFollowingAndCollection = styled.div`
-  width: 35%;
+  width: 30%;
+  margin-right: 20px;
 `;
 
 const StProfileAndFollowingAndCollection = styled.div`
@@ -174,7 +178,7 @@ const StProfileAndFollowingAndCollection = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 10%;
+  padding: 10px;
 `;
 
 const StProfileAndFollwing = styled.div`
@@ -182,7 +186,7 @@ const StProfileAndFollwing = styled.div`
   flex-direction: row;
 `;
 
-const StDetailAndMapAndComment = styled.div`
+const StListAndMapAndComment = styled.div`
   width: 50%;
 `;
 
