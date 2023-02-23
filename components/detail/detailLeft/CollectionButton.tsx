@@ -93,8 +93,6 @@ const CollectionButton = ({ item }: any) => {
   if (isLoading) return <h1>로딩중 입니다</h1>;
   if (isError) return <h1>통신이 불안정합니다</h1>;
 
-  return <div></div>;
-
   //* 컬렉팅한 사람은 컬렉팅 삭제 버튼이 컬렉팅 하지 않은 사람은 컬렉팅 추가 버튼을 보이도록 하기
   //* 비회원 or 자기 자신 포스트에는 컬렉팅 버튼이 안보이도록 하기
   if (
@@ -120,6 +118,8 @@ const CollectionButton = ({ item }: any) => {
       </StCollectionContainer>
     );
   }
+
+  return <div></div>;
 };
 
 export default CollectionButton;

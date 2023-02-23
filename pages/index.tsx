@@ -11,12 +11,19 @@ function Landing() {
   return (
     <LandingWrap>
       <LandContainer>
-        <LandingTitle>
-          제주의 멋진 사진이 있는 스팟을 찾아 픽해보세요!
-        </LandingTitle>
+        <LogoTitleWrap>
+          <LogoImg src="logo.png" />
+          <LandingTitle>
+            <div>제주의 멋진 사진이 있는</div> &nbsp;
+            <BoldFont>픽스팟에서 인생샷 명소</BoldFont>
+            <div>를 찾아보세요!</div>
+          </LandingTitle>
+        </LogoTitleWrap>
+        <CloudTop src="/landing/cloud_1.svg" />
+        <CloudBottom src="/landing/cloud_2.svg" />
         <LandTop>
           <Image
-            src={imageTopHover ? '/land-top-hover.png' : '/land-top.png'}
+            src={imageTopHover ? '/landing/top-hover.svg' : '/landing/top.svg'}
             onMouseOver={() => setImageTopHover(true)}
             onMouseOut={() => setImageTopHover(false)}
             onClick={() =>
@@ -26,14 +33,16 @@ function Landing() {
               })
             }
             alt="land-top"
-            height={168}
-            width={694}
+            height={208.82}
+            width={692.61}
           />
         </LandTop>
         <LandBottom>
           <Image
             src={
-              imageBottomHover ? '/land-bottom-hover.png' : '/land-bottom.png'
+              imageBottomHover
+                ? '/landing/bottom-hover.svg'
+                : '/landing/bottom.svg'
             }
             onMouseOver={() => setImageBottomHover(true)}
             onMouseOut={() => setImageBottomHover(false)}
@@ -44,8 +53,8 @@ function Landing() {
               })
             }
             alt="land-bottom"
-            height={168}
-            width={694}
+            height={229.41}
+            width={708.27}
           />
         </LandBottom>
         <SkipButton
@@ -66,10 +75,10 @@ function Landing() {
 export default Landing;
 
 const LandingWrap = styled.div`
-  margin: auto;
-  /* background-color: aqua; */
-  width: 1440px;
-  height: 810px;
+  background-color: #ececec;
+  display: inherit;
+  height: 100vh;
+  margin: -10px;
 `;
 const LandContainer = styled.div`
   display: flex;
@@ -78,32 +87,57 @@ const LandContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* background-color: aqua; */
   width: 700px;
   height: 700px;
 `;
+const LogoTitleWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const LogoImg = styled.img`
+  width: 190px;
+  height: 52px;
+`;
 const LandingTitle = styled.div`
+  display: flex;
+  flex-direction: row;
   margin-top: 50px;
-  font-size: 24px;
+  font-size: 20px;
+`;
+const BoldFont = styled.div`
+  font-weight: 700;
+`;
+const CloudTop = styled.img`
+  width: 214px;
+  height: 100px;
+  position: absolute;
+  top: 23%;
+  left: 80%;
+  transform: translate(50%, -50%);
+`;
+const CloudBottom = styled.img`
+  width: 214px;
+  height: 100px;
+  position: absolute;
+  top: 75%;
+  left: -5%;
+  transform: translate(-50%, -50%);
 `;
 const LandTop = styled.div`
   position: absolute;
-  top: 20%;
-  left: 49%;
+  top: 39.5%;
+  left: 50.5%;
   transform: translate(-50%, -50%);
-  /* background-color: red; */
-  rotate: -20deg;
   :hover {
     cursor: pointer;
   }
 `;
 const LandBottom = styled.div`
   position: absolute;
-  top: 39%;
-  left: 55%;
+  top: 61%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  /* background-color: blue; */
-  rotate: -20deg;
   :hover {
     cursor: pointer;
   }
