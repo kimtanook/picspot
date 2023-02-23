@@ -146,17 +146,7 @@ export default function Main() {
           <PostFormButton onClick={onClickTogglePostModal}>
             + 나의 스팟 추가
           </PostFormButton>
-          {isModalPostActive ? (
-            <CustomModal
-              modal={isModalPostActive}
-              setModal={setIsModalPostActive}
-              width="952"
-              height="632"
-              element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
-            />
-          ) : (
-            ''
-          )}
+
           <Search
             searchOptionRef={searchOptionRef}
             searchValue={searchValue}
@@ -312,7 +302,17 @@ export default function Main() {
         </div>
         <div>지도에서 핀 보기</div>
       </MapModalBtn>
-
+      {isModalPostActive ? (
+        <CustomModal
+          modal={isModalPostActive}
+          setModal={setIsModalPostActive}
+          width="950"
+          height="632"
+          element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
+        />
+      ) : (
+        ''
+      )}
       {isModalActive ? (
         <CustomModal
           modal={isModalActive}
