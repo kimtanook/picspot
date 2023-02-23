@@ -24,11 +24,9 @@ export default function Mypage() {
     isLoading,
     isError,
   } = useQuery('followingData', getFollwing);
-  // console.log('followingData: ', followingData);
 
   //* useQuery 사용해서 userData 데이터 불러오기
   const { data: userData } = useQuery('userData', getUser);
-  // console.log('userData: ', userData);
 
   //* 팔로잉한 사람 프로필 닉네임 뽑아오기
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
@@ -39,13 +37,11 @@ export default function Mypage() {
     ?.find((item: any) => {
       return item.follow;
     })?.follow;
-  // console.log('authFollowingUid: ', authFollowingUid);
 
   //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
   const followingUser = userData?.filter((item: any) =>
     authFollowingUid?.includes(item.uid)
   );
-  // console.log('followingUser: ', followingUser);
 
   // 팔로잉 하는 사람 숫자
   const followingCount = authFollowingUid.length;
@@ -70,7 +66,7 @@ export default function Mypage() {
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>
-        <div style={{ paddingBottom: '10px' }}>
+        <div style={{ margin: '40px 0px 10px 0px' }}>
           {onSpot ? (
             <>
               <BlackBtn onClick={() => setOnSpot(true)}>게시한 스팟</BlackBtn>

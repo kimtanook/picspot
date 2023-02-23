@@ -1,18 +1,25 @@
 import Link from 'next/link';
 import React from 'react';
+import Masonry from 'react-responsive-masonry';
 import styled from 'styled-components';
 
 export default function MorePost({ item }: any) {
+  console.log('item??:', item);
   return (
-    <Link href={`/detail/${item.id}`}>
-      <h1>더보기 기능 구현할 예정입니다!!</h1>
-      <CollectionImg src={item.imgUrl} />
-    </Link>
+    <div
+      style={{
+        display: 'flex',
+      }}
+    >
+      <Link href={`/detail/${item.id}`}>
+        <CollectionImg src={item.imgUrl} />
+      </Link>
+    </div>
   );
 }
 const CollectionImg = styled.img`
-  width: 170px;
-  margin-bottom: 10px;
+  width: 279px;
+  margin-bottom: 20px;
   :hover {
     transition: all 0.3s;
     transform: scale(1.03);
