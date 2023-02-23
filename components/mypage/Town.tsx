@@ -4,10 +4,8 @@ import styled from 'styled-components';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import MyCollectItem from './MyCollectItem';
 import Masonry from 'react-responsive-masonry';
-import MorePost from './MorePost';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
-import { isTemplateExpression } from 'typescript';
 
 const Town = ({ value }: any) => {
   const [scroll, setScroll] = useState(true);
@@ -26,7 +24,6 @@ const Town = ({ value }: any) => {
     querySnapshot.forEach((doc) => {
       response.push({ id: doc.id, ...doc.data() });
     });
-    console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
 
     return response;
   };
@@ -39,7 +36,6 @@ const Town = ({ value }: any) => {
   const myPostList = data?.filter(
     (item: any) => item.creator === authService.currentUser?.uid
   );
-  console.log('myPostList', myPostList);
   const a = myPostList?.map((item: any) => item.town);
   return (
     <div>
@@ -132,34 +128,3 @@ const MoreBtn = styled.button`
     transition: all 0.3s;
   }
 `;
-
-////////////////////////////////? 더보기 more 버튼기능 로직입니다 ( 중간발표 후 작업하겠습니다)//////////////////////////////
-// const [townName, setTownName] = useState('');
-// const onClickBtn = () => {
-//   setMore(false);
-//   setTownName(a);
-// };
-//* postData의 id가 collection uid와 같다면 postData id 출력하기
-// const postId = postData?.filter((item: any) =>
-//   collectorId?.includes(item.id)
-// );
-// return
-//   <Testdiv>
-//     <MyPostTownTitle>{townName}</MyPostTownTitle>
-//     <Masonry columnsCount={4} style={{ gap: '10px' }}>
-//       {onClickMoreData?.map((item: any) => (
-//         <MorePostList>
-//           <MorePost item={item} />
-//         </MorePostList>
-//       ))}
-//     </Masonry>
-//   </Testdiv>
-// </> */}
-// const MorePostList = styled.div`
-//   width: 1180px;
-// `;
-// const Testdiv = styled.div`
-//   margin: auto;
-//   width: 1188px;
-// `;
-////////////////////////////////?////////////////////////////////?////////////////////////////////?

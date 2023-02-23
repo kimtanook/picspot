@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { authService, storageService } from '@/firebase';
 import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
@@ -26,16 +26,6 @@ const Profile = ({ followingCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
-
-  // 프로필 수정하기
-  // const profileEdit = () => {
-  //   localStorage.removeItem('imgURL');
-  //   setEditProfileModal(!editProfileModal);
-  // };
-
-  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setNicknameEdit(e.target.value);
-  // };
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -93,14 +83,7 @@ const Profile = ({ followingCount }: propsType) => {
       userName: nicknameEdit,
       userImg: downloadUrl,
     };
-    onUpdateUser(editUser, {
-      onSuccess: () => {
-        console.log('유저수정 요청 성공');
-      },
-      onError: () => {
-        console.log('유저수정 요청 실패');
-      },
-    });
+    onUpdateUser(editUser);
 
     await updateProfile(authService?.currentUser!, {
       displayName: nicknameEdit,
@@ -111,9 +94,6 @@ const Profile = ({ followingCount }: propsType) => {
       })
       .then(() => {
         setEditProfileModal(!editProfileModal);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   };
 

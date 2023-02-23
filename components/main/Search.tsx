@@ -1,4 +1,4 @@
-import { ChangeEventHandler, RefObject, useState } from 'react';
+import { ChangeEventHandler, RefObject } from 'react';
 import styled from 'styled-components';
 
 const Search = ({

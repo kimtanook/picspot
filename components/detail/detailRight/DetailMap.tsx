@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import {
-  CustomOverlayMap,
   Map,
   MapMarker,
   MapTypeControl,
@@ -12,10 +11,7 @@ import DetailMapLanding from './DetailMapLanding';
 const DetailMap = ({
   item,
   editBtnToggle,
-  setEditBtnToggle,
   setIsOpen,
-  isOpen,
-  inputToggle,
   searchCategory,
   saveLatLng,
   setSaveLatLng,
@@ -24,9 +20,6 @@ const DetailMap = ({
   setPlace,
   place,
 }: any) => {
-  // console.log('saveLatLng: ', saveLatLng);
-  // console.log('saveAddress: ', saveAddress);
-
   if (editBtnToggle) {
     return (
       <div>

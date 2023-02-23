@@ -1,16 +1,10 @@
-import React, {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
 import { useForm } from 'react-hook-form';
-import { authService, storageService } from '@/firebase';
+import { authService } from '@/firebase';
 import Image from 'next/image';
 
 const imgFile = '/profileicon.svg';
@@ -65,11 +59,8 @@ function ModalProfile(props: Props) {
     await updateProfile(authService?.currentUser!, {
       displayName: props.nicknameEdit,
       photoURL: '',
-    })
-      .then((res) => {})
-      .catch((error) => {
-        console.log(error);
-      });
+    });
+
     props.setImgEdit(imgFile as string);
   };
 

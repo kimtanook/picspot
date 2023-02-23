@@ -155,7 +155,7 @@ const Chat = () => {
     // useEffect clean 함수
     if (socket) return () => socket.disconnect();
   }, []);
-  console.log('chatUsers : ', chatUsers);
+
   return (
     <ComponentContainer>
       <div>
