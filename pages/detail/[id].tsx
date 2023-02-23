@@ -1,13 +1,11 @@
 import Header from '@/components/Header';
-import { getData, getUser, postCounter } from '@/api';
+import { getData, postCounter } from '@/api';
 import Seo from '@/components/Seo';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/detailRight/CommentList';
 import FollowingButton from '@/components/detail/detailLeft/FollowingButton';
-import { authService } from '@/firebase';
-import DetailBox from '@/components/detail/DetailBox';
 import DetailMap from '@/components/detail/detailRight/DetailMap';
 import CollectionButton from '@/components/detail/detailLeft/CollectionButton';
 import DetailImg from '@/components/detail/detailLeft/DetailImg';
@@ -15,41 +13,29 @@ import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
 
 const Post = ({ id }: any) => {
-  //* DetailMap state
+  //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
   const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveAddress, setSaveAddress]: any = useState('');
 
-  // console.log('saveLatLng: ', saveLatLng);
-  // console.log('saveAddress: ', saveAddress);
-
   //? 카테고리버튼 눌렀을 때 실행하는 함수
   const [place, setPlace] = useState('');
   const onClickEditTown = (e: any) => {
     setPlace('');
-    setEditTown(e.target.innerText);
-    setSearchCategory(e.target.innerText);
+    setEditTown(e.target.value);
+    setSearchCategory(e.target.value);
   };
 
-  //* DetailBox state
-  const [dropdownToggle, setDropdownToggle] = useState(false);
+  // console.log('saveLatLng: ', saveLatLng);
+  // console.log('saveAddress: ', saveAddress);
+
+  //* Text 관련
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
-  const [imageUpload, setImageUpload]: any = useState(null);
-
-  let editState = {
-    title: editTitle,
-    content: editContent,
-    city: editCity,
-    town: editTown,
-    imgUrl: '',
-    lat: saveLatLng.Ma,
-    long: saveLatLng.La,
-    address: saveAddress,
-  };
+  // const [imageUpload, setImageUpload]: any = useState(null);
 
   //* input 토글
   const [inputToggle, setInputToggle] = useState(false);
@@ -57,12 +43,29 @@ const Post = ({ id }: any) => {
   //* collection 저장 state
   const [isOpen, setIsOpen] = useState(false);
 
+  const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
+  const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+
+  const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
+
+  //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
+
+  //* 데이터 수정 시 보내주는 데이터
+  let editData = {
+    title: editTitle,
+    content: editContent,
+    city: editCity,
+    town: editTown,
+    lat: saveLatLng.Ma,
+    long: saveLatLng.La,
+    address: saveAddress,
+  };
+
   //* useQuery 사용해서 포스트 데이터 불러오기
   const { data: detail, isLoading, isError } = useQuery('detailData', getData);
-
-  //* useQuery 사용해서 유저 데이터 불러오기
-  // const { data: user } = useQuery('data', getUser);
-  // console.log('user: ', user);
 
   const queryClient = useQueryClient();
 
@@ -84,7 +87,7 @@ const Post = ({ id }: any) => {
   return (
     <StDetailContainer>
       <Seo title="Detail" />
-      <Header />
+      <Header selectCity={undefined} onChangeSelectCity={undefined} />
 
       {detail
         ?.filter((item: any) => {
@@ -93,29 +96,12 @@ const Post = ({ id }: any) => {
         .map((item: any) => (
           <StDetailContents key={item.id}>
             <StImgAndProfileAndFollowingAndCollection>
-              <DetailImg item={item} />
-
-              {/* <DetailBox
+              <DetailImg
                 item={item}
-                inputToggle={inputToggle}
-                setInputToggle={setInputToggle}
-                setImageUpload={setImageUpload}
                 imageUpload={imageUpload}
-                editTitle={editTitle}
-                editContent={editContent}
-                editCity={editCity}
-                editTown={editTown}
-                editState={editState}
-                setEditTitle={setEditTitle}
-                setEditContent={setEditContent}
-                setEditCity={setEditCity}
-                setEditTown={setEditTown}
-                setDropdownToggle={setDropdownToggle}
-                dropdownToggle={dropdownToggle}
-                onClickEditTown={onClickEditTown}
-                setSaveLatLng={setSaveLatLng}
-                setSaveAddress={setSaveAddress}
-              /> */}
+                setImageUpload={setImageUpload}
+                editImg={editImg}
+              />
 
               <StProfileAndFollowingAndCollection>
                 <StProfileAndFollwing>
@@ -128,10 +114,31 @@ const Post = ({ id }: any) => {
             </StImgAndProfileAndFollowingAndCollection>
 
             <StListAndMapAndComment>
-              <DetailList item={item} />
+              <DetailList
+                item={item}
+                editBtnToggle={editBtnToggle}
+                onClickEditToggle={onClickEditToggle}
+                editTitle={editTitle}
+                setEditTitle={setEditTitle}
+                editContent={editContent}
+                setEditContent={setEditContent}
+                editCity={editCity}
+                setEditCity={setEditCity}
+                editTown={editTown}
+                setEditTown={setEditTown}
+                onClickEditTown={onClickEditTown}
+                editData={editData}
+                saveLatLng={saveLatLng}
+                setSaveLatLng={setSaveLatLng}
+                saveAddress={saveAddress}
+                setSaveAddress={setSaveAddress}
+                setEditBtnToggle={setEditBtnToggle}
+              />
 
               <DetailMap
                 item={item}
+                editBtnToggle={editBtnToggle}
+                setEditBtnToggle={setEditBtnToggle}
                 setIsOpen={setIsOpen}
                 isOpen={isOpen}
                 inputToggle={inputToggle}

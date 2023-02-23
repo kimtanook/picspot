@@ -5,6 +5,7 @@ import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import MyCollectPost from './MyCollectPost';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { useState } from 'react';
+import { uuidv4 } from '@firebase/util';
 
 const CollectionCategory = ({ value, postData, collectionData }: any) => {
   const [scroll, setScroll] = useState(true);
@@ -53,7 +54,7 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
         <MySpotImg>
           <Masonry columnsCount={2} style={{ gap: '-10px' }}>
             {MyCollectionTownItem?.map((item: any) => (
-              <MyCollectPost item={item} />
+              <MyCollectPost item={item} key={uuidv4()} />
             ))}
           </Masonry>
         </MySpotImg>
@@ -61,7 +62,7 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
         <MoreMySpotImg>
           <Masonry columnsCount={2} style={{ gap: '-10px' }}>
             {MyCollectionTownItem?.map((item: any) => (
-              <MyCollectPost item={item} />
+              <MyCollectPost item={item} key={uuidv4()} />
             ))}
           </Masonry>
         </MoreMySpotImg>

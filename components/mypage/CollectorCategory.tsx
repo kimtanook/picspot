@@ -1,4 +1,3 @@
-import { getCollection, getData, getTownData, getTownDataJeju } from '@/api';
 import { authService, dbService } from '@/firebase';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
@@ -42,7 +41,7 @@ const CollectorCategory = ({ value }: { value: string }) => {
     <TownWrap>
       <div>{value}</div>
       {myPostList?.map((item: any) => (
-        <MyCollectItem item={item} />
+        <MyCollectItem key={uuidv4()} item={item} />
       ))}
     </TownWrap>
   );

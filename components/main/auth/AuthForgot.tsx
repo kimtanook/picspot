@@ -85,6 +85,7 @@ const StHeder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
+  display: flex;
 `;
 
 const ForgotText = styled.div`

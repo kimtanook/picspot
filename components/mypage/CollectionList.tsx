@@ -1,11 +1,6 @@
-import { getCollection, getData, getTownData, getTownDataJeju } from '@/api';
+import { getCollection } from '@/api';
 import { authService } from '@/firebase';
-import Image from 'next/image';
 import { useQuery } from 'react-query';
-import styled from 'styled-components';
-import Link from 'next/link';
-import { useState } from 'react';
-import Town from './Town';
 import CollectionCategory from './CollectionCategory';
 import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,8 +30,11 @@ const CollectionList = ({ postData }: any) => {
     return item.town;
   });
   //* 배열에서 중복된 값 합치기
-  let myCollectionTownArr = [...new Set(myCollectionTown)];
-
+  const myCollectionTownArr = myCollectionTown?.filter(
+    (element: any, index: any) => {
+      return myCollectionTown?.indexOf(element) === index;
+    }
+  );
   return (
     <>
       <Masonry columnsCount={3} style={{ gap: '45px' }}>
