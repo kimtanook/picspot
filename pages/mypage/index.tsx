@@ -11,6 +11,7 @@ import { uuidv4 } from '@firebase/util';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import Masonry from 'react-responsive-masonry';
+import Link from 'next/link';
 
 interface propsType {
   followingCount: number;
@@ -65,15 +66,17 @@ export default function Mypage({ followingCount, followerCount }: propsType) {
   return (
     <>
       <Seo title="My" />
-      <Header />
+      <Header selectCity={undefined} onChangeSelectCity={undefined} />
       <MyContainer>
         <MyProfileContainer>
           <Profile />
         </MyProfileContainer>
         {followingUser?.map((item: any) => (
           <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-            <div>{item.userName}</div>
-            <Image src={item.userImg} alt="image" height={100} width={100} />
+            <Link href={`/userprofile/${item.uid}`}>
+              <div>{item.userName}</div>
+              <Image src={item.userImg} alt="image" height={100} width={100} />
+            </Link>
           </div>
         ))}
       </MyContainer>
