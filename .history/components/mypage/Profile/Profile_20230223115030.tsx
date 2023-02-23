@@ -241,19 +241,16 @@ const MyProfileFollowing = styled.div`
   padding: 7%;
   width: 90px;
   height: 85px;
-  text-align: center;
 `;
 
 const FollowingText = styled.div`
   color: 5B5B5F;
-  font-size: 20px;
-  padding-top: 10px;
+  font-size: 18px;
+  /* width: 90px;
+  height: 85px; */
+  text-align: center;
 `;
-const FollowingCount = styled.div`
-  color: #212121;
-  font-size: 24px;
-  padding: 10px;
-`;
+const FollowingCount = styled.div``;
 
 const MyProfileFollower = styled.div`
   border-radius: 20px;
@@ -261,15 +258,12 @@ const MyProfileFollower = styled.div`
   padding: 7%;
   width: 90px;
   height: 85px;
-  text-align: center;
 `;
 const FollowerText = styled.div`
   color: 5B5B5F;
-  font-size: 20px;
-  padding-top: 10px;
+  font-size: 18px;
+  /* width: 90px;
+  height: 85px; */
+  text-align: center;
 `;
-const FollowerCount = styled.div`
-  color: #212121;
-  font-size: 20px;
-  padding: 10px;
-`;
+const FollowerCount = styled.div``;

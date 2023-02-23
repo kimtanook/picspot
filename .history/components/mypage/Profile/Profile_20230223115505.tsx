@@ -247,7 +247,7 @@ const MyProfileFollowing = styled.div`
 const FollowingText = styled.div`
   color: 5B5B5F;
   font-size: 20px;
-  padding-top: 10px;
+  padding: 10px;
 `;
 const FollowingCount = styled.div`
   color: #212121;
@@ -266,7 +266,7 @@ const MyProfileFollower = styled.div`
 const FollowerText = styled.div`
   color: 5B5B5F;
   font-size: 20px;
-  padding-top: 10px;
+  padding: 10px;
 `;
 const FollowerCount = styled.div`
   color: #212121;

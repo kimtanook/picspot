@@ -21,7 +21,6 @@ interface Props {
   imgEdit: string;
   setImgEdit: Dispatch<SetStateAction<string>>;
   nicknameEdit: string;
-  saveImgFile: () => void;
 }
 
 function ModalProfile(props: Props) {

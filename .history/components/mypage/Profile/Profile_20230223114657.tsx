@@ -228,6 +228,7 @@ const LogoutButton = styled.button`
   font-size: 14px;
   width: 80px;
   height: 40px;
+
   cursor: pointer;
 `;
 const Follow = styled.div`
@@ -236,40 +237,28 @@ const Follow = styled.div`
   margin-top: 10px;
 `;
 const MyProfileFollowing = styled.div`
+  color: 5B5B5F;
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 7%;
+  font-size: 18pt;
   width: 90px;
   height: 85px;
   text-align: center;
 `;
 
-const FollowingText = styled.div`
-  color: 5B5B5F;
-  font-size: 20px;
-  padding-top: 10px;
-`;
-const FollowingCount = styled.div`
-  color: #212121;
-  font-size: 24px;
-  padding: 10px;
-`;
+const FollowingText = styled.div``;
+const FollowingCount = styled.div``;
 
 const MyProfileFollower = styled.div`
+  color: 5B5B5F;
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 7%;
+  font-size: 18pt;
   width: 90px;
   height: 85px;
   text-align: center;
 `;
-const FollowerText = styled.div`
-  color: 5B5B5F;
-  font-size: 20px;
-  padding-top: 10px;
-`;
-const FollowerCount = styled.div`
-  color: #212121;
-  font-size: 20px;
-  padding: 10px;
-`;
+const FollowerText = styled.div``;
+const FollowerCount = styled.div``;

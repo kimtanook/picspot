@@ -16,7 +16,7 @@ export default function Mypage() {
   const [currentUser, setCurrentUser] = useState(false);
   const [onSpot, setOnSpot] = useState(true);
   const [more, setMore]: any = useState(true);
-  const followingCount = getUser.length;
+  const followingCount = followingData.length;
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
