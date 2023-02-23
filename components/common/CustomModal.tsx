@@ -48,7 +48,7 @@ const Container = styled.div<{ width: string; height: string }>`
   flex-direction: column;
   align-items: center;
   font-size: 24px;
-  border: 0.3px solid black;
+  border: 1px solid gray;
 `;
 
 const Canvas = styled.div`

@@ -33,7 +33,14 @@ const MapLandingPage = ({
           onChange={onchange}
           value={inputText}
         />
-        <CustomButton width="60px" borderRadius="30px" height="35px">
+        <CustomButton
+          width="80px"
+          borderRadius="20px"
+          height="35px"
+          margin="20px 10px"
+          color="white"
+          backgroundColor="black"
+        >
           검색
         </CustomButton>
       </StyledForm>

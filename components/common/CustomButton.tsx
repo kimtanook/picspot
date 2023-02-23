@@ -15,23 +15,24 @@ interface ButtonProps {
 }
 
 export const CustomButton = styled.button<ButtonProps>`
-  background-color: ${(props) => props.backgroundColor || 'black'};
-  color: ${(props) => props.color || 'white'};
-  width: ${(props) => props.width || '60px'};
-  height: ${(props) => props.height || '20px'};
+  background-color: ${(props) => props.backgroundColor || '#e7e7e7'};
+  color: ${(props) => props.color || 'black'};
+  width: ${(props) => props.width || '50px'};
+  height: ${(props) => props.height || '25px'};
   font-size: ${(props) => props.fontSize || '16px'};
-  border-radius: ${(props) => props.borderRadius || '0px'};
+  border-radius: ${(props) => props.borderRadius || '25px'};
   padding: ${(props) => props.padding || '0px'};
   border: ${(props) => props.border || '1px solid black;'};
-  margin: ${(props) => props.margin || '20px 10px'};
+  margin: ${(props) => props.margin || '5px'};
+  border: ${(props) => props.border || 'none'};
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 
   &:disabled {
     opacity: 0.5;
   }
-  &:hover {
+  /* &:hover {
     cursor: pointer;
     scale: 1.02;
-  }
+  } */
 `;

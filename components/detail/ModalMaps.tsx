@@ -69,17 +69,21 @@ const ModalMaps = () => {
                             width={150}
                           />
                           <StOverLayHoverWrap>
-                            <StOveLayHoverIcon>이동 아이콘</StOveLayHoverIcon>
+                            <StOveLayHoverIcon>
+                              <SearchImage src="/seeDetailsicon.svg" />
+                            </StOveLayHoverIcon>
                             <StOverLayHoverText>글 보러가기</StOverLayHoverText>
                           </StOverLayHoverWrap>
                         </StOverLayImg>
                       </Link>
 
                       <StOverLayAddress>
+                        <SearchImage1 src="/search.svg" />{' '}
                         {item.address.slice(7, 20)}
                       </StOverLayAddress>
                       <StOverLayCounter>
-                        {item.clickCounter} view
+                        <SearchImage1 src="/search.svg" /> {item.clickCounter}{' '}
+                        view
                       </StOverLayCounter>
                     </StOverLayWrap>
                   </CustomOverlayMap>
@@ -125,15 +129,17 @@ const StOverLayAddress = styled.div`
   color: gray;
   font-size: 15px;
   position: relative;
-  margin-top: 10px;
-  text-align: center;
+  margin-top: 13px;
+  text-align: left;
+  margin-left: 10px;
 `;
 
 const StOverLayCounter = styled.div`
   font-size: 15px;
   color: cornflowerblue;
   font-weight: 600;
-  text-align: center;
+  text-align: left;
+  margin-left: 10px;
 `;
 
 const StOverLayClose = styled.div`
@@ -188,5 +194,16 @@ const StOverLayHoverText = styled.h2`
   text-overflow: ellipsis;
   white-space: nowrap;
   text-transform: uppercase;
+`;
+
+const SearchImage = styled.img`
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  margin-left: 5px;
+`;
+const SearchImage1 = styled.img`
+  width: 15px;
+  height: 15px;
 `;
 export default ModalMaps;

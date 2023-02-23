@@ -34,14 +34,18 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const [isModalActive, setIsModalActive] = useState(false);
-  const [isModalPostActive, setIsModalPostActive] = useState(false);
+  const [isModalPostActive, setIsModalPostActive]: any = useState(false);
   const onClickToggleMapModal = useCallback(() => {
     setIsModalActive(!isModalActive);
   }, [isModalActive]);
-  const onClickTogglePostModal = useCallback(() => {
-    setIsModalPostActive(!isModalPostActive);
-  }, [isModalPostActive]);
 
+  // const onClickTogglePostModal = useCallback(() => {
+  //   setIsModalPostActive(!isModalPostActive);
+  // }, [isModalPostActive]);
+
+  const onClickTogglePostModal = () => {
+    setIsModalPostActive(true);
+  };
   const router = useRouter();
 
   const onClickToggleModal = () => {
@@ -146,9 +150,9 @@ export default function Main() {
             <CustomModal
               modal={isModalPostActive}
               setModal={setIsModalPostActive}
-              width="1200"
-              height="600"
-              element={<PostForm />}
+              width="952"
+              height="632"
+              element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
             />
           ) : (
             ''
