@@ -26,7 +26,6 @@ const Profile = ({ followingCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
-  const imgRef = useRef<HTMLInputElement>(null);
 
   // 프로필 수정하기
   // const profileEdit = () => {
@@ -37,14 +36,6 @@ const Profile = ({ followingCount }: propsType) => {
   // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
   //   setNicknameEdit(e.target.value);
   // };
-  //* useMutation 사용해서 user 데이터 수정하기
-  const { mutate: onUpdateUser } = useMutation(updateUser);
-
-  let editUser: any = {
-    uid: authService.currentUser?.uid,
-    userName: '',
-    userImg: '',
-  };
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -57,6 +48,31 @@ const Profile = ({ followingCount }: propsType) => {
       setUserImg(authService.currentUser.photoURL);
     }
   }, [nowUser]);
+
+  // 로그아웃
+  const logOut = () => {
+    signOut(authService).then(() => {
+      // Sign-out successful.
+      localStorage.clear();
+      setCurrentUser(false);
+      customAlert('로그아웃에 성공하였습니다!');
+    });
+  };
+  // 전체 프로필 수정을 취소하기
+  const profileEditCancle = () => {
+    setImgEdit((authService?.currentUser?.photoURL as string) ?? imgFile);
+    setNicknameEdit(authService?.currentUser?.displayName as string);
+    setEditProfileModal(!editProfileModal);
+  };
+
+  //* useMutation 사용해서 user 데이터 수정하기
+  const { mutate: onUpdateUser } = useMutation(updateUser);
+
+  let editUser: any = {
+    uid: authService.currentUser?.uid,
+    userName: '',
+    userImg: '',
+  };
 
   // 전체 프로필 수정을 완료하기
   const profileEditComplete = async () => {
@@ -101,21 +117,6 @@ const Profile = ({ followingCount }: propsType) => {
       });
   };
 
-  // 전체 프로필 수정을 취소하기
-  const profileEditCancle = () => {
-    setImgEdit((authService?.currentUser?.photoURL as string) ?? imgFile);
-    setNicknameEdit(authService?.currentUser?.displayName as string);
-    setEditProfileModal(!editProfileModal);
-  };
-  // 로그아웃
-  const logOut = () => {
-    signOut(authService).then(() => {
-      // Sign-out successful.
-      localStorage.clear();
-      setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
-    });
-  };
   return (
     <ProfileContainer>
       {/* 프로필 수정 버튼 props */}
