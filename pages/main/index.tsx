@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ChangeEvent,
@@ -199,14 +199,6 @@ export default function Main() {
             <div>데이터를 불러오지 못했습니다.</div>
           ) : (
             <GridBox>
-              {/* <ResponsiveMasonry
-                columnsCountBreakPoints={{
-                  600: 1,
-                  900: 2,
-                  1366: 3,
-                  1440: 4,
-                }}
-              > */}
               <Masonry columnsCount={4}>
                 {data?.pages.map((data) =>
                   data?.map((item: any) => (
@@ -216,7 +208,6 @@ export default function Main() {
                   ))
                 )}
               </Masonry>
-              {/* </ResponsiveMasonry> */}
             </GridBox>
           )}
 
@@ -262,8 +253,8 @@ export default function Main() {
 }
 
 const MainContainer = styled.div`
-  width: 1440px;
-  margin: auto;
+  /* width: 1440px;
+  margin: auto; */
 `;
 
 const SearchAndForm = styled.div`
@@ -312,15 +303,6 @@ const TownBtn = styled.button`
 const GridBox = styled.div`
   margin: auto;
   width: 1188px;
-  /* @media only screen and (max-width: 1366px) {
-    width: 1000px;
-  }
-  @media only screen and (max-width: 900px) {
-    width: 560px;
-  }
-  @media only screen and (max-width: 600px) {
-    width: 380px;
-  } */
 `;
 const ItemBox = styled.div`
   margin: 0px 5px 20px 5px;
@@ -386,5 +368,4 @@ const TopBtn = styled.button`
   :hover {
     background-color: #fed474;
   }
-  /* transform: translate(-50%, -50%); */
 `;

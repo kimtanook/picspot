@@ -6,6 +6,7 @@ import MyCollectItem from './MyCollectItem';
 import Masonry from 'react-responsive-masonry';
 import MorePost from './MorePost';
 import { useState } from 'react';
+import { uuidv4 } from '@firebase/util';
 import { isTemplateExpression } from 'typescript';
 
 const Town = ({ value }: any) => {
@@ -40,7 +41,6 @@ const Town = ({ value }: any) => {
   );
   console.log('myPostList', myPostList);
   const a = myPostList?.map((item: any) => item.town);
-
   return (
     <div>
       <TownWrap>
@@ -51,9 +51,6 @@ const Town = ({ value }: any) => {
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '-10px' }}>
               {myPostList?.map((item: any) => (
-                <>
-                  <MyCollectItem item={item} />
-                </>
               ))}
             </Masonry>
           </MySpotImg>

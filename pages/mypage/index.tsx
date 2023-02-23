@@ -10,7 +10,8 @@ import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import Masonry from 'react-responsive-masonry';
-import { convertTypeAcquisitionFromJson } from 'typescript';
+import Link from 'next/link';
+
 
 export default function Mypage() {
   const [currentUser, setCurrentUser] = useState(false);
@@ -53,15 +54,17 @@ export default function Mypage() {
   return (
     <>
       <Seo title="My" />
-      <Header />
+      <Header selectCity={undefined} onChangeSelectCity={undefined} />
       <MyContainer>
         <MyProfileContainer>
           <Profile followingCount={followingCount} />
         </MyProfileContainer>
         {followingUser?.map((item: any) => (
           <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-            <div>{item.userName}</div>
-            <Image src={item.userImg} alt="image" height={100} width={100} />
+            <Link href={`/userprofile/${item.uid}`}>
+              <div>{item.userName}</div>
+              <Image src={item.userImg} alt="image" height={100} width={100} />
+            </Link>
           </div>
         ))}
       </MyContainer>
