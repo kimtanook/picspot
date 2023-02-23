@@ -7,7 +7,6 @@ import { authService } from '@/firebase';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { uuidv4 } from '@firebase/util';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import Masonry from 'react-responsive-masonry';
@@ -16,7 +15,6 @@ export default function Mypage() {
   const [currentUser, setCurrentUser] = useState(false);
   const [onSpot, setOnSpot] = useState(true);
   const [more, setMore]: any = useState(true);
-  const followingCount = getUser.length;
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
@@ -48,6 +46,9 @@ export default function Mypage() {
     authFollowingUid?.includes(item.uid)
   );
   // console.log('followingUser: ', followingUser);
+
+  // 팔로잉 하는 사람 숫자
+  const followingCount = authFollowingUid.length;
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;

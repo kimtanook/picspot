@@ -57,3 +57,10 @@ export { app, authService, dbService, storageService };
 //   storageBucket: "testpicspot.appspot.com",
 //   messagingSenderId: "110955419725",
 //   appId: "1:110955419725:web:7fad0ffe45eb75af49e404"
+
+// apiKey: 'AIzaSyAm1Oo1wlRi_pfmI4hiS_Z-xSURpgsSrX0',
+// authDomain: 'testpicspot.firebaseapp.com',
+// projectId: 'testpicspot',
+// storageBucket: 'testpicspot.appspot.com',
+// messagingSenderId: '110955419725',
+// appId: '1:110955419725:web:7fad0ffe45eb75af49e404',

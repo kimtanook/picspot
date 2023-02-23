@@ -126,7 +126,7 @@ const LoginTextDiv = styled.div`
   margin-top: 5vh;
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
-  font-size: 40px;
+  font-size: 20px;
   line-height: 138.5%;
   text-align: center;
   color: #212121;
@@ -137,29 +137,29 @@ const LoginEmailPwContainer = styled.div`
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 40px;
 `;
 
 const LoginEmailInput = styled.input`
-  height: 80px;
-  padding-left: 40px;
+  height: 40px;
+  padding-left: 10px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
-  font-size: 25px;
+  font-size: 15px;
 `;
 
 const LoginPwInput = styled.input`
-  height: 80px;
-  padding-left: 40px;
+  height: 40px;
+  padding-left: 10px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
-  margin-top: 40px;
-  font-size: 25px;
+  margin-top: 20px;
+  font-size: 15px;
 `;
 
 const AuthWarn = styled.p`
   color: red;
-  font-size: 20px;
+  font-size: 10px;
 `;
 
 const LoginBtnContainer = styled.div`
@@ -167,19 +167,19 @@ const LoginBtnContainer = styled.div`
   flex-direction: column;
   margin: 0 auto;
   width: 90%;
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 
 const LoginBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
+  height: 40px;
   border: transparent;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
-  font-size: 25px;
+  font-size: 15px;
 
   &:hover {
     cursor: pointer;
@@ -192,7 +192,7 @@ const PwForgotContainer = styled.span`
   align-items: center;
   padding: 10px;
   transition: color 0.2s ease-in;
-  margin-top: 30px;
+  margin-top: 10px;
   color: #1882ff;
 `;
 
@@ -200,7 +200,7 @@ const LoginGoogleContainer = styled.div`
   display: flex;
   width: 90%;
   margin: 0 auto;
-  margin-top: 70px;
+  margin-top: 30px;
 `;
 
 const LoginCheckContainer = styled.span`
@@ -209,14 +209,14 @@ const LoginCheckContainer = styled.span`
   align-items: center;
   padding: 10px;
   transition: color 0.2s ease-in;
-  margin-top: 30px;
+  margin-top: 20px;
   color: #1882ff;
 `;
 
 const LoginCheckSignDiv = styled.div`
   cursor: pointer;
   text-decoration: underline;
-  font-size: 25px;
+  font-size: 15px;
 `;
 
 export default Auth;
