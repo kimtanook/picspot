@@ -369,7 +369,9 @@ export default PostForm;
 
 const StPostFormWrap = styled.div`
   display: flex;
-  /* justify-content: center; */
+  /* background-color: Red; */
+  width: 1100px;
+  justify-content: space-evenly;
   /* align-items: center; */
   /* background-color: yellow; */
   /* border: 1px solid black; */

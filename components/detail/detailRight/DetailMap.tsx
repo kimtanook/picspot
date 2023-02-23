@@ -63,7 +63,7 @@ const DetailMap = ({
         />
         <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
         <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
-        {isOpen && (
+        {/* {isOpen && (
           <CustomOverlayMap
             position={{
               // 지도의 중심좌표
@@ -100,7 +100,7 @@ const DetailMap = ({
               </StOverLayInfo>
             </StOverLayWrap>
           </CustomOverlayMap>
-        )}
+        )} */}
       </Map>
     </StMapContainer>
   );

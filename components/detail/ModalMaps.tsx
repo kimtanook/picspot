@@ -78,12 +78,12 @@ const ModalMaps = () => {
                       </Link>
 
                       <StOverLayAddress>
-                        <SearchImage1 src="/search.svg" />{' '}
+                        <SearchImage1 src="/spot_icon.svg" />{' '}
                         {item.address.slice(7, 20)}
                       </StOverLayAddress>
                       <StOverLayCounter>
-                        <SearchImage1 src="/search.svg" /> {item.clickCounter}{' '}
-                        view
+                        <SearchImage2 src="/view_icon.svg" />{' '}
+                        {item.clickCounter} view
                       </StOverLayCounter>
                     </StOverLayWrap>
                   </CustomOverlayMap>
@@ -104,6 +104,7 @@ const StOverLayWrap = styled.div`
   box-shadow: 2.5px 5px 5px gray;
   border-radius: 3px;
   overflow: hidden;
+  position: relative;
 `;
 
 const StOverLayTitle = styled.div`
@@ -131,15 +132,16 @@ const StOverLayAddress = styled.div`
   position: relative;
   margin-top: 13px;
   text-align: left;
-  margin-left: 10px;
+  margin-left: 28px;
 `;
 
 const StOverLayCounter = styled.div`
-  font-size: 15px;
+  font-size: 16px;
   color: cornflowerblue;
   font-weight: 600;
   text-align: left;
-  margin-left: 10px;
+  margin-left: 32px;
+  margin-top: 3px;
 `;
 
 const StOverLayClose = styled.div`
@@ -203,7 +205,16 @@ const SearchImage = styled.img`
   margin-left: 5px;
 `;
 const SearchImage1 = styled.img`
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  left: -18px;
+`;
+const SearchImage2 = styled.img`
+  width: 25px;
+  height: 14px;
+  position: absolute;
+  left: 6px;
+  /* bottom: 0.1px; */
 `;
 export default ModalMaps;
