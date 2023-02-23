@@ -5,12 +5,12 @@ import AuthSignUp from './main/auth/AuthSignUp';
 import AuthForgot from './main/auth/AuthForgot';
 
 interface Props {
-  closeModal: () => void;
+  closeLoginModal: () => void;
 }
 
 function ModalLogin(props: Props) {
-  function closeModal() {
-    props.closeModal();
+  function closeLoginModal() {
+    props.closeLoginModal();
   }
   // 모달 창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
@@ -37,17 +37,17 @@ function ModalLogin(props: Props) {
     setForgotModal(!forgotModal);
   };
   return (
-    <ModalStyled onClick={closeModal}>
+    <ModalStyled onClick={closeLoginModal}>
       {forgotModal ? (
         <AuthForgot forgotModalButton={forgotModalButton} />
       ) : signUpModal ? (
         <AuthSignUp
           changeModalButton={changeModalButton}
-          closeModal={closeModal}
+          closeLoginModal={closeLoginModal}
         />
       ) : (
         <Auth
-          closeModal={closeModal}
+          closeLoginModal={closeLoginModal}
           forgotModalButton={forgotModalButton}
           changeModalButton={changeModalButton}
         />

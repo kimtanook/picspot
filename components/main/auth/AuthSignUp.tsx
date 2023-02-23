@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  updateProfile,
-} from 'firebase/auth';
-import AuthSocial from './AuthSocial';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
@@ -18,7 +13,7 @@ interface AuthForm {
 }
 interface Props {
   changeModalButton: () => void;
-  closeModal: () => void;
+  closeLoginModal: () => void;
 }
 
 const AuthSignUp = (props: Props) => {
@@ -50,7 +45,7 @@ const AuthSignUp = (props: Props) => {
           displayName: nickname,
         });
         customAlert('회원가입을 축하합니다!');
-        props.closeModal();
+        props.closeLoginModal();
       })
       .catch((error) => {
         if (error.code.includes('auth/weak-password')) {
@@ -65,7 +60,7 @@ const AuthSignUp = (props: Props) => {
         }
         if (error.code.includes('auth/invalid-display-name-in-use')) {
           setRegistering(false);
-          alert('별명이 이미 존재합니다');
+          alert('닉네임이 이미 존재합니다');
           return;
         }
         setRegistering(false);

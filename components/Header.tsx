@@ -25,8 +25,7 @@ const Header = () => {
   }, [nowUser]);
   return (
     <HeaderContainer>
-      {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-      {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
+      {/* picspot */}
       <Link href="/" style={{ color: 'black', textDecorationLine: 'none' }}>
         <Title
           onClick={() => {
@@ -38,7 +37,9 @@ const Header = () => {
         </Title>
       </Link>
       {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-      {closeLoginModal && <ModalLogin closeModal={closeLoginModalButton} />}
+      {closeLoginModal && (
+        <ModalLogin closeLoginModal={closeLoginModalButton} />
+      )}
       {currentUser ? (
         <div onClick={() => router.push('/mypage')}>
           {userImg ? (

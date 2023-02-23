@@ -1,12 +1,12 @@
 import Header from '@/components/Header';
-import { getData, getFollwing, getUser } from '@/api';
-import Profile from '@/components/mypage/Profile';
 import Seo from '@/components/Seo';
+import Profile from '@/components/mypage/Profile/Profile';
+import CollectionList from '@/components/mypage/CollectionList';
+import { getData, getFollwing, getUser } from '@/api';
 import { authService } from '@/firebase';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import CollectionList from '@/components/mypage/CollectionList';
 import { uuidv4 } from '@firebase/util';
 
 interface propsType {
@@ -23,7 +23,6 @@ type ProfileItemProps = {
 export default function Mypage({ followingCount, followerCount }: propsType) {
   console.log(authService.currentUser?.displayName);
   console.log(authService.currentUser?.photoURL);
-
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery('data', getData);
   //* useQuery 사용해서 following 데이터 불러오기
