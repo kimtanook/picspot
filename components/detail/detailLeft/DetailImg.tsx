@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
   // console.log('item.id', item.id);
@@ -36,7 +37,7 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
       customAlert('이미지를 추가해주세요.');
     }
 
-    const imageRef = ref(storageService, `images/${imageUpload.name}`);
+    const imageRef = ref(storageService, `images/${uuidv4()}`);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         console.log('사진이 업로드 되었습니다.');

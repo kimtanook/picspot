@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import {
   CustomOverlayMap,
   Map,
-  MapMarker,
   MapTypeControl,
-  useMap,
   ZoomControl,
 } from 'react-kakao-maps-sdk';
 import { useQuery } from 'react-query';

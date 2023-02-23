@@ -3,9 +3,9 @@ import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 const DetailList = ({
   item,
