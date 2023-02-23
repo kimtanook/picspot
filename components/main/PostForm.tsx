@@ -55,7 +55,7 @@ const PostForm = ({ setOpenModal }: any) => {
     } = e;
     const theFile = files[0];
     const reader = new FileReader();
-    reader.readAsDataURL(theFile);
+    reader?.readAsDataURL(theFile);
     reader.onloadend = (finishedEvent) => {
       const {
         currentTarget: { result },
@@ -246,7 +246,7 @@ const StAddButton = styled.button`
 const Img = styled.label`
   height: 100px;
   width: 100px;
-  background-image: url(/plusimage.png);
+  background-image: url(/Light.png);
   background-position: center;
   cursor: pointer;
   margin: 10px;
