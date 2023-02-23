@@ -13,7 +13,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import MapPanTo from './MapPanTo';
 const ModalMaps = () => {
-  const { data, isLoading, isError } = useQuery('detailData', getData);
+  const { data, isLoading, isError } = useQuery('bringData', getData);
   const [isOpen, setIsOpen]: any = useState(false);
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;

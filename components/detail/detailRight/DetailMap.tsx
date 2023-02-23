@@ -7,10 +7,12 @@ import {
   ZoomControl,
 } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import MapLandingPage from '../MapLandingPage';
+import DetailMapLanding from './DetailMapLanding';
 
 const DetailMap = ({
   item,
+  editBtnToggle,
+  setEditBtnToggle,
   setIsOpen,
   isOpen,
   inputToggle,
@@ -22,10 +24,13 @@ const DetailMap = ({
   setPlace,
   place,
 }: any) => {
-  if (inputToggle) {
+  // console.log('saveLatLng: ', saveLatLng);
+  // console.log('saveAddress: ', saveAddress);
+
+  if (editBtnToggle) {
     return (
       <div>
-        <MapLandingPage
+        <DetailMapLanding
           searchCategory={searchCategory}
           saveLatLng={saveLatLng}
           setSaveLatLng={setSaveLatLng}
