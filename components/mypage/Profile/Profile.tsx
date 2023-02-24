@@ -27,16 +27,6 @@ const Profile = ({ followingCount }: propsType) => {
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
 
-  // 프로필 수정하기
-  // const profileEdit = () => {
-  //   localStorage.removeItem('imgURL');
-  //   setEditProfileModal(!editProfileModal);
-  // };
-
-  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setNicknameEdit(e.target.value);
-  // };
-
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
     setEditProfileModal(!editProfileModal);
