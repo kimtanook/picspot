@@ -106,9 +106,9 @@ const Post = ({ id }: any) => {
               <StProfileAndFollowingAndCollection>
                 <StProfileAndFollwing>
                   <DetailProfile item={item} />
-                  <FollowingButton item={item} />
                 </StProfileAndFollwing>
 
+                <FollowingButton item={item} />
                 <CollectionButton item={item} />
               </StProfileAndFollowingAndCollection>
             </StImgAndProfileAndFollowingAndCollection>
@@ -161,40 +161,36 @@ const Post = ({ id }: any) => {
 
 export default Post;
 
-const StDetailContainer = styled.div`
-  /* width: 1440px;
-  margin: auto; */
-`;
+const StDetailContainer = styled.div``;
 
 const StDetailContents = styled.div`
   position: relative;
   top: 50px;
-  /* margin: auto; */
+  margin: auto;
   display: flex;
   justify-content: center;
-  /* width: 80%; */
+  gap: 80px;
+  width: 80%;
 `;
 
 const StImgAndProfileAndFollowingAndCollection = styled.div`
-  /* width: 30%; */
-  margin-right: 20px;
+  width: 30%;
 `;
 
 const StProfileAndFollowingAndCollection = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  width: 350px;
+  padding-top: 20px;
 `;
 
 const StProfileAndFollwing = styled.div`
   display: flex;
-  flex-direction: row;
 `;
 
 const StListAndMapAndComment = styled.div`
-  /* width: 50%; */
+  width: 50%;
 `;
 
 //* SSR방식으로 server에서 id 값 보내기

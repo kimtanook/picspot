@@ -115,7 +115,7 @@ const StInputBtn = styled.button`
   color: white;
   border-radius: 5px;
   width: 80px;
-  height: 25px;
+  height: 30px;
   text-align: center;
   margin-left: 10px;
   border: transparent;

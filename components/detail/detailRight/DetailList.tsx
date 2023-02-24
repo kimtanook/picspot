@@ -135,7 +135,7 @@ const DetailList = ({
           <StTown>{item.town}</StTown>
           <StAddress>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <span>{item.address}</span>
+            <StAddressText>{item.address}</StAddressText>
             <span
               style={{
                 marginLeft: 10,
@@ -257,7 +257,7 @@ export default DetailList;
 const StListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 `;
 
 const StTitleAndView = styled.div`
@@ -277,7 +277,7 @@ const StTitle = styled.div`
 const StTitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;
-  width: 250px;
+  width: 190px;
 `;
 
 const StView = styled.div`
@@ -289,6 +289,7 @@ const StView = styled.div`
 const StEditBtnCotainer = styled.div`
   display: flex;
   gap: 10px;
+  width: 350px;
 `;
 
 const StEditBtn = styled.div`
@@ -304,7 +305,7 @@ const StEditBtn = styled.div`
 
 const StCityAndTownAndAddress = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 10px;
 `;
 
 const StCity = styled.div`
@@ -313,7 +314,7 @@ const StCity = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 80px;
+  width: 100%;
   height: 40px;
   text-align: center;
   padding-top: 4px;
@@ -334,7 +335,7 @@ const StTown = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 80px;
+  width: 400px;
   height: 40px;
   text-align: center;
   padding-top: 4px;
@@ -353,6 +354,13 @@ const StAddress = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+`;
+
+const StAddressText = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const StContent = styled.div`
@@ -363,7 +371,7 @@ const StContent = styled.div`
   min-height: 50px;
   padding-left: 20px;
   color: #8e8e93;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 `;
 
 const StContentInput = styled.input`

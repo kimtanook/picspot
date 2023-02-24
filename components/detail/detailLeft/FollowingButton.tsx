@@ -126,14 +126,15 @@ const StFollowingContainer = styled.div`
 `;
 
 const StFollowingBtn = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #8e8e93;
   border-radius: 30px;
-  /* width: 60px; */
-  height: 20px;
+  height: 30px;
   text-align: center;
   color: white;
   cursor: pointer;
-  padding-top: 5px;
   :hover {
     background-color: #4cb2f6;
   }
