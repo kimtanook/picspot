@@ -8,15 +8,17 @@ import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
 
 const CommentList = ({ postId }: postId) => {
+  const [inputCount, setInputCount] = useState(0);
+
   const queryClient = useQueryClient();
   const [comment, setComment] = useState('');
   const { data, isLoading } = useQuery(['comments', postId], getComment);
   const { isLoading: commentLoading, mutate: commentMutate } =
     useMutation(addComment);
 
-  const onChangeComment = (event: ChangeEvent<HTMLInputElement>) => {
-    setComment(event.target.value);
-  };
+  // const onChangeComment = (event: ChangeEvent<HTMLInputElement>) => {
+  //   setComment(event.target.value);
+  // };
 
   const submitCommentData = {
     creatorUid: authService.currentUser?.uid,
@@ -60,7 +62,10 @@ const CommentList = ({ postId }: postId) => {
       </StCommentBox>
       <StForm onSubmit={onSubmitComment}>
         <StInput
-          onChange={onChangeComment}
+          onChange={(e) => {
+            setComment(e.target.value);
+            setInputCount(e.target.value.length);
+          }}
           value={comment}
           placeholder={
             authService.currentUser
@@ -70,7 +75,9 @@ const CommentList = ({ postId }: postId) => {
           disabled={authService.currentUser ? false : true}
         />
         <StInputBtnContainer>
-          <span style={{ color: '#8E8E93', paddingTop: 3 }}>0/30</span>
+          <span style={{ color: '#8E8E93', paddingTop: 6, width: 50 }}>
+            {inputCount} /30
+          </span>
           <StInputBtn>댓글 등록</StInputBtn>
         </StInputBtnContainer>
       </StForm>
@@ -115,7 +122,7 @@ const StInputBtn = styled.button`
   color: white;
   border-radius: 5px;
   width: 80px;
-  height: 25px;
+  height: 30px;
   text-align: center;
   margin-left: 10px;
   border: transparent;
