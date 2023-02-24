@@ -89,4 +89,3 @@
 |     <h4>마이 페이지</h4>     |    <img width="277" alt="mypage" src="">    |
 |   <h4>정보수정 페이지</h4>   |  <img width="277" alt="mypageedit" src="">  |
 |    <h4>로그인 페이지</h4>    |  <img width="277" alt="loginpage" src="">   |
-
