@@ -62,7 +62,14 @@ const Post = ({ id }: any) => {
   };
 
   //* useQuery 사용해서 포스트 데이터 불러오기
-  const { data: detail, isLoading, isError } = useQuery('detailData', getData);
+  const {
+    data: detail,
+    isLoading,
+    isError,
+  } = useQuery('detailData', getData, {
+    staleTime: 60 * 1000, // 1분, default >> 0
+    cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
+  });
 
   const queryClient = useQueryClient();
 
