@@ -9,40 +9,20 @@ const FollowingButton = ({ item }: any) => {
   const [follwingUserAndCreatorUidState, setFollwingUserAndCreatorUidState] =
     useState(false);
 
-  // console.log(authService.currentUser?.uid);
-  // console.log('item: ', item);
-  // console.log('data: ', data);
-
   //* mutation 사용해서 팔로잉 데이터 보내기
-  const { mutate: follwingMutate } = useMutation(addFollowing, {
-    onSuccess: () => {
-      console.log('팔로잉 요청 성공');
-    },
-    onError: () => {
-      console.log('팔로잉 요청 실패');
-    },
-  });
+  const { mutate: follwingMutate } = useMutation(addFollowing);
 
   //* 팔로잉버튼 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
-    console.log('팔로잉 버튼을 클릭했습니다.');
     follwingMutate({ ...item, uid: authService?.currentUser?.uid });
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
   };
 
   //* mutation 사용해서 팔로잉 삭제 데이터 보내기
-  const { mutate: deleteFollowingMutate } = useMutation(deleteFollwing, {
-    onSuccess: () => {
-      console.log('팔로잉 삭제 요청 성공');
-    },
-    onError: () => {
-      console.log('팔로잉 삭제 요청 실패');
-    },
-  });
+  const { mutate: deleteFollowingMutate } = useMutation(deleteFollwing);
 
   //* 팔로잉삭제 버튼 눌렀을때 실행하는 함수
   const onClickDeleteFollwing = (item: any) => {
-    console.log('팔로잉삭제 버튼을 클릭했습니다');
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
   };
@@ -62,7 +42,6 @@ const FollowingButton = ({ item }: any) => {
     .find((item: any) => {
       return item.follow;
     })?.follow;
-  // console.log('authFollowingUid: ', authFollowingUid);
 
   //! 기능
   //* 팔로잉을 한 유저가 페이지에 들어왔을때 팔로잉 취소버튼이,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -105,8 +105,6 @@ const Maps = ({
       }
     });
   }, [searchPlace]);
-  // console.log('saveLatLng', saveLatLng);
-  // console.log('saveAddress', saveAddress);
 
   return <div id="map" style={{ width: '620px', height: '650px' }}></div>;
 };

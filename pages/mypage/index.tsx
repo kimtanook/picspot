@@ -4,16 +4,12 @@ import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
 import { getData, getFollwing, getUser } from '@/api';
 import { authService } from '@/firebase';
-import Image from 'next/image';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
-import Masonry from 'react-responsive-masonry';
-import Link from 'next/link';
 
 export default function Mypage() {
-  const [currentUser, setCurrentUser] = useState(false);
   const [onSpot, setOnSpot] = useState(true);
   const [more, setMore]: any = useState(true);
 
@@ -31,14 +27,15 @@ export default function Mypage() {
 
   //* 팔로잉한 사람 프로필 닉네임 뽑아오기
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
-  const authFollowingUid = followingData
-    ?.filter((item: any) => {
-      return item.uid === authService?.currentUser?.uid;
-    })
-    ?.find((item: any) => {
-      return item.follow;
-    })?.follow;
-
+  const authFollowingUid =
+    followingData
+      ?.filter((item: any) => {
+        return item.uid === authService?.currentUser?.uid;
+      })
+      ?.find((item: any) => {
+        return item.follow;
+      })?.follow ?? [];
+  console.log(authFollowingUid);
   //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
   const followingUser = userData?.filter((item: any) =>
     authFollowingUid?.includes(item.uid)
@@ -46,7 +43,6 @@ export default function Mypage() {
 
   // 팔로잉 하는 사람 숫자
   const followingCount = authFollowingUid?.length;
-
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 

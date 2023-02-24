@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 
 const DetailList = ({
   item,
@@ -27,12 +26,6 @@ const DetailList = ({
   setSaveAddress,
   setEditBtnToggle,
 }: any) => {
-  // console.log('item.id', item.id);
-  // console.log(editTitle);
-  // console.log(editContent);
-  // console.log(editCity);
-  // console.log(editTown);
-
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
 
@@ -41,16 +34,11 @@ const DetailList = ({
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const onClickDelete = (docId: any) => {
-    console.log('게시물 삭제 버튼을 눌렀습니다.');
     onDeleteData(docId, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
-        console.log('삭제 요청 성공');
         customAlert('삭제를 완료하였습니다!');
         router.push('/main?city=제주전체');
-      },
-      onError: () => {
-        console.log('삭제 요청 실패');
       },
     });
     visibleReset();
@@ -89,7 +77,6 @@ const DetailList = ({
         //* invalidateQueries 실행이 완료되기 전에 화면이 보여지는 문제로 인해
         //* setTimeOut을 사용해 0.5초 뒤에 invalidateQueries가 실행되도록 했습니다.
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-        console.log('수정 요청 성공');
         customAlert('수정을 완료하였습니다!');
         setEditTitle('');
         setEditContent('');
@@ -98,9 +85,6 @@ const DetailList = ({
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
-      },
-      onError: () => {
-        console.log('수정 요청 실패');
       },
     });
   };

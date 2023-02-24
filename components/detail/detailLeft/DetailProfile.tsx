@@ -5,7 +5,6 @@ import styled from 'styled-components';
 const DetailProfile = ({ item }: any) => {
   //* useQuery 사용해서 유저 데이터 불러오기
   const { data: user } = useQuery('data', getUser);
-  // console.log('user: ', user);
 
   return (
     <>

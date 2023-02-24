@@ -9,14 +9,11 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 
 const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
-  // console.log('item.id', item.id);
-
   const queryClient = useQueryClient(); // *쿼리 최신화하기
   const editFileInput: any = useRef(); //* Input Dom 접근하기
 
   //* 파일 선택 버튼을 눌렀을때 실행하는 함수
   const onChangeEditImgUrl = (e: any) => {
-    console.log('파일 선택을 선택했습니다.');
     const theFile = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(theFile);
@@ -31,8 +28,6 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
 
   //* 게시물 사진 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEdit = (data: any) => {
-    console.log('게시물 사진 수정 버튼을 눌렀습니다.');
-
     if (imageUpload === null) {
       customAlert('이미지를 추가해주세요.');
     }
@@ -40,7 +35,6 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
     const imageRef = ref(storageService, `images/${uuidv4()}`);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
-        console.log('사진이 업로드 되었습니다.');
         const response = url;
         editImg = {
           ...editImg,
@@ -55,12 +49,8 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
                 () => queryClient.invalidateQueries('detailData'),
                 500
               );
-              console.log('수정 요청 성공');
               customAlert('수정을 완료하였습니다!');
               setImageUpload(null);
-            },
-            onError: () => {
-              console.log('수정 요청 실패');
             },
           }
         );

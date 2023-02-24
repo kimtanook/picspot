@@ -27,9 +27,6 @@ const Post = ({ id }: any) => {
     setSearchCategory(e.target.value);
   };
 
-  // console.log('saveLatLng: ', saveLatLng);
-  // console.log('saveAddress: ', saveAddress);
-
   //* Text 관련
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');

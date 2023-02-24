@@ -1,9 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import styled from 'styled-components';
 
 const Content = ({ item }: any) => {
-  // console.log('item : ', item);
   return (
     <Link href={`/detail/${item.id}`}>
       <ImageWrap>

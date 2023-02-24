@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import MyCollectPost from './MyCollectPost';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 
@@ -23,7 +23,6 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
     querySnapshot.forEach((doc) => {
       response.push({ id: doc.id, ...doc.data() });
     });
-    console.log('컬렉션 카테고리 데이터를 불러왔습니다.');
 
     return response;
   };
