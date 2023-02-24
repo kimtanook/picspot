@@ -1,4 +1,5 @@
 import { getUser } from '@/api';
+import Link from 'next/link';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
@@ -12,7 +13,9 @@ const DetailProfile = ({ item }: any) => {
         ?.filter((obj: any) => obj.uid === item.creator)
         .map((obj: any) => (
           <StProfileCotainer key={obj.uid}>
-            <StProfileImg src={obj.userImg} alt="image" />
+            <Link href={`/userprofile/${obj.uid}`}>
+              <StProfileImg src={obj.userImg} alt="image" />
+            </Link>
             <StProfileName>{obj.userName}</StProfileName>
           </StProfileCotainer>
         ))}
