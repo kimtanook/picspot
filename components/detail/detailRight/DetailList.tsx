@@ -102,7 +102,9 @@ const DetailList = ({
               height={20}
               style={{ marginRight: 5 }}
             />
-            <span style={{ color: '#1882FF' }}>{item.clickCounter} view</span>
+            <span style={{ color: '#1882FF', width: 50 }}>
+              {item.clickCounter} view
+            </span>
           </StView>
           {authService.currentUser?.uid === item.creator ? (
             <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
