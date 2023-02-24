@@ -56,65 +56,12 @@ const Profile = ({ followingCount }: propsType) => {
     setEditProfileModal(!editProfileModal);
   };
 
-  //* useMutation 사용해서 user 데이터 수정하기
-  const { mutate: onUpdateUser } = useMutation(updateUser);
-
-  let editUser: any = {
-    uid: authService.currentUser?.uid,
-    userName: '',
-    userImg: '',
-  };
-
-  // 전체 프로필 수정을 완료하기
-  const profileEditComplete = async () => {
-    const imgRef = ref(
-      storageService,
-      `${authService.currentUser?.uid}${uuidv4()}`
-    );
-
-    const imgDataUrl = localStorage.getItem('imgURL');
-    let downloadUrl;
-    if (imgDataUrl) {
-      const response = await uploadString(imgRef, imgDataUrl, 'data_url');
-      downloadUrl = await getDownloadURL(response.ref);
-    }
-
-    editUser = {
-      ...editUser,
-      userName: nicknameEdit,
-      userImg: downloadUrl,
-    };
-    onUpdateUser(editUser, {
-      onSuccess: () => {
-        console.log('유저수정 요청 성공');
-      },
-      onError: () => {
-        console.log('유저수정 요청 실패');
-      },
-    });
-
-    await updateProfile(authService?.currentUser!, {
-      displayName: nicknameEdit,
-      photoURL: downloadUrl ?? null,
-    })
-      .then((res) => {
-        customAlert('프로필 수정 완료하였습니다!');
-      })
-      .then(() => {
-        setEditProfileModal(!editProfileModal);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <ProfileContainer>
       {/* 프로필 수정 버튼 props */}
       {editProfileModal && (
         <ModalProfile
           profileEditCancle={profileEditCancle}
-          profileEditComplete={profileEditComplete}
           editProfileModal={editProfileModalButton}
           imgEdit={imgEdit}
           setImgEdit={setImgEdit}
@@ -165,11 +112,7 @@ const ProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-const ProfileEdit = styled.div`
-  /* margin-left: 15px; */
-  /* border: 1px solid; */
-`;
+const ProfileEdit = styled.div``;
 const ProfileImage = styled.div<{ img: string }>`
   width: 150px;
   height: 150px;
@@ -178,8 +121,8 @@ const ProfileImage = styled.div<{ img: string }>`
   background-image: url(${(props) => props.img});
   background-position: center center;
 `;
-
 const ProfileEditBtn = styled.button`
+  font-family: Noto Sans CJK KR;
   border: none;
   background-color: transparent;
   color: #1882ff;
@@ -191,7 +134,6 @@ const ProfileEditBtn = styled.button`
   padding-left: 35px;
   cursor: pointer;
 `;
-
 const ProfileText = styled.div`
   padding-right: 30px;
   width: 100%;
@@ -203,6 +145,7 @@ const ProfileTextdiv = styled.div`
   margin-bottom: 15px;
 `;
 const ProfileNickname = styled.span`
+  font-family: Noto Sans CJK KR;
   width: 70%;
   height: 36px;
   font-style: normal;
@@ -212,6 +155,7 @@ const ProfileNickname = styled.span`
   padding-left: 20px;
 `;
 const LogoutButton = styled.button`
+  font-family: Noto Sans CJK KR;
   color: #8e8e93;
   border: none;
   background-color: transparent;
@@ -229,6 +173,7 @@ const Follow = styled.div`
   gap: 16px;
 `;
 const MyProfileFollowing = styled.div`
+  font-family: Noto Sans CJK KR;
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
@@ -236,18 +181,18 @@ const MyProfileFollowing = styled.div`
   height: 85px;
   text-align: center;
 `;
-
 const FollowingText = styled.div`
+  font-family: Noto Sans CJK KR;
   color: 5B5B5F;
   font-size: 20px;
   padding-top: 10px;
 `;
 const FollowingCount = styled.div`
+  font-family: Noto Sans CJK KR;
   color: #212121;
   font-size: 24px;
   padding: 11px 20px;
 `;
-
 const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
@@ -257,11 +202,13 @@ const MyProfileFollower = styled.div`
   text-align: center;
 `;
 const FollowerText = styled.div`
+  font-family: Noto Sans CJK KR;
   color: 5B5B5F;
   font-size: 20px;
   padding-top: 10px;
 `;
 const FollowerCount = styled.div`
+  font-family: Noto Sans CJK KR;
   color: #212121;
   font-size: 20px;
   padding: 10px;

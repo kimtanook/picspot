@@ -187,12 +187,8 @@ const AuthSignUp = (props: Props) => {
                 message: '2글자이상 입력해씨펄',
               },
             })}
-            minLength={2}
-            name="username"
             type="username"
-            id="username"
             value={nickname}
-            onChange={(event) => setNickname(event.target.value)}
             placeholder="닉네임을 입력해 주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
