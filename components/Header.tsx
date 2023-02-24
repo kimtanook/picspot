@@ -2,7 +2,6 @@ import { authService } from '@/firebase';
 import Link from 'next/link';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import ModalLogin from '@/components/ModalLogin';
 import { useRouter } from 'next/router';
 
@@ -39,7 +38,7 @@ const Header = ({
             localStorage.clear();
           }}
         >
-          <img src="/logo.png" />
+          <LogoImg src="/logo.png" />
         </Title>
       </Link>
       {router.route === '/main' ? (
@@ -103,6 +102,11 @@ const Title = styled.div`
   font-weight: 900;
   font-size: 24px;
   cursor: pointer;
+`;
+
+const LogoImg = styled.img`
+  width: 107px;
+  height: 29px;
 `;
 
 const CityCategory = styled.select`

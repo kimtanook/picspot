@@ -54,11 +54,8 @@ function ModalProfile(props: Props) {
     await updateProfile(authService?.currentUser!, {
       displayName: props.nicknameEdit,
       photoURL: '',
-    })
-      .then((res) => {})
-      .catch((error) => {
-        console.log(error);
-      });
+    });
+
     props.setImgEdit(imgFile as string);
   };
 

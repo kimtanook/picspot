@@ -67,15 +67,7 @@ const AuthSignUp = (props: Props) => {
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
-        onAddUser(userState),
-          {
-            onSuccess: () => {
-              console.log('유저추가 요청 성공');
-            },
-            onError: () => {
-              console.log('유저추가 요청 실패');
-            },
-          };
+        onAddUser(userState);
       })
       .catch((error) => {
         if (error.code.includes('auth/weak-password')) {

@@ -26,7 +26,16 @@ const Profile = ({ followingCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
-  console.log(followingCount);
+
+  // 프로필 수정하기
+  // const profileEdit = () => {
+  //   localStorage.removeItem('imgURL');
+  //   setEditProfileModal(!editProfileModal);
+  // };
+
+  // const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setNicknameEdit(e.target.value);
+  // };
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -54,6 +63,58 @@ const Profile = ({ followingCount }: propsType) => {
     setImgEdit((authService?.currentUser?.photoURL as string) ?? imgFile);
     setNicknameEdit(authService?.currentUser?.displayName as string);
     setEditProfileModal(!editProfileModal);
+  };
+
+  //* useMutation 사용해서 user 데이터 수정하기
+  const { mutate: onUpdateUser } = useMutation(updateUser);
+
+  let editUser: any = {
+    uid: authService.currentUser?.uid,
+    userName: '',
+    userImg: '',
+  };
+
+  // 전체 프로필 수정을 완료하기
+  const profileEditComplete = async () => {
+    const imgRef = ref(
+      storageService,
+      `${authService.currentUser?.uid}${uuidv4()}`
+    );
+
+    const imgDataUrl = localStorage.getItem('imgURL');
+    let downloadUrl;
+    if (imgDataUrl) {
+      const response = await uploadString(imgRef, imgDataUrl, 'data_url');
+      downloadUrl = await getDownloadURL(response.ref);
+    }
+
+    editUser = {
+      ...editUser,
+      userName: nicknameEdit,
+      userImg: downloadUrl,
+    };
+    onUpdateUser(editUser, {
+      onSuccess: () => {
+        console.log('유저수정 요청 성공');
+      },
+      onError: () => {
+        console.log('유저수정 요청 실패');
+      },
+    });
+
+    await updateProfile(authService?.currentUser!, {
+      displayName: nicknameEdit,
+      photoURL: downloadUrl ?? null,
+    })
+      .then((res) => {
+        customAlert('프로필 수정 완료하였습니다!');
+      })
+      .then(() => {
+        setEditProfileModal(!editProfileModal);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (

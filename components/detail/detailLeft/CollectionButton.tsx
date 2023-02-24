@@ -31,23 +31,17 @@ const CollectionButton = ({ item }: any) => {
   //* mutation 사용해서 collector값 보내기
   const { mutate: onAddCollection } = useMutation(addCollectionData, {
     onSuccess: () => {
-      console.log('collection 저장 성공');
       setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
-    onError: () => {
-      console.log('collection 요청 실패');
-    },
+    onError: () => {},
   });
 
   //* mutation 사용해서 collector값 삭제하기
   const { mutate: onDeleteCollection } = useMutation(deleteCollectionData, {
     onSuccess: () => {
-      console.log('collection 삭제 성공');
       setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
-    onError: () => {
-      console.log('collection 요청 실패');
-    },
+    onError: () => {},
   });
 
   //* collection 저장 기능입니다.
@@ -78,8 +72,6 @@ const CollectionButton = ({ item }: any) => {
     .find((item: any) => {
       return item.collector;
     })?.collector;
-
-  // console.log('collectorUid: ', collectorUid);
 
   //* useEffect로 collection 상태 예외처리 하기
   useEffect(() => {

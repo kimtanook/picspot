@@ -4,9 +4,7 @@ import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ChangeEvent,
-  Dispatch,
   MouseEvent,
-  SetStateAction,
   useCallback,
   useEffect,
   useRef,
@@ -25,14 +23,13 @@ import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
-import ModalLogin from '@/components/ModalLogin';
 import Loading from '@/components/common/Loading';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useState(false);
-  const [searchOption, setSearchOption] = useState('userName');
+  const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
@@ -41,10 +38,6 @@ export default function Main() {
   const onClickToggleMapModal = useCallback(() => {
     setIsModalActive(!isModalActive);
   }, [isModalActive]);
-
-  // const onClickTogglePostModal = useCallback(() => {
-  //   setIsModalPostActive(!isModalPostActive);
-  // }, [isModalPostActive]);
 
   const onClickTogglePostModal = () => {
     setIsModalPostActive(true);
