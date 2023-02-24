@@ -172,12 +172,15 @@ const AuthSignUp = (props: Props) => {
           <AuthWarn>{errors?.confirm?.message}</AuthWarn>
 
           <NicknameInput
-            minLength={2}
-            name="username"
+            {...register('nickname', {
+              required: '닉네임를 입력해주세요.',
+              minLength: {
+                value: 2,
+                message: '2글자이상 입력해씨펄',
+              },
+            })}
             type="username"
-            id="username"
             value={nickname}
-            onChange={(event) => setNickname(event.target.value)}
             placeholder="닉네임을 입력해 주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
