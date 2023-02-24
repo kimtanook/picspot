@@ -23,7 +23,8 @@ import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
-import Loading from '@/components/common/Loading';
+import DataLoading from '@/components/common/DataLoading';
+import DataError from '@/components/common/DataError';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -258,9 +259,9 @@ export default function Main() {
         <div>
           {/* 무한 스크롤 */}
           {status === 'loading' ? (
-            <Loading />
+            <DataLoading />
           ) : status === 'error' ? (
-            <div>데이터를 불러오지 못했습니다.</div>
+            <DataError />
           ) : (
             <GridBox>
               <Masonry columnsCount={4}>

@@ -62,7 +62,14 @@ const Post = ({ id }: any) => {
   };
 
   //* useQuery 사용해서 포스트 데이터 불러오기
-  const { data: detail, isLoading, isError } = useQuery('detailData', getData);
+  const {
+    data: detail,
+    isLoading,
+    isError,
+  } = useQuery('detailData', getData, {
+    staleTime: 60 * 1000, // 1분, default >> 0
+    cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
+  });
 
   const queryClient = useQueryClient();
 
@@ -103,9 +110,9 @@ const Post = ({ id }: any) => {
               <StProfileAndFollowingAndCollection>
                 <StProfileAndFollwing>
                   <DetailProfile item={item} />
-                  <FollowingButton item={item} />
                 </StProfileAndFollwing>
 
+                <FollowingButton item={item} />
                 <CollectionButton item={item} />
               </StProfileAndFollowingAndCollection>
             </StImgAndProfileAndFollowingAndCollection>
@@ -163,28 +170,32 @@ const StDetailContainer = styled.div``;
 const StDetailContents = styled.div`
   position: relative;
   top: 50px;
+  margin: auto;
   display: flex;
   justify-content: center;
+  gap: 80px;
+  width: 80%;
 `;
 
 const StImgAndProfileAndFollowingAndCollection = styled.div`
-  margin-right: 20px;
+  width: 30%;
 `;
 
 const StProfileAndFollowingAndCollection = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  width: 350px;
+  padding-top: 20px;
 `;
 
 const StProfileAndFollwing = styled.div`
   display: flex;
-  flex-direction: row;
 `;
 
-const StListAndMapAndComment = styled.div``;
+const StListAndMapAndComment = styled.div`
+  width: 50%;
+`;
 
 //* SSR방식으로 server에서 id 값 보내기
 export async function getServerSideProps(context: { params: any }) {

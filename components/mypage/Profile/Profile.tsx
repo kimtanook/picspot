@@ -83,7 +83,14 @@ const Profile = ({ followingCount }: propsType) => {
       userName: nicknameEdit,
       userImg: downloadUrl,
     };
-    onUpdateUser(editUser);
+    onUpdateUser(editUser, {
+      onSuccess: () => {
+        console.log('유저수정 요청 성공');
+      },
+      onError: () => {
+        console.log('유저수정 요청 실패');
+      },
+    });
 
     await updateProfile(authService?.currentUser!, {
       displayName: nicknameEdit,
@@ -94,6 +101,9 @@ const Profile = ({ followingCount }: propsType) => {
       })
       .then(() => {
         setEditProfileModal(!editProfileModal);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -103,7 +113,6 @@ const Profile = ({ followingCount }: propsType) => {
       {editProfileModal && (
         <ModalProfile
           profileEditCancle={profileEditCancle}
-          profileEditComplete={profileEditComplete}
           editProfileModal={editProfileModalButton}
           imgEdit={imgEdit}
           setImgEdit={setImgEdit}
@@ -124,14 +133,13 @@ const Profile = ({ followingCount }: propsType) => {
         <ProfileTextdiv>
           {/* 닉네임 */}
           <ProfileNickname>
-            {authService.currentUser?.displayName}님
+            {authService.currentUser?.displayName}님{/* 로그아웃 */}
+            <Link href={'/main?city=제주전체'}>
+              {authService.currentUser ? (
+                <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+              ) : null}
+            </Link>
           </ProfileNickname>
-          {/* 로그아웃 */}
-          <Link href={'/main?city=제주전체'}>
-            {authService.currentUser ? (
-              <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
-            ) : null}
-          </Link>
         </ProfileTextdiv>
 
         <Follow>
@@ -155,10 +163,7 @@ const ProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-const ProfileEdit = styled.div`
-  padding-right: 15px;
-`;
+const ProfileEdit = styled.div``;
 const ProfileImage = styled.div<{ img: string }>`
   width: 150px;
   height: 150px;
@@ -167,8 +172,8 @@ const ProfileImage = styled.div<{ img: string }>`
   background-image: url(${(props) => props.img});
   background-position: center center;
 `;
-
 const ProfileEditBtn = styled.button`
+  font-family: Noto Sans CJK KR;
   border: none;
   background-color: transparent;
   color: #1882ff;
@@ -180,25 +185,28 @@ const ProfileEditBtn = styled.button`
   padding-left: 35px;
   cursor: pointer;
 `;
-
 const ProfileText = styled.div`
-  padding-left: 15px;
-  width: 60%;
+  padding-right: 30px;
+  width: 100%;
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
-  place-items: flex-end;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
 `;
-const ProfileNickname = styled.div`
-  padding-top: 20px;
-  width: 150px;
+const ProfileNickname = styled.span`
+  font-family: Noto Sans CJK KR;
+  width: 70%;
   height: 36px;
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
-  text-align: center;
+  text-align: left;
+  padding-left: 20px;
 `;
 const LogoutButton = styled.button`
+  font-family: Noto Sans CJK KR;
   color: #8e8e93;
   border: none;
   background-color: transparent;
@@ -210,44 +218,48 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 const Follow = styled.div`
-  display: grid;
-  grid-template-columns: 35% 35%;
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
 `;
 const MyProfileFollowing = styled.div`
+  font-family: Noto Sans CJK KR;
   border-radius: 20px;
   background-color: #f8f8f8;
-  padding: 7%;
+  padding: 11px 20px;
   width: 90px;
   height: 85px;
   text-align: center;
 `;
-
 const FollowingText = styled.div`
+  font-family: Noto Sans CJK KR;
   color: 5B5B5F;
   font-size: 20px;
   padding-top: 10px;
 `;
 const FollowingCount = styled.div`
+  font-family: Noto Sans CJK KR;
   color: #212121;
   font-size: 24px;
-  padding: 10px;
+  padding: 11px 20px;
 `;
-
 const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
-  padding: 7%;
+  padding: 11px 20px;
   width: 90px;
   height: 85px;
   text-align: center;
 `;
 const FollowerText = styled.div`
+  font-family: Noto Sans CJK KR;
   color: 5B5B5F;
   font-size: 20px;
   padding-top: 10px;
 `;
 const FollowerCount = styled.div`
+  font-family: Noto Sans CJK KR;
   color: #212121;
   font-size: 20px;
   padding: 10px;

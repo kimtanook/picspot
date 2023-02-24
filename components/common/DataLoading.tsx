@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function Loading() {
+function DataLoading() {
   return (
     <LoadingImgWrap>
       <LoadingImg src="/loading.gif" />
@@ -9,7 +9,7 @@ function Loading() {
   );
 }
 
-export default Loading;
+export default DataLoading;
 
 const LoadingImgWrap = styled.div`
   width: 100%;
@@ -19,6 +19,7 @@ const LoadingImgWrap = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 10;
 `;
 const LoadingImg = styled.img`
   width: 70px;
