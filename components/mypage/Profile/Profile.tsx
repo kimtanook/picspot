@@ -9,6 +9,8 @@ import { useMutation } from 'react-query';
 import { updateUser } from '@/api';
 import Link from 'next/link';
 import ModalProfile from './ModalProfile';
+import { useRecoilState } from 'recoil';
+import { messageBoxToggle } from '@/atom';
 
 const imgFile = '/profileicon.svg';
 
@@ -17,6 +19,7 @@ interface propsType {
 }
 
 const Profile = ({ followingCount }: propsType) => {
+  const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [editProfileModal, setEditProfileModal] = useState(false);
   const [imgEdit, setImgEdit] = useState<string>(profileimg);
@@ -83,7 +86,7 @@ const Profile = ({ followingCount }: propsType) => {
           <ProfileImage img={imgEdit}></ProfileImage>
           {/* 프로필 수정 */}
           <ProfileEditBtn onClick={editProfileModalButton}>
-            내 정보 변경 {'>'}{' '}
+            내 정보 변경 {'>'}
           </ProfileEditBtn>
         </div>
       </ProfileEdit>
@@ -98,6 +101,7 @@ const Profile = ({ followingCount }: propsType) => {
               ) : null}
             </Link>
           </ProfileNickname>
+          <SendMessage onClick={() => setMsgToggle(true)}>쪽지함</SendMessage>
         </ProfileTextdiv>
 
         <Follow>
@@ -162,6 +166,18 @@ const ProfileNickname = styled.span`
   font-size: 24px;
   text-align: left;
   padding-left: 20px;
+`;
+const SendMessage = styled.button`
+  background-color: white;
+  border: 1px black solid;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
 `;
 const LogoutButton = styled.button`
   font-family: Noto Sans CJK KR;
