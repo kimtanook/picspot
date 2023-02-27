@@ -7,6 +7,8 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import UserPostList from '@/components/userprofile/UserPostList';
 import UserCollectionList from '@/components/userprofile/UserCollectionList';
+import { useRecoilState } from 'recoil';
+import { messageSendToggle } from '@/atom';
 
 function Profile() {
   const router = useRouter();
@@ -16,6 +18,8 @@ function Profile() {
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
   const { data: getFollowingData } = useQuery('getFollowingData', getFollwing);
+
+  const [sendMsgToggle, setSendMsgToggle] = useRecoilState(messageSendToggle);
 
   // 다른 사용자의 프로필을 보여주기 위한 filter
   const userData = getUserData?.filter(
@@ -37,7 +41,9 @@ function Profile() {
             <ProfileText>
               <ProfileTextWrap>
                 <ProfileNickname>{userData?.userName}님</ProfileNickname>
-                <SendMessage>쪽지보내기</SendMessage>
+                <SendMessage onClick={() => setSendMsgToggle(true)}>
+                  쪽지보내기
+                </SendMessage>
               </ProfileTextWrap>
               <FollowWrap>
                 <MyProfileFollowing>
