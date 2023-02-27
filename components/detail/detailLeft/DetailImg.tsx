@@ -109,7 +109,9 @@ const StDetailImgContainer = styled.div`
 `;
 
 const StDetailImg = styled.img`
-  width: 350px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 `;
 
 const StDetailBtn = styled.label`
