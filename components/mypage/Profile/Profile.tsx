@@ -46,6 +46,7 @@ const Profile = ({ followingCount }: propsType) => {
       localStorage.clear();
       setCurrentUser(false);
       customAlert('로그아웃에 성공하였습니다!');
+      localStorage.removeItem('googleUser');
     });
   };
   // 전체 프로필 수정을 취소하기
