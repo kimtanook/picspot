@@ -3,14 +3,34 @@ import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-
+import { CustomModal } from '@/components/common/CustomModal';
 const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
+  const [isModalImgActive, setIsModalImgActive]: any = useState(false);
   const queryClient = useQueryClient(); // *쿼리 최신화하기
   const editFileInput: any = useRef(); //* Input Dom 접근하기
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalImgActive) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalImgActive]);
+
+  const onClickToggleImgModal = () => {
+    setIsModalImgActive(true);
+  };
 
   //* 파일 선택 버튼을 눌렀을때 실행하는 함수
   const onChangeEditImgUrl = (e: any) => {
@@ -62,7 +82,22 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
   if (authService.currentUser?.uid !== item.creator) {
     return (
       <StDetailImgContainer>
-        <StDetailImg src={item.imgUrl} alt="image" />
+        <StDetailImg
+          src={item.imgUrl}
+          alt="image"
+          onClick={onClickToggleImgModal}
+        />
+        {isModalImgActive ? (
+          <CustomModal
+            modal={isModalImgActive}
+            setModal={setIsModalImgActive}
+            width="300"
+            height="300"
+            element={<StDetailImg2 src={item.imgUrl} alt="image" />}
+          />
+        ) : (
+          ''
+        )}
       </StDetailImgContainer>
     );
   } else {
@@ -109,7 +144,15 @@ const StDetailImgContainer = styled.div`
 `;
 
 const StDetailImg = styled.img`
-  width: 350px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  object-fit: contain;
+`;
+const StDetailImg2 = styled.img`
+  width: 550px;
+  /* height: 600px; */
+  cursor: pointer;
 `;
 
 const StDetailBtn = styled.label`
