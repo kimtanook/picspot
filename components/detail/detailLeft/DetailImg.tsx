@@ -3,14 +3,19 @@ import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-
+import { CustomModal } from '@/components/common/CustomModal';
 const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
+  const [isModalImgActive, setIsModalImgActive]: any = useState(true);
   const queryClient = useQueryClient(); // *쿼리 최신화하기
   const editFileInput: any = useRef(); //* Input Dom 접근하기
+
+  const onClickToggleImgModal = () => {
+    setIsModalImgActive(true);
+  };
 
   //* 파일 선택 버튼을 눌렀을때 실행하는 함수
   const onChangeEditImgUrl = (e: any) => {
@@ -58,11 +63,50 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
     });
     queryClient.invalidateQueries('detailData');
   };
+  // 모달창이 나왔을 때 스크롤 고정
+  // useEffect(() => {
+  //   document.body.style.cssText = `
+  //   position: fixed;
+  //   top: -${window.scrollY}px;
+  //   overflow-y: scroll;
+  //   width: 100%;`;
+  //   return () => {
+  //     const scrollY = document.body.style.top;
+  //     document.body.style.cssText = '';
+  //     window.scrollTo(0, parseInt(scrollY) * -1);
+  //   };
+  // }, []);
 
   if (authService.currentUser?.uid !== item.creator) {
     return (
       <StDetailImgContainer>
-        <StDetailImg src={item.imgUrl} alt="image" />
+        {isModalImgActive ? (
+          <CustomModal
+            modal={isModalImgActive}
+            setModal={setIsModalImgActive}
+            width="300"
+            height="300"
+            element={
+              <div>
+                {/* // 여기서 싸이즈를 정해야함 object fit 도맞춰야함*/}
+                <StDetailImg
+                  src={item.imgUrl}
+                  alt="image"
+                  width="100%"
+                  height="100%"
+                  onClick={onClickToggleImgModal}
+                />
+              </div>
+            }
+          />
+        ) : (
+          ''
+        )}
+        <StDetailImg
+          src={item.imgUrl}
+          alt="image"
+          onClick={onClickToggleImgModal}
+        />
       </StDetailImgContainer>
     );
   } else {
@@ -110,6 +154,7 @@ const StDetailImgContainer = styled.div`
 
 const StDetailImg = styled.img`
   width: 350px;
+  cursor: pointer;
 `;
 
 const StDetailBtn = styled.label`
