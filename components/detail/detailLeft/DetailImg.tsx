@@ -9,9 +9,24 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomModal } from '@/components/common/CustomModal';
 const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
-  const [isModalImgActive, setIsModalImgActive]: any = useState(true);
+  const [isModalImgActive, setIsModalImgActive]: any = useState(false);
   const queryClient = useQueryClient(); // *쿼리 최신화하기
   const editFileInput: any = useRef(); //* Input Dom 접근하기
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalImgActive) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalImgActive]);
 
   const onClickToggleImgModal = () => {
     setIsModalImgActive(true);
@@ -63,50 +78,26 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
     });
     queryClient.invalidateQueries('detailData');
   };
-  // 모달창이 나왔을 때 스크롤 고정
-  // useEffect(() => {
-  //   document.body.style.cssText = `
-  //   position: fixed;
-  //   top: -${window.scrollY}px;
-  //   overflow-y: scroll;
-  //   width: 100%;`;
-  //   return () => {
-  //     const scrollY = document.body.style.top;
-  //     document.body.style.cssText = '';
-  //     window.scrollTo(0, parseInt(scrollY) * -1);
-  //   };
-  // }, []);
 
   if (authService.currentUser?.uid !== item.creator) {
     return (
       <StDetailImgContainer>
+        <StDetailImg
+          src={item.imgUrl}
+          alt="image"
+          onClick={onClickToggleImgModal}
+        />
         {isModalImgActive ? (
           <CustomModal
             modal={isModalImgActive}
             setModal={setIsModalImgActive}
             width="300"
             height="300"
-            element={
-              <div>
-                {/* // 여기서 싸이즈를 정해야함 object fit 도맞춰야함*/}
-                <StDetailImg
-                  src={item.imgUrl}
-                  alt="image"
-                  width="100%"
-                  height="100%"
-                  onClick={onClickToggleImgModal}
-                />
-              </div>
-            }
+            element={<StDetailImg2 src={item.imgUrl} alt="image" />}
           />
         ) : (
           ''
         )}
-        <StDetailImg
-          src={item.imgUrl}
-          alt="image"
-          onClick={onClickToggleImgModal}
-        />
       </StDetailImgContainer>
     );
   } else {
@@ -153,7 +144,14 @@ const StDetailImgContainer = styled.div`
 `;
 
 const StDetailImg = styled.img`
-  width: 350px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  object-fit: contain;
+`;
+const StDetailImg2 = styled.img`
+  width: 550px;
+  /* height: 600px; */
   cursor: pointer;
 `;
 
