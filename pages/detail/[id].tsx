@@ -173,8 +173,7 @@ const StDetailContents = styled.div`
   margin: auto;
   display: flex;
   justify-content: center;
-  gap: 80px;
-  width: 80%;
+  width: 100%;
 `;
 
 const StImgAndProfileAndFollowingAndCollection = styled.div`
