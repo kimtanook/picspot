@@ -41,6 +41,7 @@ const AuthSocial = (props: Props): JSX.Element => {
       //* 구글 로그인 시 user 추가하기
       .then(() => {
         onAddUser(userState);
+        localStorage.setItem('googleUser', 'true');
       })
       .catch(() => {
         setSocial(false);
