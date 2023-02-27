@@ -37,6 +37,7 @@ function Profile() {
             <ProfileText>
               <ProfileTextWrap>
                 <ProfileNickname>{userData?.userName}님</ProfileNickname>
+                <SendMessage>쪽지보내기</SendMessage>
               </ProfileTextWrap>
               <FollowWrap>
                 <MyProfileFollowing>
@@ -158,16 +159,29 @@ const ProfileText = styled.div`
 `;
 const ProfileTextWrap = styled.div`
   display: flex;
-  place-items: flex-end;
+  align-items: center;
+  text-align: center;
 `;
 const ProfileNickname = styled.div`
-  padding-top: 20px;
   width: 150px;
+  line-height: 36px;
   height: 36px;
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
   text-align: center;
+`;
+const SendMessage = styled.button`
+  background-color: white;
+  border: 1px black solid;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
 `;
 
 const FollowWrap = styled.div`
