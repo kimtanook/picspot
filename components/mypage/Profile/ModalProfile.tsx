@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { updateUser } from '@/api';
 import { useMutation } from 'react-query';
-import AuthSocial from '@/components/main/auth/AuthSocial';
 
 const imgFile = '/profileicon.svg';
 
@@ -92,6 +91,7 @@ function ModalProfile(props: Props) {
   } = useForm<SaveForm>({
     mode: 'onSubmit',
   });
+
   //* useMutation 사용해서 user 데이터 수정하기
   let editUser: any = {
     uid: authService.currentUser?.uid,
@@ -493,7 +493,6 @@ const CloseNicknameToggleImg = styled.img`
 const EditInputBox = styled.div`
   width: 100%;
   height: 48px;
-  /* border: 1px solid; */
   position: relative;
 `;
 const EditclearBtn = styled.div`
