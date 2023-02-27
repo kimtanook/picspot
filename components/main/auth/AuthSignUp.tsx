@@ -137,7 +137,7 @@ const AuthSignUp = (props: Props) => {
                     '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
                 },
               })}
-              type={hidePassword ? 'password' : 'text'}
+              type={hidePassword ? 'text' : 'password'}
               placeholder="비밀번호를 입력해주세요"
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -157,7 +157,7 @@ const AuthSignUp = (props: Props) => {
                   message: '입력하신 비밀번호와 일치하지 않아요',
                 },
               })}
-              type={hidePassword ? 'password' : 'text'}
+              type={hidePassword ? 'text' : 'password'}
               placeholder="비밀번호를 다시한번 입력해 주세요"
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {

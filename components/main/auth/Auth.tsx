@@ -98,7 +98,7 @@ const Auth = (props: Props): JSX.Element => {
                     '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
                 },
               })}
-              type={hidePassword ? 'password' : 'text'}
+              type={hidePassword ? 'text' : 'password'}
               placeholder="비밀번호를 입력 해주세요"
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
