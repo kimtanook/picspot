@@ -65,49 +65,6 @@ const Profile = ({ followingCount }: propsType) => {
     userImg: '',
   };
 
-  // 전체 프로필 수정을 완료하기
-  const profileEditComplete = async () => {
-    const imgRef = ref(
-      storageService,
-      `${authService.currentUser?.uid}${uuidv4()}`
-    );
-
-    const imgDataUrl = localStorage.getItem('imgURL');
-    let downloadUrl;
-    if (imgDataUrl) {
-      const response = await uploadString(imgRef, imgDataUrl, 'data_url');
-      downloadUrl = await getDownloadURL(response.ref);
-    }
-
-    editUser = {
-      ...editUser,
-      userName: nicknameEdit,
-      userImg: downloadUrl,
-    };
-    onUpdateUser(editUser, {
-      onSuccess: () => {
-        console.log('유저수정 요청 성공');
-      },
-      onError: () => {
-        console.log('유저수정 요청 실패');
-      },
-    });
-
-    await updateProfile(authService?.currentUser!, {
-      displayName: nicknameEdit,
-      photoURL: downloadUrl ?? null,
-    })
-      .then((res) => {
-        customAlert('프로필 수정 완료하였습니다!');
-      })
-      .then(() => {
-        setEditProfileModal(!editProfileModal);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <ProfileContainer>
       {/* 프로필 수정 버튼 props */}

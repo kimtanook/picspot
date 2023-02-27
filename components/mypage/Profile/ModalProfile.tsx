@@ -25,7 +25,6 @@ interface Props {
   imgEdit: string;
   setImgEdit: Dispatch<SetStateAction<string>>;
   nicknameEdit: string;
-  googleIdUser: string;
 }
 
 function ModalProfile(props: Props) {
