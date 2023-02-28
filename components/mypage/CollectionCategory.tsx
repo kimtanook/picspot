@@ -96,9 +96,12 @@ export default CollectionCategory;
 const TownWrap = styled.div`
   width: 365px;
   height: 352px;
-
   margin: 0px 1px 30px 1px;
   padding-right: 25px;
+  :hover {
+    transition: all 0.7s;
+    transform: scale(1.01);
+  }
 `;
 
 const PostTownTitle = styled.div`
