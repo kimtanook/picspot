@@ -25,24 +25,51 @@ import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
+import ModalLogin from '@/components/ModalLogin';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  const [closeLoginModal, setCloseLoginModal] = useState(false);
+  const [closeLoginModal, setCloseLoginModal]: any = useState(false);
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState('');
   const [isModalActive, setIsModalActive] = useState(false);
+
   const [isModalPostActive, setIsModalPostActive]: any = useState(false);
-  const onClickToggleMapModal = useCallback(() => {
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalActive || isModalPostActive) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalActive, isModalPostActive]);
+
+  const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
-  }, [isModalActive]);
+  };
 
   const onClickTogglePostModal = () => {
-    setIsModalPostActive(true);
+    if (!authService.currentUser) {
+      setCloseLoginModal(true);
+      return;
+    }
+    if (authService.currentUser) {
+      setIsModalPostActive(true);
+      return;
+    }
+    // setIsModalPostActive(!isModalPostActive);
   };
+
   const router = useRouter();
 
   const onClickToggleModal = () => {
@@ -308,6 +335,18 @@ export default function Main() {
             width="1200"
             height="700"
             element={<ModalMaps />}
+          />
+        ) : (
+          ''
+        )}
+
+        {closeLoginModal ? (
+          <CustomModal
+            modal={closeLoginModal}
+            setModal={setCloseLoginModal}
+            width="1000"
+            height="1000"
+            element={<ModalLogin closeLoginModal={setCloseLoginModal} />}
           />
         ) : (
           ''

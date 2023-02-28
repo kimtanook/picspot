@@ -291,3 +291,10 @@ export const updateUser: any = (data: any) => {
 
 //   return response;
 // };
+
+export const addSendMessage = async (item: any) => {
+  await addDoc(collection(dbService, `message/take/${item.takeUser}`), item);
+};
+export const addSendedMessage = async (item: any) => {
+  await addDoc(collection(dbService, `message/send/${item.sendUser}`), item);
+};

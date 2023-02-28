@@ -32,8 +32,18 @@ function ModalProfile(props: Props) {
   }
   const [saveInformation, setSaveInformation] = useState<boolean>(false);
   const [nicknameToggle, setNicknameToggle] = useState(false);
+  const [googleUser, setGoolgleUser] = useState(true);
   const [pwToggle, setPwToggle] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const googleIdUser = localStorage.getItem('googleUser');
+    if (googleIdUser) {
+      setGoolgleUser(false);
+    } else {
+      setGoolgleUser(true);
+    }
+  }, []);
 
   // 모달 창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
@@ -81,6 +91,7 @@ function ModalProfile(props: Props) {
   } = useForm<SaveForm>({
     mode: 'onSubmit',
   });
+
   //* useMutation 사용해서 user 데이터 수정하기
   let editUser: any = {
     uid: authService.currentUser?.uid,
@@ -248,20 +259,28 @@ function ModalProfile(props: Props) {
             <ProfileWarn>{errors?.nickname?.message}</ProfileWarn>
 
             {/* 비밀번호 변경 */}
-            <PwToggleContainer
-              onClick={() => {
-                setPwToggle((e) => !e);
-              }}
-            >
-              <PwToggleText>
-                비밀번호 변경하기
-                {pwToggle ? (
-                  <ClosePwToggleImg src="/under-arrow.png" />
-                ) : (
-                  <OpenPwToggleImg src="/right-arrow.png" />
-                )}
-              </PwToggleText>
-            </PwToggleContainer>
+            {/* 구글 유저 숨기기 */}
+            <div>
+              {googleUser ? (
+                <PwToggleContainer
+                  onClick={() => {
+                    setPwToggle((e) => !e);
+                  }}
+                >
+                  <PwToggleText>
+                    비밀번호 변경하기
+                    {pwToggle ? (
+                      <ClosePwToggleImg src="/under-arrow.png" />
+                    ) : (
+                      <OpenPwToggleImg src="/right-arrow.png" />
+                    )}
+                  </PwToggleText>
+                </PwToggleContainer>
+              ) : (
+                ''
+              )}
+            </div>
+
             {pwToggle && (
               <EditInputBox>
                 <EditInput
@@ -474,7 +493,6 @@ const CloseNicknameToggleImg = styled.img`
 const EditInputBox = styled.div`
   width: 100%;
   height: 48px;
-  /* border: 1px solid; */
   position: relative;
 `;
 const EditclearBtn = styled.div`

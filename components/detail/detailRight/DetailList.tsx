@@ -102,19 +102,13 @@ const DetailList = ({
               height={20}
               style={{ marginRight: 5 }}
             />
-            <span style={{ color: '#1882FF', width: 50 }}>
+            <span style={{ color: '#1882FF', width: 70 }}>
               {item.clickCounter} view
             </span>
           </StView>
           {authService.currentUser?.uid === item.creator ? (
             <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
-          ) : (
-            <StEditBtn
-              onClick={() => customAlert('본인이 작성한 글이 아니에요.')}
-            >
-              게시물 수정 〉
-            </StEditBtn>
-          )}
+          ) : null}
         </StTitleAndView>
         <StCityAndTownAndAddress>
           <StCity>{item.city}</StCity>
@@ -177,6 +171,7 @@ const DetailList = ({
                   {item.clickCounter} view
                 </span>
               </StView>
+
               <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
             </>
           )}
@@ -249,12 +244,13 @@ const StListContainer = styled.div`
 const StTitleAndView = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
 `;
 
 const StTitle = styled.div`
   font-size: 30px;
   margin-right: 20px;
-  width: 350px;
+  width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -263,19 +259,19 @@ const StTitle = styled.div`
 const StTitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;
-  width: 190px;
+  width: 90%;
 `;
 
 const StView = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 20px;
 `;
 
 const StEditBtnCotainer = styled.div`
   display: flex;
   gap: 10px;
   width: 350px;
+  margin-left: 20px;
 `;
 
 const StEditBtn = styled.div`
@@ -309,7 +305,7 @@ const StCity = styled.div`
 const StCityInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 80px;
+  width: 160px;
   height: 40px;
   text-align: center;
   border: none;
@@ -330,7 +326,7 @@ const StTown = styled.div`
 const StTownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 80px;
+  width: 100px;
   height: 40px;
   text-align: center;
   border: none;
@@ -353,7 +349,7 @@ const StContent = styled.div`
   display: flex;
   align-items: center;
   background-color: #f8f8f8;
-  width: 96%;
+  width: 97%;
   min-height: 50px;
   padding-left: 20px;
   color: #8e8e93;
