@@ -174,7 +174,10 @@ export default function Main() {
             {selectCity === '제주시' ? (
               <div>
                 <TownBtn onClick={onClickSelectTown} value="">
-                  제주시
+                  제주시 전체
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="제주시 시내">
+                  제주시 시내
                 </TownBtn>
                 <TownBtn onClick={onClickSelectTown} value="구좌읍">
                   구좌읍
@@ -202,7 +205,10 @@ export default function Main() {
             ) : selectCity === '서귀포시' ? (
               <div>
                 <TownBtn onClick={onClickSelectTown} value="">
-                  서귀포시
+                  서귀포시 전체
+                </TownBtn>
+                <TownBtn onClick={onClickSelectTown} value="서귀포시 시내">
+                  서귀포시 시내
                 </TownBtn>
                 <TownBtn onClick={onClickSelectTown} value="표선면">
                   표선면
@@ -334,7 +340,9 @@ export default function Main() {
             setModal={setIsModalActive}
             width="1200"
             height="700"
-            element={<ModalMaps />}
+            element={
+              <ModalMaps selectTown={selectTown} selectCity={selectCity} />
+            }
           />
         ) : (
           ''
@@ -409,7 +417,9 @@ const TownCategory = styled.div`
 `;
 const TownBtn = styled.button`
   background-color: #dcdcdc;
-  width: 66px;
+
+  /* width: 66px; */
+  width: 88px;
   height: 26px;
   margin: 3px;
   border: none;
