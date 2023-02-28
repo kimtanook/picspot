@@ -29,7 +29,7 @@ const CollectionList = () => {
   );
   return (
     <>
-      <Masonry columnsCount={3} style={{ gap: '45px' }}>
+      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
         {myCollectionTownArr?.map((item: any) => (
           <CollectionCategory
             key={uuidv4()}

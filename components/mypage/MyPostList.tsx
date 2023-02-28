@@ -29,7 +29,7 @@ const MyPostList = () => {
 
   return (
     <>
-      <Masonry columnsCount={3} style={{ gap: '45px' }}>
+      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
         {myCollectTownArr?.map((item: string) => (
           <div key={uuidv4()}>
             <Town value={item} myPostData={data} />
