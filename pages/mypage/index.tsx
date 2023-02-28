@@ -24,14 +24,11 @@ export default function Mypage() {
       data.find((item: any) => item.uid === authService.currentUser?.uid)
         ?.follow,
   });
-  // console.log('FollwingData: ', FollwingData);
-
   //* user에서 내가 팔로우한 사람 데이터 뽑기
   const { data: userData } = useQuery('UserData', getUser, {
     select: (data) =>
       data?.filter((item: any) => follwingData?.includes(item.uid)),
   });
-  // console.log('userData: ', userData);
 
   //* 내가 팔로잉 하는 사람 숫자
   const followingCount = follwingData?.length;
@@ -74,7 +71,6 @@ export default function Mypage() {
 
 const MyContainer = styled.div`
   width: 100%;
-  /* height: 55vh; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

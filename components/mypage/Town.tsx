@@ -8,13 +8,13 @@ import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Link from 'next/link';
 
-const Town = ({ value }: any) => {
+const Town = ({ value }: { value: string }) => {
   const [more, setMore] = useState(true);
 
   //* post town 기준 데이터 가져오기
   const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
     const [_, town] = queryKey;
-    const response: any = [];
+    const response: { id: string }[] = [];
     let q = query(
       collection(dbService, 'post'),
       where('town', '==', town),
@@ -51,7 +51,7 @@ const Town = ({ value }: any) => {
           </PostTownTitle>
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-              {myPostList?.map((item: any) => (
+              {myPostList?.map((item: { [key: string]: string }) => (
                 <MyCollectItem key={uuidv4()} item={item} />
               ))}
             </Masonry>
@@ -70,7 +70,7 @@ const Town = ({ value }: any) => {
               <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
             </MorePostTownTitle>
             <Masonry columnsCount={4}>
-              {myPostList?.map((item: any) => (
+              {myPostList?.map((item: { [key: string]: string }) => (
                 <Link href={`/detail/${item.id}`}>
                   <MyPostImg src={item.imgUrl} />
                 </Link>
@@ -126,7 +126,7 @@ const MoreDiv = styled.div`
   width: 1200px;
   margin: auto;
   height: 1700px;
-  top: 450px;
+  top: 440px;
   left: 8%;
 `;
 const MyPostImg = styled.img`
