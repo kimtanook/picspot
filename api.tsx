@@ -291,9 +291,49 @@ export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
   return response;
 };
 
+// 상대방에게 메세지 보내기
 export const addSendMessage = async (item: any) => {
   await addDoc(collection(dbService, `message/take/${item.takeUser}`), item);
 };
+
+// 내가 보낸 메세지 저장
 export const addSendedMessage = async (item: any) => {
   await addDoc(collection(dbService, `message/send/${item.sendUser}`), item);
+};
+
+// 받은 메세지 가져오기
+export const getTakeMessage = async ({ queryKey }: any) => {
+  const [_, id] = queryKey;
+  const data: any = [];
+  const q = query(
+    collection(dbService, `message/take/${id}`),
+    orderBy('time', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+};
+// 보낸 메세지 가져오기
+export const getSendMessage = async ({ queryKey }: any) => {
+  const [_, id] = queryKey;
+  const data: any = [];
+  const q = query(
+    collection(dbService, `message/send/${id}`),
+    orderBy('time', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+};
+// 받은 메세지 삭제
+export const deleteTakeMessage = async (item: any) => {
+  deleteDoc(doc(dbService, `message/take/${item.uid}/${item.id}`));
+};
+// 보낸 메세지 삭제
+export const deleteSendMessage = async (item: any) => {
+  deleteDoc(doc(dbService, `message/send/${item.uid}/${item.id}`));
 };
