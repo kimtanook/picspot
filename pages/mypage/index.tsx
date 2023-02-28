@@ -11,38 +11,28 @@ import { useState } from 'react';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
-  const [more, setMore]: any = useState(true);
 
   //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery('data', getData);
+  const { data: postData } = useQuery('data', getData);
   //* useQuery 사용해서 following 데이터 불러오기
   const {
-    data: followingData,
+    data: follwingData,
     isLoading,
     isError,
-  } = useQuery('followingData', getFollwing);
+  } = useQuery('FollwingData', getFollwing, {
+    select: (data) =>
+      data.find((item: any) => item.uid === authService.currentUser?.uid)
+        ?.follow,
+  });
+  //* user에서 내가 팔로우한 사람 데이터 뽑기
+  const { data: userData } = useQuery('UserData', getUser, {
+    select: (data) =>
+      data?.filter((item: any) => follwingData?.includes(item.uid)),
+  });
 
-  //* useQuery 사용해서 userData 데이터 불러오기
-  const { data: userData } = useQuery('userData', getUser);
+  //* 내가 팔로잉 하는 사람 숫자
+  const followingCount = follwingData?.length;
 
-  //* 팔로잉한 사람 프로필 닉네임 뽑아오기
-  //? 팔로잉한 사람 uid를 배열에 담았습니다.
-  const authFollowingUid =
-    followingData
-      ?.filter((item: any) => {
-        return item.uid === authService?.currentUser?.uid;
-      })
-      ?.find((item: any) => {
-        return item.follow;
-      })?.follow ?? [];
-  console.log(authFollowingUid);
-  //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
-  const followingUser = userData?.filter((item: any) =>
-    authFollowingUid?.includes(item.uid)
-  );
-
-  // 팔로잉 하는 사람 숫자
-  const followingCount = authFollowingUid?.length;
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
@@ -54,14 +44,6 @@ export default function Mypage() {
         <MyProfileContainer>
           <Profile followingCount={followingCount} />
         </MyProfileContainer>
-        {/* {followingUser?.map((item: any) => (
-          <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-            <Link href={`/userprofile/${item.uid}`}>
-              <div>{item.userName}</div>
-              <Image src={item.userImg} alt="image" height={100} width={100} />
-            </Link>
-          </div>
-        ))} */}
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>
@@ -80,11 +62,7 @@ export default function Mypage() {
         </div>
 
         <GridBox>
-          {onSpot ? (
-            <MyPostList more={more} setMore={setMore} />
-          ) : (
-            <CollectionList postData={data} />
-          )}
+          {onSpot ? <MyPostList /> : <CollectionList postData={postData} />}
         </GridBox>
       </AllMyPostList>
     </>
@@ -93,7 +71,6 @@ export default function Mypage() {
 
 const MyContainer = styled.div`
   width: 100%;
-  /* height: 55vh; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
