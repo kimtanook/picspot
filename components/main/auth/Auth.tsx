@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
@@ -18,8 +18,11 @@ interface Props {
 
 const Auth = (props: Props): JSX.Element => {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
+  const [login, setLogin] = useState<boolean>(false);
   const [hidePassword, setHidePassword] = useState<boolean>(false);
-  // const [isRemember, setIsRemember] = useState<boolean>(false);
+  const [isRemember, setIsRemember] = useState<boolean>(false);
+  const LS_KEY_ID = 'LS_KEY_ID';
+  const LS_KEY_SAVE_ID_FLAG = 'LS_KEY_SAVE_ID_FLAG';
 
   const {
     register,
@@ -31,11 +34,19 @@ const Auth = (props: Props): JSX.Element => {
 
   const onSubmit = async (data: AuthForm) => {
     setAuthenticating(true);
+    if (isRemember) {
+      localStorage.setItem(LS_KEY_ID, data.email);
+      localStorage.setItem('isRemember', 'ture');
+    } else if (!isRemember) {
+      localStorage.removeItem(LS_KEY_ID);
+      localStorage.removeItem('isRemember');
+    }
     await signInWithEmailAndPassword(authService, data.email, data.password)
       .then((res) => {
         customAlert('로그인에 성공하였습니다!');
         props.closeLoginModal();
       })
+      .then(() => {})
       .catch(() => {
         setError('password', {
           type: 'invalid',
@@ -48,6 +59,28 @@ const Auth = (props: Props): JSX.Element => {
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
   };
+  const handleSaveIDFlag = () => {
+    if (!isRemember) {
+      localStorage.setItem('isRemember', 'ture');
+    } else {
+      localStorage.removeItem('isRemember');
+      localStorage.removeItem(LS_KEY_ID);
+    }
+    setIsRemember(!isRemember);
+  };
+
+  useEffect(() => {
+    let idFlag = localStorage.getItem(LS_KEY_ID);
+
+    let isRememberStorage = localStorage.getItem('isRemember');
+    if (isRememberStorage) {
+      setIsRemember(true);
+    }
+    if (idFlag !== null && isRememberStorage) {
+      setValue('email', idFlag);
+    }
+  }, [isRemember]);
+
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
       <LoginTextDiv>
@@ -110,13 +143,18 @@ const Auth = (props: Props): JSX.Element => {
           </EditInputBox>
           <AuthWarn>{errors?.password?.message}</AuthWarn>
         </LoginEmailPwContainer>
-
+        <RememberID>
+          <input
+            type="checkbox"
+            name="saveEmail"
+            id="saveEmail"
+            checked={isRemember}
+            onChange={handleSaveIDFlag}
+          />
+          <div>아이디 저장</div>
+        </RememberID>
         <LoginBtnContainer>
-          <LoginBtn
-            onClick={handleSubmit(onSubmit)}
-            type="submit"
-            disabled={authenticating}
-          >
+          <LoginBtn type="submit" disabled={authenticating}>
             <div>로그인 하기</div>
           </LoginBtn>
         </LoginBtnContainer>
@@ -195,6 +233,13 @@ const EditPwShowBtn = styled.div`
   background-repeat: no-repeat;
 
   cursor: pointer;
+`;
+
+const RememberID = styled.label`
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  font-size: 15px;
 `;
 const LoginBtnContainer = styled.div`
   display: flex;
