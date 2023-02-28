@@ -165,12 +165,16 @@ const Post = ({ id }: any) => {
 
 export default Post;
 
-const StDetailContainer = styled.div``;
+const StDetailContainer = styled.div`
+  position: relative;
+`;
 
 const StDetailContents = styled.div`
-  position: relative;
   top: 50px;
-  margin: auto;
+
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   justify-content: center;
   width: 100%;

@@ -4,7 +4,7 @@
 >
 > ### PicSpot은 Picture / Pick + Spot의 약자로 사진과 장소를 고르는 것을 뜻합니다. 가고 싶은 여행지 혹은 여행 중에 사진 명소들을 일목요연하게 볼 수 있는 공유 플렛폼입니다. 지도를 통해 위치를 간편하게 찾을 수 있습니다.
 >
-> #### 🏠[HomePage](https://picspot.vercel.app/) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔗[NOTION](https://www.notion.so/TEAM-2-_FAMILY-784e6ae20d7c499fa9df5620592f5d93)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📐[Figma](https://www.figma.com/file/9cv3rhM9sjGuRCgVGxOLPD/Project_%ED%94%BD%EC%8A%A4%ED%8C%9F?node-id=0%3A1&t=N5kTxggsQwbvT68F-0)
+> #### 🏠[HomePage](https://picspot.vercel.app/) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔗[Notion](https://www.notion.so/TEAM-2-_FAMILY-784e6ae20d7c499fa9df5620592f5d93)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📐[Figma](https://www.figma.com/file/9cv3rhM9sjGuRCgVGxOLPD/Project_%ED%94%BD%EC%8A%A4%ED%8C%9F?node-id=0%3A1&t=N5kTxggsQwbvT68F-0)
 
 <br>
 
@@ -28,7 +28,7 @@
 
 ## 🌼 개발 기간
 
-### 2022.02.06. ~ 2023.03.13. (5 weeks)
+- 2022.02.06. ~ 2023.03.13. (5 weeks)
 
 <br>
 
@@ -77,15 +77,10 @@
 
 ## 🌼 주요 페이지
 
-|       <h4>페이지</h4>        |                <h4>사진</h4>                |
-| :--------------------------: | :-----------------------------------------: |
-|     <h4>랜딩 페이지</h4>     | <img width="277" alt="landingpage" src="">  |
-|     <h4>메인 페이지</h4>     |   <img width="277" alt="mainpage" src="">   |
-|   <h4>검색결과 페이지</h4>   | <img width="277" alt="selectResult" src=""> |
-| <h4>상세검색결과 페이지</h4> | <img width="277" alt="placeDetail" src="">  |
-|     <h4>상세 페이지</h4>     |  <img width="277" alt="detailPage" src="">  |
-|     <h4>지도 페이지</h4>     |     <img width="277" alt="map" src="">      |
-|    <h4>팔로잉 페이지</h4>    |  <img width="277" alt="following" src="">   |
-|     <h4>마이 페이지</h4>     |    <img width="277" alt="mypage" src="">    |
-|   <h4>정보수정 페이지</h4>   |  <img width="277" alt="mypageedit" src="">  |
-|    <h4>로그인 페이지</h4>    |  <img width="277" alt="loginpage" src="">   |
+|     <h4>페이지</h4>      |                <h4>사진</h4>                |       <h4>페이지</h4>        |               <h4>사진</h4>                |
+| :----------------------: | :-----------------------------------------: | :--------------------------: | :----------------------------------------: |
+|   <h4>랜딩 페이지</h4>   | <img width="277" alt="landingpage" src="">  |     <h4>메인 페이지</h4>     |  <img width="277" alt="mainpage" src="">   |
+| <h4>검색결과 페이지</h4> | <img width="277" alt="selectResult" src=""> | <h4>상세검색결과 페이지</h4> | <img width="277" alt="placeDetail" src=""> |
+|   <h4>상세 페이지</h4>   |  <img width="277" alt="detailPage" src="">  |     <h4>지도 페이지</h4>     |     <img width="277" alt="map" src="">     |
+|  <h4>팔로잉 페이지</h4>  |  <img width="277" alt="following" src="">   |     <h4>마이 페이지</h4>     |   <img width="277" alt="mypage" src="">    |
+| <h4>정보수정 페이지</h4> |  <img width="277" alt="mypageedit" src="">  |    <h4>로그인 페이지</h4>    |  <img width="277" alt="loginpage" src="">  |

@@ -38,9 +38,25 @@ export default function Main() {
   const [isModalActive, setIsModalActive] = useState(false);
 
   const [isModalPostActive, setIsModalPostActive]: any = useState(false);
-  const onClickToggleMapModal = useCallback(() => {
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalActive || isModalPostActive) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalActive, isModalPostActive]);
+
+  const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
-  }, [isModalActive]);
+  };
 
   const onClickTogglePostModal = () => {
     if (!authService.currentUser) {
@@ -51,6 +67,7 @@ export default function Main() {
       setIsModalPostActive(true);
       return;
     }
+    // setIsModalPostActive(!isModalPostActive);
   };
 
   const router = useRouter();
