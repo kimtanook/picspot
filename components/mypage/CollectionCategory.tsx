@@ -7,18 +7,16 @@ import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Link from 'next/link';
-import Image from 'next/image';
 
-const CollectionCategory = ({ value, postData, collectionData }: any) => {
+const CollectionCategory = ({ value, collectorList }: any) => {
   const [more, setMore] = useState(true);
   //* post CollectionCategory 기준 데이터 가져오기
   const getTownDatas = async ({ queryKey }: { queryKey: string[] }) => {
     const [_, town] = queryKey;
     const response: { id: string }[] = [];
     let q = query(
-      collection(dbService, 'post'),
-      where('town', '==', town),
-      orderBy('createdAt', 'desc')
+      collection(dbService, 'collection'),
+      where('town', '==', town)
     );
 
     const querySnapshot = await getDocs(q);
@@ -29,19 +27,12 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
     return response;
   };
 
-  //* useQuery 사용해서 내가 컬렉션한 포스터의 town의 모든 postData들
+  //* useQuery 사용해서 내가 컬렉션한 포스터의 town별 데이터들
   const { data } = useQuery(['data', value], getTownDatas);
-
-  //* 모든 collection중 내가 collector에 내이름이 있는(내가 선택한) 포스터들
-  const collectorList = collectionData?.filter((item: { collector: any[] }) => {
-    return item.collector?.find((item) =>
-      authService.currentUser?.uid.includes(item)
-    );
-  });
 
   //* 내가 담은 collection의 uid값
   const myCollectionUid = collectorList?.map((item: { uid: any }) => item.uid);
-  //* 모든 포스터들 중 내가 담은 collection의 uid와 비교허여 일치하는 값
+  //* 모든 collection 포스터들 중 내가 담은 collection의 uid와 비교허여 일치하는 값
   const MyCollectionTownItem = data?.filter((item: { id: string }) =>
     myCollectionUid?.includes(item.id)
   );
@@ -74,24 +65,26 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
         </TownWrap>
       ) : (
         <>
-          <MoreDiv>
-            <MorePostTownTitle>
-              <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
-            </MorePostTownTitle>
-            <Masonry columnsCount={4}>
-              {MyCollectionTownItem?.map((item: any) => (
-                <Link key={uuidv4()} href={`/detail/${item.id}`}>
-                  <MyPostImg src={item.imgUrl} />
-                </Link>
-              ))}
-            </Masonry>
-            <MoreBtn onClick={onClickMoreBtn}>
-              <MoreBtnContents>
-                <ArrowImg src={'/arrow-left.png'} />
-                back
-              </MoreBtnContents>
-            </MoreBtn>
-          </MoreDiv>
+          <FatherDiv>
+            <MoreDiv>
+              <MorePostTownTitle>
+                <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
+              </MorePostTownTitle>
+              <Masonry columnsCount={4}>
+                {MyCollectionTownItem?.map((item: any) => (
+                  <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                    <MyPostImg src={item.imgUrl} />
+                  </Link>
+                ))}
+              </Masonry>
+              <MoreBtn onClick={onClickMoreBtn}>
+                <MoreBtnContents>
+                  <ArrowImg src={'/arrow-left.png'} />
+                  back
+                </MoreBtnContents>
+              </MoreBtn>
+            </MoreDiv>
+          </FatherDiv>
         </>
       )}
     </div>
@@ -129,6 +122,48 @@ const MySpotImg = styled.div`
   display: grid;
 `;
 
+const FatherDiv = styled.div`
+  background-color: white;
+  width: 100vw;
+  height: 100vw;
+  position: absolute;
+  left: 1px;
+  overflow: hidden;
+`;
+
+const MoreDiv = styled.div`
+  background-color: white;
+  z-index: 100;
+  position: absolute;
+  width: 1188px;
+  transform: translate(-50%, 0%);
+  left: 50%;
+  overflow: hidden;
+`;
+const MyPostImg = styled.img`
+  width: 275px;
+  margin-bottom: 13px;
+  :hover {
+    transition: all 0.3s;
+    transform: scale(1.02);
+  }
+`;
+
+const MorePostTownTitle = styled.div`
+  height: 43px;
+  border-bottom: 1px solid #212121;
+  margin-bottom: 25px;
+`;
+
+const MoreMyPostTownTitle = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-size: 20px;
+  line-height: 30px;
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+`;
+
 const MoreBtn = styled.button`
   width: 35px;
   height: 22px;
@@ -159,38 +194,4 @@ const ArrowImg = styled.img`
   width: 12px;
   height: 12px;
   align-items: flex-end;
-`;
-
-const MoreDiv = styled.div`
-  background-color: white;
-  z-index: 100;
-  position: absolute;
-  width: 1200px;
-  margin: auto;
-  height: 1700px;
-  top: 440px;
-  left: 8%;
-`;
-const MyPostImg = styled.img`
-  width: 275px;
-  margin-bottom: 13px;
-  :hover {
-    transition: all 0.3s;
-    transform: scale(1.02);
-  }
-`;
-
-const MorePostTownTitle = styled.div`
-  height: 43px;
-  border-bottom: 1px solid #212121;
-  margin-bottom: 25px;
-`;
-
-const MoreMyPostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
-  font-size: 20px;
-  line-height: 30px;
-  text-align: left;
-  font-weight: 500;
-  letter-spacing: -0.015em;
 `;

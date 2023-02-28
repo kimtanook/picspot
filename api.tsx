@@ -201,12 +201,19 @@ export const getCollection = async () => {
 };
 
 //* collection  데이터 추가하기
-export const addCollectionData: any = ({ uid, collector }: any) => {
+export const addCollectionData: any = ({
+  uid,
+  collector,
+  town,
+  imgUrl,
+}: any) => {
   setDoc(
     doc(dbService, 'collection', uid),
     {
       collector: arrayUnion(collector),
       uid: uid,
+      town: town,
+      imgUrl: imgUrl,
     },
     { merge: true }
   );
@@ -339,4 +346,16 @@ export const deleteTakeMessage = async (item: DeleteMessage) => {
 // 보낸 메세지 삭제
 export const deleteSendMessage = async (item: DeleteMessage) => {
   deleteDoc(doc(dbService, `message/send/${item.uid}/${item.id}`));
+};
+
+// 내 게시물 가져오기
+export const getMyPost = async ({ queryKey }: any) => {
+  const [_, id] = queryKey;
+  const data: any[] = [];
+  const q = query(collection(dbService, 'post'), where('creator', '==', id));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
 };
