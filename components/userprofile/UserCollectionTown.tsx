@@ -6,36 +6,18 @@ import Masonry from 'react-responsive-masonry';
 import UserItem from './UserItem';
 import { v4 as uuidv4 } from 'uuid';
 
-const UserCollectionTown = ({ value, postUid }: any) => {
-  // * post CollectionCategory 기준 데이터 가져오기
-  const getTownData = async ({ queryKey }: { queryKey: any }) => {
-    const [_, town] = queryKey;
-    const response: any = [];
-    let q = query(
-      collection(dbService, 'post'),
-      where('town', '==', town),
-      orderBy('createdAt', 'desc')
-    );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      response.push({ id: doc.id, ...doc.data() });
-    });
-
-    return response;
-  };
-
-  const { data } = useQuery(['getPostTownData', value], getTownData);
-
-  // 가져온 게시글 데이터와 컬렉션 Uid와 같은 게시글 추출
-  const collectionData = data?.filter((item: any) =>
-    postUid?.includes(item.id)
-  );
-
+const UserCollectionTown = ({
+  value,
+  postList,
+}: {
+  value: string;
+  postList: { [key: string]: string | number }[] | undefined;
+}) => {
   // town과 현재 town value가 같은 게시글 추출
-  const townSameValueData = collectionData?.filter(
-    (item: any) => item.town === value
+  const townSameValueData = postList?.filter(
+    (item: userItem) => item.town === value
   );
+
   return (
     <TownWrap>
       <PostTownTitle>
@@ -43,7 +25,7 @@ const UserCollectionTown = ({ value, postUid }: any) => {
       </PostTownTitle>
       <MySpotImg>
         <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-          {townSameValueData?.map((item: any) => (
+          {townSameValueData?.map((item: userItem) => (
             <UserItem key={uuidv4()} item={item} />
           ))}
         </Masonry>
