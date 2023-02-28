@@ -10,15 +10,18 @@ import { updateUser } from '@/api';
 import Link from 'next/link';
 import ModalProfile from './ModalProfile';
 import { useRecoilState } from 'recoil';
-import { messageBoxToggle } from '@/atom';
+import { messageBoxToggle, followingToggle } from '@/atom';
 
 const imgFile = '/profileicon.svg';
 
 interface propsType {
   followingCount: number;
+  followCount: number;
 }
 
-const Profile = ({ followingCount }: propsType) => {
+const Profile = ({ followingCount, followCount }: propsType) => {
+  const [followToggle, setFollowToggle] = useRecoilState(followingToggle);
+
   const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [editProfileModal, setEditProfileModal] = useState(false);
@@ -96,13 +99,13 @@ const Profile = ({ followingCount }: propsType) => {
         </ProfileTextdiv>
 
         <Follow>
-          <MyProfileFollowing>
+          <MyProfileFollowing onClick={() => setFollowToggle(!followToggle)}>
             <FollowingText>팔로잉</FollowingText>
-            <FollowingCount>{followingCount}</FollowingCount>
+            <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
           </MyProfileFollowing>
           <MyProfileFollower>
             <FollowerText>팔로워</FollowerText>
-            <FollowerCount>준비중</FollowerCount>
+            <FollowerCount>{null ? '0' : followCount}</FollowerCount>
           </MyProfileFollower>
         </Follow>
       </ProfileText>
@@ -196,6 +199,7 @@ const MyProfileFollowing = styled.div`
   width: 90px;
   height: 85px;
   text-align: center;
+  cursor: pointer;
 `;
 const FollowingText = styled.div`
   font-family: Noto Sans CJK KR;
@@ -203,12 +207,14 @@ const FollowingText = styled.div`
   font-size: 20px;
   padding-top: 10px;
 `;
+
 const FollowingCount = styled.div`
   font-family: Noto Sans CJK KR;
   color: #212121;
-  font-size: 24px;
-  padding: 11px 20px;
+  font-size: 20px;
+  padding-top: 10px;
 `;
+
 const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
@@ -216,13 +222,16 @@ const MyProfileFollower = styled.div`
   width: 90px;
   height: 85px;
   text-align: center;
+  cursor: pointer;
 `;
+
 const FollowerText = styled.div`
   font-family: Noto Sans CJK KR;
   color: 5B5B5F;
   font-size: 20px;
   padding-top: 10px;
 `;
+
 const FollowerCount = styled.div`
   font-family: Noto Sans CJK KR;
   color: #212121;
