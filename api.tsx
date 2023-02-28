@@ -167,7 +167,8 @@ export const getComment = async ({ queryKey }: any) => {
 };
 
 //* 댓글 추가
-export const addComment = async (item: any) => {
+export const addComment = async (item: AddComment) => {
+  console.log('item : ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -176,12 +177,12 @@ export const addComment = async (item: any) => {
 
 //* 댓글 삭제
 
-export const deleteComment = async (item: any) => {
+export const deleteComment = async (item: DeleteComment) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
 
 //* 조회수 증가하기
-export const postCounter: any = async (item: any) => {
+export const postCounter = async (item: any) => {
   await updateDoc(doc(dbService, 'post', item), {
     clickCounter: increment(1),
   });
@@ -292,9 +293,50 @@ export const updateUser: any = (data: any) => {
 //   return response;
 // };
 
-export const addSendMessage = async (item: any) => {
+// 상대방에게 메세지 보내기
+export const addSendMessage = async (item: CreateMessage) => {
   await addDoc(collection(dbService, `message/take/${item.takeUser}`), item);
 };
-export const addSendedMessage = async (item: any) => {
+
+// 내가 보낸 메세지 저장
+export const addSendedMessage = async (item: CreateMessage) => {
   await addDoc(collection(dbService, `message/send/${item.sendUser}`), item);
+};
+
+// 받은 메세지 가져오기
+export const getTakeMessage = async ({ queryKey }: MessageQueryKey) => {
+  const [_, id] = queryKey;
+  const data: SendTakeMessage[] = [];
+  const q = query(
+    collection(dbService, `message/take/${id}`),
+    orderBy('time', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  console.log('data : ', data);
+  return data;
+};
+// 보낸 메세지 가져오기
+export const getSendMessage = async ({ queryKey }: MessageQueryKey) => {
+  const [_, id] = queryKey;
+  const data: SendTakeMessage[] = [];
+  const q = query(
+    collection(dbService, `message/send/${id}`),
+    orderBy('time', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+};
+// 받은 메세지 삭제
+export const deleteTakeMessage = async (item: DeleteMessage) => {
+  deleteDoc(doc(dbService, `message/take/${item.uid}/${item.id}`));
+};
+// 보낸 메세지 삭제
+export const deleteSendMessage = async (item: DeleteMessage) => {
+  deleteDoc(doc(dbService, `message/send/${item.uid}/${item.id}`));
 };
