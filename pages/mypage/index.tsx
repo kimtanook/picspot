@@ -21,7 +21,7 @@ export default function Mypage() {
   } = useQuery('FollwingData', getFollwing, {
     select: (data) =>
       data.find((item: any) => item.uid === authService.currentUser?.uid)
-        .follow,
+        ?.follow,
   });
   // console.log('FollwingData: ', FollwingData);
 
