@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 function MessageSend() {
   const router = useRouter();
   const queryClient = useQueryClient();
-
   const { mutate: addMessage } = useMutation(addSendMessage);
   const { mutate: sendedMessage } = useMutation(addSendedMessage);
   const [messageValue, setMessageValue] = useState('');
@@ -21,6 +20,7 @@ function MessageSend() {
     event.preventDefault();
     const sendMessageData = {
       takeUser: router.query.id,
+      takeUserName: router.query.name,
       sendUser: authService.currentUser?.uid,
       sendUserName: authService.currentUser?.displayName,
       message: messageValue,
@@ -28,14 +28,20 @@ function MessageSend() {
       checked: false,
     };
     addMessage(sendMessageData, {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries('getMessageData');
+      onSuccess: () => {
+        setTimeout(
+          () => queryClient.invalidateQueries('getTakeMessageData'),
+          300
+        );
         setMessageValue('');
       },
     });
     sendedMessage(sendMessageData, {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries('getMessageData');
+      onSuccess: () => {
+        setTimeout(
+          () => queryClient.invalidateQueries('getSendMessageData'),
+          300
+        );
         setMessageValue('');
       },
     });
