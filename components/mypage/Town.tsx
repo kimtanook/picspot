@@ -65,24 +65,26 @@ const Town = ({ value }: { value: string }) => {
         </TownWrap>
       ) : (
         <>
-          <MoreDiv>
-            <MorePostTownTitle>
-              <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
-            </MorePostTownTitle>
-            <Masonry columnsCount={4}>
-              {myPostList?.map((item: { [key: string]: string }) => (
-                <Link key={uuidv4()} href={`/detail/${item.id}`}>
-                  <MyPostImg src={item.imgUrl} />
-                </Link>
-              ))}
-            </Masonry>
-            <MoreBtn onClick={onClickMoreBtn}>
-              <MoreBtnContents>
-                <ArrowImg src={'/arrow-left.png'} />
-                back
-              </MoreBtnContents>
-            </MoreBtn>
-          </MoreDiv>
+          <FatherDiv>
+            <MoreDiv>
+              <MorePostTownTitle>
+                <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
+              </MorePostTownTitle>
+              <Masonry columnsCount={4}>
+                {myPostList?.map((item: { [key: string]: string }) => (
+                  <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                    <MyPostImg src={item.imgUrl} />
+                  </Link>
+                ))}
+              </Masonry>
+              <MoreBtn onClick={onClickMoreBtn}>
+                <MoreBtnContents>
+                  <ArrowImg src={'/arrow-left.png'} />
+                  back
+                </MoreBtnContents>
+              </MoreBtn>
+            </MoreDiv>
+          </FatherDiv>
         </>
       )}
     </div>
@@ -119,15 +121,22 @@ const MySpotImg = styled.div`
   display: grid;
 `;
 
+const FatherDiv = styled.div`
+  background-color: white;
+  width: 100vw;
+  height: 100vw;
+  position: absolute;
+  left: 1px;
+  overflow: hidden;
+`;
 const MoreDiv = styled.div`
   background-color: white;
   z-index: 100;
   position: absolute;
-  width: 1200px;
-  margin: auto;
-  height: 1700px;
-  top: 440px;
-  left: 8%;
+  width: 1188px;
+  transform: translate(-50%, 0%);
+  left: 50%;
+  overflow: hidden;
 `;
 const MyPostImg = styled.img`
   width: 275px;

@@ -74,24 +74,26 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
         </TownWrap>
       ) : (
         <>
-          <MoreDiv>
-            <MorePostTownTitle>
-              <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
-            </MorePostTownTitle>
-            <Masonry columnsCount={4}>
-              {MyCollectionTownItem?.map((item: any) => (
-                <Link key={uuidv4()} href={`/detail/${item.id}`}>
-                  <MyPostImg src={item.imgUrl} />
-                </Link>
-              ))}
-            </Masonry>
-            <MoreBtn onClick={onClickMoreBtn}>
-              <MoreBtnContents>
-                <ArrowImg src={'/arrow-left.png'} />
-                back
-              </MoreBtnContents>
-            </MoreBtn>
-          </MoreDiv>
+          <FatherDiv>
+            <MoreDiv>
+              <MorePostTownTitle>
+                <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
+              </MorePostTownTitle>
+              <Masonry columnsCount={4}>
+                {MyCollectionTownItem?.map((item: any) => (
+                  <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                    <MyPostImg src={item.imgUrl} />
+                  </Link>
+                ))}
+              </Masonry>
+              <MoreBtn onClick={onClickMoreBtn}>
+                <MoreBtnContents>
+                  <ArrowImg src={'/arrow-left.png'} />
+                  back
+                </MoreBtnContents>
+              </MoreBtn>
+            </MoreDiv>
+          </FatherDiv>
         </>
       )}
     </div>
@@ -129,6 +131,48 @@ const MySpotImg = styled.div`
   display: grid;
 `;
 
+const FatherDiv = styled.div`
+  background-color: white;
+  width: 100vw;
+  height: 100vw;
+  position: absolute;
+  left: 1px;
+  overflow: hidden;
+`;
+
+const MoreDiv = styled.div`
+  background-color: white;
+  z-index: 100;
+  position: absolute;
+  width: 1188px;
+  transform: translate(-50%, 0%);
+  left: 50%;
+  overflow: hidden;
+`;
+const MyPostImg = styled.img`
+  width: 275px;
+  margin-bottom: 13px;
+  :hover {
+    transition: all 0.3s;
+    transform: scale(1.02);
+  }
+`;
+
+const MorePostTownTitle = styled.div`
+  height: 43px;
+  border-bottom: 1px solid #212121;
+  margin-bottom: 25px;
+`;
+
+const MoreMyPostTownTitle = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-size: 20px;
+  line-height: 30px;
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+`;
+
 const MoreBtn = styled.button`
   width: 35px;
   height: 22px;
@@ -159,38 +203,4 @@ const ArrowImg = styled.img`
   width: 12px;
   height: 12px;
   align-items: flex-end;
-`;
-
-const MoreDiv = styled.div`
-  background-color: white;
-  z-index: 100;
-  position: absolute;
-  width: 1200px;
-  margin: auto;
-  height: 1700px;
-  top: 440px;
-  left: 8%;
-`;
-const MyPostImg = styled.img`
-  width: 275px;
-  margin-bottom: 13px;
-  :hover {
-    transition: all 0.3s;
-    transform: scale(1.02);
-  }
-`;
-
-const MorePostTownTitle = styled.div`
-  height: 43px;
-  border-bottom: 1px solid #212121;
-  margin-bottom: 25px;
-`;
-
-const MoreMyPostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
-  font-size: 20px;
-  line-height: 30px;
-  text-align: left;
-  font-weight: 500;
-  letter-spacing: -0.015em;
 `;
