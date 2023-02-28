@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollwing, getUser } from '@/api';
+import { getFollwing, getUser } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -12,8 +12,6 @@ import { useState } from 'react';
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
 
-  //* useQuery 사용해서 데이터 불러오기
-  const { data: postData } = useQuery('data', getData);
   //* useQuery 사용해서 following 데이터 불러오기
   const {
     data: follwingData,
@@ -61,9 +59,7 @@ export default function Mypage() {
           )}
         </div>
 
-        <GridBox>
-          {onSpot ? <MyPostList /> : <CollectionList postData={postData} />}
-        </GridBox>
+        <GridBox>{onSpot ? <MyPostList /> : <CollectionList />}</GridBox>
       </AllMyPostList>
     </>
   );

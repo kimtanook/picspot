@@ -1,4 +1,4 @@
-import { getData } from '@/api';
+import { getMyPost } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import Masonry from 'react-responsive-masonry';
@@ -6,21 +6,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 
 const MyPostList = () => {
-  //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery('data', getData);
-  //* 전체에서 가져온 데이터에서 내가 작성한 포스터들만 가져왔다.
-  const myPostList = data?.map((item: any) => {
-    if (item.creator === authService.currentUser?.uid) {
-      return item.id;
-    }
-  });
+  const userUid = authService.currentUser?.uid;
 
-  // * 포스터 data중 내가 만든 것
-  const categoryId = data?.filter((item: { id: string }) =>
-    myPostList?.includes(item.id)
-  );
+  //* useQuery 사용해서 데이터 불러오기
+  const { data } = useQuery(['data', userUid], getMyPost);
+  console.log('data', data);
+
   //* 만든 것 중 town 값만 고르기
-  const myCollectPost = categoryId?.filter((item: { town: string }) => {
+  const myCollectPost = data?.filter((item: { town: string }) => {
     return item.town;
   });
   //* town값을 골라 map 돌리기
@@ -39,7 +32,7 @@ const MyPostList = () => {
       <Masonry columnsCount={3} style={{ gap: '45px' }}>
         {myCollectTownArr?.map((item: string) => (
           <div key={uuidv4()}>
-            <Town value={item} />
+            <Town value={item} myPostData={data} />
           </div>
         ))}
       </Masonry>
