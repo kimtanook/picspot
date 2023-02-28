@@ -19,6 +19,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
+import { useQuery } from 'react-query';
 import { dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
@@ -273,23 +274,23 @@ export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);
 };
 
-//* post town 기준 데이터 가져오기
-export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
-  const [town] = queryKey;
-  const response: any = [];
-  let q = query(
-    collection(dbService, 'post'),
-    where('town', '==', '우도'),
-    orderBy('createdAt', 'desc')
-  );
+// //* post town 기준 데이터 가져오기
+// export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
+//   const [town] = queryKey;
+//   const response: any = [];
+//   let q = query(
+//     collection(dbService, 'post'),
+//     where('town', '==', '우도'),
+//     orderBy('createdAt', 'desc')
+//   );
 
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    response.push({ id: doc.id, ...doc.data() });
-  });
+//   const querySnapshot = await getDocs(q);
+//   querySnapshot.forEach((doc) => {
+//     response.push({ id: doc.id, ...doc.data() });
+//   });
 
-  return response;
-};
+//   return response;
+// };
 
 export const addSendMessage = async (item: any) => {
   await addDoc(collection(dbService, `message/take/${item.takeUser}`), item);
