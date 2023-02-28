@@ -80,7 +80,7 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
             </MorePostTownTitle>
             <Masonry columnsCount={4}>
               {MyCollectionTownItem?.map((item: any) => (
-                <Link href={`/detail/${item.id}`}>
+                <Link key={uuidv4()} href={`/detail/${item.id}`}>
                   <MyPostImg src={item.imgUrl} />
                 </Link>
               ))}

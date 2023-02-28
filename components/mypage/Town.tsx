@@ -71,7 +71,7 @@ const Town = ({ value }: { value: string }) => {
             </MorePostTownTitle>
             <Masonry columnsCount={4}>
               {myPostList?.map((item: { [key: string]: string }) => (
-                <Link href={`/detail/${item.id}`}>
+                <Link key={uuidv4()} href={`/detail/${item.id}`}>
                   <MyPostImg src={item.imgUrl} />
                 </Link>
               ))}
