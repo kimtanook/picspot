@@ -35,7 +35,7 @@ export default function Mypage() {
       ?.find((item: any) => {
         return item.follow;
       })?.follow ?? [];
-  console.log(authFollowingUid);
+
   //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
   const followingUser = userData?.filter((item: any) =>
     authFollowingUid?.includes(item.uid)
@@ -54,14 +54,6 @@ export default function Mypage() {
         <MyProfileContainer>
           <Profile followingCount={followingCount} />
         </MyProfileContainer>
-        {/* {followingUser?.map((item: any) => (
-          <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-            <Link href={`/userprofile/${item.uid}`}>
-              <div>{item.userName}</div>
-              <Image src={item.userImg} alt="image" height={100} width={100} />
-            </Link>
-          </div>
-        ))} */}
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>

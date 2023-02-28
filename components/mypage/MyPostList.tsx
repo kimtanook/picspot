@@ -38,7 +38,7 @@ const MyPostList = ({ setMore, more }: any) => {
       <Masonry columnsCount={3} style={{ gap: '45px' }}>
         {myCollectTownArr?.map((item: any) => (
           <div key={uuidv4()}>
-            <Town value={item} more={more} setMore={setMore} />
+            <Town value={item} />
           </div>
         ))}
       </Masonry>
