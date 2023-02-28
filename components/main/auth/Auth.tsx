@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
@@ -18,11 +18,9 @@ interface Props {
 
 const Auth = (props: Props): JSX.Element => {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
-  const [login, setLogin] = useState<boolean>(false);
   const [hidePassword, setHidePassword] = useState<boolean>(false);
   const [isRemember, setIsRemember] = useState<boolean>(false);
   const LS_KEY_ID = 'LS_KEY_ID';
-  const LS_KEY_SAVE_ID_FLAG = 'LS_KEY_SAVE_ID_FLAG';
 
   const {
     register,
@@ -83,6 +81,7 @@ const Auth = (props: Props): JSX.Element => {
 
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
+      <StHeder onClick={props.closeLoginModal}> 〈 취소 </StHeder>
       <LoginTextDiv>
         <div>
           <b>픽스팟에 로그인</b> 하고, <br></br>
@@ -178,6 +177,12 @@ const Auth = (props: Props): JSX.Element => {
 const LoginContainer = styled.div`
   background-color: #ffffff;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+`;
+const StHeder = styled.header`
+  cursor: pointer;
+  color: #1882ff;
+  font-size: 15px;
+  display: flex;
 `;
 const LoginTextDiv = styled.div`
   margin-top: 5vh;
