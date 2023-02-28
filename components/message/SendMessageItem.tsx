@@ -3,7 +3,7 @@ import { authService } from '@/firebase';
 import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
-function SendMessageItem({ item }: any) {
+function SendMessageItem({ item }: { item: SendTakeMessage }) {
   const user = authService.currentUser?.uid;
   const queryClient = useQueryClient();
   const { mutate: sendMessage } = useMutation(deleteSendMessage);

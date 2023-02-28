@@ -30,7 +30,7 @@ function MessageBox() {
             <div>받은메세지함</div>
             <div>받은메세지목록</div>
             <div>
-              {takeMsgData?.map((item: any) => (
+              {takeMsgData?.map((item: SendTakeMessage) => (
                 <div key={uuidv4()}>
                   <TakeMessageItem item={item} />
                 </div>
@@ -42,7 +42,7 @@ function MessageBox() {
             <div>보낸메세지함</div>
             <div>보낸메세지목록</div>
             <div>
-              {sendMsgData?.map((item: any) => (
+              {sendMsgData?.map((item: SendTakeMessage) => (
                 <div key={uuidv4()}>
                   <SendMessageItem item={item} />
                 </div>
