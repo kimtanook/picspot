@@ -72,9 +72,7 @@ export default function Mypage() {
           )}
         </div>
 
-        <GridBox>
-          {onSpot ? <MyPostList /> : <CollectionList postData={postData} />}
-        </GridBox>
+        <GridBox>{onSpot ? <MyPostList /> : <CollectionList />}</GridBox>
       </AllMyPostList>
     </>
   );

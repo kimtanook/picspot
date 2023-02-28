@@ -27,7 +27,6 @@ const DetailMapLanding = ({
   return (
     <StyleContainer>
       <StyledForm onSubmit={handleSubmit}>
-        {/* <StyledInfo>{infoDiv}</StyledInfo> */}
         <StyledInput
           placeholder="제주도 지역명을 검색해주세요."
           onChange={onchange}
