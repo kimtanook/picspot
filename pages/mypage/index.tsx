@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollwing, getUser } from '@/api';
+import { getData, getFollow, getFollowing, getUser } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -13,27 +13,35 @@ export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
   const [more, setMore]: any = useState(true);
 
-  //* following에서 내 uid와 같은 데이터 뽑기
+  //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: follwingData,
     isLoading,
     isError,
-  } = useQuery('FollwingData', getFollwing, {
+  } = useQuery('FollwingData', getFollowing, {
     select: (data) =>
-      data.find((item: any) => item.uid === authService.currentUser?.uid)
-        ?.follow,
+      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+        ?.following,
   });
-  // console.log('FollwingData: ', FollwingData);
+  // console.log('follwingData: ', follwingData);
+  const followingCount = follwingData?.length; //* 내가 팔로잉 하는 사람 숫자
 
-  //* user에서 내가 팔로우한 사람 데이터 뽑기
-  const { data: userData } = useQuery('UserData', getUser, {
+  //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
+  const { data: followData } = useQuery('FollowData', getFollow, {
+    select: (data) =>
+      data?.filter(
+        (item: any) => item.docId === authService.currentUser?.uid
+      )[0]?.follow,
+  });
+  // console.log('followData: ', followData);
+  const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
+
+  //* user에서 내가 팔로잉한 사람 데이터 뽑기
+  useQuery('UserData', getUser, {
     select: (data) =>
       data?.filter((item: any) => follwingData?.includes(item.uid)),
   });
   // console.log('userData: ', userData);
-
-  //* 내가 팔로잉 하는 사람 숫자
-  const followingCount = follwingData?.length;
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
@@ -44,7 +52,7 @@ export default function Mypage() {
       <Header selectCity={undefined} onChangeSelectCity={undefined} />
       <MyContainer>
         <MyProfileContainer>
-          <Profile followingCount={followingCount} />
+          <Profile followingCount={followingCount} followCount={followCount} />
         </MyProfileContainer>
         {/* {followingUser?.map((item: any) => (
           <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
