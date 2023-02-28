@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollwing, getUser } from '@/api';
+import { getFollwing, getUser } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -11,9 +11,8 @@ import { useState } from 'react';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
-  const [more, setMore]: any = useState(true);
 
-  //* following에서 내 uid와 같은 데이터 뽑기
+  //* useQuery 사용해서 following 데이터 불러오기
   const {
     data: follwingData,
     isLoading,
@@ -23,14 +22,11 @@ export default function Mypage() {
       data.find((item: any) => item.uid === authService.currentUser?.uid)
         ?.follow,
   });
-  // console.log('FollwingData: ', FollwingData);
-
   //* user에서 내가 팔로우한 사람 데이터 뽑기
   const { data: userData } = useQuery('UserData', getUser, {
     select: (data) =>
       data?.filter((item: any) => follwingData?.includes(item.uid)),
   });
-  // console.log('userData: ', userData);
 
   //* 내가 팔로잉 하는 사람 숫자
   const followingCount = follwingData?.length;
@@ -46,14 +42,6 @@ export default function Mypage() {
         <MyProfileContainer>
           <Profile followingCount={followingCount} />
         </MyProfileContainer>
-        {/* {followingUser?.map((item: any) => (
-          <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-            <Link href={`/userprofile/${item.uid}`}>
-              <div>{item.userName}</div>
-              <Image src={item.userImg} alt="image" height={100} width={100} />
-            </Link>
-          </div>
-        ))} */}
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>
@@ -71,13 +59,7 @@ export default function Mypage() {
           )}
         </div>
 
-        <GridBox>
-          {onSpot ? (
-            <MyPostList more={more} setMore={setMore} />
-          ) : (
-            <CollectionList postData={follwingData} />
-          )}
-        </GridBox>
+        <GridBox>{onSpot ? <MyPostList /> : <CollectionList />}</GridBox>
       </AllMyPostList>
     </>
   );
@@ -85,7 +67,6 @@ export default function Mypage() {
 
 const MyContainer = styled.div`
   width: 100%;
-  /* height: 55vh; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

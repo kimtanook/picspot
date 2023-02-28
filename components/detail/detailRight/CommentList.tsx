@@ -16,10 +16,6 @@ const CommentList = ({ postId }: postId) => {
   const { isLoading: commentLoading, mutate: commentMutate } =
     useMutation(addComment);
 
-  // const onChangeComment = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setComment(event.target.value);
-  // };
-
   const submitCommentData = {
     creatorUid: authService.currentUser?.uid,
     userName: authService.currentUser?.displayName,
@@ -56,7 +52,7 @@ const CommentList = ({ postId }: postId) => {
   return (
     <StCommentContainer>
       <StCommentBox>
-        {data.map((item: commentItemType) => (
+        {data.map((item: CommentItemType) => (
           <CommentItem key={uuidv4()} item={item} postId={postId} />
         ))}
       </StCommentBox>

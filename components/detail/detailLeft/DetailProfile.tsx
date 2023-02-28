@@ -1,4 +1,5 @@
 import { getUser } from '@/api';
+import { authService } from '@/firebase';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -6,16 +7,27 @@ import styled from 'styled-components';
 const DetailProfile = ({ item }: any) => {
   //* useQuery 사용해서 유저 데이터 불러오기
   const { data: user } = useQuery('data', getUser);
-
   return (
     <>
       {user
         ?.filter((obj: any) => obj.uid === item.creator)
         .map((obj: any) => (
           <StProfileCotainer key={obj.uid}>
-            <Link href={`/userprofile/${obj.uid}`}>
-              <StProfileImg src={obj.userImg} alt="image" />
-            </Link>
+            {authService.currentUser?.uid === obj.uid ? (
+              <Link href={'/mypage'}>
+                <StProfileImg src={obj.userImg} alt="image" />
+              </Link>
+            ) : (
+              <Link
+                href={{
+                  pathname: `/userprofile/${obj.uid}`,
+                  query: { name: obj.userName },
+                }}
+              >
+                <StProfileImg src={obj.userImg} alt="image" />
+              </Link>
+            )}
+
             <StProfileName>{obj.userName}</StProfileName>
           </StProfileCotainer>
         ))}

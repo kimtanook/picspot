@@ -1,29 +1,23 @@
-import { getData } from '@/api';
+import { getMyPost } from '@/api';
 import { authService } from '@/firebase';
-
 import { useQuery } from 'react-query';
 import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 
-const MyPostList = ({ setMore, more }: any) => {
-  //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery('data', getData);
-  //* 전체에서 가져온 데이터에서 내가 작성한 포스터들만 가져왔다.
-  const myPostList = data?.map((item: any) => {
-    if (item.creator === authService.currentUser?.uid) {
-      return item.id;
-    }
-  });
+const MyPostList = () => {
+  const userUid = authService.currentUser?.uid;
 
-  // * 포스터 data중 내가 만든 것
-  const categoryId = data?.filter((item: any) => myPostList?.includes(item.id));
+  //* useQuery 사용해서 데이터 불러오기
+  const { data } = useQuery(['data', userUid], getMyPost);
+  console.log('data', data);
+
   //* 만든 것 중 town 값만 고르기
-  const myCollectPost = categoryId?.filter((item: any) => {
+  const myCollectPost = data?.filter((item: { town: string }) => {
     return item.town;
   });
   //* town값을 골라 map 돌리기
-  const myCollectPostTown = myCollectPost?.map((item: any) => {
+  const myCollectPostTown = myCollectPost?.map((item: { town: string }) => {
     return item.town;
   });
   //* 배열에서 중복된 값 합치기
@@ -36,9 +30,9 @@ const MyPostList = ({ setMore, more }: any) => {
   return (
     <>
       <Masonry columnsCount={3} style={{ gap: '45px' }}>
-        {myCollectTownArr?.map((item: any) => (
+        {myCollectTownArr?.map((item: string) => (
           <div key={uuidv4()}>
-            <Town value={item} more={more} setMore={setMore} />
+            <Town value={item} myPostData={data} />
           </div>
         ))}
       </Masonry>
