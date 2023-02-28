@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollow, getFollowing, getUser } from '@/api';
+import { getFollow, getFollowing, getUser } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -10,6 +10,12 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 
 export default function Mypage() {
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+  // console.log(
+  //   'authService.currentUser?.displayName: ',
+  //   authService.currentUser?.displayName
+  // );
+
   const [onSpot, setOnSpot] = useState(true);
   const [more, setMore]: any = useState(true);
 
