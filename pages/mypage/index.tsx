@@ -18,21 +18,21 @@ export default function Mypage() {
 
   const [onSpot, setOnSpot] = useState(true);
 
-  //* following에서 uid와 현재 uid가 같은 following만 뽑기
   //* useQuery 사용해서 데이터 불러오기
   const { data: postData } = useQuery('data', getData);
-  //* useQuery 사용해서 following 데이터 불러오기
+
+  //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
-    data: follwingData,
+    data: followingData,
     isLoading,
     isError,
-  } = useQuery('FollwingData', getFollowing, {
+  } = useQuery('followingData', getFollowing, {
     select: (data) =>
       data?.find((item: any) => item.uid === authService.currentUser?.uid)
         ?.following,
   });
-  // console.log('follwingData: ', follwingData);
-  const followingCount = follwingData?.length; //* 내가 팔로잉 하는 사람 숫자
+  // console.log('followingData: ', followingData);
+  const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자
 
   //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
   const { data: followData } = useQuery('FollowData', getFollow, {
@@ -43,14 +43,6 @@ export default function Mypage() {
   });
   // console.log('followData: ', followData);
   const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
-
-  //* user에서 내가 팔로잉한 사람 데이터 뽑기
-  // useQuery('UserData', getUser, {
-  //* user에서 내가 팔로우한 사람 데이터 뽑기
-  // const { data: userData } = useQuery('UserData', getUser, {
-  //   select: (data) =>
-  //     data?.filter((item: any) => follwingData?.includes(item.uid)),
-  // });
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;

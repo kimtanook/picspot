@@ -10,7 +10,7 @@ import { updateUser } from '@/api';
 import Link from 'next/link';
 import ModalProfile from './ModalProfile';
 import { useRecoilState } from 'recoil';
-import { messageBoxToggle } from '@/atom';
+import { messageBoxToggle, followingToggle } from '@/atom';
 
 const imgFile = '/profileicon.svg';
 
@@ -20,6 +20,8 @@ interface propsType {
 }
 
 const Profile = ({ followingCount, followCount }: propsType) => {
+  const [followToggle, setFollowToggle] = useRecoilState(followingToggle);
+
   const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [editProfileModal, setEditProfileModal] = useState(false);
@@ -97,7 +99,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
         </ProfileTextdiv>
 
         <Follow>
-          <MyProfileFollowing>
+          <MyProfileFollowing onClick={() => setFollowToggle(!followToggle)}>
             <FollowingText>팔로잉</FollowingText>
             <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
           </MyProfileFollowing>
@@ -197,6 +199,7 @@ const MyProfileFollowing = styled.div`
   width: 90px;
   height: 85px;
   text-align: center;
+  cursor: pointer;
 `;
 const FollowingText = styled.div`
   font-family: Noto Sans CJK KR;
@@ -219,6 +222,7 @@ const MyProfileFollower = styled.div`
   width: 90px;
   height: 85px;
   text-align: center;
+  cursor: pointer;
 `;
 
 const FollowerText = styled.div`

@@ -4,6 +4,7 @@ import {
   deleteFollow,
   deleteFollowing,
   getFollowing,
+  updateUser,
 } from '@/api';
 import { authService } from '@/firebase';
 import { useEffect, useState } from 'react';
@@ -15,14 +16,24 @@ const FollowingButton = ({ item }: any) => {
   const [follwingUserAndCreatorUidState, setFollwingUserAndCreatorUidState] =
     useState(false);
 
-  //* mutation 사용해서 팔로잉, 팔로우 데이터 보내기
+  //* mutation 사용해서 팔로잉, 팔로우 데이터 보내기, user 데이터 보내기
   const { mutate: follwingMutate } = useMutation(addFollowing);
   const { mutate: followMutate } = useMutation(addFollow);
+  const { mutate: userMutate } = useMutation(updateUser);
+
+  //! auth.uid의 user 정보가 아니라,
+  //! creator의 user 정보를 바꿔야 한다.
+  //* user 데이터
+  const userData: any = {
+    uid: item.creator,
+    creator: item.creator,
+  };
 
   //* 팔로잉버튼 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
     follwingMutate({ ...item, uid: authService?.currentUser?.uid });
     followMutate({ ...item, uid: authService?.currentUser?.uid });
+    userMutate(userData);
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
   };
 
