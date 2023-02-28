@@ -1,4 +1,4 @@
-import { getFollwing, getUser } from '@/api';
+import { getFollowing, getUser } from '@/api';
 import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import { useRouter } from 'next/router';
@@ -17,7 +17,7 @@ function Profile() {
   const [onSpot, setOnSpot] = useState(true);
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
-  const { data: getFollowingData } = useQuery('getFollowingData', getFollwing);
+  const { data: getFollowingData } = useQuery('getFollowingData', getFollowing);
 
   const [sendMsgToggle, setSendMsgToggle] = useRecoilState(messageSendToggle);
 
