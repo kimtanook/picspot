@@ -6,13 +6,15 @@ import MyCollectPost from './MyCollectPost';
 import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const CollectionCategory = ({ value, postData, collectionData }: any) => {
-  const [scroll, setScroll] = useState(true);
+  const [more, setMore] = useState(true);
   //* post CollectionCategory 기준 데이터 가져오기
   const getTownDatas = async ({ queryKey }: { queryKey: string[] }) => {
     const [_, town] = queryKey;
-    const response: any = [];
+    const response: { id: string }[] = [];
     let q = query(
       collection(dbService, 'post'),
       where('town', '==', town),
@@ -31,50 +33,68 @@ const CollectionCategory = ({ value, postData, collectionData }: any) => {
   const { data } = useQuery(['data', value], getTownDatas);
 
   //* 모든 collection중 내가 collector에 내이름이 있는(내가 선택한) 포스터들
-  const collectorList = collectionData?.filter((item: any) => {
-    return item.collector?.find((item: any) =>
+  const collectorList = collectionData?.filter((item: { collector: any[] }) => {
+    return item.collector?.find((item) =>
       authService.currentUser?.uid.includes(item)
     );
   });
 
   //* 내가 담은 collection의 uid값
-  const myCollectionUid = collectorList?.map((item: any) => item.uid);
+  const myCollectionUid = collectorList?.map((item: { uid: any }) => item.uid);
   //* 모든 포스터들 중 내가 담은 collection의 uid와 비교허여 일치하는 값
-  const MyCollectionTownItem = data?.filter((item: any) =>
+  const MyCollectionTownItem = data?.filter((item: { id: string }) =>
     myCollectionUid?.includes(item.id)
   );
 
-  return (
-    <TownWrap>
-      <PostTownTitle>
-        <CollectorTownTitle>{value}</CollectorTownTitle>
-      </PostTownTitle>
-      {scroll ? (
-        <MySpotImg>
-          <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-            {MyCollectionTownItem?.map((item: any) => (
-              <MyCollectPost item={item} key={uuidv4()} />
-            ))}
-          </Masonry>
-        </MySpotImg>
-      ) : (
-        <MoreMySpotImg>
-          <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-            {MyCollectionTownItem?.map((item: any) => (
-              <MyCollectPost item={item} key={uuidv4()} />
-            ))}
-          </Masonry>
-        </MoreMySpotImg>
-      )}
+  const onClickMoreBtn = () => {
+    setMore(!more);
+  };
 
-      <MoreBtn
-        onClick={() => {
-          setScroll(!scroll);
-        }}
-      >
-        more
-      </MoreBtn>
-    </TownWrap>
+  return (
+    <div>
+      {more ? (
+        <TownWrap>
+          <PostTownTitle>
+            <CollectorTownTitle>{value}</CollectorTownTitle>
+          </PostTownTitle>
+          <MySpotImg>
+            <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+              {MyCollectionTownItem?.map((item: { [key: string]: string }) => (
+                <MyCollectPost item={item} key={uuidv4()} />
+              ))}
+            </Masonry>
+          </MySpotImg>
+
+          <MoreBtn onClick={onClickMoreBtn}>
+            <MoreBtnContents>
+              more
+              <ArrowImg src={'/right-arrow.png'} />
+            </MoreBtnContents>
+          </MoreBtn>
+        </TownWrap>
+      ) : (
+        <>
+          <MoreDiv>
+            <MorePostTownTitle>
+              <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
+            </MorePostTownTitle>
+            <Masonry columnsCount={4}>
+              {MyCollectionTownItem?.map((item: any) => (
+                <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                  <MyPostImg src={item.imgUrl} />
+                </Link>
+              ))}
+            </Masonry>
+            <MoreBtn onClick={onClickMoreBtn}>
+              <MoreBtnContents>
+                <ArrowImg src={'/arrow-left.png'} />
+                back
+              </MoreBtnContents>
+            </MoreBtn>
+          </MoreDiv>
+        </>
+      )}
+    </div>
   );
 };
 
@@ -108,13 +128,6 @@ const MySpotImg = styled.div`
   overflow: hidden;
   display: grid;
 `;
-const MoreMySpotImg = styled.div`
-  width: 390px;
-  margin-top: 24px;
-  height: 256px;
-  overflow: scroll;
-  display: grid;
-`;
 
 const MoreBtn = styled.button`
   width: 35px;
@@ -129,8 +142,55 @@ const MoreBtn = styled.button`
   margin-top: 20px;
   border: none;
   background-color: white;
+  margin-right: 16px;
   :hover {
     font-size: 15px;
     transition: all 0.3s;
   }
+`;
+
+const MoreBtnContents = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const ArrowImg = styled.img`
+  width: 12px;
+  height: 12px;
+  align-items: flex-end;
+`;
+
+const MoreDiv = styled.div`
+  background-color: white;
+  z-index: 100;
+  position: absolute;
+  width: 1200px;
+  margin: auto;
+  height: 1700px;
+  top: 440px;
+  left: 8%;
+`;
+const MyPostImg = styled.img`
+  width: 275px;
+  margin-bottom: 13px;
+  :hover {
+    transition: all 0.3s;
+    transform: scale(1.02);
+  }
+`;
+
+const MorePostTownTitle = styled.div`
+  height: 43px;
+  border-bottom: 1px solid #212121;
+  margin-bottom: 25px;
+`;
+
+const MoreMyPostTownTitle = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-size: 20px;
+  line-height: 30px;
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: -0.015em;
 `;

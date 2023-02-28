@@ -7,7 +7,7 @@ function CommentItem({
   item,
   postId,
 }: {
-  item: commentItemType;
+  item: CommentItemType;
   postId: string | string[] | undefined;
 }) {
   const queryClient = useQueryClient();
