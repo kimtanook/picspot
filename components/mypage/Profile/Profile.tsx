@@ -59,15 +59,6 @@ const Profile = ({ followingCount }: propsType) => {
     setEditProfileModal(!editProfileModal);
   };
 
-  //* useMutation 사용해서 user 데이터 수정하기
-  const { mutate: onUpdateUser } = useMutation(updateUser);
-
-  let editUser: any = {
-    uid: authService.currentUser?.uid,
-    userName: '',
-    userImg: '',
-  };
-
   return (
     <ProfileContainer>
       {/* 프로필 수정 버튼 props */}

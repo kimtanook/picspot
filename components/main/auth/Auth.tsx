@@ -8,6 +8,7 @@ import { customAlert } from '@/utils/alerts';
 
 interface AuthForm {
   email: string;
+  password: string;
 }
 interface Props {
   closeLoginModal: () => void;
@@ -17,33 +18,36 @@ interface Props {
 
 const Auth = (props: Props): JSX.Element => {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [hidePassword, setHidePassword] = useState<boolean>(false);
   // const [isRemember, setIsRemember] = useState<boolean>(false);
 
   const {
     register,
+    setValue,
+    handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<AuthForm>({ mode: 'onBlur' });
 
-  const onClickLoginHandler = async (e: FormEvent) => {
-    e.preventDefault();
-    if (error !== '') setError('');
-
+  const onSubmit = async (data: AuthForm) => {
     setAuthenticating(true);
-    await signInWithEmailAndPassword(authService, email, password)
+    await signInWithEmailAndPassword(authService, data.email, data.password)
       .then((res) => {
         customAlert('로그인에 성공하였습니다!');
         props.closeLoginModal();
       })
       .catch(() => {
-        alert('로그인 실패, 다시 입력해주세요');
+        setError('password', {
+          type: 'invalid',
+          message: '비밀번호를 잘못 입력하셨어요',
+        });
         setAuthenticating(false);
-        setError('Failed Login');
       });
   };
 
+  const toggleHidePassword = () => {
+    setHidePassword(!hidePassword);
+  };
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
       <LoginTextDiv>
@@ -53,49 +57,65 @@ const Auth = (props: Props): JSX.Element => {
         </div>
       </LoginTextDiv>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <LoginEmailPwContainer>
-          <LoginEmailInput
-            {...register('email', {
-              required: '*등록되지 않은 아이디예요',
-              pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                message: '*등록되지 않은 아이디예요',
-              },
-            })}
-            name="email"
-            type="email"
-            id="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="이메일을 입력 해주세요"
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                onClickLoginHandler(e);
-              }
-            }}
-          />
-          <LoginPwInput
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="비밀번호를 입력 해주세요"
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                onClickLoginHandler(e);
-              }
-            }}
-          />
+          <EditInputBox>
+            <LoginInput
+              {...register('email', {
+                required: '*등록되지 않은 아이디예요',
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                  message: '*등록되지 않은 아이디예요',
+                },
+              })}
+              placeholder="이메일을 입력 해주세요"
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(onSubmit);
+                }
+              }}
+            />
+            <EditclearBtn
+              onClick={() => {
+                setValue('email', '');
+              }}
+            ></EditclearBtn>
+          </EditInputBox>
           <AuthWarn>{errors?.email?.message}</AuthWarn>
+          <EditInputBox>
+            <LoginInput
+              {...register('password', {
+                required: '비밀번호를 입력해주세요.',
+                minLength: {
+                  value: 8,
+                  message:
+                    '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                },
+                pattern: {
+                  value:
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                  message:
+                    '*7~20자리 숫자 내 영문 숫자 혼합 비밀번호를 입력해주세요',
+                },
+              })}
+              type={hidePassword ? 'text' : 'password'}
+              placeholder="비밀번호를 입력 해주세요"
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(onSubmit);
+                }
+              }}
+            />
+            <EditPwShowBtn onClick={toggleHidePassword}></EditPwShowBtn>
+          </EditInputBox>
+          <AuthWarn>{errors?.password?.message}</AuthWarn>
         </LoginEmailPwContainer>
 
         <LoginBtnContainer>
           <LoginBtn
+            onClick={handleSubmit(onSubmit)}
             type="submit"
             disabled={authenticating}
-            onClick={(e) => onClickLoginHandler(e)}
           >
             <div>로그인 하기</div>
           </LoginBtn>
@@ -121,7 +141,6 @@ const LoginContainer = styled.div`
   background-color: #ffffff;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
-
 const LoginTextDiv = styled.div`
   margin-top: 5vh;
   font-family: 'Noto Sans CJK KR';
@@ -131,7 +150,6 @@ const LoginTextDiv = styled.div`
   text-align: center;
   color: #212121;
 `;
-
 const LoginEmailPwContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -139,29 +157,45 @@ const LoginEmailPwContainer = styled.div`
   margin: 0 auto;
   margin-top: 40px;
 `;
-
-const LoginEmailInput = styled.input`
+const LoginInput = styled.input`
   height: 40px;
+  width: 96%;
   padding-left: 10px;
   background-color: #fbfbfb;
   border: 1px solid #8e8e93;
   font-size: 15px;
 `;
-
-const LoginPwInput = styled.input`
-  height: 40px;
-  padding-left: 10px;
-  background-color: #fbfbfb;
-  border: 1px solid #8e8e93;
-  margin-top: 20px;
-  font-size: 15px;
-`;
-
 const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
+  height: 10px;
 `;
+const EditInputBox = styled.div`
+  width: 100%;
+  position: relative;
+`;
+const EditclearBtn = styled.div`
+  position: absolute;
+  top: 25%;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
 
+  cursor: pointer;
+`;
+const EditPwShowBtn = styled.div`
+  position: absolute;
+  top: 25%;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background-image: url(/pw-show.png);
+  background-repeat: no-repeat;
+
+  cursor: pointer;
+`;
 const LoginBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -169,7 +203,6 @@ const LoginBtnContainer = styled.div`
   width: 90%;
   margin-top: 20px;
 `;
-
 const LoginBtn = styled.button`
   display: flex;
   justify-content: center;
@@ -185,7 +218,6 @@ const LoginBtn = styled.button`
     cursor: pointer;
   }
 `;
-
 const PwForgotContainer = styled.span`
   display: flex;
   justify-content: center;
@@ -195,14 +227,12 @@ const PwForgotContainer = styled.span`
   margin-top: 10px;
   color: #1882ff;
 `;
-
 const LoginGoogleContainer = styled.div`
   display: flex;
   width: 90%;
   margin: 0 auto;
   margin-top: 30px;
 `;
-
 const LoginCheckContainer = styled.span`
   display: flex;
   justify-content: center;
@@ -212,7 +242,6 @@ const LoginCheckContainer = styled.span`
   margin-top: 20px;
   color: #1882ff;
 `;
-
 const LoginCheckSignDiv = styled.div`
   cursor: pointer;
   text-decoration: underline;
