@@ -181,6 +181,7 @@ const AuthSignUp = (props: Props) => {
             })}
             type="username"
             value={nickname}
+            onChange={(event) => setNickname(event.target.value)}
             placeholder="닉네임을 입력해 주세요"
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
