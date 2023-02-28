@@ -238,6 +238,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                   <StPostFormSelect onChange={onChange2}>
                     {city === '제주시' ? (
                       <>
+                        <option value="">선택</option>
+                        <option value="제주시 시내">제주시 시내</option>
                         <option value="한림읍">한림읍</option>
                         <option value="조천읍">조천읍</option>
                         <option value="한경면">한경면</option>
@@ -248,6 +250,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                       </>
                     ) : city === '서귀포시' ? (
                       <>
+                        <option value="">선택</option>
+                        <option value="서귀포시 시내">서귀포시 시내</option>
                         <option value="표선면">표선면</option>
                         <option value="대정읍">대정읍</option>
                         <option value="남원읍">남원읍</option>
