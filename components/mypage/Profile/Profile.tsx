@@ -5,18 +5,30 @@ import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { customAlert } from '@/utils/alerts';
-import { useMutation } from 'react-query';
-import { updateUser } from '@/api';
+import { useMutation, useQuery } from 'react-query';
+import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
 import ModalProfile from './ModalProfile';
+import { useRecoilState } from 'recoil';
+import {
+  messageBoxToggle,
+  followingToggleAtom,
+  followToggleAtom,
+} from '@/atom';
 
 const imgFile = '/profileicon.svg';
 
 interface propsType {
   followingCount: number;
+  followCount: number;
 }
 
-const Profile = ({ followingCount }: propsType) => {
+const Profile = ({ followingCount, followCount }: propsType) => {
+  const [followingToggle, setfollowingToggle] =
+    useRecoilState(followingToggleAtom);
+  const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
+
+  const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [editProfileModal, setEditProfileModal] = useState(false);
   const [imgEdit, setImgEdit] = useState<string>(profileimg);
@@ -43,9 +55,10 @@ const Profile = ({ followingCount }: propsType) => {
   const logOut = () => {
     signOut(authService).then(() => {
       // Sign-out successful.
-      localStorage.clear();
+      // localStorage.clear();
       setCurrentUser(false);
       customAlert('로그아웃에 성공하였습니다!');
+      localStorage.removeItem('googleUser');
     });
   };
   // 전체 프로필 수정을 취소하기
@@ -55,57 +68,12 @@ const Profile = ({ followingCount }: propsType) => {
     setEditProfileModal(!editProfileModal);
   };
 
-  //* useMutation 사용해서 user 데이터 수정하기
-  const { mutate: onUpdateUser } = useMutation(updateUser);
-
-  let editUser: any = {
-    uid: authService.currentUser?.uid,
-    userName: '',
-    userImg: '',
-  };
-
-  // 전체 프로필 수정을 완료하기
-  const profileEditComplete = async () => {
-    const imgRef = ref(
-      storageService,
-      `${authService.currentUser?.uid}${uuidv4()}`
-    );
-
-    const imgDataUrl = localStorage.getItem('imgURL');
-    let downloadUrl;
-    if (imgDataUrl) {
-      const response = await uploadString(imgRef, imgDataUrl, 'data_url');
-      downloadUrl = await getDownloadURL(response.ref);
-    }
-
-    editUser = {
-      ...editUser,
-      userName: nicknameEdit,
-      userImg: downloadUrl,
-    };
-    onUpdateUser(editUser, {
-      onSuccess: () => {
-        console.log('유저수정 요청 성공');
-      },
-      onError: () => {
-        console.log('유저수정 요청 실패');
-      },
-    });
-
-    await updateProfile(authService?.currentUser!, {
-      displayName: nicknameEdit,
-      photoURL: downloadUrl ?? null,
-    })
-      .then((res) => {
-        customAlert('프로필 수정 완료하였습니다!');
-      })
-      .then(() => {
-        setEditProfileModal(!editProfileModal);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // 쪽지함 버튼에 확인하지 않은 메세지 표시
+  const { data: takeMsgData } = useQuery(
+    ['getTakeMessageData', nowUser?.uid],
+    getTakeMessage
+  );
+  const checked = takeMsgData?.filter((item) => item.checked === false);
 
   return (
     <ProfileContainer>
@@ -125,7 +93,7 @@ const Profile = ({ followingCount }: propsType) => {
           <ProfileImage img={imgEdit}></ProfileImage>
           {/* 프로필 수정 */}
           <ProfileEditBtn onClick={editProfileModalButton}>
-            내 정보 변경 {'>'}{' '}
+            내 정보 변경 {'>'}
           </ProfileEditBtn>
         </div>
       </ProfileEdit>
@@ -140,16 +108,21 @@ const Profile = ({ followingCount }: propsType) => {
               ) : null}
             </Link>
           </ProfileNickname>
+          <SendMessage onClick={() => setMsgToggle(true)}>
+            쪽지함/미확인{checked?.length}개
+          </SendMessage>
         </ProfileTextdiv>
 
         <Follow>
-          <MyProfileFollowing>
+          <MyProfileFollowing
+            onClick={() => setfollowingToggle(!followingToggle)}
+          >
             <FollowingText>팔로잉</FollowingText>
-            <FollowingCount>{followingCount}</FollowingCount>
+            <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
           </MyProfileFollowing>
-          <MyProfileFollower>
+          <MyProfileFollower onClick={() => setFollowToggle(!followToggle)}>
             <FollowerText>팔로워</FollowerText>
-            <FollowerCount>준비중</FollowerCount>
+            <FollowerCount>{null ? '0' : followCount}</FollowerCount>
           </MyProfileFollower>
         </Follow>
       </ProfileText>
@@ -205,6 +178,18 @@ const ProfileNickname = styled.span`
   text-align: left;
   padding-left: 20px;
 `;
+const SendMessage = styled.button`
+  background-color: white;
+  border: 1px black solid;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
+`;
 const LogoutButton = styled.button`
   font-family: Noto Sans CJK KR;
   color: #8e8e93;
@@ -231,6 +216,7 @@ const MyProfileFollowing = styled.div`
   width: 90px;
   height: 85px;
   text-align: center;
+  cursor: pointer;
 `;
 const FollowingText = styled.div`
   font-family: Noto Sans CJK KR;
@@ -238,12 +224,14 @@ const FollowingText = styled.div`
   font-size: 20px;
   padding-top: 10px;
 `;
+
 const FollowingCount = styled.div`
   font-family: Noto Sans CJK KR;
   color: #212121;
-  font-size: 24px;
-  padding: 11px 20px;
+  font-size: 20px;
+  padding-top: 10px;
 `;
+
 const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
@@ -251,13 +239,16 @@ const MyProfileFollower = styled.div`
   width: 90px;
   height: 85px;
   text-align: center;
+  cursor: pointer;
 `;
+
 const FollowerText = styled.div`
   font-family: Noto Sans CJK KR;
   color: 5B5B5F;
   font-size: 20px;
   padding-top: 10px;
 `;
+
 const FollowerCount = styled.div`
   font-family: Noto Sans CJK KR;
   color: #212121;

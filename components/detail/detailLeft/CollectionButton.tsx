@@ -16,6 +16,8 @@ const CollectionButton = ({ item }: any) => {
   //* 현재 나의 uid
   const collector = authService.currentUser?.uid;
   let postId = item.id;
+  let imgUrl = item.imgUrl;
+  let town = item.town;
 
   const queryClient = useQueryClient();
 
@@ -50,8 +52,11 @@ const CollectionButton = ({ item }: any) => {
       ...item,
       uid: postId,
       collector: authService.currentUser?.uid,
+      imgUrl: imgUrl,
+      town: town,
     });
     setIsCollect(!isCollect);
+    console.log('first', postId);
   };
 
   //* collection 삭제 기능입니다.

@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollwing, getUser } from '@/api';
+import { getData, getFollow, getFollowing, getUser } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -10,39 +10,40 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 
 export default function Mypage() {
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+  // console.log(
+  //   'authService.currentUser?.displayName: ',
+  //   authService.currentUser?.displayName
+  // );
+
   const [onSpot, setOnSpot] = useState(true);
-  const [more, setMore]: any = useState(true);
 
   //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery('data', getData);
-  //* useQuery 사용해서 following 데이터 불러오기
+  const { data: postData } = useQuery('data', getData);
+
+  //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
     isLoading,
     isError,
-  } = useQuery('followingData', getFollwing);
+  } = useQuery('FollowingData', getFollowing, {
+    select: (data) =>
+      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+        ?.following,
+  });
+  // console.log('followingData: ', followingData);
+  const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자
 
-  //* useQuery 사용해서 userData 데이터 불러오기
-  const { data: userData } = useQuery('userData', getUser);
+  //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
+  const { data: followData } = useQuery('FollowData', getFollow, {
+    select: (data) =>
+      data?.filter(
+        (item: any) => item.docId === authService.currentUser?.uid
+      )[0]?.follow,
+  });
+  // console.log('followData: ', followData);
+  const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
-  //* 팔로잉한 사람 프로필 닉네임 뽑아오기
-  //? 팔로잉한 사람 uid를 배열에 담았습니다.
-  const authFollowingUid =
-    followingData
-      ?.filter((item: any) => {
-        return item.uid === authService?.currentUser?.uid;
-      })
-      ?.find((item: any) => {
-        return item.follow;
-      })?.follow ?? [];
-  console.log(authFollowingUid);
-  //? user의 item.uid과 팔로잉한 사람 uid의 교집합을 배열에 담았습니다.
-  const followingUser = userData?.filter((item: any) =>
-    authFollowingUid?.includes(item.uid)
-  );
-
-  // 팔로잉 하는 사람 숫자
-  const followingCount = authFollowingUid?.length;
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
@@ -52,16 +53,8 @@ export default function Mypage() {
       <Header selectCity={undefined} onChangeSelectCity={undefined} />
       <MyContainer>
         <MyProfileContainer>
-          <Profile followingCount={followingCount} />
+          <Profile followingCount={followingCount} followCount={followCount} />
         </MyProfileContainer>
-        {/* {followingUser?.map((item: any) => (
-          <div key={item.uid} style={{ display: 'flex', flexDirection: 'row' }}>
-            <Link href={`/userprofile/${item.uid}`}>
-              <div>{item.userName}</div>
-              <Image src={item.userImg} alt="image" height={100} width={100} />
-            </Link>
-          </div>
-        ))} */}
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>
@@ -79,13 +72,7 @@ export default function Mypage() {
           )}
         </div>
 
-        <GridBox>
-          {onSpot ? (
-            <MyPostList more={more} setMore={setMore} />
-          ) : (
-            <CollectionList postData={data} />
-          )}
-        </GridBox>
+        <GridBox>{onSpot ? <MyPostList /> : <CollectionList />}</GridBox>
       </AllMyPostList>
     </>
   );
@@ -93,7 +80,6 @@ export default function Mypage() {
 
 const MyContainer = styled.div`
   width: 100%;
-  /* height: 55vh; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

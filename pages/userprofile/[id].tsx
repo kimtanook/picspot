@@ -1,4 +1,4 @@
-import { getFollwing, getUser } from '@/api';
+import { getFollowing, getUser } from '@/api';
 import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import { useRouter } from 'next/router';
@@ -7,6 +7,8 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import UserPostList from '@/components/userprofile/UserPostList';
 import UserCollectionList from '@/components/userprofile/UserCollectionList';
+import { useRecoilState } from 'recoil';
+import { messageSendToggle } from '@/atom';
 
 function Profile() {
   const router = useRouter();
@@ -15,7 +17,9 @@ function Profile() {
   const [onSpot, setOnSpot] = useState(true);
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
-  const { data: getFollowingData } = useQuery('getFollowingData', getFollwing);
+  const { data: getFollowingData } = useQuery('getFollowingData', getFollowing);
+
+  const [sendMsgToggle, setSendMsgToggle] = useRecoilState(messageSendToggle);
 
   // 다른 사용자의 프로필을 보여주기 위한 filter
   const userData = getUserData?.filter(
@@ -37,6 +41,9 @@ function Profile() {
             <ProfileText>
               <ProfileTextWrap>
                 <ProfileNickname>{userData?.userName}님</ProfileNickname>
+                <SendMessage onClick={() => setSendMsgToggle(true)}>
+                  쪽지보내기
+                </SendMessage>
               </ProfileTextWrap>
               <FollowWrap>
                 <MyProfileFollowing>
@@ -158,16 +165,29 @@ const ProfileText = styled.div`
 `;
 const ProfileTextWrap = styled.div`
   display: flex;
-  place-items: flex-end;
+  align-items: center;
+  text-align: center;
 `;
 const ProfileNickname = styled.div`
-  padding-top: 20px;
   width: 150px;
+  line-height: 36px;
   height: 36px;
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
   text-align: center;
+`;
+const SendMessage = styled.button`
+  background-color: white;
+  border: 1px black solid;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
 `;
 
 const FollowWrap = styled.div`

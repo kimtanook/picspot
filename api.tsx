@@ -19,6 +19,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
+import { useQuery } from 'react-query';
 import { dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
@@ -166,7 +167,8 @@ export const getComment = async ({ queryKey }: any) => {
 };
 
 //* 댓글 추가
-export const addComment = async (item: any) => {
+export const addComment = async (item: AddComment) => {
+  console.log('item : ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -175,12 +177,12 @@ export const addComment = async (item: any) => {
 
 //* 댓글 삭제
 
-export const deleteComment = async (item: any) => {
+export const deleteComment = async (item: DeleteComment) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
 
 //* 조회수 증가하기
-export const postCounter: any = async (item: any) => {
+export const postCounter = async (item: any) => {
   await updateDoc(doc(dbService, 'post', item), {
     clickCounter: increment(1),
   });
@@ -199,12 +201,19 @@ export const getCollection = async () => {
 };
 
 //* collection  데이터 추가하기
-export const addCollectionData: any = ({ uid, collector }: any) => {
+export const addCollectionData: any = ({
+  uid,
+  collector,
+  town,
+  imgUrl,
+}: any) => {
   setDoc(
     doc(dbService, 'collection', uid),
     {
       collector: arrayUnion(collector),
       uid: uid,
+      town: town,
+      imgUrl: imgUrl,
     },
     { merge: true }
   );
@@ -219,29 +228,60 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
+  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
-      follow: arrayUnion(data.creator),
+      following: arrayUnion(data.creator),
     },
     { merge: true }
   );
 };
 
 //* 팔로잉 삭제하기
-export const deleteFollwing: any = (data: any) => {
+export const deleteFollowing: any = (data: any) => {
   updateDoc(doc(dbService, 'following', data.uid), {
-    follow: arrayRemove(data.creator),
+    following: arrayRemove(data.creator),
   });
 };
 
 //* 팔로잉 가져오기
-export const getFollwing = async () => {
+export const getFollowing = async () => {
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'following'));
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
+  });
+
+  return response;
+};
+
+//* 팔로우 추가하기
+export const addFollow: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'follow', data.creator),
+    {
+      follow: arrayUnion(data.uid),
+    },
+    { merge: true }
+  );
+};
+
+//* 팔로우 삭제하기
+export const deleteFollow: any = (data: any) => {
+  updateDoc(doc(dbService, 'follow', data.creator), {
+    follow: arrayRemove(data.uid),
+  });
+};
+
+//* 팔로우 가져오기
+export const getFollow = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'follow'));
+  querySnapshot.forEach((doc) => {
+    response.push({ docId: doc.id, ...doc.data() });
   });
 
   return response;
@@ -273,20 +313,86 @@ export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);
 };
 
-//* post town 기준 데이터 가져오기
-export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
-  const [town] = queryKey;
-  const response: any = [];
-  let q = query(
-    collection(dbService, 'post'),
-    where('town', '==', '우도'),
-    orderBy('createdAt', 'desc')
-  );
+// //* post town 기준 데이터 가져오기
+// export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
+//   const [town] = queryKey;
+//   const response: any = [];
+//   let q = query(
+//     collection(dbService, 'post'),
+//     where('town', '==', '우도'),
+//     orderBy('createdAt', 'desc')
+//   );
 
+//   const querySnapshot = await getDocs(q);
+//   querySnapshot.forEach((doc) => {
+//     response.push({ id: doc.id, ...doc.data() });
+//   });
+
+//   return response;
+// };
+
+// 상대방에게 메세지 보내기
+export const addSendMessage = async (item: CreateMessage) => {
+  await addDoc(collection(dbService, `message/take/${item.takeUser}`), item);
+};
+
+// 내가 보낸 메세지 저장
+export const addSendedMessage = async (item: CreateMessage) => {
+  await addDoc(collection(dbService, `message/send/${item.sendUser}`), item);
+};
+
+// 받은 메세지 가져오기
+export const getTakeMessage = async ({ queryKey }: MessageQueryKey) => {
+  const [_, id] = queryKey;
+  const data: SendTakeMessage[] = [];
+  const q = query(
+    collection(dbService, `message/take/${id}`),
+    orderBy('time', 'desc')
+  );
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    response.push({ id: doc.id, ...doc.data() });
+    data.push({ id: doc.id, ...doc.data() });
   });
+  return data;
+};
+// 보낸 메세지 가져오기
+export const getSendMessage = async ({ queryKey }: MessageQueryKey) => {
+  const [_, id] = queryKey;
+  const data: SendTakeMessage[] = [];
+  const q = query(
+    collection(dbService, `message/send/${id}`),
+    orderBy('time', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+};
+// 받은 메세지 삭제
+export const deleteTakeMessage = async (item: DeleteMessage) => {
+  deleteDoc(doc(dbService, `message/take/${item.uid}/${item.id}`));
+};
+// 보낸 메세지 삭제
+export const deleteSendMessage = async (item: DeleteMessage) => {
+  deleteDoc(doc(dbService, `message/send/${item.uid}/${item.id}`));
+};
 
-  return response;
+// 내 게시물 가져오기
+export const getMyPost = async ({ queryKey }: any) => {
+  const [_, id] = queryKey;
+  const data: any[] = [];
+  const q = query(collection(dbService, 'post'), where('creator', '==', id));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+};
+
+// 메세지 확인
+export const checkedMessageData = async (data: any) => {
+  await updateDoc(doc(dbService, `message/take/${data.user}/${data.id}`), {
+    checked: true,
+  });
 };
