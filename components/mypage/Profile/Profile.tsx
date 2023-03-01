@@ -5,8 +5,8 @@ import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { customAlert } from '@/utils/alerts';
-import { useMutation } from 'react-query';
-import { updateUser } from '@/api';
+import { useMutation, useQuery } from 'react-query';
+import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
 import ModalProfile from './ModalProfile';
 import { useRecoilState } from 'recoil';
@@ -68,6 +68,13 @@ const Profile = ({ followingCount, followCount }: propsType) => {
     setEditProfileModal(!editProfileModal);
   };
 
+  // 쪽지함 버튼에 확인하지 않은 메세지 표시
+  const { data: takeMsgData } = useQuery(
+    ['getTakeMessageData', nowUser?.uid],
+    getTakeMessage
+  );
+  const checked = takeMsgData?.filter((item) => item.checked === false);
+
   return (
     <ProfileContainer>
       {/* 프로필 수정 버튼 props */}
@@ -101,7 +108,9 @@ const Profile = ({ followingCount, followCount }: propsType) => {
               ) : null}
             </Link>
           </ProfileNickname>
-          <SendMessage onClick={() => setMsgToggle(true)}>쪽지함</SendMessage>
+          <SendMessage onClick={() => setMsgToggle(true)}>
+            쪽지함/미확인{checked?.length}개
+          </SendMessage>
         </ProfileTextdiv>
 
         <Follow>

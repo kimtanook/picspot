@@ -353,7 +353,6 @@ export const getTakeMessage = async ({ queryKey }: MessageQueryKey) => {
   querySnapshot.forEach((doc) => {
     data.push({ id: doc.id, ...doc.data() });
   });
-  console.log('data : ', data);
   return data;
 };
 // 보낸 메세지 가져오기
@@ -389,4 +388,11 @@ export const getMyPost = async ({ queryKey }: any) => {
     data.push({ id: doc.id, ...doc.data() });
   });
   return data;
+};
+
+// 메세지 확인
+export const checkedMessageData = async (data: any) => {
+  await updateDoc(doc(dbService, `message/take/${data.user}/${data.id}`), {
+    checked: true,
+  });
 };
