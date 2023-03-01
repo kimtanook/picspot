@@ -1,7 +1,7 @@
-import { authService, dbService } from '@/firebase';
+import { dbService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import MyCollectPost from './MyCollectPost';
 import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';

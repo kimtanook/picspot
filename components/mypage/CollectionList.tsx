@@ -23,14 +23,14 @@ const CollectionList = () => {
 
   //* 배열에서 중복된 town 값 합치기
   const myCollectionTownArr = myCollectionTown?.filter(
-    (element: any, index: any) => {
+    (element: string, index: number) => {
       return myCollectionTown?.indexOf(element) === index;
     }
   );
   return (
     <>
       <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
-        {myCollectionTownArr?.map((item: any) => (
+        {myCollectionTownArr?.map((item: string) => (
           <CollectionCategory
             key={uuidv4()}
             value={item}

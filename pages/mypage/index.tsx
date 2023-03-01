@@ -10,12 +10,6 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 
 export default function Mypage() {
-  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
-  // console.log(
-  //   'authService.currentUser?.displayName: ',
-  //   authService.currentUser?.displayName
-  // );
-
   const [onSpot, setOnSpot] = useState(true);
 
   //* useQuery 사용해서 데이터 불러오기
