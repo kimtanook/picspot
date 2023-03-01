@@ -10,7 +10,12 @@ export const messageSendToggle = atom({
   default: false,
 });
 
-export const followingToggle = atom({
-  key: `followingToggle${uuidv4()}`,
+export const followingToggleAtom = atom({
+  key: `followingToggleAtom${uuidv4()}`,
+  default: false,
+});
+
+export const followToggleAtom = atom({
+  key: `followToggleAtom${uuidv4()}`,
   default: false,
 });

@@ -228,6 +228,7 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
+  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {

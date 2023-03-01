@@ -26,7 +26,7 @@ export default function Mypage() {
     data: followingData,
     isLoading,
     isError,
-  } = useQuery('followingData', getFollowing, {
+  } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
       data?.find((item: any) => item.uid === authService.currentUser?.uid)
         ?.following,
