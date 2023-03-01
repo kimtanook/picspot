@@ -19,7 +19,6 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
-import { useQuery } from 'react-query';
 import { dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
@@ -32,7 +31,7 @@ export const visibleReset = () => {
   // 그로 인해, 페이지 이동 후 돌아오면 다음 페이지부터 보여주므로 기존 데이터 날아감.
   lastVisible = undefined;
 };
-export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
+export const getInfiniteData = async ({ queryKey }: any) => {
   const [_, option, value, town, city] = queryKey;
   const getData: { [key: string]: string }[] = [];
   let q;
@@ -62,18 +61,18 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         limit(20)
       );
     } else {
-      if (town && lastVisible) {
+      if (town.length !== 0 && lastVisible) {
         q = query(
           collection(dbService, 'post'),
-          where('town', '==', town),
+          where('town', 'in', town),
           orderBy('createdAt', 'desc'),
           limit(8),
           startAfter(lastVisible)
         );
-      } else if (town) {
+      } else if (town.length !== 0) {
         q = query(
           collection(dbService, 'post'),
-          where('town', '==', town),
+          where('town', 'in', town),
           orderBy('createdAt', 'desc'),
           limit(20)
         );
