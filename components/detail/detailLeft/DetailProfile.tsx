@@ -1,10 +1,24 @@
 import { getUser } from '@/api';
 import { authService } from '@/firebase';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
 const DetailProfile = ({ item }: any) => {
+  //* 마이페이지로 이동하기
+  const router = useRouter();
+  const onClickRouteMypage = (obj: any) => {
+    if (authService.currentUser?.uid === obj.uid) {
+      router.push(`/mypage`);
+    } else {
+      router.push({
+        pathname: `/userprofile/${obj.uid}`,
+        query: { name: obj.userName },
+      });
+    }
+  };
+
   //* useQuery 사용해서 유저 데이터 불러오기
   const { data: user } = useQuery('data', getUser);
   return (
@@ -12,23 +26,21 @@ const DetailProfile = ({ item }: any) => {
       {user
         ?.filter((obj: any) => obj.uid === item.creator)
         .map((obj: any) => (
-          <StProfileCotainer key={obj.uid}>
+          <StProfileCotainer
+            key={obj.uid}
+            onClick={() => onClickRouteMypage(obj)}
+          >
             {authService.currentUser?.uid === obj.uid ? (
-              <Link href={'/mypage'}>
+              <>
                 <StProfileImg src={obj.userImg} alt="image" />
-              </Link>
+                <StProfileName>{obj.userName}</StProfileName>
+              </>
             ) : (
-              <Link
-                href={{
-                  pathname: `/userprofile/${obj.uid}`,
-                  query: { name: obj.userName },
-                }}
-              >
+              <>
                 <StProfileImg src={obj.userImg} alt="image" />
-              </Link>
+                <StProfileName>{obj.userName}</StProfileName>
+              </>
             )}
-
-            <StProfileName>{obj.userName}</StProfileName>
           </StProfileCotainer>
         ))}
     </>
@@ -42,6 +54,7 @@ const StProfileCotainer = styled.div`
   flex-direction: row;
   align-items: center;
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const StProfileImg = styled.img`

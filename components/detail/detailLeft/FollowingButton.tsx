@@ -33,7 +33,7 @@ const FollowingButton = ({ item }: any) => {
     creator: authService.currentUser?.uid,
   };
 
-  //* 팔로잉버튼 눌렀을때 실행하는 함수
+  //* 팔로잉버튼을 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
     followMutate({ ...item, uid: authService?.currentUser?.uid });
@@ -46,7 +46,7 @@ const FollowingButton = ({ item }: any) => {
   const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing);
   const { mutate: deleteFollowMutate } = useMutation(deleteFollow);
 
-  //* 팔로잉삭제 버튼 눌렀을때 실행하는 함수
+  //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowing = (item: any) => {
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
@@ -63,11 +63,12 @@ const FollowingButton = ({ item }: any) => {
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
   const authFollowingUid = followingData
     ?.filter((item: any) => {
-      return item.uid === authService.currentUser?.uid;
+      return item.docId === authService.currentUser?.uid;
     })
     .find((item: any) => {
       return item.following;
     })?.following;
+  // console.log('authFollowingUid: ', authFollowingUid);
 
   //* 팔로잉을 한 유저가 페이지에 들어왔을때 팔로잉 취소버튼이,
   //* 팔로잉을 하지 않은 유저가 페이지에 들어왔을때 팔로잉 버튼이 보이도록 하기
@@ -102,7 +103,7 @@ const FollowingButton = ({ item }: any) => {
             onClick={() => onClickDeleteFollowing(item)}
             style={{ width: 80 }}
           >
-            팔로잉 삭제
+            언팔로잉
           </StFollowingBtn>
         ) : (
           <StFollowingBtn
