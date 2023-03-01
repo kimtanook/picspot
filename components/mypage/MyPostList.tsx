@@ -10,7 +10,7 @@ const MyPostList = () => {
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery(['data', userUid], getMyPost);
-  console.log('data', data);
+  // console.log('data', data);
 
   //* 만든 것 중 town 값만 고르기
   const myCollectPost = data?.filter((item: { town: string }) => {
