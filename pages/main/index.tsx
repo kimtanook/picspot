@@ -2,14 +2,7 @@ import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ChangeEvent,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
@@ -34,7 +27,7 @@ export default function Main() {
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
-  const [selectTown, setSelectTown] = useState('');
+  const [selectTown, setSelectTown] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
 
   const [isModalPostActive, setIsModalPostActive]: any = useState(false);
@@ -101,7 +94,7 @@ export default function Main() {
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectCity('제주전체');
-    setSelectTown('');
+    setSelectTown([]);
     visibleReset();
     setSearchOption(searchOptionRef.current?.value);
     setSearchValue(event.target.value);
@@ -113,7 +106,7 @@ export default function Main() {
 
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectTown('');
+    setSelectTown([]);
     setSearchValue('');
     visibleReset();
     router.push({
@@ -126,7 +119,15 @@ export default function Main() {
   const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
-    setSelectTown(event.currentTarget.value);
+    const townName = event.currentTarget.value as never;
+    if (!selectTown.includes(townName)) {
+      setSelectTown([...selectTown, townName]);
+    } else {
+      const cancelSelect = selectTown.filter(
+        (item: string) => item !== event.currentTarget.value
+      );
+      setSelectTown(cancelSelect);
+    }
   };
 
   // 무한 스크롤
@@ -141,10 +142,47 @@ export default function Main() {
       getNextPageParam: () => {
         return true;
       },
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 10,
     }
   );
   // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
   useBottomScrollListener(fetchNextPage, { offset: 300 });
+
+  // 시티별 타운 카테고리
+  const jejuTown = [
+    '제주시 시내',
+    '구좌읍',
+    '애월읍',
+    '우도면',
+    '추자면',
+    '한경면',
+    '한림읍',
+    '조천읍',
+  ];
+  const seogwipoTown = [
+    '서귀포시 시내',
+    '표선면',
+    '대정읍',
+    '성산읍',
+    '성산읍',
+    '안덕면',
+    '남원읍',
+  ];
+  const allTown = [
+    '구좌읍',
+    '표선면',
+    '대정읍',
+    '애월읍',
+    '남원읍',
+    '성산읍',
+    '안덕면',
+    '우도면',
+    '추자면',
+    '한경면',
+    '한림읍',
+    '조천읍',
+  ];
 
   useEffect(() => {
     setSelectCity(`${router.query.city}`);
@@ -173,100 +211,42 @@ export default function Main() {
           <TownCategory>
             {selectCity === '제주시' ? (
               <div>
-                <TownBtn onClick={onClickSelectTown} value="">
-                  제주시 전체
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="제주시 시내">
-                  제주시 시내
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="구좌읍">
-                  구좌읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="애월읍">
-                  애월읍
-                </TownBtn>
-
-                <TownBtn onClick={onClickSelectTown} value="우도면">
-                  우도면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="추자면">
-                  추자면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한경면">
-                  한경면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한림읍">
-                  한림읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="조천읍">
-                  조천읍
-                </TownBtn>
+                {jejuTown.map((item: string) => (
+                  <TownBtn
+                    key={uuidv4()}
+                    town={selectTown}
+                    value={item}
+                    onClick={onClickSelectTown}
+                  >
+                    {item === '' ? '제주시 전체' : item}
+                  </TownBtn>
+                ))}
               </div>
             ) : selectCity === '서귀포시' ? (
               <div>
-                <TownBtn onClick={onClickSelectTown} value="">
-                  서귀포시 전체
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="서귀포시 시내">
-                  서귀포시 시내
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="표선면">
-                  표선면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="대정읍">
-                  대정읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="성산읍">
-                  성산읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="안덕면">
-                  안덕면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="남원읍">
-                  남원읍
-                </TownBtn>
+                {seogwipoTown.map((item: string) => (
+                  <TownBtn
+                    key={uuidv4()}
+                    town={selectTown}
+                    value={item}
+                    onClick={onClickSelectTown}
+                  >
+                    {item === '' ? '서귀포시 전체' : item}
+                  </TownBtn>
+                ))}
               </div>
             ) : (
               <div>
-                <TownBtn onClick={onClickSelectTown} value="">
-                  제주전체
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="구좌읍">
-                  구좌읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="표선면">
-                  표선면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="대정읍">
-                  대정읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="애월읍">
-                  애월읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="남원읍">
-                  남원읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="성산읍">
-                  성산읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="안덕면">
-                  안덕면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="우도면">
-                  우도면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="추자면">
-                  추자면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한경면">
-                  한경면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한림읍">
-                  한림읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="조천읍">
-                  조천읍
-                </TownBtn>
+                {allTown.map((item: string) => (
+                  <TownBtn
+                    key={uuidv4()}
+                    town={selectTown}
+                    value={item}
+                    onClick={onClickSelectTown}
+                  >
+                    {item === '' ? '제주 전체' : item}
+                  </TownBtn>
+                ))}
               </div>
             )}
           </TownCategory>
@@ -299,7 +279,7 @@ export default function Main() {
             <GridBox>
               <Masonry columnsCount={4}>
                 {data?.pages.map((data) =>
-                  data?.map((item: any) => (
+                  data?.map((item: { [key: string]: string }) => (
                     <ItemBox key={uuidv4()}>
                       <Content item={item} />
                     </ItemBox>
@@ -415,16 +395,16 @@ const TownCategory = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
 `;
-const TownBtn = styled.button`
+const TownBtn = styled.button<{ town: string[]; value: string }>`
   background-color: #dcdcdc;
-
-  /* width: 66px; */
   width: 88px;
   height: 26px;
   margin: 3px;
   border: none;
   border-radius: 52px;
   cursor: pointer;
+  border: ${({ value, town }) =>
+    town.includes(value) ? '2px solid #FEB819' : 'none'};
 `;
 
 const GridBox = styled.div`

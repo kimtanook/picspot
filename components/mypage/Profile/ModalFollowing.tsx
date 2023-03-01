@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { followingToggle } from '@/atom';
+import { followingToggleAtom } from '@/atom';
 
 interface ItemType {
   uid: string;
@@ -16,15 +16,16 @@ interface ItemType {
 
 const ModalFollowing = () => {
   // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
-  const [followToggle, setFollowToggle] = useRecoilState(followingToggle);
+  const [followingToggle, setfollowingToggle] =
+    useRecoilState(followingToggleAtom);
   const queryClient = useQueryClient();
 
-  //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
+  //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
     isLoading,
     isError,
-  } = useQuery('followingData', getFollowing, {
+  } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
       data?.find((item: any) => item.uid === authService.currentUser?.uid)
         ?.following,
@@ -42,16 +43,13 @@ const ModalFollowing = () => {
   //* mutation 사용해서 팔로잉, 팔로우 삭제 데이터 보내기
   const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing, {
     onSuccess: () => {
-      setTimeout(() => queryClient.invalidateQueries('followingData'), 500);
+      setTimeout(() => queryClient.invalidateQueries('FollowingData'), 500);
       setTimeout(() => queryClient.invalidateQueries('UserData'), 500);
     },
     onError: () => {},
   });
 
-  //! following 삭제에 보내줘야하는 정보
-  //! 내 uid, 게시물 만든 사람의 uid
-  //! item에 담긴 정보는 내가 팔로잉한 사람의 user 정보
-  //* 팔로잉삭제 버튼 눌렀을때 실행하는 함수
+  //* 언팔로잉 버튼 눌렀을때 실행하는 함수
   const onClickDeleteFollowing = (item: any) => {
     deleteFollowingMutate({ ...item, uid: authService.currentUser?.uid });
   };
@@ -59,7 +57,7 @@ const ModalFollowing = () => {
   //* 팔로잉한 사람 버튼을 눌렀을때 실행하는 함수
   const router = useRouter();
   const onClickFollowing = (item: any) => {
-    setFollowToggle(!followToggle);
+    setfollowingToggle(!followingToggle);
     router.push(`/userprofile/${item.uid}`);
   };
 
@@ -89,9 +87,9 @@ const ModalFollowing = () => {
             />
             <FollowingUserName>{item.userName}</FollowingUserName>
           </FollowingUser>
-          <FollwingBtn onClick={() => onClickDeleteFollowing(item)}>
+          <FollowingBtn onClick={() => onClickDeleteFollowing(item)}>
             언팔로잉
-          </FollwingBtn>
+          </FollowingBtn>
         </FollowingProfile>
       ))}
     </FollowingContainer>
@@ -124,6 +122,7 @@ const FollowingTotal = styled.div`
   height: 70px;
   text-align: center;
   margin-bottom: 30px;
+  padding-bottom: 20px;
 `;
 
 const FollowingText = styled.div`
@@ -159,7 +158,7 @@ const FollowingUserName = styled.div`
   font-size: 20px;
 `;
 
-const FollwingBtn = styled.div`
+const FollowingBtn = styled.div`
   cursor: pointer;
   background-color: #4cb2f6;
   color: white;

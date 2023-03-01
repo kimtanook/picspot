@@ -10,7 +10,11 @@ import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
 import ModalProfile from './ModalProfile';
 import { useRecoilState } from 'recoil';
-import { messageBoxToggle, followingToggle } from '@/atom';
+import {
+  messageBoxToggle,
+  followingToggleAtom,
+  followToggleAtom,
+} from '@/atom';
 
 const imgFile = '/profileicon.svg';
 
@@ -20,7 +24,9 @@ interface propsType {
 }
 
 const Profile = ({ followingCount, followCount }: propsType) => {
-  const [followToggle, setFollowToggle] = useRecoilState(followingToggle);
+  const [followingToggle, setfollowingToggle] =
+    useRecoilState(followingToggleAtom);
+  const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
 
   const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
@@ -108,11 +114,13 @@ const Profile = ({ followingCount, followCount }: propsType) => {
         </ProfileTextdiv>
 
         <Follow>
-          <MyProfileFollowing onClick={() => setFollowToggle(!followToggle)}>
+          <MyProfileFollowing
+            onClick={() => setfollowingToggle(!followingToggle)}
+          >
             <FollowingText>팔로잉</FollowingText>
             <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
           </MyProfileFollowing>
-          <MyProfileFollower>
+          <MyProfileFollower onClick={() => setFollowToggle(!followToggle)}>
             <FollowerText>팔로워</FollowerText>
             <FollowerCount>{null ? '0' : followCount}</FollowerCount>
           </MyProfileFollower>

@@ -1,15 +1,23 @@
-import { messageBoxToggle, messageSendToggle, followingToggle } from '@/atom';
+import {
+  messageBoxToggle,
+  messageSendToggle,
+  followingToggleAtom,
+  followToggleAtom,
+} from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { CustomModal } from './common/CustomModal';
 import MessageBox from './message/MessageBox';
 import MessageSend from './message/MessageSend';
+import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
   const [msgSendToggle, setMsgSendToggle] = useRecoilState(messageSendToggle);
-  const [followToggle, setFollowToggle] = useRecoilState(followingToggle);
+  const [followingToggle, setfollowingToggle] =
+    useRecoilState(followingToggleAtom);
+  const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
   return (
     <div>
       <div>
@@ -35,13 +43,24 @@ function Layout() {
         ) : null}
       </div>
       <div>
+        {followingToggle ? (
+          <CustomModal
+            modal={followingToggle}
+            setModal={setfollowingToggle}
+            width="400"
+            height="650"
+            element={<ModalFollowing />}
+          />
+        ) : null}
+      </div>
+      <div>
         {followToggle ? (
           <CustomModal
             modal={followToggle}
             setModal={setFollowToggle}
             width="400"
             height="650"
-            element={<ModalFollowing />}
+            element={<ModalFollow />}
           />
         ) : null}
       </div>
