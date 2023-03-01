@@ -81,8 +81,8 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
 
   if (authService.currentUser?.uid !== item.creator) {
     return (
-      <StDetailImgContainer>
-        <StDetailImg
+      <DetailImgContainer>
+        <DetailImg3
           src={item.imgUrl}
           alt="image"
           onClick={onClickToggleImgModal}
@@ -93,27 +93,27 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
             setModal={setIsModalImgActive}
             width="300"
             height="300"
-            element={<StDetailImg2 src={item.imgUrl} alt="image" />}
+            element={<DetailImg2 src={item.imgUrl} alt="image" />}
           />
         ) : (
           ''
         )}
-      </StDetailImgContainer>
+      </DetailImgContainer>
     );
   } else {
     return (
-      <StDetailImgContainer>
+      <DetailImgContainer>
         {imageUpload ? (
-          <StDetailImg src={imageUpload} />
+          <DetailImg3 src={imageUpload} />
         ) : (
-          <StDetailImg src={item.imgUrl} alt="image" />
+          <DetailImg3 src={item.imgUrl} alt="image" />
         )}
         {imageUpload ? (
-          <StDetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
+          <DetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
             게시물 사진 수정 〉
-          </StDetailBtn>
+          </DetailBtn>
         ) : (
-          <StDetailBtn>
+          <DetailBtn>
             게시물 사진 변경 〉
             <input
               type="file"
@@ -125,16 +125,16 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
               id="file"
               style={{ height: '100%', width: '100%', display: 'none' }}
             />
-          </StDetailBtn>
+          </DetailBtn>
         )}
-      </StDetailImgContainer>
+      </DetailImgContainer>
     );
   }
 };
 
 export default DetailImg;
 
-const StDetailImgContainer = styled.div`
+const DetailImgContainer = styled.div`
   background-color: #f1f1f1;
   height: 500px;
   width: 350px;
@@ -143,19 +143,20 @@ const StDetailImgContainer = styled.div`
   align-items: center;
 `;
 
-const StDetailImg = styled.img`
+const DetailImg3 = styled.img`
   width: 100%;
   height: 100%;
   cursor: pointer;
   object-fit: contain;
 `;
-const StDetailImg2 = styled.img`
+
+const DetailImg2 = styled.img`
   width: 550px;
   /* height: 600px; */
   cursor: pointer;
 `;
 
-const StDetailBtn = styled.label`
+const DetailBtn = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;

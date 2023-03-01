@@ -97,23 +97,23 @@ const FollowingButton = ({ item }: any) => {
     authService.currentUser?.uid !== item.creator
   ) {
     return (
-      <StFollowingContainer>
+      <FollowingContainer>
         {follwingUserAndCreatorUidState ? (
-          <StFollowingBtn
+          <FollowingBtn
             onClick={() => onClickDeleteFollowing(item)}
             style={{ width: 80 }}
           >
             언팔로잉
-          </StFollowingBtn>
+          </FollowingBtn>
         ) : (
-          <StFollowingBtn
+          <FollowingBtn
             onClick={() => onClickFollowingBtn(item)}
             style={{ width: 60 }}
           >
             팔로잉
-          </StFollowingBtn>
+          </FollowingBtn>
         )}
-      </StFollowingContainer>
+      </FollowingContainer>
     );
   }
   return <div></div>;
@@ -121,12 +121,12 @@ const FollowingButton = ({ item }: any) => {
 
 export default FollowingButton;
 
-const StFollowingContainer = styled.div`
+const FollowingContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const StFollowingBtn = styled.div`
+const FollowingBtn = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

@@ -91,10 +91,10 @@ const DetailList = ({
 
   if (!editBtnToggle) {
     return (
-      <StListContainer>
-        <StTitleAndView>
-          <StTitle>{item.title} </StTitle>
-          <StView>
+      <ListContainer>
+        <TitleAndView>
+          <Title>{item.title} </Title>
+          <View>
             <Image
               src="/view_icon.svg"
               alt="image"
@@ -105,17 +105,17 @@ const DetailList = ({
             <span style={{ color: '#1882FF', width: 70 }}>
               {item.clickCounter} view
             </span>
-          </StView>
+          </View>
           {authService.currentUser?.uid === item.creator ? (
-            <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
+            <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
           ) : null}
-        </StTitleAndView>
-        <StCityAndTownAndAddress>
-          <StCity>{item.city}</StCity>
-          <StTown>{item.town}</StTown>
-          <StAddress>
+        </TitleAndView>
+        <CityAndTownAndAddress>
+          <City>{item.city}</City>
+          <Town>{item.town}</Town>
+          <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <StAddressText>{item.address}</StAddressText>
+            <AddressText>{item.address}</AddressText>
             <span
               style={{
                 marginLeft: 10,
@@ -126,19 +126,19 @@ const DetailList = ({
             >
               copy
             </span>
-          </StAddress>
-        </StCityAndTownAndAddress>
-        <StContent>
-          <StTipSpan>Tip |</StTipSpan>
-          <StContentSpan>{item.content}</StContentSpan>
-        </StContent>
-      </StListContainer>
+          </Address>
+        </CityAndTownAndAddress>
+        <Content>
+          <TipSpan>Tip |</TipSpan>
+          <ContentSpan>{item.content}</ContentSpan>
+        </Content>
+      </ListContainer>
     );
   } else {
     return (
-      <StListContainer>
-        <StTitleAndView>
-          <StTitleInput
+      <ListContainer>
+        <TitleAndView>
+          <TitleInput
             defaultValue={item.title}
             onChange={(e) => {
               setEditTitle(e.target.value);
@@ -146,20 +146,20 @@ const DetailList = ({
           />
 
           {editBtnToggle ? (
-            <StEditBtnCotainer>
-              <StEditBtn onClick={() => onClickDelete(item.id)}>
+            <EditBtnCotainer>
+              <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
-              </StEditBtn>
-              <StEditBtn
+              </EditBtn>
+              <EditBtn
                 onClick={() => onClickEdit({ id: item.id, ...editData })}
               >
                 수정 완료 〉
-              </StEditBtn>
-              <StEditBtn onClick={onClickEditToggle}>취소 〉</StEditBtn>
-            </StEditBtnCotainer>
+              </EditBtn>
+              <EditBtn onClick={onClickEditToggle}>취소 〉</EditBtn>
+            </EditBtnCotainer>
           ) : (
             <>
-              <StView>
+              <View>
                 <Image
                   src="/view_icon.svg"
                   alt="image"
@@ -170,14 +170,14 @@ const DetailList = ({
                 <span style={{ color: '#1882FF' }}>
                   {item.clickCounter} view
                 </span>
-              </StView>
+              </View>
 
-              <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
+              <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
             </>
           )}
-        </StTitleAndView>
-        <StCityAndTownAndAddress>
-          <StCityInput
+        </TitleAndView>
+        <CityAndTownAndAddress>
+          <CityInput
             defaultValue={item.city}
             onChange={(e) => setEditCity(e.target.value)}
             // onChange={onClickEditTown}
@@ -185,8 +185,8 @@ const DetailList = ({
             <option value="제주전체">제주전체</option>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
-          </StCityInput>
-          <StTownInput
+          </CityInput>
+          <TownInput
             defaultValue={item.town}
             // onChange={(e) => setEditTown(e.target.value)}
             onChange={(e) => onClickEditTown(e)}
@@ -203,8 +203,8 @@ const DetailList = ({
             <option value="애월읍">애월읍</option>
             <option value="우도">우도</option>
             <option value="마라도">마라도</option>
-          </StTownInput>
-          <StAddress>
+          </TownInput>
+          <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
             <span>{item.address}</span>
             <span
@@ -217,37 +217,37 @@ const DetailList = ({
             >
               copy
             </span>
-          </StAddress>
-        </StCityAndTownAndAddress>
-        <StContent>
+          </Address>
+        </CityAndTownAndAddress>
+        <Content>
           Tip |{' '}
-          <StContentInput
+          <ContentInput
             defaultValue={item.content}
             onChange={(e) => {
               setEditContent(e.target.value);
             }}
           />
-        </StContent>
-      </StListContainer>
+        </Content>
+      </ListContainer>
     );
   }
 };
 
 export default DetailList;
 
-const StListContainer = styled.div`
+const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
 `;
 
-const StTitleAndView = styled.div`
+const TitleAndView = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
 `;
 
-const StTitle = styled.div`
+const Title = styled.div`
   font-size: 30px;
   margin-right: 20px;
   width: 90%;
@@ -256,25 +256,25 @@ const StTitle = styled.div`
   white-space: nowrap;
 `;
 
-const StTitleInput = styled.input`
+const TitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;
   width: 90%;
 `;
 
-const StView = styled.div`
+const View = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const StEditBtnCotainer = styled.div`
+const EditBtnCotainer = styled.div`
   display: flex;
   gap: 10px;
   width: 350px;
   margin-left: 20px;
 `;
 
-const StEditBtn = styled.div`
+const EditBtn = styled.div`
   background-color: #feb819;
   display: flex;
   justify-content: center;
@@ -285,12 +285,12 @@ const StEditBtn = styled.div`
   cursor: pointer;
 `;
 
-const StCityAndTownAndAddress = styled.div`
+const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
 `;
 
-const StCity = styled.div`
+const City = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -302,7 +302,7 @@ const StCity = styled.div`
   padding-top: 4px;
 `;
 
-const StCityInput = styled.select`
+const CityInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
   width: 50%;
@@ -311,7 +311,7 @@ const StCityInput = styled.select`
   border: none;
 `;
 
-const StTown = styled.div`
+const Town = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -323,7 +323,7 @@ const StTown = styled.div`
   padding-top: 4px;
 `;
 
-const StTownInput = styled.select`
+const TownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
   width: 30%;
@@ -332,7 +332,7 @@ const StTownInput = styled.select`
   border: none;
 `;
 
-const StAddress = styled.div`
+const Address = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -340,13 +340,13 @@ const StAddress = styled.div`
   width: 100%;
 `;
 
-const StAddressText = styled.span`
+const AddressText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
 
-const StContent = styled.div`
+const Content = styled.div`
   display: flex;
   align-items: center;
   background-color: #f8f8f8;
@@ -357,7 +357,7 @@ const StContent = styled.div`
   margin-bottom: 5px;
 `;
 
-const StContentInput = styled.input`
+const ContentInput = styled.input`
   width: 80%;
   min-height: 30px;
   padding-left: 10px;
@@ -365,11 +365,11 @@ const StContentInput = styled.input`
   border: transparent;
 `;
 
-const StTipSpan = styled.span`
+const TipSpan = styled.span`
   width: 50px;
 `;
 
-const StContentSpan = styled.span`
+const ContentSpan = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

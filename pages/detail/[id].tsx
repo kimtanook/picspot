@@ -89,7 +89,7 @@ const Post = ({ id }: any) => {
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   return (
-    <StDetailContainer>
+    <DetailContainer>
       <Seo title="Detail" />
       <Header selectCity={undefined} onChangeSelectCity={undefined} />
 
@@ -98,8 +98,8 @@ const Post = ({ id }: any) => {
           return item.id === id;
         })
         .map((item: any) => (
-          <StDetailContents key={item.id}>
-            <StImgAndProfileAndFollowingAndCollection>
+          <DetailContents key={item.id}>
+            <ImgAndProfileAndFollowingAndCollection>
               <DetailImg
                 item={item}
                 imageUpload={imageUpload}
@@ -107,17 +107,17 @@ const Post = ({ id }: any) => {
                 editImg={editImg}
               />
 
-              <StProfileAndFollowingAndCollection>
-                <StProfileAndFollwing>
+              <ProfileAndFollowingAndCollection>
+                <ProfileAndFollwing>
                   <DetailProfile item={item} />
-                </StProfileAndFollwing>
+                </ProfileAndFollwing>
 
                 <FollowingButton item={item} />
                 <CollectionButton item={item} />
-              </StProfileAndFollowingAndCollection>
-            </StImgAndProfileAndFollowingAndCollection>
+              </ProfileAndFollowingAndCollection>
+            </ImgAndProfileAndFollowingAndCollection>
 
-            <StListAndMapAndComment>
+            <ListAndMapAndComment>
               <DetailList
                 item={item}
                 editBtnToggle={editBtnToggle}
@@ -156,20 +156,20 @@ const Post = ({ id }: any) => {
               />
 
               <CommentList postId={id} />
-            </StListAndMapAndComment>
-          </StDetailContents>
+            </ListAndMapAndComment>
+          </DetailContents>
         ))}
-    </StDetailContainer>
+    </DetailContainer>
   );
 };
 
 export default Post;
 
-const StDetailContainer = styled.div`
+const DetailContainer = styled.div`
   position: relative;
 `;
 
-const StDetailContents = styled.div`
+const DetailContents = styled.div`
   top: 50px;
 
   margin-top: 50px;
@@ -180,11 +180,11 @@ const StDetailContents = styled.div`
   width: 100%;
 `;
 
-const StImgAndProfileAndFollowingAndCollection = styled.div`
+const ImgAndProfileAndFollowingAndCollection = styled.div`
   width: 30%;
 `;
 
-const StProfileAndFollowingAndCollection = styled.div`
+const ProfileAndFollowingAndCollection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -192,11 +192,11 @@ const StProfileAndFollowingAndCollection = styled.div`
   padding-top: 20px;
 `;
 
-const StProfileAndFollwing = styled.div`
+const ProfileAndFollwing = styled.div`
   display: flex;
 `;
 
-const StListAndMapAndComment = styled.div`
+const ListAndMapAndComment = styled.div`
   width: 50%;
 `;
 

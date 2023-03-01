@@ -92,7 +92,7 @@ const AuthSignUp = (props: Props) => {
   };
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
-      <StHeder onClick={props.changeModalButton}> 〈 돌아가기 </StHeder>
+      <Heder onClick={props.changeModalButton}> 〈 돌아가기 </Heder>
 
       <SignUpTextDiv>회원가입하기</SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -218,7 +218,7 @@ const SignUpContainer = styled.div`
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
 `;
 
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;

@@ -26,22 +26,22 @@ const DetailProfile = ({ item }: any) => {
       {user
         ?.filter((obj: any) => obj.uid === item.creator)
         .map((obj: any) => (
-          <StProfileCotainer
+          <ProfileCotainer
             key={obj.uid}
             onClick={() => onClickRouteMypage(obj)}
           >
             {authService.currentUser?.uid === obj.uid ? (
               <>
-                <StProfileImg src={obj.userImg} alt="image" />
-                <StProfileName>{obj.userName}</StProfileName>
+                <ProfileImg src={obj.userImg} alt="image" />
+                <ProfileName>{obj.userName}</ProfileName>
               </>
             ) : (
               <>
-                <StProfileImg src={obj.userImg} alt="image" />
-                <StProfileName>{obj.userName}</StProfileName>
+                <ProfileImg src={obj.userImg} alt="image" />
+                <ProfileName>{obj.userName}</ProfileName>
               </>
             )}
-          </StProfileCotainer>
+          </ProfileCotainer>
         ))}
     </>
   );
@@ -49,7 +49,7 @@ const DetailProfile = ({ item }: any) => {
 
 export default DetailProfile;
 
-const StProfileCotainer = styled.div`
+const ProfileCotainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -57,14 +57,14 @@ const StProfileCotainer = styled.div`
   cursor: pointer;
 `;
 
-const StProfileImg = styled.img`
+const ProfileImg = styled.img`
   border-radius: 50%;
   width: 50px;
   height: 50px;
   margin-right: 10px;
 `;
 
-const StProfileName = styled.div`
+const ProfileName = styled.div`
   width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
