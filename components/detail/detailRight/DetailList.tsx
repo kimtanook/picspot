@@ -281,7 +281,7 @@ const StEditBtn = styled.div`
   align-items: center;
   color: white;
   font-size: 12px;
-  width: 88px;
+  width: 120px;
   cursor: pointer;
 `;
 
@@ -305,7 +305,7 @@ const StCity = styled.div`
 const StCityInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 160px;
+  width: 50%;
   height: 40px;
   text-align: center;
   border: none;
@@ -326,7 +326,7 @@ const StTown = styled.div`
 const StTownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 100px;
+  width: 30%;
   height: 40px;
   text-align: center;
   border: none;
@@ -337,6 +337,7 @@ const StAddress = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
+  width: 100%;
 `;
 
 const StAddressText = styled.span`

@@ -9,3 +9,13 @@ export const messageSendToggle = atom({
   key: `messageToggle${uuidv4()}`,
   default: false,
 });
+
+export const followingToggleAtom = atom({
+  key: `followingToggleAtom${uuidv4()}`,
+  default: false,
+});
+
+export const followToggleAtom = atom({
+  key: `followToggleAtom${uuidv4()}`,
+  default: false,
+});

@@ -19,7 +19,6 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
-import { useQuery } from 'react-query';
 import { dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
@@ -32,7 +31,7 @@ export const visibleReset = () => {
   // 그로 인해, 페이지 이동 후 돌아오면 다음 페이지부터 보여주므로 기존 데이터 날아감.
   lastVisible = undefined;
 };
-export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
+export const getInfiniteData = async ({ queryKey }: any) => {
   const [_, option, value, town, city] = queryKey;
   const getData: { [key: string]: string }[] = [];
   let q;
@@ -62,18 +61,18 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         limit(20)
       );
     } else {
-      if (town && lastVisible) {
+      if (town.length !== 0 && lastVisible) {
         q = query(
           collection(dbService, 'post'),
-          where('town', '==', town),
+          where('town', 'in', town),
           orderBy('createdAt', 'desc'),
           limit(8),
           startAfter(lastVisible)
         );
-      } else if (town) {
+      } else if (town.length !== 0) {
         q = query(
           collection(dbService, 'post'),
-          where('town', '==', town),
+          where('town', 'in', town),
           orderBy('createdAt', 'desc'),
           limit(20)
         );
@@ -228,29 +227,60 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
+  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
-      follow: arrayUnion(data.creator),
+      following: arrayUnion(data.creator),
     },
     { merge: true }
   );
 };
 
 //* 팔로잉 삭제하기
-export const deleteFollwing: any = (data: any) => {
+export const deleteFollowing: any = (data: any) => {
   updateDoc(doc(dbService, 'following', data.uid), {
-    follow: arrayRemove(data.creator),
+    following: arrayRemove(data.creator),
   });
 };
 
 //* 팔로잉 가져오기
-export const getFollwing = async () => {
+export const getFollowing = async () => {
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'following'));
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
+  });
+
+  return response;
+};
+
+//* 팔로우 추가하기
+export const addFollow: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'follow', data.creator),
+    {
+      follow: arrayUnion(data.uid),
+    },
+    { merge: true }
+  );
+};
+
+//* 팔로우 삭제하기
+export const deleteFollow: any = (data: any) => {
+  updateDoc(doc(dbService, 'follow', data.creator), {
+    follow: arrayRemove(data.uid),
+  });
+};
+
+//* 팔로우 가져오기
+export const getFollow = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'follow'));
+  querySnapshot.forEach((doc) => {
+    response.push({ docId: doc.id, ...doc.data() });
   });
 
   return response;
@@ -322,7 +352,6 @@ export const getTakeMessage = async ({ queryKey }: MessageQueryKey) => {
   querySnapshot.forEach((doc) => {
     data.push({ id: doc.id, ...doc.data() });
   });
-  console.log('data : ', data);
   return data;
 };
 // 보낸 메세지 가져오기
@@ -358,4 +387,11 @@ export const getMyPost = async ({ queryKey }: any) => {
     data.push({ id: doc.id, ...doc.data() });
   });
   return data;
+};
+
+// 메세지 확인
+export const checkedMessageData = async (data: any) => {
+  await updateDoc(doc(dbService, `message/take/${data.user}/${data.id}`), {
+    checked: true,
+  });
 };

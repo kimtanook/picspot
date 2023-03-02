@@ -116,6 +116,7 @@ const CityCategory = styled.select`
   border: none;
   border-radius: 20px;
   height: 40px;
+  z-index: 1;
 `;
 const Profile = styled.div`
   width: 107px;

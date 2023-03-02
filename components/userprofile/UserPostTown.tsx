@@ -1,48 +1,16 @@
-import { dbService } from '@/firebase';
-import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import Masonry from 'react-responsive-masonry';
 import { uuidv4 } from '@firebase/util';
 import UserCollectItem from './UserItem';
 
 const UserTown = ({
   town,
-  userId,
   postList,
 }: {
   town: string;
-  userId: string | undefined;
-  postList: { [key: string]: (string | number)[] };
+  postList: { [key: string]: string | number }[] | undefined;
 }) => {
-  //* post town 기준 데이터 가져오기
-  // 데이터를 다시 불러오기 때문에 비용문제가 발생할 수 있기 때문에,
-  // UserPostList의 postList을 사용하여 기존 데이터를 이용하도록 리팩토링 예정
-  const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
-    const [_, town] = queryKey;
-
-    const response: { [key: string]: string }[] = [];
-
-    let q = query(
-      collection(dbService, 'post'),
-      where('town', '==', town),
-      orderBy('createdAt', 'desc')
-    );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      response.push({ id: doc.id, ...doc.data() });
-    });
-
-    return response;
-  };
-
-  //* useQuery 사용해서 town 데이터 불러오기
-  const { data } = useQuery(['getTownData', town], getTownData);
-  //* town데이터 creator 와 내 id가 같으면 그 item을 출력
-  const myPostList = data?.filter(
-    (item: { [key: string]: string | number }) => item.creator === userId
-  );
+  const userPostTownList = postList?.filter((item) => item.town === town);
   return (
     <div>
       <TownWrap>
@@ -51,7 +19,7 @@ const UserTown = ({
         </PostTownTitle>
         <UserPostImgWrap>
           <Masonry columnsCount={2} style={{ gap: '-10px' }}>
-            {myPostList?.map((item: { [key: string]: string }) => (
+            {userPostTownList?.map((item: userItem) => (
               <UserCollectItem key={uuidv4()} item={item} />
             ))}
           </Masonry>

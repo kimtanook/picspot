@@ -183,6 +183,7 @@ const AuthSignUp = (props: Props) => {
                   handleSubmit(onSubmit);
                 }
               }}
+              onChange={(event) => setNickname(event.target.value)}
             />
             <EditclearBtn
               onClick={() => {
