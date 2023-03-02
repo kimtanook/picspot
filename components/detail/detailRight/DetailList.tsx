@@ -69,13 +69,9 @@ const DetailList = ({
       return;
     }
 
-    //! 기능
-    //* 뮤테이션을 사용하여 데이터를 수정하고 invalidateQueries를 사용해 쿼리를 최신화 했습니다.
+    //* 뮤테이션을 사용하여 데이터를 수정하고 invalidateQueries를 사용해 쿼리 최신화
     onUpdateData(data, {
       onSuccess: () => {
-        //! 로직 : setTimeOut을 사용
-        //* invalidateQueries 실행이 완료되기 전에 화면이 보여지는 문제로 인해
-        //* setTimeOut을 사용해 0.5초 뒤에 invalidateQueries가 실행되도록 했습니다.
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
         customAlert('수정을 완료하였습니다!');
         setEditTitle('');

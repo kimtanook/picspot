@@ -56,6 +56,8 @@ const StyleContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  width: 100%;
+  height: 230px;
 `;
 
 const StyledForm = styled.form`
