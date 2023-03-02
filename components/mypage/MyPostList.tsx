@@ -2,7 +2,8 @@ import { getMyPost } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
-import Masonry from 'react-responsive-masonry';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 
@@ -35,27 +36,26 @@ const MyPostList = () => {
   });
 
   return (
-    <>
-      {isPc && (
-        <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
+    <GridBox>
+      <ResponsiveMasonry columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}>
+        <Masonry columnsCount={3}>
           {myCollectTownArr?.map((item: string) => (
             <div key={uuidv4()}>
               <Town value={item} myPostData={data} />
             </div>
           ))}
         </Masonry>
-      )}
-      {isMobile && (
-        <Masonry columnsCount={1} style={{ margin: '0px 1%' }}>
-          {myCollectTownArr?.map((item: string) => (
-            <div key={uuidv4()}>
-              <Town value={item} myPostData={data} />
-            </div>
-          ))}
-        </Masonry>
-      )}
-    </>
+      </ResponsiveMasonry>
+    </GridBox>
   );
 };
 
 export default MyPostList;
+
+const GridBox = styled.div`
+  margin: 0px 1%;
+  width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
+`;

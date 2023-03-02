@@ -10,6 +10,7 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
@@ -48,7 +49,7 @@ export default function Mypage() {
           <Profile followingCount={followingCount} followCount={followCount} />
         </MyProfileContainer>
       </MyContainer>
-      {/* 내 게시물과 저장한 게시물입니다 */}
+      {/* 내 게시물과 저장한 게시물입니다  */}
       <AllMyPostList>
         <CategoryBtn>
           {onSpot ? (
@@ -87,14 +88,18 @@ const MyProfileContainer = styled.div`
 const AllMyPostList = styled.div`
   margin: auto;
   width: 1188px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
 `;
 
 const CategoryBtn = styled.div`
   margin: 40px 0px 10px 0px;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
-    text-align: left;
+    /* text-align: left; */
     margin: 0px;
+    width: 100%;
   }
 `;
 
@@ -102,8 +107,10 @@ const GridBox = styled.div`
   width: 1188px;
   margin-top: 19px;
   display: inline-flex;
-
   justify-content: space-between;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
 `;
 
 const GrayBtn = styled.button`
@@ -125,9 +132,10 @@ const GrayBtn = styled.button`
   @media ${(props) => props.theme.mobile} {
     color: #d9d9d9;
     font-size: 12px;
-    width: 187px;
+    width: 50vw;
     margin-right: 0px;
     border-bottom: 0.5px solid #d9d9d9;
+    padding: 0px;
   }
 `;
 const BlackBtn = styled.button`
@@ -143,8 +151,9 @@ const BlackBtn = styled.button`
   letter-spacing: -0.015em;
   @media ${(props) => props.theme.mobile} {
     font-size: 12px;
-    width: 187px;
+    width: 50vw;
     margin-right: 0px;
     border-bottom: 0.5px solid #1882ff;
+    padding: 0px;
   }
 `;

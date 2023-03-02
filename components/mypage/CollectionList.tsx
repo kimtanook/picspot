@@ -2,9 +2,10 @@ import { getCollection } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import CollectionCategory from './CollectionCategory';
-import Masonry from 'react-responsive-masonry';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import { useMediaQuery } from 'react-responsive';
+import styled from 'styled-components';
 
 const CollectionList = () => {
   //* useQuery 사용해서 collection의 모든 데이터 불러오기
@@ -36,9 +37,9 @@ const CollectionList = () => {
     query: '(max-width: 425px)',
   });
   return (
-    <>
-      {isPc && (
-        <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
+    <GridBox>
+      <ResponsiveMasonry columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}>
+        <Masonry columnsCount={3}>
           {myCollectionTownArr?.map((item: string) => (
             <CollectionCategory
               key={uuidv4()}
@@ -47,22 +48,16 @@ const CollectionList = () => {
             />
           ))}
         </Masonry>
-      )}
-      {isMobile && (
-        <Masonry columnsCount={1} style={{ margin: '0px 1%' }}>
-          {myCollectionTownArr?.map((item: string) => (
-            <CollectionCategory
-              isPc={isPc}
-              isMobile={isMobile}
-              key={uuidv4()}
-              value={item}
-              collectorList={collectorList}
-            />
-          ))}
-        </Masonry>
-      )}
-    </>
+      </ResponsiveMasonry>
+    </GridBox>
   );
 };
 
 export default CollectionList;
+const GridBox = styled.div`
+  margin: 0px 1%;
+  width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
+`;
