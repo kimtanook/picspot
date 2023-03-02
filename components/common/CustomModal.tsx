@@ -73,7 +73,7 @@ const Canvas = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 9998;
+  z-index: 999;
 `;
 
 const Wrapper = styled.div`

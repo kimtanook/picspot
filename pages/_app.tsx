@@ -4,6 +4,8 @@ import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import GlobalStyle from './global';
+import { ThemeProvider } from 'styled-components';
+
 const client = new QueryClient({
   defaultOptions: {
     queries: {
@@ -11,14 +13,19 @@ const client = new QueryClient({
     },
   },
 });
+const theme = {
+  mobile: `(max-width: 425px)`,
+};
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={client}>
       <RecoilRoot>
-        <GlobalStyle />
-        <Layout />
-        <Component {...pageProps} />
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <Layout />
+          <Component {...pageProps} />
+        </ThemeProvider>
       </RecoilRoot>
     </QueryClientProvider>
   );

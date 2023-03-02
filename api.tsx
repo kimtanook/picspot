@@ -61,7 +61,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
         limit(20)
       );
     } else {
-      if (town.length !== 0 && lastVisible) {
+      if (town.length !== 0 && town[0] !== '' && lastVisible) {
         q = query(
           collection(dbService, 'post'),
           where('town', 'in', town),
@@ -69,7 +69,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
           limit(8),
           startAfter(lastVisible)
         );
-      } else if (town.length !== 0) {
+      } else if (town.length !== 0 && town[0] !== '') {
         q = query(
           collection(dbService, 'post'),
           where('town', 'in', town),
@@ -311,24 +311,6 @@ export const getUser = async () => {
 export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);
 };
-
-// //* post town 기준 데이터 가져오기
-// export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
-//   const [town] = queryKey;
-//   const response: any = [];
-//   let q = query(
-//     collection(dbService, 'post'),
-//     where('town', '==', '우도'),
-//     orderBy('createdAt', 'desc')
-//   );
-
-//   const querySnapshot = await getDocs(q);
-//   querySnapshot.forEach((doc) => {
-//     response.push({ id: doc.id, ...doc.data() });
-//   });
-
-//   return response;
-// };
 
 // 상대방에게 메세지 보내기
 export const addSendMessage = async (item: CreateMessage) => {

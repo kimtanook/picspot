@@ -2,7 +2,6 @@ import { authService } from '@/firebase';
 import Link from 'next/link';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ModalLogin from '@/components/ModalAuth';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { loginModalAtom } from '@/atom';
@@ -51,9 +50,6 @@ const Header = ({
         </CityCategory>
       ) : null}
       {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-      {/* {closeLoginModal && (
-        <ModalLogin closeLoginModal={closeLoginModalButton} />
-      )} */}
       {currentUser ? (
         <div onClick={() => router.push('/mypage')}>
           <Profile>
@@ -88,15 +84,24 @@ const HeaderContainer = styled.div`
   text-align: center;
   height: 70px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.08);
-  @media only screen and (max-width: 1400px) {
+  /* @media only screen and (max-width: 1400px) {
     width: 1200px;
+    margin: 0px;
   }
   @media only screen and (max-width: 900px) {
     width: 760px;
-    margin-left: 35%;
+    margin: 0px;
   }
   @media only screen and (max-width: 600px) {
     width: 380px;
+    margin: 0px;
+  } */
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+    height: 70px;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
   }
 `;
 const Title = styled.div`
@@ -104,11 +109,19 @@ const Title = styled.div`
   font-weight: 900;
   font-size: 24px;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    margin-left: 12px;
+    width: inherit;
+  }
 `;
 
 const LogoImg = styled.img`
   width: 107px;
   height: 29px;
+  @media ${(props) => props.theme.mobile} {
+    width: 92px;
+    height: 25px;
+  }
 `;
 
 const CityCategory = styled.select`
@@ -116,13 +129,33 @@ const CityCategory = styled.select`
   background-color: inherit;
   font-size: 24px;
   border: none;
-  border-radius: 20px;
   height: 40px;
   z-index: 1;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
+`;
+const HeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const Menu = styled.img`
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    display: inherit;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+  }
 `;
 const Profile = styled.div`
   width: 107px;
   background-color: inherit;
+  @media ${(props) => props.theme.mobile} {
+    width: inherit;
+    margin-right: 12px;
+  }
 `;
 const ProfileImg = styled.img`
   border-radius: 50%;
