@@ -1,15 +1,8 @@
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
-import Masonry from 'react-responsive-masonry';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ChangeEvent,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
@@ -26,6 +19,7 @@ import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import ModalLogin from '@/components/ModalLogin';
+import TownSelect from '@/components/main/TownSelect';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -34,7 +28,7 @@ export default function Main() {
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
-  const [selectTown, setSelectTown] = useState('');
+  const [selectTown, setSelectTown] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
 
   const [isModalPostActive, setIsModalPostActive]: any = useState(false);
@@ -101,7 +95,7 @@ export default function Main() {
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectCity('제주전체');
-    setSelectTown('');
+    setSelectTown([]);
     visibleReset();
     setSearchOption(searchOptionRef.current?.value);
     setSearchValue(event.target.value);
@@ -113,7 +107,7 @@ export default function Main() {
 
   // [카테고리] 지역 카테고리 onChange
   const onChangeSelectCity = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectTown('');
+    setSelectTown([]);
     setSearchValue('');
     visibleReset();
     router.push({
@@ -122,11 +116,25 @@ export default function Main() {
     });
     setSelectCity(event.target.value);
   };
-  // [카테고리] 타운 카테고리 onChange
+  // [카테고리] 타운 카테고리 onClick
   const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
-    setSelectTown(event.currentTarget.value);
+    const townName = event.currentTarget.value as never;
+    if (!selectTown.includes(townName)) {
+      setSelectTown([...selectTown, townName]);
+    } else {
+      const cancelSelect = selectTown.filter(
+        (item: string) => item !== event.currentTarget.value
+      );
+      setSelectTown(cancelSelect);
+    }
+  };
+  const onChangeSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
+    setSearchValue('');
+    visibleReset();
+    const townName = event.currentTarget.value as never;
+    setSelectTown([townName]);
   };
 
   // 무한 스크롤
@@ -141,6 +149,8 @@ export default function Main() {
       getNextPageParam: () => {
         return true;
       },
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 10,
     }
   );
   // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
@@ -153,7 +163,7 @@ export default function Main() {
   }, [router]);
 
   return (
-    <>
+    <Wrap>
       <Seo title="Home" />
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
       <MainContainer>
@@ -168,110 +178,25 @@ export default function Main() {
             onChangeSearchValue={onChangeSearchValue}
           />
         </SearchAndForm>
-
-        <CategoriesWrap>
-          <TownCategory>
-            {selectCity === '제주시' ? (
-              <div>
-                <TownBtn onClick={onClickSelectTown} value="">
-                  제주시 전체
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="제주시 시내">
-                  제주시 시내
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="구좌읍">
-                  구좌읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="애월읍">
-                  애월읍
-                </TownBtn>
-
-                <TownBtn onClick={onClickSelectTown} value="우도면">
-                  우도면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="추자면">
-                  추자면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한경면">
-                  한경면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한림읍">
-                  한림읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="조천읍">
-                  조천읍
-                </TownBtn>
-              </div>
-            ) : selectCity === '서귀포시' ? (
-              <div>
-                <TownBtn onClick={onClickSelectTown} value="">
-                  서귀포시 전체
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="서귀포시 시내">
-                  서귀포시 시내
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="표선면">
-                  표선면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="대정읍">
-                  대정읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="성산읍">
-                  성산읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="안덕면">
-                  안덕면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="남원읍">
-                  남원읍
-                </TownBtn>
-              </div>
-            ) : (
-              <div>
-                <TownBtn onClick={onClickSelectTown} value="">
-                  제주전체
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="구좌읍">
-                  구좌읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="표선면">
-                  표선면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="대정읍">
-                  대정읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="애월읍">
-                  애월읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="남원읍">
-                  남원읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="성산읍">
-                  성산읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="안덕면">
-                  안덕면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="우도면">
-                  우도면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="추자면">
-                  추자면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한경면">
-                  한경면
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="한림읍">
-                  한림읍
-                </TownBtn>
-                <TownBtn onClick={onClickSelectTown} value="조천읍">
-                  조천읍
-                </TownBtn>
-              </div>
-            )}
-          </TownCategory>
-        </CategoriesWrap>
-
+        <SelectContainer>
+          {router.route === '/main' ? (
+            <CityCategory value={selectCity} onChange={onChangeSelectCity}>
+              <option value="제주전체">제주전체</option>
+              <option value="제주시">제주시</option>
+              <option value="서귀포시">서귀포시</option>
+            </CityCategory>
+          ) : null}
+          <CategoriesWrap>
+            <TownCategory>
+              <TownSelect
+                selectCity={selectCity}
+                selectTown={selectTown}
+                onClickSelectTown={onClickSelectTown}
+                onChangeSelectTown={onChangeSelectTown}
+              />
+            </TownCategory>
+          </CategoriesWrap>
+        </SelectContainer>
         {isOpenModal && (
           <Modal
             onClickToggleModal={onClickToggleModal}
@@ -297,15 +222,19 @@ export default function Main() {
             <DataError />
           ) : (
             <GridBox>
-              <Masonry columnsCount={4}>
-                {data?.pages.map((data) =>
-                  data?.map((item: any) => (
-                    <ItemBox key={uuidv4()}>
-                      <Content item={item} />
-                    </ItemBox>
-                  ))
-                )}
-              </Masonry>
+              <ResponsiveMasonry
+                columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
+              >
+                <Masonry columnsCount={4}>
+                  {data?.pages.map((data) =>
+                    data?.map((item: { [key: string]: string }) => (
+                      <ItemBox key={uuidv4()}>
+                        <Content item={item} />
+                      </ItemBox>
+                    ))
+                  )}
+                </Masonry>
+              </ResponsiveMasonry>
             </GridBox>
           )}
 
@@ -373,15 +302,45 @@ export default function Main() {
           TOP
         </TopBtn>
       </MainContainer>
-    </>
+    </Wrap>
   );
 }
-
-const MainContainer = styled.div`
-  /* width: 1440px;
-  margin: auto; */
+const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+  }
 `;
-
+const MainContainer = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 375px;
+  }
+`;
+const CityCategory = styled.select`
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    margin: auto;
+    display: inherit;
+    text-align: center;
+    background-color: inherit;
+    font-size: 14px;
+    border: none;
+    width: 70px;
+    height: 21px;
+  }
+`;
+const SelectContainer = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    margin: auto;
+    width: 150px;
+  }
+`;
 const SearchAndForm = styled.div`
   display: flex;
   position: absolute;
@@ -392,6 +351,9 @@ const SearchAndForm = styled.div`
   margin-top: 10px;
   margin-left: 55%;
   width: 440px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const PostFormButton = styled.button`
   border-radius: 20px;
@@ -415,21 +377,13 @@ const TownCategory = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
 `;
-const TownBtn = styled.button`
-  background-color: #dcdcdc;
-
-  /* width: 66px; */
-  width: 88px;
-  height: 26px;
-  margin: 3px;
-  border: none;
-  border-radius: 52px;
-  cursor: pointer;
-`;
 
 const GridBox = styled.div`
   margin: auto;
   width: 1188px;
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+  }
 `;
 const ItemBox = styled.div`
   margin: 0px 5px 20px 5px;
@@ -439,6 +393,9 @@ const ChatWrap = styled.div`
   left: 3%;
   top: 90%;
   transform: translate(-50%, -50%);
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
@@ -468,6 +425,15 @@ const MapModalBtn = styled.button`
   height: 36px;
   left: calc(50% - 121px / 2 - 0.5px);
   bottom: 42px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+    height: 60px;
+    margin: auto;
+    left: 0;
+    bottom: 0;
+    border-radius: inherit;
+    font-size: 14px;
+  }
 `;
 const PinImg = styled.img`
   margin-right: 3px;
@@ -494,5 +460,8 @@ const TopBtn = styled.button`
   transition: 0.3s;
   :hover {
     background-color: #fed474;
+  }
+  @media ${(props) => props.theme.mobile} {
+    display: none;
   }
 `;

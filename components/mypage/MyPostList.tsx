@@ -10,7 +10,6 @@ const MyPostList = () => {
 
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery(['data', userUid], getMyPost);
-  // console.log('data', data);
 
   //* 만든 것 중 town 값만 고르기
   const myCollectPost = data?.filter((item: { town: string }) => {
@@ -22,14 +21,14 @@ const MyPostList = () => {
   });
   //* 배열에서 중복된 값 합치기
   const myCollectTownArr = myCollectPostTown?.filter(
-    (element: any, index: any) => {
+    (element: string, index: number) => {
       return myCollectPostTown?.indexOf(element) === index;
     }
   );
 
   return (
     <>
-      <Masonry columnsCount={3} style={{ gap: '45px' }}>
+      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
         {myCollectTownArr?.map((item: string) => (
           <div key={uuidv4()}>
             <Town value={item} myPostData={data} />

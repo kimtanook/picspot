@@ -19,7 +19,6 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
-import { useQuery } from 'react-query';
 import { dbService } from './firebase';
 
 //* 무한스크롤 데이터 불러오기
@@ -32,7 +31,7 @@ export const visibleReset = () => {
   // 그로 인해, 페이지 이동 후 돌아오면 다음 페이지부터 보여주므로 기존 데이터 날아감.
   lastVisible = undefined;
 };
-export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
+export const getInfiniteData = async ({ queryKey }: any) => {
   const [_, option, value, town, city] = queryKey;
   const getData: { [key: string]: string }[] = [];
   let q;
@@ -62,18 +61,18 @@ export const getInfiniteData = async ({ queryKey }: { queryKey: string[] }) => {
         limit(20)
       );
     } else {
-      if (town && lastVisible) {
+      if (town.length !== 0 && town[0] !== '' && lastVisible) {
         q = query(
           collection(dbService, 'post'),
-          where('town', '==', town),
+          where('town', 'in', town),
           orderBy('createdAt', 'desc'),
           limit(8),
           startAfter(lastVisible)
         );
-      } else if (town) {
+      } else if (town.length !== 0 && town[0] !== '') {
         q = query(
           collection(dbService, 'post'),
-          where('town', '==', town),
+          where('town', 'in', town),
           orderBy('createdAt', 'desc'),
           limit(20)
         );
@@ -312,24 +311,6 @@ export const getUser = async () => {
 export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);
 };
-
-// //* post town 기준 데이터 가져오기
-// export const getTownData = async ({ queryKey }: { queryKey: string[] }) => {
-//   const [town] = queryKey;
-//   const response: any = [];
-//   let q = query(
-//     collection(dbService, 'post'),
-//     where('town', '==', '우도'),
-//     orderBy('createdAt', 'desc')
-//   );
-
-//   const querySnapshot = await getDocs(q);
-//   querySnapshot.forEach((doc) => {
-//     response.push({ id: doc.id, ...doc.data() });
-//   });
-
-//   return response;
-// };
 
 // 상대방에게 메세지 보내기
 export const addSendMessage = async (item: CreateMessage) => {

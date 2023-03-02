@@ -9,7 +9,9 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const [more, setMore] = useState(true);
 
   // * 내 게시물 town 추출
-  const myPostTownList = myPostData?.filter((item: any) => item.town === value);
+  const myPostTownList = myPostData?.filter(
+    (item: { town: string }) => item.town === value
+  );
 
   //* 더보기 버튼
   const onClickMoreBtn = () => {
@@ -24,7 +26,7 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
             <MyPostTownTitle>{value}</MyPostTownTitle>
           </PostTownTitle>
           <MySpotImg>
-            <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+            <Masonry columnsCount={2} style={{ paddingRight: '25px' }}>
               {myPostTownList?.map((item: { [key: string]: string }) => (
                 <MyCollectItem key={uuidv4()} item={item} />
               ))}
@@ -70,13 +72,16 @@ export default Town;
 const TownWrap = styled.div`
   width: 365px;
   height: 352px;
-
   margin: 0px 1px 30px 1px;
-  padding-right: 25px;
+  :hover {
+    transition: all 0.7s;
+    transform: scale(1.01);
+  }
 `;
 const PostTownTitle = styled.div`
   height: 43px;
   border-bottom: 1px solid #212121;
+  margin-right: 13px;
 `;
 
 const MyPostTownTitle = styled.div`
@@ -148,7 +153,7 @@ const MoreBtn = styled.button`
   margin-top: 20px;
   border: none;
   background-color: white;
-  margin-right: 16px;
+  margin-right: 25px;
   :hover {
     font-size: 15px;
     transition: all 0.3s;

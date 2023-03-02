@@ -11,7 +11,7 @@ const UserPostList = ({ userId }: { userId: string }) => {
   //* 현재 프로필 유저가 작성한 포스트들의 town 값 배열
   const townArray = data?.map((item: { town: string }) => item.town);
 
-  //town 값 배열의 중복 제거
+  //* town 값 배열의 중복 제거
   const uniqueTownArray = townArray?.filter(
     (element: string, index: number) => {
       return townArray?.indexOf(element) === index;
@@ -20,7 +20,7 @@ const UserPostList = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      <Masonry columnsCount={3} style={{ gap: '45px' }}>
+      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
         {uniqueTownArray?.map((item: string) => (
           <div key={uuidv4()}>
             <UserTown town={item} postList={data} />

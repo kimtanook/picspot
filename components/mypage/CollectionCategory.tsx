@@ -1,7 +1,7 @@
-import { authService, dbService } from '@/firebase';
+import { dbService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import MyCollectPost from './MyCollectPost';
 import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';
@@ -49,7 +49,7 @@ const CollectionCategory = ({ value, collectorList }: any) => {
             <CollectorTownTitle>{value}</CollectorTownTitle>
           </PostTownTitle>
           <MySpotImg>
-            <Masonry columnsCount={2} style={{ gap: '-10px' }}>
+            <Masonry columnsCount={2} style={{ paddingRight: '25px' }}>
               {MyCollectionTownItem?.map((item: { [key: string]: string }) => (
                 <MyCollectPost item={item} key={uuidv4()} />
               ))}
@@ -96,14 +96,18 @@ export default CollectionCategory;
 const TownWrap = styled.div`
   width: 365px;
   height: 352px;
-
   margin: 0px 1px 30px 1px;
-  padding-right: 25px;
+
+  :hover {
+    transition: all 0.7s;
+    transform: scale(1.01);
+  }
 `;
 
 const PostTownTitle = styled.div`
   height: 43px;
   border-bottom: 1px solid #212121;
+  margin-right: 13px;
 `;
 const CollectorTownTitle = styled.div`
   font-family: 'Noto Sans CJK KR';
@@ -177,7 +181,7 @@ const MoreBtn = styled.button`
   margin-top: 20px;
   border: none;
   background-color: white;
-  margin-right: 16px;
+  margin-right: 25px;
   :hover {
     font-size: 15px;
     transition: all 0.3s;
