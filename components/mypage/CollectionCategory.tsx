@@ -160,7 +160,7 @@ const FatherDiv = styled.div`
   width: 100vw;
   height: 100vw;
   position: absolute;
-  left: 1px;
+  left: 0px;
   overflow: hidden;
 `;
 
@@ -176,7 +176,7 @@ const MoreDiv = styled.div`
     position: relative;
     width: 375px;
     overflow: hidden;
-    transform: translate(-261%, 0%);
+    transform: translate(-263%, 0%);
     margin: auto;
     left: 50%;
   }
@@ -189,7 +189,7 @@ const MyPostImg = styled.img`
     transform: scale(1.02);
   }
   @media ${(props) => props.theme.mobile} {
-    width: 365px;
+    width: 100vw;
   }
 `;
 
