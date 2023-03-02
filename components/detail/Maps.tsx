@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -14,17 +14,17 @@ const Maps = ({
   setSaveAddress,
   setInfoDiv,
 }: any) => {
+  const container = useRef(null);
   useEffect(() => {
     const { kakao } = window;
-
     //----------------------------카카오맵 셋팅/----------------------------
     kakao.maps.load(() => {
-      const container = document.getElementById('map');
+      // const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
         level: 4,
       };
-      const map = new kakao.maps.Map(container, options);
+      const map = new kakao.maps.Map(container.current, options); // useRef를 쓰기 위해 container.current를 넣어줌
       const geocoder = new kakao.maps.services.Geocoder();
 
       //----------------------------줌 레벨 및 스카이뷰/----------------------------
@@ -104,9 +104,15 @@ const Maps = ({
         }
       }
     });
-  }, [searchPlace]);
+  }, [searchPlace, setInfoDiv, setSaveAddress, setSaveLatLng]);
 
-  return <div id="map" style={{ width: '620px', height: '650px' }}></div>;
+  return (
+    <div
+      id="map"
+      ref={container}
+      style={{ width: '620px', height: '650px' }}
+    ></div>
+  );
 };
 
 export default Maps;

@@ -10,16 +10,7 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 
 export default function Mypage() {
-  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
-  // console.log(
-  //   'authService.currentUser?.displayName: ',
-  //   authService.currentUser?.displayName
-  // );
-
   const [onSpot, setOnSpot] = useState(true);
-
-  //* useQuery 사용해서 데이터 불러오기
-  const { data: postData } = useQuery('data', getData);
 
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
@@ -31,7 +22,6 @@ export default function Mypage() {
       data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
-  // console.log('followingData: ', followingData);
   const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자
 
   //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
@@ -41,7 +31,7 @@ export default function Mypage() {
         (item: any) => item.docId === authService.currentUser?.uid
       )[0]?.follow,
   });
-  // console.log('followData: ', followData);
+
   const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
   if (isLoading) return <h1>로딩 중입니다.</h1>;
@@ -58,7 +48,7 @@ export default function Mypage() {
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <AllMyPostList>
-        <div style={{ margin: '40px 0px 10px 0px' }}>
+        <div style={{ margin: '40px 0px 10px 0px', textAlign: 'center' }}>
           {onSpot ? (
             <>
               <BlackBtn onClick={() => setOnSpot(true)}>게시한 스팟</BlackBtn>
