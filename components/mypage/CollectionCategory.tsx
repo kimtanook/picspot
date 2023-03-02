@@ -172,6 +172,14 @@ const MoreDiv = styled.div`
   transform: translate(-50%, 0%);
   left: 50%;
   overflow: hidden;
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    width: 375px;
+    overflow: hidden;
+    transform: translate(-261%, 0%);
+    margin: auto;
+    left: 50%;
+  }
 `;
 const MyPostImg = styled.img`
   width: 275px;
@@ -180,12 +188,18 @@ const MyPostImg = styled.img`
     transition: all 0.3s;
     transform: scale(1.02);
   }
+  @media ${(props) => props.theme.mobile} {
+    width: 365px;
+  }
 `;
 
 const MorePostTownTitle = styled.div`
   height: 43px;
   border-bottom: 1px solid #212121;
   margin-bottom: 25px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
 `;
 
 const MoreMyPostTownTitle = styled.div`

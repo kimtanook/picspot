@@ -163,7 +163,7 @@ const MyPostImg = styled.img`
     transform: scale(1.02);
   }
   @media ${(props) => props.theme.mobile} {
-    width: 370px;
+    width: 365px;
   }
 `;
 
