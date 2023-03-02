@@ -156,8 +156,6 @@ export default function Main() {
   // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
   useBottomScrollListener(fetchNextPage, { offset: 300 });
 
-  // 시티별 타운 카테고리
-
   useEffect(() => {
     setSelectCity(`${router.query.city}`);
     visibleReset();
