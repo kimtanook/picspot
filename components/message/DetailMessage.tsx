@@ -1,6 +1,5 @@
 import { checkedMessageData } from '@/api';
-import { SetState } from 'immer/dist/internal';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
