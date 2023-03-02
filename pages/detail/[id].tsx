@@ -165,9 +165,7 @@ const Post = ({ id }: any) => {
 
 export default Post;
 
-const StDetailContainer = styled.div`
-  position: relative;
-`;
+const StDetailContainer = styled.div``;
 
 const StDetailContents = styled.div`
   top: 50px;
