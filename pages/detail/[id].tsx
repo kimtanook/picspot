@@ -48,6 +48,8 @@ const Post = ({ id }: any) => {
   //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
+    setEditCity(editCity);
+    setEditTown(editTown);
   };
 
   //* 데이터 수정 시 보내주는 데이터
@@ -137,6 +139,8 @@ const Post = ({ id }: any) => {
                 saveAddress={saveAddress}
                 setSaveAddress={setSaveAddress}
                 setEditBtnToggle={setEditBtnToggle}
+                setPlace={setPlace}
+                place={place}
               />
 
               <DetailMap
@@ -178,6 +182,7 @@ const DetailContents = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 600px;
 `;
 
 const ImgAndProfileAndFollowingAndCollection = styled.div`

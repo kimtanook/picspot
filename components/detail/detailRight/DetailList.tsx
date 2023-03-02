@@ -26,6 +26,8 @@ const DetailList = ({
   saveAddress,
   setSaveAddress,
   setEditBtnToggle,
+  setPlace,
+  place,
 }: any) => {
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
@@ -84,15 +86,24 @@ const DetailList = ({
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
         customAlert('수정을 완료하였습니다!');
-        setEditTitle('');
-        setEditContent('');
-        setEditCity('');
-        setEditTown('');
+        // setEditTitle('');
+        // setEditContent('');
+        // setEditCity('');
+        // setEditTown('');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
       },
     });
+  };
+
+  const onChangeCityInput = (e: any) => {
+    setEditCity(e.target.value);
+  };
+
+  const onChangeTownInput = (e: any) => {
+    setEditTown(e.target.value);
+    setPlace(e.target.value);
   };
 
   if (!editBtnToggle) {
@@ -141,6 +152,11 @@ const DetailList = ({
             }}
             ref={titleInput}
           />
+          {/* <EditTitleClearBtn
+            onClick={() => {
+              setEditTitle('');
+            }}
+          ></EditTitleClearBtn> */}
 
           {editBtnToggle ? (
             <EditBtnCotainer>
@@ -176,30 +192,43 @@ const DetailList = ({
         <CityAndTownAndAddress>
           <CityInput
             defaultValue={item.city}
-            onChange={(e) => setEditCity(e.target.value)}
+            onChange={(e) => onChangeCityInput(e)}
             // onChange={onClickEditTown}
           >
-            <option value="제주전체">제주전체</option>
+            {/* <option value="제주전체">제주전체</option> */}
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
           <TownInput
             defaultValue={item.town}
-            onChange={(e) => onClickEditTown(e)}
+            onChange={(e) => onChangeTownInput(e)}
             // onChange={(e) => setEditTown(e.target.value)}
           >
-            <option value="조천읍">조천읍</option>
-            <option value="제주시">제주시</option>
-            <option value="성산읍">성산읍</option>
-            <option value="표선면">표선면</option>
-            <option value="남원읍">남원읍</option>
-            <option value="서귀포">서귀포</option>
-            <option value="중문">중문</option>
-            <option value="안덕면">안덕면</option>
-            <option value="대정읍">대정읍</option>
-            <option value="애월읍">애월읍</option>
-            <option value="우도">우도</option>
-            <option value="마라도">마라도</option>
+            {editCity === '제주시' && (
+              <>
+                <option value="">선택</option>
+                <option value="제주시 시내">제주시 시내</option>
+                <option value="한림읍">한림읍</option>
+                <option value="조천읍">조천읍</option>
+                <option value="한경면">한경면</option>
+                <option value="추자면">추자면</option>
+                <option value="우도면">우도면</option>
+                <option value="구좌읍">구좌읍</option>
+                <option value="애월읍">애월읍</option>
+              </>
+            )}
+
+            {editCity === '서귀포시' && (
+              <>
+                <option value="">선택</option>
+                <option value="서귀포시 시내">서귀포시 시내</option>
+                <option value="표선면">표선면</option>
+                <option value="대정읍">대정읍</option>
+                <option value="남원읍">남원읍</option>
+                <option value="성산읍">성산읍</option>
+                <option value="안덕면">안덕면</option>
+              </>
+            )}
           </TownInput>
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
@@ -209,12 +238,18 @@ const DetailList = ({
         <Content>
           Tip |{' '}
           <ContentInput
+            // value={editContent}
             defaultValue={item.content}
             onChange={(e) => {
               setEditContent(e.target.value);
             }}
             ref={contentInput}
           />
+          {/* <EditContentClearBtn
+            onClick={() => {
+              setEditContent('');
+            }}
+          ></EditContentClearBtn> */}
         </Content>
       </ListContainer>
     );
@@ -271,6 +306,7 @@ const EditBtn = styled.div`
   font-size: 12px;
   width: 120px;
   cursor: pointer;
+  height: 50px;
 `;
 
 const CityAndTownAndAddress = styled.div`
@@ -284,7 +320,7 @@ const City = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 100%;
+  width: 200px;
   height: 40px;
   text-align: center;
   padding-top: 4px;
@@ -293,7 +329,7 @@ const City = styled.div`
 const CityInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 50%;
+  width: 200px;
   height: 40px;
   text-align: center;
   border: none;
@@ -305,7 +341,7 @@ const Town = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 400px;
+  width: 200px;
   height: 40px;
   text-align: center;
   padding-top: 4px;
@@ -314,7 +350,7 @@ const Town = styled.div`
 const TownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 400px;
+  width: 200px;
   height: 40px;
   text-align: center;
   border: none;
@@ -363,4 +399,28 @@ const ContentSpan = styled.span`
   white-space: nowrap;
   margin-left: 20px;
   margin-right: 20px;
+`;
+
+const EditTitleClearBtn = styled.div`
+  position: absolute;
+  top: 18.5%;
+  right: 42%;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+
+  cursor: pointer;
+`;
+
+const EditContentClearBtn = styled.div`
+  position: absolute;
+  top: 33.8%;
+  right: 19%;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+
+  cursor: pointer;
 `;
