@@ -3,13 +3,13 @@
     "Datas",
     "firestore",
     "Follwing",
+    "Jibun",
+    "kakao",
+    "latlng",
     "Mainpage",
     "Mypage",
     "selectd",
     "Updata",
-    "Jibun",
-    "kakao",
-    "latlng",
-    "firestore"
+    "uuidv"
   ]
 }
