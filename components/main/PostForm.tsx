@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import MapLandingPage from '../detail/MapLandingPage';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
+import { customAlert, customConfirm } from '@/utils/alerts';
 const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const queryClient = useQueryClient();
 
@@ -66,27 +67,27 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
     if (imageUpload === null) {
-      alert('이미지를 추가해주세요.');
+      customAlert('이미지를 추가해주세요.');
       return;
     }
 
     if (title === '') {
-      alert('제목을 입력해주세요');
+      customAlert('제목을 입력해주세요');
       return;
     }
 
     if (content === '') {
-      alert('내용을 입력해주세요');
+      customAlert('내용을 입력해주세요');
       return;
     }
 
     if (city === '' || town === '') {
-      alert('카테고리를 입력해주세요');
+      customAlert('카테고리를 입력해주세요');
       return;
     }
 
     if (saveLatLng === undefined || saveAddress === undefined) {
-      alert('지도에 마커를 찍어주세요');
+      customAlert('지도에 마커를 찍어주세요');
       return;
     }
 
