@@ -21,7 +21,7 @@ const MyPostList = () => {
   });
   //* 배열에서 중복된 값 합치기
   const myCollectTownArr = myCollectPostTown?.filter(
-    (element: any, index: any) => {
+    (element: string, index: number) => {
       return myCollectPostTown?.indexOf(element) === index;
     }
   );

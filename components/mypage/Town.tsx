@@ -9,7 +9,9 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const [more, setMore] = useState(true);
 
   // * 내 게시물 town 추출
-  const myPostTownList = myPostData?.filter((item: any) => item.town === value);
+  const myPostTownList = myPostData?.filter(
+    (item: { town: string }) => item.town === value
+  );
 
   //* 더보기 버튼
   const onClickMoreBtn = () => {

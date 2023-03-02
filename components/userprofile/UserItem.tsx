@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
-export default function UserItem({ item }: { item: any }) {
+export default function UserItem({ item }: { item: userItem }) {
   return (
     <Link href={`/detail/${item.id}`}>
       <UserPostImg src={item.imgUrl} />

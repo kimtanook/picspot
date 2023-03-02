@@ -59,7 +59,7 @@ function Profile() {
       </UserContainer>
       {/* 내 게시물과 저장한 게시물입니다 */}
       <UserPostTownList>
-        <div style={{ paddingBottom: '10px' }}>
+        <div style={{ margin: '40px 0px 10px 0px', textAlign: 'center' }}>
           {onSpot ? (
             <>
               <BlackBtn onClick={() => setOnSpot(true)}>게시한 스팟</BlackBtn>
