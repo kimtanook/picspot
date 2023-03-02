@@ -36,15 +36,6 @@ function ModalProfile(props: Props) {
   const [pwToggle, setPwToggle] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const googleIdUser = localStorage.getItem('googleUser');
-    if (googleIdUser) {
-      setGoolgleUser(false);
-    } else {
-      setGoolgleUser(true);
-    }
-  }, []);
-
   // 모달 창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
     document.body.style.cssText = `
@@ -68,6 +59,16 @@ function ModalProfile(props: Props) {
 
     props.setImgEdit(imgFile as string);
   };
+
+  // 구글 로그인 유저라면 비밀번호 토글 숨기기
+  useEffect(() => {
+    const googleIdUser = localStorage.getItem('googleUser');
+    if (googleIdUser) {
+      setGoolgleUser(false);
+    } else {
+      setGoolgleUser(true);
+    }
+  }, []);
 
   // 프로필 사진 변경 후 변경 사항 유지하기
   const saveImgFile = () => {

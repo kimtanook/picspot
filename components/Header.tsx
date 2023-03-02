@@ -2,8 +2,9 @@ import { authService } from '@/firebase';
 import Link from 'next/link';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ModalLogin from '@/components/ModalLogin';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { loginModalAtom } from '@/atom';
 
 const Header = ({
   selectCity,
@@ -13,7 +14,7 @@ const Header = ({
   onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
-  const [closeLoginModal, setCloseLoginModal] = useState(false);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const [userImg, setUserImg] = useState<string | null>(null);
   const router = useRouter();
   const nowUser = authService.currentUser;
@@ -48,30 +49,24 @@ const Header = ({
           <option value="서귀포시">서귀포시</option>
         </CityCategory>
       ) : null}
-      <HeaderRight>
-        <Menu src="/menu.png" />
-        {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-        {closeLoginModal && (
-          <ModalLogin closeLoginModal={closeLoginModalButton} />
-        )}
-        {currentUser ? (
-          <div onClick={() => router.push('/mypage')}>
-            <Profile>
-              {userImg ? (
-                <ProfileImg src={userImg} />
-              ) : (
-                <ProfileImg src="/profileicon.svg" />
-              )}
-            </Profile>
-          </div>
-        ) : (
-          <div onClick={closeLoginModalButton}>
-            <Profile>
+      {/* 로그인, 로그아웃, 마이페이지 버튼 */}
+      {currentUser ? (
+        <div onClick={() => router.push('/mypage')}>
+          <Profile>
+            {userImg ? (
+              <ProfileImg src={userImg} />
+            ) : (
               <ProfileImg src="/profileicon.svg" />
-            </Profile>
-          </div>
-        )}
-      </HeaderRight>
+            )}
+          </Profile>
+        </div>
+      ) : (
+        <div onClick={closeLoginModalButton}>
+          <Profile>
+            <ProfileImg src="/profileicon.svg" />
+          </Profile>
+        </div>
+      )}
     </HeaderContainer>
   );
 };

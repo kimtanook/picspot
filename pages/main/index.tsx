@@ -18,13 +18,14 @@ import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
-import ModalLogin from '@/components/ModalLogin';
+import { useRecoilState } from 'recoil';
+import { loginModalAtom } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
-  const [closeLoginModal, setCloseLoginModal]: any = useState(false);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectCity, setSelectCity] = useState('');
@@ -272,18 +273,6 @@ export default function Main() {
             element={
               <ModalMaps selectTown={selectTown} selectCity={selectCity} />
             }
-          />
-        ) : (
-          ''
-        )}
-
-        {closeLoginModal ? (
-          <CustomModal
-            modal={closeLoginModal}
-            setModal={setCloseLoginModal}
-            width="1000"
-            height="1000"
-            element={<ModalLogin closeLoginModal={setCloseLoginModal} />}
           />
         ) : (
           ''
