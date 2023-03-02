@@ -165,7 +165,7 @@ const FollowList = styled.div`
   align-items: center;
   padding-top: 30px;
   height: 30%;
-  width: 400px;
+  width: 524px;
   margin-bottom: 40px;
   border-bottom: 1px solid black;
 `;
@@ -196,7 +196,7 @@ const FollowProfile = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 340px;
+  width: 400px;
   overflow-y: scroll;
   margin: auto;
   padding-bottom: 20px;

@@ -28,7 +28,7 @@ export default function Mypage() {
     isError,
   } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+      data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
   // console.log('followingData: ', followingData);

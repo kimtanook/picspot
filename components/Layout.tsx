@@ -47,8 +47,8 @@ function Layout() {
           <CustomModal
             modal={followingToggle}
             setModal={setfollowingToggle}
-            width="400"
-            height="650"
+            width="524"
+            height="695"
             element={<ModalFollowing />}
           />
         ) : null}
@@ -58,8 +58,8 @@ function Layout() {
           <CustomModal
             modal={followToggle}
             setModal={setFollowToggle}
-            width="400"
-            height="650"
+            width="524"
+            height="695"
             element={<ModalFollow />}
           />
         ) : null}
