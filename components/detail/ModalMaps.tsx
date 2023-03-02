@@ -38,12 +38,13 @@ const ModalMaps = ({ selectTown, selectCity }: any) => {
         <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
 
         {data
+
           .filter((item: any) =>
-            !selectTown && selectCity === '제주전체'
+            selectTown.length === 0 && selectCity === '제주전체'
               ? true
-              : !selectTown && item.city === selectCity
+              : selectTown.length === 0 && item.city === selectCity
               ? true
-              : item.town === selectTown
+              : selectTown.includes(item.town)
           )
 
           .map((item: any) => {
