@@ -5,23 +5,22 @@ import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
 import { customAlert } from '@/utils/alerts';
+import { useRecoilState } from 'recoil';
+import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
 
 interface AuthForm {
   email: string;
   password: string;
 }
-interface Props {
-  closeLoginModal: () => void;
-  changeModalButton: () => void;
-  forgotModalButton: () => void;
-}
 
-const Auth = (props: Props): JSX.Element => {
+const Auth = (): JSX.Element => {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
   const [hidePassword, setHidePassword] = useState<boolean>(false);
   const [isRemember, setIsRemember] = useState<boolean>(false);
   const LS_KEY_ID = 'LS_KEY_ID';
-
+  const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
+  const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const {
     register,
     setValue,
@@ -42,7 +41,7 @@ const Auth = (props: Props): JSX.Element => {
     await signInWithEmailAndPassword(authService, data.email, data.password)
       .then((res) => {
         customAlert('로그인에 성공하였습니다!');
-        props.closeLoginModal();
+        setCloseLoginModal(!closeLoginModal);
       })
       .then(() => {})
       .catch(() => {
@@ -81,7 +80,14 @@ const Auth = (props: Props): JSX.Element => {
 
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
-      <StHeder onClick={props.closeLoginModal}> 〈 취소 </StHeder>
+      <StHeder
+        onClick={() => {
+          setCloseLoginModal(!closeLoginModal);
+        }}
+      >
+        {' '}
+        〈 취소{' '}
+      </StHeder>
       <LoginTextDiv>
         <div>
           <b>픽스팟에 로그인</b> 하고, <br></br>
@@ -159,15 +165,29 @@ const Auth = (props: Props): JSX.Element => {
         </LoginBtnContainer>
       </form>
 
-      <PwForgotContainer onClick={props.forgotModalButton}>
+      <PwForgotContainer
+        onClick={() => {
+          setCloseLoginModal(!closeLoginModal);
+          setForgotModal(!forgotModal);
+        }}
+      >
         <LoginCheckSignDiv>아이디/패스워드를 잊으셨나요?</LoginCheckSignDiv>
       </PwForgotContainer>
 
       <LoginGoogleContainer>
-        <AuthSocial closeModal={props.closeLoginModal} />
+        <AuthSocial
+          closeModal={() => {
+            setCloseLoginModal(!closeLoginModal);
+          }}
+        />
       </LoginGoogleContainer>
 
-      <LoginCheckContainer onClick={props.changeModalButton}>
+      <LoginCheckContainer
+        onClick={() => {
+          setCloseLoginModal(!closeLoginModal);
+          setSignUpModal(!signUpModal);
+        }}
+      >
         <LoginCheckSignDiv>회원가입 하기</LoginCheckSignDiv>
       </LoginCheckContainer>
     </LoginContainer>
@@ -175,8 +195,8 @@ const Auth = (props: Props): JSX.Element => {
 };
 
 const LoginContainer = styled.div`
-  background-color: #ffffff;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  height: 100%;
 `;
 const StHeder = styled.header`
   cursor: pointer;
@@ -185,7 +205,7 @@ const StHeder = styled.header`
   display: flex;
 `;
 const LoginTextDiv = styled.div`
-  margin-top: 5vh;
+  margin-top: 0px;
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 20px;
@@ -201,12 +221,14 @@ const LoginEmailPwContainer = styled.div`
   margin-top: 40px;
 `;
 const LoginInput = styled.input`
-  height: 40px;
-  width: 96%;
-  padding-left: 10px;
-  background-color: #fbfbfb;
+  padding-left: 16px;
+  background-color: #f4f4f4;
   border: 1px solid #8e8e93;
   font-size: 15px;
+  display: flex;
+  width: 394px;
+  height: 48px;
+  margin: 0 auto;
 `;
 const AuthWarn = styled.p`
   color: red;
@@ -220,7 +242,7 @@ const EditInputBox = styled.div`
 const EditclearBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 12px;
+  right: 50px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -231,7 +253,7 @@ const EditclearBtn = styled.div`
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 12px;
+  right: 50px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
@@ -243,7 +265,7 @@ const EditPwShowBtn = styled.div`
 const RememberID = styled.label`
   display: flex;
   align-items: center;
-  margin-left: 20px;
+  margin-left: 60px;
   font-size: 15px;
 `;
 const LoginBtnContainer = styled.div`
@@ -255,9 +277,12 @@ const LoginBtnContainer = styled.div`
 `;
 const LoginBtn = styled.button`
   display: flex;
+  width: 394px;
+  height: 48px;
+  margin: 0 auto;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 40px;
   border: transparent;
   transition: 0.1s;
   background-color: #1882ff;
@@ -279,7 +304,8 @@ const PwForgotContainer = styled.span`
 `;
 const LoginGoogleContainer = styled.div`
   display: flex;
-  width: 90%;
+  width: 394px;
+  height: 48px;
   margin: 0 auto;
   margin-top: 30px;
 `;

@@ -2,8 +2,10 @@ import { authService } from '@/firebase';
 import Link from 'next/link';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ModalLogin from '@/components/ModalLogin';
+import ModalLogin from '@/components/ModalAuth';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { loginModalAtom } from '@/atom';
 
 const Header = ({
   selectCity,
@@ -13,7 +15,7 @@ const Header = ({
   onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
-  const [closeLoginModal, setCloseLoginModal] = useState(false);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const [userImg, setUserImg] = useState<string | null>(null);
   const router = useRouter();
   const nowUser = authService.currentUser;
@@ -49,9 +51,9 @@ const Header = ({
         </CityCategory>
       ) : null}
       {/* 로그인, 로그아웃, 마이페이지 버튼 */}
-      {closeLoginModal && (
+      {/* {closeLoginModal && (
         <ModalLogin closeLoginModal={closeLoginModalButton} />
-      )}
+      )} */}
       {currentUser ? (
         <div onClick={() => router.push('/mypage')}>
           <Profile>
