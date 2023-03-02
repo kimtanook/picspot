@@ -61,7 +61,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
         limit(20)
       );
     } else {
-      if (town.length !== 0 && lastVisible) {
+      if (town.length !== 0 && town[0] !== '' && lastVisible) {
         q = query(
           collection(dbService, 'post'),
           where('town', 'in', town),
@@ -69,7 +69,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
           limit(8),
           startAfter(lastVisible)
         );
-      } else if (town.length !== 0) {
+      } else if (town.length !== 0 && town[0] !== '') {
         q = query(
           collection(dbService, 'post'),
           where('town', 'in', town),

@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
-import Masonry from 'react-responsive-masonry';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import ModalLogin from '@/components/ModalLogin';
+import TownSelect from '@/components/main/TownSelect';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -115,7 +116,7 @@ export default function Main() {
     });
     setSelectCity(event.target.value);
   };
-  // [카테고리] 타운 카테고리 onChange
+  // [카테고리] 타운 카테고리 onClick
   const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
@@ -128,6 +129,12 @@ export default function Main() {
       );
       setSelectTown(cancelSelect);
     }
+  };
+  const onChangeSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
+    setSearchValue('');
+    visibleReset();
+    const townName = event.currentTarget.value as never;
+    setSelectTown([townName]);
   };
 
   // 무한 스크롤
@@ -150,39 +157,6 @@ export default function Main() {
   useBottomScrollListener(fetchNextPage, { offset: 300 });
 
   // 시티별 타운 카테고리
-  const jejuTown = [
-    '제주시 시내',
-    '구좌읍',
-    '애월읍',
-    '우도면',
-    '추자면',
-    '한경면',
-    '한림읍',
-    '조천읍',
-  ];
-  const seogwipoTown = [
-    '서귀포시 시내',
-    '표선면',
-    '대정읍',
-    '성산읍',
-    '성산읍',
-    '안덕면',
-    '남원읍',
-  ];
-  const allTown = [
-    '구좌읍',
-    '표선면',
-    '대정읍',
-    '애월읍',
-    '남원읍',
-    '성산읍',
-    '안덕면',
-    '우도면',
-    '추자면',
-    '한경면',
-    '한림읍',
-    '조천읍',
-  ];
 
   useEffect(() => {
     setSelectCity(`${router.query.city}`);
@@ -191,7 +165,7 @@ export default function Main() {
   }, [router]);
 
   return (
-    <>
+    <Wrap>
       <Seo title="Home" />
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
       <MainContainer>
@@ -206,52 +180,25 @@ export default function Main() {
             onChangeSearchValue={onChangeSearchValue}
           />
         </SearchAndForm>
-
-        <CategoriesWrap>
-          <TownCategory>
-            {selectCity === '제주시' ? (
-              <div>
-                {jejuTown.map((item: string) => (
-                  <TownBtn
-                    key={uuidv4()}
-                    town={selectTown}
-                    value={item}
-                    onClick={onClickSelectTown}
-                  >
-                    {item === '' ? '제주시 전체' : item}
-                  </TownBtn>
-                ))}
-              </div>
-            ) : selectCity === '서귀포시' ? (
-              <div>
-                {seogwipoTown.map((item: string) => (
-                  <TownBtn
-                    key={uuidv4()}
-                    town={selectTown}
-                    value={item}
-                    onClick={onClickSelectTown}
-                  >
-                    {item === '' ? '서귀포시 전체' : item}
-                  </TownBtn>
-                ))}
-              </div>
-            ) : (
-              <div>
-                {allTown.map((item: string) => (
-                  <TownBtn
-                    key={uuidv4()}
-                    town={selectTown}
-                    value={item}
-                    onClick={onClickSelectTown}
-                  >
-                    {item === '' ? '제주 전체' : item}
-                  </TownBtn>
-                ))}
-              </div>
-            )}
-          </TownCategory>
-        </CategoriesWrap>
-
+        <SelectContainer>
+          {router.route === '/main' ? (
+            <CityCategory value={selectCity} onChange={onChangeSelectCity}>
+              <option value="제주전체">제주전체</option>
+              <option value="제주시">제주시</option>
+              <option value="서귀포시">서귀포시</option>
+            </CityCategory>
+          ) : null}
+          <CategoriesWrap>
+            <TownCategory>
+              <TownSelect
+                selectCity={selectCity}
+                selectTown={selectTown}
+                onClickSelectTown={onClickSelectTown}
+                onChangeSelectTown={onChangeSelectTown}
+              />
+            </TownCategory>
+          </CategoriesWrap>
+        </SelectContainer>
         {isOpenModal && (
           <Modal
             onClickToggleModal={onClickToggleModal}
@@ -277,15 +224,19 @@ export default function Main() {
             <DataError />
           ) : (
             <GridBox>
-              <Masonry columnsCount={4}>
-                {data?.pages.map((data) =>
-                  data?.map((item: { [key: string]: string }) => (
-                    <ItemBox key={uuidv4()}>
-                      <Content item={item} />
-                    </ItemBox>
-                  ))
-                )}
-              </Masonry>
+              <ResponsiveMasonry
+                columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
+              >
+                <Masonry columnsCount={4}>
+                  {data?.pages.map((data) =>
+                    data?.map((item: { [key: string]: string }) => (
+                      <ItemBox key={uuidv4()}>
+                        <Content item={item} />
+                      </ItemBox>
+                    ))
+                  )}
+                </Masonry>
+              </ResponsiveMasonry>
             </GridBox>
           )}
 
@@ -353,15 +304,45 @@ export default function Main() {
           TOP
         </TopBtn>
       </MainContainer>
-    </>
+    </Wrap>
   );
 }
-
-const MainContainer = styled.div`
-  /* width: 1440px;
-  margin: auto; */
+const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+  }
 `;
-
+const MainContainer = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 375px;
+  }
+`;
+const CityCategory = styled.select`
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    margin: auto;
+    display: inherit;
+    text-align: center;
+    background-color: inherit;
+    font-size: 14px;
+    border: none;
+    width: 70px;
+    height: 21px;
+  }
+`;
+const SelectContainer = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    margin: auto;
+    width: 150px;
+  }
+`;
 const SearchAndForm = styled.div`
   display: flex;
   position: absolute;
@@ -372,6 +353,9 @@ const SearchAndForm = styled.div`
   margin-top: 10px;
   margin-left: 55%;
   width: 440px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const PostFormButton = styled.button`
   border-radius: 20px;
@@ -395,21 +379,13 @@ const TownCategory = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
 `;
-const TownBtn = styled.button<{ town: string[]; value: string }>`
-  background-color: #dcdcdc;
-  width: 88px;
-  height: 26px;
-  margin: 3px;
-  border: none;
-  border-radius: 52px;
-  cursor: pointer;
-  border: ${({ value, town }) =>
-    town.includes(value) ? '2px solid #FEB819' : 'none'};
-`;
 
 const GridBox = styled.div`
   margin: auto;
   width: 1188px;
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+  }
 `;
 const ItemBox = styled.div`
   margin: 0px 5px 20px 5px;
@@ -419,6 +395,9 @@ const ChatWrap = styled.div`
   left: 3%;
   top: 90%;
   transform: translate(-50%, -50%);
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const ChatToggleBtn = styled.button`
   position: fixed;
@@ -448,6 +427,15 @@ const MapModalBtn = styled.button`
   height: 36px;
   left: calc(50% - 121px / 2 - 0.5px);
   bottom: 42px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+    height: 60px;
+    margin: auto;
+    left: 0;
+    bottom: 0;
+    border-radius: inherit;
+    font-size: 14px;
+  }
 `;
 const PinImg = styled.img`
   margin-right: 3px;
@@ -474,5 +462,8 @@ const TopBtn = styled.button`
   transition: 0.3s;
   :hover {
     background-color: #fed474;
+  }
+  @media ${(props) => props.theme.mobile} {
+    display: none;
   }
 `;
