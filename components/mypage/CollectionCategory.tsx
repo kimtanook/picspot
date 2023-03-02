@@ -7,6 +7,7 @@ import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Link from 'next/link';
+import { useMediaQuery } from 'react-responsive';
 
 const CollectionCategory = ({ value, collectorList }: any) => {
   const [more, setMore] = useState(true);
@@ -41,6 +42,13 @@ const CollectionCategory = ({ value, collectorList }: any) => {
     setMore(!more);
   };
 
+  const isPc = useMediaQuery({
+    query: '(min-width: 425px)',
+  });
+  const isMobile = useMediaQuery({
+    query: '(max-width: 425px)',
+  });
+
   return (
     <div>
       {more ? (
@@ -55,7 +63,6 @@ const CollectionCategory = ({ value, collectorList }: any) => {
               ))}
             </Masonry>
           </MySpotImg>
-
           <MoreBtn onClick={onClickMoreBtn}>
             <MoreBtnContents>
               more
@@ -65,12 +72,34 @@ const CollectionCategory = ({ value, collectorList }: any) => {
         </TownWrap>
       ) : (
         <>
-          <FatherDiv>
+          {isPc && (
+            <FatherDiv>
+              <MoreDiv>
+                <MorePostTownTitle>
+                  <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
+                </MorePostTownTitle>
+                <Masonry columnsCount={4}>
+                  {MyCollectionTownItem?.map((item: any) => (
+                    <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                      <MyPostImg src={item.imgUrl} />
+                    </Link>
+                  ))}
+                </Masonry>
+                <MoreBtn onClick={onClickMoreBtn}>
+                  <MoreBtnContents>
+                    <ArrowImg src={'/arrow-left.png'} />
+                    back
+                  </MoreBtnContents>
+                </MoreBtn>
+              </MoreDiv>
+            </FatherDiv>
+          )}
+          {isMobile && (
             <MoreDiv>
               <MorePostTownTitle>
                 <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
               </MorePostTownTitle>
-              <Masonry columnsCount={4}>
+              <Masonry columnsCount={1}>
                 {MyCollectionTownItem?.map((item: any) => (
                   <Link key={uuidv4()} href={`/detail/${item.id}`}>
                     <MyPostImg src={item.imgUrl} />
@@ -84,7 +113,7 @@ const CollectionCategory = ({ value, collectorList }: any) => {
                 </MoreBtnContents>
               </MoreBtn>
             </MoreDiv>
-          </FatherDiv>
+          )}
         </>
       )}
     </div>

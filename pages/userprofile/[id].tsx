@@ -9,6 +9,8 @@ import UserPostList from '@/components/userprofile/UserPostList';
 import UserCollectionList from '@/components/userprofile/UserCollectionList';
 import { useRecoilState } from 'recoil';
 import { messageSendToggle } from '@/atom';
+import DataLoading from '@/components/common/DataLoading';
+import DataError from '@/components/common/DataError';
 
 function Profile() {
   const router = useRouter();
@@ -17,7 +19,11 @@ function Profile() {
   const [onSpot, setOnSpot] = useState(true);
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
-  const { data: getFollowingData } = useQuery('getFollowingData', getFollowing);
+  const {
+    data: getFollowingData,
+    isLoading,
+    isError,
+  } = useQuery('getFollowingData', getFollowing);
 
   const [sendMsgToggle, setSendMsgToggle] = useRecoilState(messageSendToggle);
 
@@ -30,6 +36,9 @@ function Profile() {
   const FollowingData = getFollowingData?.filter(
     (item: { [key: string]: string }) => item.uid === userId
   );
+
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
   return (
     <>
       <Seo title="My" />

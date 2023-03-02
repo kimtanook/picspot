@@ -4,6 +4,7 @@ import Masonry from 'react-responsive-masonry';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Link from 'next/link';
+import { useMediaQuery } from 'react-responsive';
 
 const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const [more, setMore] = useState(true);
@@ -17,6 +18,13 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const onClickMoreBtn = () => {
     setMore(!more);
   };
+
+  const isPc = useMediaQuery({
+    query: '(min-width: 425px)',
+  });
+  const isMobile = useMediaQuery({
+    query: '(max-width: 425px)',
+  });
 
   return (
     <div>
@@ -41,12 +49,34 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
         </TownWrap>
       ) : (
         <>
-          <FatherDiv>
+          {isPc && (
+            <FatherDiv>
+              <MoreDiv>
+                <MorePostTownTitle>
+                  <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
+                </MorePostTownTitle>
+                <Masonry columnsCount={4}>
+                  {myPostTownList?.map((item: { [key: string]: string }) => (
+                    <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                      <MyPostImg src={item.imgUrl} />
+                    </Link>
+                  ))}
+                </Masonry>
+                <MoreBtn onClick={onClickMoreBtn}>
+                  <MoreBtnContents>
+                    <ArrowImg src={'/arrow-left.png'} />
+                    back
+                  </MoreBtnContents>
+                </MoreBtn>
+              </MoreDiv>
+            </FatherDiv>
+          )}
+          {isMobile && (
             <MoreDiv>
               <MorePostTownTitle>
                 <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
               </MorePostTownTitle>
-              <Masonry columnsCount={4}>
+              <Masonry columnsCount={1}>
                 {myPostTownList?.map((item: { [key: string]: string }) => (
                   <Link key={uuidv4()} href={`/detail/${item.id}`}>
                     <MyPostImg src={item.imgUrl} />
@@ -60,7 +90,7 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
                 </MoreBtnContents>
               </MoreBtn>
             </MoreDiv>
-          </FatherDiv>
+          )}
         </>
       )}
     </div>
@@ -116,6 +146,14 @@ const MoreDiv = styled.div`
   transform: translate(-50%, 0%);
   left: 50%;
   overflow: hidden;
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    width: 375px;
+    overflow: hidden;
+    transform: translate(-261%, 0%);
+    margin: auto;
+    left: 50%;
+  }
 `;
 const MyPostImg = styled.img`
   width: 275px;
@@ -124,12 +162,18 @@ const MyPostImg = styled.img`
     transition: all 0.3s;
     transform: scale(1.02);
   }
+  @media ${(props) => props.theme.mobile} {
+    width: 370px;
+  }
 `;
 
 const MorePostTownTitle = styled.div`
   height: 43px;
   border-bottom: 1px solid #212121;
   margin-bottom: 25px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
 `;
 
 const MoreMyPostTownTitle = styled.div`

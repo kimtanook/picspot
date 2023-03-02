@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import CollectionCategory from './CollectionCategory';
 import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
+import { useMediaQuery } from 'react-responsive';
 
 const CollectionList = () => {
   //* useQuery 사용해서 collection의 모든 데이터 불러오기
@@ -27,17 +28,39 @@ const CollectionList = () => {
       return myCollectionTown?.indexOf(element) === index;
     }
   );
+
+  const isPc = useMediaQuery({
+    query: '(min-width: 425px)',
+  });
+  const isMobile = useMediaQuery({
+    query: '(max-width: 425px)',
+  });
   return (
     <>
-      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
-        {myCollectionTownArr?.map((item: string) => (
-          <CollectionCategory
-            key={uuidv4()}
-            value={item}
-            collectorList={collectorList}
-          />
-        ))}
-      </Masonry>
+      {isPc && (
+        <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
+          {myCollectionTownArr?.map((item: string) => (
+            <CollectionCategory
+              key={uuidv4()}
+              value={item}
+              collectorList={collectorList}
+            />
+          ))}
+        </Masonry>
+      )}
+      {isMobile && (
+        <Masonry columnsCount={1} style={{ margin: '0px 1%' }}>
+          {myCollectionTownArr?.map((item: string) => (
+            <CollectionCategory
+              isPc={isPc}
+              isMobile={isMobile}
+              key={uuidv4()}
+              value={item}
+              collectorList={collectorList}
+            />
+          ))}
+        </Masonry>
+      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { getMyPost } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import Masonry from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
@@ -26,15 +27,33 @@ const MyPostList = () => {
     }
   );
 
+  const isPc = useMediaQuery({
+    query: '(min-width: 425px)',
+  });
+  const isMobile = useMediaQuery({
+    query: '(max-width: 425px)',
+  });
+
   return (
     <>
-      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
-        {myCollectTownArr?.map((item: string) => (
-          <div key={uuidv4()}>
-            <Town value={item} myPostData={data} />
-          </div>
-        ))}
-      </Masonry>
+      {isPc && (
+        <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
+          {myCollectTownArr?.map((item: string) => (
+            <div key={uuidv4()}>
+              <Town value={item} myPostData={data} />
+            </div>
+          ))}
+        </Masonry>
+      )}
+      {isMobile && (
+        <Masonry columnsCount={1} style={{ margin: '0px 1%' }}>
+          {myCollectTownArr?.map((item: string) => (
+            <div key={uuidv4()}>
+              <Town value={item} myPostData={data} />
+            </div>
+          ))}
+        </Masonry>
+      )}
     </>
   );
 };
