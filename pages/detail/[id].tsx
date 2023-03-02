@@ -181,7 +181,7 @@ const DetailContents = styled.div`
 `;
 
 const ImgAndProfileAndFollowingAndCollection = styled.div`
-  width: 30%;
+  width: 400px;
 `;
 
 const ProfileAndFollowingAndCollection = styled.div`
@@ -197,7 +197,7 @@ const ProfileAndFollwing = styled.div`
 `;
 
 const ListAndMapAndComment = styled.div`
-  width: 50%;
+  width: 650px;
 `;
 
 //* SSR방식으로 server에서 id 값 보내기

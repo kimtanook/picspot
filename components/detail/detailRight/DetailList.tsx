@@ -3,6 +3,7 @@ import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useRef } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -28,6 +29,8 @@ const DetailList = ({
 }: any) => {
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
+  const titleInput = useRef<HTMLInputElement>(null); //* DOM에 접근하기
+  const contentInput = useRef<HTMLInputElement>(null);
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -50,26 +53,33 @@ const DetailList = ({
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
     if (editTitle === '') {
+      setEditTitle(item.title);
+    }
+
+    if (titleInput.current?.value === '') {
       customAlert('제목을 입력해주세요');
       return;
     }
 
+    if (editCity === '' || editTown === '') {
+      customAlert('카테코리를 입력해주세요');
+      return;
+    }
+
     if (editContent === '') {
+      setEditContent(item.content);
+    }
+
+    if (contentInput.current?.value === '') {
       customAlert('내용을 입력해주세요');
       return;
     }
 
-    if (editCity === '' || editTown === '') {
-      customAlert('카테고리를 입력해주세요');
-      return;
-    }
-
-    if (saveLatLng === undefined || saveAddress === undefined) {
+    if (saveLatLng === '' || saveAddress === '') {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
 
-    //* 뮤테이션을 사용하여 데이터를 수정하고 invalidateQueries를 사용해 쿼리 최신화
     onUpdateData(data, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
@@ -112,16 +122,6 @@ const DetailList = ({
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
             <AddressText>{item.address}</AddressText>
-            <span
-              style={{
-                marginLeft: 10,
-                textDecoration: 'underLine',
-                color: '#8E8E93',
-                cursor: 'pointer',
-              }}
-            >
-              copy
-            </span>
           </Address>
         </CityAndTownAndAddress>
         <Content>
@@ -139,6 +139,7 @@ const DetailList = ({
             onChange={(e) => {
               setEditTitle(e.target.value);
             }}
+            ref={titleInput}
           />
 
           {editBtnToggle ? (
@@ -184,8 +185,8 @@ const DetailList = ({
           </CityInput>
           <TownInput
             defaultValue={item.town}
-            // onChange={(e) => setEditTown(e.target.value)}
             onChange={(e) => onClickEditTown(e)}
+            // onChange={(e) => setEditTown(e.target.value)}
           >
             <option value="조천읍">조천읍</option>
             <option value="제주시">제주시</option>
@@ -203,16 +204,6 @@ const DetailList = ({
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
             <span>{item.address}</span>
-            <span
-              style={{
-                marginLeft: 10,
-                textDecoration: 'underLine',
-                color: '#8E8E93',
-                cursor: 'pointer',
-              }}
-            >
-              copy
-            </span>
           </Address>
         </CityAndTownAndAddress>
         <Content>
@@ -222,6 +213,7 @@ const DetailList = ({
             onChange={(e) => {
               setEditContent(e.target.value);
             }}
+            ref={contentInput}
           />
         </Content>
       </ListContainer>
@@ -322,7 +314,7 @@ const Town = styled.div`
 const TownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 30%;
+  width: 400px;
   height: 40px;
   text-align: center;
   border: none;
