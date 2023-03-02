@@ -29,7 +29,7 @@ const CommentList = ({ postId }: postId) => {
     if (!authService.currentUser) {
       return alert('로그인 후 댓글을 남겨보세요!');
     } else if (comment.length > 30) {
-      customAlert('30자를 초과했어요.');
+      customAlert('댓글이 30자를 초과했어요.');
       return;
     } else if (comment) {
       commentMutate(

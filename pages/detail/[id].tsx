@@ -45,13 +45,6 @@ const Post = ({ id }: any) => {
 
   const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
 
-  //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEditToggle = () => {
-    setEditBtnToggle(!editBtnToggle);
-    setEditCity(editCity);
-    setEditTown(editTown);
-  };
-
   //* 데이터 수정 시 보내주는 데이터
   let editData = {
     title: editTitle,
@@ -61,6 +54,13 @@ const Post = ({ id }: any) => {
     lat: saveLatLng.Ma,
     long: saveLatLng.La,
     address: saveAddress,
+  };
+
+  //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+    setEditCity(editCity);
+    setEditTown(editTown);
   };
 
   //* useQuery 사용해서 포스트 데이터 불러오기

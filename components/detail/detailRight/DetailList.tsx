@@ -3,7 +3,7 @@ import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -34,6 +34,9 @@ const DetailList = ({
   const titleInput = useRef<HTMLInputElement>(null); //* DOM에 접근하기
   const contentInput = useRef<HTMLInputElement>(null);
 
+  const [editTitleInputCount, setEditTitleInputCount] = useState(0);
+  const [editContentInputCount, setEditContentInputCount] = useState(0);
+
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
 
@@ -54,12 +57,13 @@ const DetailList = ({
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
-    if (editTitle === '') {
-      setEditTitle(item.title);
-    }
-
     if (titleInput.current?.value === '') {
       customAlert('제목을 입력해주세요');
+      return;
+    }
+
+    if (editTitleInputCount > 20) {
+      customAlert('제목이 20자를 초과했어요.');
       return;
     }
 
@@ -68,12 +72,13 @@ const DetailList = ({
       return;
     }
 
-    if (editContent === '') {
-      setEditContent(item.content);
-    }
-
     if (contentInput.current?.value === '') {
       customAlert('내용을 입력해주세요');
+      return;
+    }
+
+    if (editContentInputCount > 35) {
+      customAlert('내용이 35자를 초과했어요.');
       return;
     }
 
@@ -86,10 +91,6 @@ const DetailList = ({
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
         customAlert('수정을 완료하였습니다!');
-        // setEditTitle('');
-        // setEditContent('');
-        // setEditCity('');
-        // setEditTown('');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
@@ -149,14 +150,20 @@ const DetailList = ({
             defaultValue={item.title}
             onChange={(e) => {
               setEditTitle(e.target.value);
+              setEditTitleInputCount(e.target.value.length);
             }}
             ref={titleInput}
           />
-          {/* <EditTitleClearBtn
-            onClick={() => {
-              setEditTitle('');
+          <span
+            style={{
+              color: '#8E8E93',
+              width: 100,
+              marginTop: 'auto',
+              marginBottom: 'auto',
             }}
-          ></EditTitleClearBtn> */}
+          >
+            {editTitleInputCount} /20
+          </span>
 
           {editBtnToggle ? (
             <EditBtnCotainer>
@@ -193,16 +200,13 @@ const DetailList = ({
           <CityInput
             defaultValue={item.city}
             onChange={(e) => onChangeCityInput(e)}
-            // onChange={onClickEditTown}
           >
-            {/* <option value="제주전체">제주전체</option> */}
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
           <TownInput
             defaultValue={item.town}
             onChange={(e) => onChangeTownInput(e)}
-            // onChange={(e) => setEditTown(e.target.value)}
           >
             {editCity === '제주시' && (
               <>
@@ -236,15 +240,27 @@ const DetailList = ({
           </Address>
         </CityAndTownAndAddress>
         <Content>
-          Tip |{' '}
+          Tip
           <ContentInput
             // value={editContent}
             defaultValue={item.content}
             onChange={(e) => {
               setEditContent(e.target.value);
+              setEditContentInputCount(e.target.value.length);
             }}
             ref={contentInput}
           />
+          <span
+            style={{
+              color: '#8E8E93',
+              width: 100,
+              marginTop: 'auto',
+              marginBottom: 'auto',
+              marginLeft: 20,
+            }}
+          >
+            {editContentInputCount} /35
+          </span>
           {/* <EditContentClearBtn
             onClick={() => {
               setEditContent('');
@@ -283,6 +299,9 @@ const TitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;
   width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const View = styled.div`
@@ -293,7 +312,7 @@ const View = styled.div`
 const EditBtnCotainer = styled.div`
   display: flex;
   gap: 10px;
-  width: 350px;
+  width: 300px;
   margin-left: 20px;
 `;
 
@@ -358,7 +377,7 @@ const TownInput = styled.select`
 
 const Address = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   gap: 10px;
   width: 100%;
@@ -387,6 +406,9 @@ const ContentInput = styled.input`
   padding-left: 10px;
   margin-left: 20px;
   border: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const TipSpan = styled.span`
