@@ -47,7 +47,7 @@ function Layout() {
             setModal={setMsgSendToggle}
             width={'500'}
             height={'500'}
-            element={<MessageSend />}
+            element={<MessageSend setModal={setMsgSendToggle} />}
           />
         ) : null}
       </div>

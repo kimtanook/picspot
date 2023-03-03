@@ -167,7 +167,6 @@ export const getComment = async ({ queryKey }: any) => {
 
 //* 댓글 추가
 export const addComment = async (item: AddComment) => {
-  console.log('item : ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
