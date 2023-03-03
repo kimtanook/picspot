@@ -1,35 +1,77 @@
 import { deleteTakeMessage } from '@/api';
 import { authService } from '@/firebase';
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import styled from 'styled-components';
+import DetailMessage from './DetailMessage';
 
-function TakeMessageItem({ item }: { item: SendTakeMessage }) {
-  const user = authService.currentUser?.uid;
-  const queryClient = useQueryClient();
-  const { mutate: sendMessage } = useMutation(deleteTakeMessage);
-  const deleteMessage = () => {
-    sendMessage(
-      { uid: user, id: item.id },
-      {
-        onSuccess: () => {
-          setTimeout(
-            () => queryClient.invalidateQueries('getTakeMessageData'),
-            300
-          );
-        },
-      }
-    );
-  };
+function TakeMessageItem({
+  item,
+  deleteId,
+  onClickDeleteMsg,
+  box,
+}: {
+  item: SendTakeMessage;
+  deleteId: string[];
+  onClickDeleteMsg: any;
+  box: string;
+}) {
+  const [toggle, setToggle] = useState(false);
+  const day = new Date(item.time! + 9 * 60 * 60 * 1000).toLocaleString(
+    'ko-KR',
+    {
+      timeZone: 'UTC',
+    }
+  );
   return (
-    <div>
-      <div>받는사람 : {item.sendUserName}</div>
-      <div>내용 : {item.message}</div>
-      <div>시간 : {item.time}</div>
-      <div>id: {item.id}</div>
-      <div>checked: {item.checked === true ? 'true' : 'false'}</div>
-      <button onClick={deleteMessage}>삭제</button>
-    </div>
+    <Wrap>
+      {toggle ? (
+        <DetailMessage item={item} setToggle={setToggle} box={box} />
+      ) : null}
+      <MessageSelect
+        type="checkbox"
+        value={item.id}
+        onChange={() => onClickDeleteMsg(item.id)}
+        checked={deleteId?.includes(item.id) ? true : false}
+      />
+      <MessageUser>{item.sendUserName}</MessageUser>
+      <MessageBody onClick={() => setToggle(!toggle)}>
+        {item.message}
+      </MessageBody>
+      <MessageDay>{day}</MessageDay>
+      <MessageStatus>
+        {item.checked === true ? '읽음' : '읽지않음'}
+      </MessageStatus>
+    </Wrap>
   );
 }
 
 export default TakeMessageItem;
+const Wrap = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  font-size: 14px;
+  border-bottom: 2px solid #f4f4f4;
+`;
+const MessageSelect = styled.input`
+  width: 50px;
+`;
+const MessageUser = styled.div`
+  width: 60px;
+`;
+const MessageBody = styled.div`
+  width: 200px;
+  max-height: 112px;
+  overflow: hidden;
+  line-height: 22px;
+  cursor: pointer;
+`;
+const MessageDay = styled.div`
+  width: 70px;
+  font-size: 12px;
+`;
+const MessageStatus = styled.div`
+  width: 50px;
+`;

@@ -40,6 +40,14 @@ const DetailProfile = ({ item }: any) => {
                 <ProfileImg src={obj.userImg} alt="image" />
                 <ProfileName>{obj.userName}</ProfileName>
               </>
+              // <Link
+              //   href={{
+              //     pathname: `/userprofile/${obj.uid}`,
+              //     query: { name: obj.userName, userImg: obj.userImg },
+              //   }}
+              // >
+              //   <StProfileImg src={obj.userImg} alt="image" />
+              // </Link>
             )}
           </ProfileCotainer>
         ))}
