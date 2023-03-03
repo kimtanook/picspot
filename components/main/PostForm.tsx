@@ -50,20 +50,43 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const { mutate: onAddData } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
+  // 수정코드
   const handleImageChange = (e: any) => {
-    const {
-      target: { files },
-    } = e;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader?.readAsDataURL(theFile);
-    reader.onloadend = (finishedEvent) => {
+    const file: any = e.target.files;
+    if (file.length === 0) {
+      return;
+    } else {
       const {
-        currentTarget: { result },
-      }: any = finishedEvent;
-      setImageUpload(result);
-    };
+        currentTarget: { files },
+      } = e;
+
+      const theFile = files[0];
+      const reader = new FileReader();
+      reader?.readAsDataURL(theFile);
+      reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        }: any = finishedEvent;
+        setImageUpload(result);
+      };
+    }
   };
+
+  // 기존코드
+  // const handleImageChange = (e: any) => {
+  //   const {
+  //     target: { files },
+  //   } = e;
+  //   const theFile = files[0];
+  //   const reader = new FileReader();
+  //   reader?.readAsDataURL(theFile);
+  //   reader.onloadend = (finishedEvent) => {
+  //     const {
+  //       currentTarget: { result },
+  //     }: any = finishedEvent;
+  //     setImageUpload(result);
+  //   };
+  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -131,8 +154,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
     setTown(e.target.value);
   };
 
-  console.log('1', saveAddress.split(' ')[1]);
-  console.log('2', saveAddress.split(' ')[2]);
   useEffect(() => {
     if (!saveAddress) {
       return;
