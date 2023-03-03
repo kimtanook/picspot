@@ -13,6 +13,8 @@ import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
 
 const Post = ({ id }: any) => {
+  console.log('id: ', id);
+
   //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
@@ -32,7 +34,6 @@ const Post = ({ id }: any) => {
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
-  // const [imageUpload, setImageUpload]: any = useState(null);
 
   //* input 토글
   const [inputToggle, setInputToggle] = useState(false);
@@ -40,8 +41,8 @@ const Post = ({ id }: any) => {
   //* collection 저장 state
   const [isOpen, setIsOpen] = useState(false);
 
-  const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
-  const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+  // const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
+  // const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
 
   const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
 
@@ -63,7 +64,7 @@ const Post = ({ id }: any) => {
     setEditTown(editTown);
   };
 
-  //* useQuery 사용해서 포스트 데이터 불러오기
+  //! useQuery 사용해서 포스트 데이터 불러오기
   const {
     data: detail,
     isLoading,
@@ -104,9 +105,9 @@ const Post = ({ id }: any) => {
             <ImgAndProfileAndFollowingAndCollection>
               <DetailImg
                 item={item}
-                imageUpload={imageUpload}
-                setImageUpload={setImageUpload}
-                editImg={editImg}
+                // imageUpload={imageUpload}
+                // setImageUpload={setImageUpload}
+                // editImg={editImg}
               />
 
               <ProfileAndFollowingAndCollection>

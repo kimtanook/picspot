@@ -8,7 +8,14 @@ import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomModal } from '@/components/common/CustomModal';
-const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
+import { useRecoilState } from 'recoil';
+import { editAtom } from '@/atom';
+
+const DetailImg = ({ item }: any) => {
+  let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+
+  const [imageUpload, setImageUpload]: any = useState(null);
+
   const [isModalImgActive, setIsModalImgActive]: any = useState(false);
   const queryClient = useQueryClient(); // *쿼리 최신화하기
   const editFileInput: any = useRef(); //* Input Dom 접근하기

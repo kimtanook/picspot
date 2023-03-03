@@ -19,3 +19,8 @@ export const followToggleAtom = atom({
   key: `followToggleAtom${uuidv4()}`,
   default: false,
 });
+
+export const editAtom = atom({
+  key: `editAtom${uuidv4()}`,
+  default: {},
+});
