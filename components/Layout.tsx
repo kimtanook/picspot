@@ -6,6 +6,7 @@ import {
   signUpModalAtom,
   forgotModalAtom,
   loginModalAtom,
+  postModalAtom,
 } from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -17,6 +18,7 @@ import MessageSend from './message/MessageSend';
 import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
 import Auth from './main/auth/Auth';
+import PostForm from './main/PostForm';
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
   const [msgSendToggle, setMsgSendToggle] = useRecoilState(messageSendToggle);
@@ -26,6 +28,7 @@ function Layout() {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
 
   return (
     <div>
@@ -105,6 +108,20 @@ function Layout() {
             width="524"
             height="695"
             element={<Auth />}
+          />
+        ) : (
+          ''
+        )}
+      </>
+      <>
+        {' '}
+        {postMapModal ? (
+          <CustomModal
+            modal={postMapModal}
+            setModal={setIsPostMapModal}
+            width="1100"
+            height="632"
+            element={<PostForm />}
           />
         ) : (
           ''

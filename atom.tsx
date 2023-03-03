@@ -39,3 +39,7 @@ export const forgotModalAtom = atom({
   key: `forgotModalAtom`,
   default: false,
 });
+export const postModalAtom = atom({
+  key: `postModalAtom`,
+  default: false,
+});

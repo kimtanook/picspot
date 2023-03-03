@@ -18,10 +18,11 @@ import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
-import { useRecoilState } from 'recoil';
-import { loginModalAtom } from '../../atom';
+
+import { loginModalAtom, postModalAtom } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
+import { useRecoilState } from 'recoil';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -32,12 +33,12 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
-  const [isModalPostActive, setIsModalPostActive]: any = useState(false);
 
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   // 뒷 배경 스크롤 방지
   useEffect(() => {
     const html = document.documentElement;
-    if (isModalActive || isModalPostActive) {
+    if (isModalActive || postMapModal) {
       html.style.overflowY = 'hidden';
       html.style.overflowX = 'hidden';
     } else {
@@ -48,7 +49,7 @@ export default function Main() {
       html.style.overflowY = 'auto';
       html.style.overflowX = 'auto';
     };
-  }, [isModalActive, isModalPostActive]);
+  }, [isModalActive, postMapModal]);
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
@@ -60,10 +61,9 @@ export default function Main() {
       return;
     }
     if (authService.currentUser) {
-      setIsModalPostActive(true);
+      setIsPostMapModal(true);
       return;
     }
-    // setIsModalPostActive(!isModalPostActive);
   };
 
   const router = useRouter();
@@ -171,7 +171,7 @@ export default function Main() {
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
       <MainContainer>
         <SearchAndForm>
-          <PostFormButton onClick={onClickTogglePostModal}>
+          <PostFormButton onClick={() => setIsPostMapModal(true)}>
             + 나의 스팟 추가
           </PostFormButton>
 
@@ -255,13 +255,13 @@ export default function Main() {
           </ChatWrap>
         </div>
 
-        {isModalPostActive ? (
+        {postMapModal ? (
           <CustomModal
-            modal={isModalPostActive}
-            setModal={setIsModalPostActive}
+            modal={postMapModal}
+            setModal={setIsPostMapModal}
             width="1100"
             height="632"
-            element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
+            element={<PostForm />}
           />
         ) : (
           ''

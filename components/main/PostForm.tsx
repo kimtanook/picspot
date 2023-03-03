@@ -8,7 +8,10 @@ import MapLandingPage from '../detail/MapLandingPage';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
-const PostForm = ({ setIsModalPostActive, modal }: any) => {
+import { useRecoilState } from 'recoil';
+import { postModalAtom } from '@/atom';
+
+const PostForm = () => {
   const queryClient = useQueryClient();
 
   const [saveLatLng, setSaveLatLng]: any = useState([]);
@@ -22,15 +25,16 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const [inputCount, setInputCount] = useState(0);
   const [textareaCount, setTextareaCount] = useState(0);
 
-  //* 드롭다운 상태
+  //* 카테고리
   const [city, setCity] = useState('');
   const [town, setTown] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
-
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
 
+  const [place, setPlace] = useState('');
   let postState: any = {
     title: title,
     content: content,
@@ -117,6 +121,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
       return;
     }
     const imageRef = ref(storageService, `images/${uuidv4()}`);
+
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
@@ -127,7 +132,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
         onAddData(postState, {
           onSuccess: () => {
             queryClient.invalidateQueries('infiniteData');
-            setIsModalPostActive(false);
+            setIsPostMapModal(false);
           },
         });
       });
@@ -137,12 +142,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   };
 
   //* 카테고리버튼 눌렀을 때 실행하는 함수
-  const [place, setPlace] = useState('');
-  const onClickTown = (e: any) => {
-    setPlace('');
-    setTown(e.target.innerText);
-    setSearchCategory(e.target.innerText);
-  };
 
   //select에서 value값 받아오기
   const onChangeFormSelect = (e: any) => {
@@ -154,6 +153,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
     setTown(e.target.value);
   };
 
+  // 지도에 마커 변경시 카테고리 변경
   useEffect(() => {
     if (!saveAddress) {
       return;
