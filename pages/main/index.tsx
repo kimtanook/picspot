@@ -355,6 +355,10 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    right: -400px;
+  }
 `;
 
 const CategoriesWrap = styled.div`
