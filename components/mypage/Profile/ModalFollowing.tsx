@@ -27,7 +27,7 @@ const ModalFollowing = () => {
     isError,
   } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+      data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
   // console.log('followingData: ', followingData);
@@ -109,7 +109,7 @@ const FollowingList = styled.div`
   align-items: center;
   padding-top: 30px;
   height: 30%;
-  width: 400px;
+  width: 524px;
   margin-bottom: 40px;
   border-bottom: 1px solid black;
 `;
@@ -140,7 +140,7 @@ const FollowingProfile = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 340px;
+  width: 400px;
   overflow-y: scroll;
   margin: auto;
   padding-bottom: 20px;

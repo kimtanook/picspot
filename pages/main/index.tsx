@@ -34,6 +34,7 @@ export default function Main() {
 
   const [isModalPostActive, setIsModalPostActive]: any = useState(false);
 
+  // 뒷 배경 스크롤 방지
   useEffect(() => {
     const html = document.documentElement;
     if (isModalActive || isModalPostActive) {
@@ -302,6 +303,7 @@ const Wrap = styled.div`
     width: 375px;
   }
 `;
+
 const MainContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     margin: auto;

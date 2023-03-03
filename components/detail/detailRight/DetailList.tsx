@@ -3,6 +3,7 @@ import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -25,9 +26,16 @@ const DetailList = ({
   saveAddress,
   setSaveAddress,
   setEditBtnToggle,
+  setPlace,
+  place,
 }: any) => {
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
+  const titleInput = useRef<HTMLInputElement>(null); //* DOM에 접근하기
+  const contentInput = useRef<HTMLInputElement>(null);
+
+  const [editTitleInputCount, setEditTitleInputCount] = useState(0);
+  const [editContentInputCount, setEditContentInputCount] = useState(0);
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -49,39 +57,40 @@ const DetailList = ({
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
-    if (editTitle === '') {
+    if (titleInput.current?.value === '') {
       customAlert('제목을 입력해주세요');
       return;
     }
 
-    if (editContent === '') {
-      customAlert('내용을 입력해주세요');
+    if (editTitleInputCount > 20) {
+      customAlert('제목이 20자를 초과했어요.');
       return;
     }
 
     if (editCity === '' || editTown === '') {
-      customAlert('카테고리를 입력해주세요');
+      customAlert('카테코리를 입력해주세요');
       return;
     }
 
-    if (saveLatLng === undefined || saveAddress === undefined) {
+    if (contentInput.current?.value === '') {
+      customAlert('내용을 입력해주세요');
+      return;
+    }
+
+    if (editContentInputCount > 35) {
+      customAlert('내용이 35자를 초과했어요.');
+      return;
+    }
+
+    if (saveLatLng === '' || saveAddress === '') {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
 
-    //! 기능
-    //* 뮤테이션을 사용하여 데이터를 수정하고 invalidateQueries를 사용해 쿼리를 최신화 했습니다.
     onUpdateData(data, {
       onSuccess: () => {
-        //! 로직 : setTimeOut을 사용
-        //* invalidateQueries 실행이 완료되기 전에 화면이 보여지는 문제로 인해
-        //* setTimeOut을 사용해 0.5초 뒤에 invalidateQueries가 실행되도록 했습니다.
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
         customAlert('수정을 완료하였습니다!');
-        setEditTitle('');
-        setEditContent('');
-        setEditCity('');
-        setEditTown('');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
@@ -89,12 +98,21 @@ const DetailList = ({
     });
   };
 
+  const onChangeCityInput = (e: any) => {
+    setEditCity(e.target.value);
+  };
+
+  const onChangeTownInput = (e: any) => {
+    setEditTown(e.target.value);
+    setPlace(e.target.value);
+  };
+
   if (!editBtnToggle) {
     return (
-      <StListContainer>
-        <StTitleAndView>
-          <StTitle>{item.title} </StTitle>
-          <StView>
+      <ListContainer>
+        <TitleAndView>
+          <Title>{item.title} </Title>
+          <View>
             <Image
               src="/view_icon.svg"
               alt="image"
@@ -105,61 +123,63 @@ const DetailList = ({
             <span style={{ color: '#1882FF', width: 70 }}>
               {item.clickCounter} view
             </span>
-          </StView>
+          </View>
           {authService.currentUser?.uid === item.creator ? (
-            <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
+            <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
           ) : null}
-        </StTitleAndView>
-        <StCityAndTownAndAddress>
-          <StCity>{item.city}</StCity>
-          <StTown>{item.town}</StTown>
-          <StAddress>
+        </TitleAndView>
+        <CityAndTownAndAddress>
+          <City>{item.city}</City>
+          <Town>{item.town}</Town>
+          <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <StAddressText>{item.address}</StAddressText>
-            <span
-              style={{
-                marginLeft: 10,
-                textDecoration: 'underLine',
-                color: '#8E8E93',
-                cursor: 'pointer',
-              }}
-            >
-              copy
-            </span>
-          </StAddress>
-        </StCityAndTownAndAddress>
-        <StContent>
-          <StTipSpan>Tip |</StTipSpan>
-          <StContentSpan>{item.content}</StContentSpan>
-        </StContent>
-      </StListContainer>
+            <AddressText>{item.address}</AddressText>
+          </Address>
+        </CityAndTownAndAddress>
+        <Content>
+          <TipSpan>Tip |</TipSpan>
+          <ContentSpan>{item.content}</ContentSpan>
+        </Content>
+      </ListContainer>
     );
   } else {
     return (
-      <StListContainer>
-        <StTitleAndView>
-          <StTitleInput
+      <ListContainer>
+        <TitleAndView>
+          <TitleInput
             defaultValue={item.title}
             onChange={(e) => {
               setEditTitle(e.target.value);
+              setEditTitleInputCount(e.target.value.length);
             }}
+            ref={titleInput}
           />
+          <span
+            style={{
+              color: '#8E8E93',
+              width: 100,
+              marginTop: 'auto',
+              marginBottom: 'auto',
+            }}
+          >
+            {editTitleInputCount} /20
+          </span>
 
           {editBtnToggle ? (
-            <StEditBtnCotainer>
-              <StEditBtn onClick={() => onClickDelete(item.id)}>
+            <EditBtnCotainer>
+              <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
-              </StEditBtn>
-              <StEditBtn
+              </EditBtn>
+              <EditBtn
                 onClick={() => onClickEdit({ id: item.id, ...editData })}
               >
                 수정 완료 〉
-              </StEditBtn>
-              <StEditBtn onClick={onClickEditToggle}>취소 〉</StEditBtn>
-            </StEditBtnCotainer>
+              </EditBtn>
+              <EditBtn onClick={onClickEditToggle}>취소 〉</EditBtn>
+            </EditBtnCotainer>
           ) : (
             <>
-              <StView>
+              <View>
                 <Image
                   src="/view_icon.svg"
                   alt="image"
@@ -170,84 +190,103 @@ const DetailList = ({
                 <span style={{ color: '#1882FF' }}>
                   {item.clickCounter} view
                 </span>
-              </StView>
+              </View>
 
-              <StEditBtn onClick={onClickEditToggle}>게시물 수정 〉</StEditBtn>
+              <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
             </>
           )}
-        </StTitleAndView>
-        <StCityAndTownAndAddress>
-          <StCityInput
+        </TitleAndView>
+        <CityAndTownAndAddress>
+          <CityInput
             defaultValue={item.city}
-            onChange={(e) => setEditCity(e.target.value)}
-            // onChange={onClickEditTown}
+            onChange={(e) => onChangeCityInput(e)}
           >
-            <option value="제주전체">제주전체</option>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
-          </StCityInput>
-          <StTownInput
+          </CityInput>
+          <TownInput
             defaultValue={item.town}
-            // onChange={(e) => setEditTown(e.target.value)}
-            onChange={(e) => onClickEditTown(e)}
+            onChange={(e) => onChangeTownInput(e)}
           >
-            <option value="조천읍">조천읍</option>
-            <option value="제주시">제주시</option>
-            <option value="성산읍">성산읍</option>
-            <option value="표선면">표선면</option>
-            <option value="남원읍">남원읍</option>
-            <option value="서귀포">서귀포</option>
-            <option value="중문">중문</option>
-            <option value="안덕면">안덕면</option>
-            <option value="대정읍">대정읍</option>
-            <option value="애월읍">애월읍</option>
-            <option value="우도">우도</option>
-            <option value="마라도">마라도</option>
-          </StTownInput>
-          <StAddress>
+            {editCity === '제주시' && (
+              <>
+                <option value="">선택</option>
+                <option value="제주시 시내">제주시 시내</option>
+                <option value="한림읍">한림읍</option>
+                <option value="조천읍">조천읍</option>
+                <option value="한경면">한경면</option>
+                <option value="추자면">추자면</option>
+                <option value="우도면">우도면</option>
+                <option value="구좌읍">구좌읍</option>
+                <option value="애월읍">애월읍</option>
+              </>
+            )}
+
+            {editCity === '서귀포시' && (
+              <>
+                <option value="">선택</option>
+                <option value="서귀포시 시내">서귀포시 시내</option>
+                <option value="표선면">표선면</option>
+                <option value="대정읍">대정읍</option>
+                <option value="남원읍">남원읍</option>
+                <option value="성산읍">성산읍</option>
+                <option value="안덕면">안덕면</option>
+              </>
+            )}
+          </TownInput>
+          <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
             <span>{item.address}</span>
-            <span
-              style={{
-                marginLeft: 10,
-                textDecoration: 'underLine',
-                color: '#8E8E93',
-                cursor: 'pointer',
-              }}
-            >
-              copy
-            </span>
-          </StAddress>
-        </StCityAndTownAndAddress>
-        <StContent>
-          Tip |{' '}
-          <StContentInput
+          </Address>
+        </CityAndTownAndAddress>
+        <Content>
+          Tip
+          <ContentInput
+            // value={editContent}
             defaultValue={item.content}
             onChange={(e) => {
               setEditContent(e.target.value);
+              setEditContentInputCount(e.target.value.length);
             }}
+            ref={contentInput}
           />
-        </StContent>
-      </StListContainer>
+          <span
+            style={{
+              color: '#8E8E93',
+              width: 100,
+              marginTop: 'auto',
+              marginBottom: 'auto',
+              marginLeft: 20,
+            }}
+          >
+            {editContentInputCount} /35
+          </span>
+          {/* <EditContentClearBtn
+            onClick={() => {
+              setEditContent('');
+            }}
+          ></EditContentClearBtn> */}
+        </Content>
+      </ListContainer>
     );
   }
 };
 
 export default DetailList;
 
-const StListContainer = styled.div`
+const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
 `;
 
-const StTitleAndView = styled.div`
+const TitleAndView = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
 `;
 
-const StTitle = styled.div`
+const Title = styled.div`
   font-size: 30px;
   margin-right: 20px;
   width: 90%;
@@ -256,25 +295,28 @@ const StTitle = styled.div`
   white-space: nowrap;
 `;
 
-const StTitleInput = styled.input`
+const TitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;
   width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
-const StView = styled.div`
+const View = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const StEditBtnCotainer = styled.div`
+const EditBtnCotainer = styled.div`
   display: flex;
   gap: 10px;
-  width: 350px;
+  width: 300px;
   margin-left: 20px;
 `;
 
-const StEditBtn = styled.div`
+const EditBtn = styled.div`
   background-color: #feb819;
   display: flex;
   justify-content: center;
@@ -283,70 +325,71 @@ const StEditBtn = styled.div`
   font-size: 12px;
   width: 120px;
   cursor: pointer;
+  height: 50px;
 `;
 
-const StCityAndTownAndAddress = styled.div`
+const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
 `;
 
-const StCity = styled.div`
+const City = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 100%;
+  width: 200px;
   height: 40px;
   text-align: center;
   padding-top: 4px;
 `;
 
-const StCityInput = styled.select`
+const CityInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 50%;
+  width: 200px;
   height: 40px;
   text-align: center;
   border: none;
 `;
 
-const StTown = styled.div`
+const Town = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 400px;
+  width: 200px;
   height: 40px;
   text-align: center;
   padding-top: 4px;
 `;
 
-const StTownInput = styled.select`
+const TownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 30%;
+  width: 200px;
   height: 40px;
   text-align: center;
   border: none;
 `;
 
-const StAddress = styled.div`
+const Address = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   gap: 10px;
   width: 100%;
 `;
 
-const StAddressText = styled.span`
+const AddressText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
 
-const StContent = styled.div`
+const Content = styled.div`
   display: flex;
   align-items: center;
   background-color: #f8f8f8;
@@ -357,22 +400,49 @@ const StContent = styled.div`
   margin-bottom: 5px;
 `;
 
-const StContentInput = styled.input`
+const ContentInput = styled.input`
   width: 80%;
   min-height: 30px;
   padding-left: 10px;
   margin-left: 20px;
   border: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
-const StTipSpan = styled.span`
+const TipSpan = styled.span`
   width: 50px;
 `;
 
-const StContentSpan = styled.span`
+const ContentSpan = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: 20px;
   margin-right: 20px;
+`;
+
+const EditTitleClearBtn = styled.div`
+  position: absolute;
+  top: 18.5%;
+  right: 42%;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+
+  cursor: pointer;
+`;
+
+const EditContentClearBtn = styled.div`
+  position: absolute;
+  top: 33.8%;
+  right: 19%;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button.png);
+  background-repeat: no-repeat;
+
+  cursor: pointer;
 `;

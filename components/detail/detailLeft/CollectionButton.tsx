@@ -97,22 +97,22 @@ const CollectionButton = ({ item }: any) => {
     authService.currentUser?.uid !== item.creator
   ) {
     return (
-      <StCollectionContainer>
+      <CollectionContainer>
         {collectorUid ? (
-          <StCollectionText>{collectorUid.length}</StCollectionText>
+          <CollectionText>{collectorUid.length}</CollectionText>
         ) : (
           0
         )}
         {isCollect ? (
-          <StCollectionBtn onClick={onClickCollection}>
+          <CollectionBtn onClick={onClickCollection}>
             <Image src="/before_save.svg" alt="image" width={30} height={30} />
-          </StCollectionBtn>
+          </CollectionBtn>
         ) : (
-          <StCollectionBtn onClick={deleteCollection}>
+          <CollectionBtn onClick={deleteCollection}>
             <Image src="/save_icon.svg" alt="image" width={30} height={30} />
-          </StCollectionBtn>
+          </CollectionBtn>
         )}
-      </StCollectionContainer>
+      </CollectionContainer>
     );
   }
 
@@ -121,17 +121,17 @@ const CollectionButton = ({ item }: any) => {
 
 export default CollectionButton;
 
-const StCollectionContainer = styled.div`
+const CollectionContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const StCollectionText = styled.div`
+const CollectionText = styled.div`
   font-size: 12px;
 `;
 
-const StCollectionBtn = styled.div`
+const CollectionBtn = styled.div`
   cursor: pointer;
   margin-left: 10px;
 `;

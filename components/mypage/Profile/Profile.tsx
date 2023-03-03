@@ -1,19 +1,17 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { authService, storageService } from '@/firebase';
-import { signOut, updateProfile } from 'firebase/auth';
-import { uploadString, getDownloadURL, ref } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
+import { authService } from '@/firebase';
+import { signOut } from 'firebase/auth';
 import { customAlert } from '@/utils/alerts';
-import { useMutation, useQuery } from 'react-query';
-import { getTakeMessage, updateUser } from '@/api';
+import { useQuery } from 'react-query';
+import { getTakeMessage } from '@/api';
 import Link from 'next/link';
-import ModalProfile from './ModalProfile';
 import { useRecoilState } from 'recoil';
 import {
   messageBoxToggle,
   followingToggleAtom,
   followToggleAtom,
+  editProfileModalAtom,
 } from '@/atom';
 
 const imgFile = '/profileicon.svg';
@@ -24,18 +22,14 @@ interface propsType {
 }
 
 const Profile = ({ followingCount, followCount }: propsType) => {
+  const [editProfileModal, setEditProfileModal] =
+    useRecoilState(editProfileModalAtom);
   const [followingToggle, setfollowingToggle] =
     useRecoilState(followingToggleAtom);
   const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
-
   const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
-  const [editProfileModal, setEditProfileModal] = useState(false);
-  const [imgEdit, setImgEdit] = useState<string>(profileimg);
   const [currentUser, setCurrentUser] = useState(false);
-  const [nicknameEdit, setNicknameEdit] = useState<string>(
-    authService?.currentUser?.displayName as string
-  );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
 
@@ -55,17 +49,10 @@ const Profile = ({ followingCount, followCount }: propsType) => {
   const logOut = () => {
     signOut(authService).then(() => {
       // Sign-out successful.
-      // localStorage.clear();
       setCurrentUser(false);
       customAlert('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
     });
-  };
-  // 전체 프로필 수정을 취소하기
-  const profileEditCancle = () => {
-    setImgEdit((authService?.currentUser?.photoURL as string) ?? imgFile);
-    setNicknameEdit(authService?.currentUser?.displayName as string);
-    setEditProfileModal(!editProfileModal);
   };
 
   // 쪽지함 버튼에 확인하지 않은 메세지 표시
@@ -77,20 +64,10 @@ const Profile = ({ followingCount, followCount }: propsType) => {
 
   return (
     <ProfileContainer>
-      {/* 프로필 수정 버튼 props */}
-      {editProfileModal && (
-        <ModalProfile
-          profileEditCancle={profileEditCancle}
-          editProfileModal={editProfileModalButton}
-          imgEdit={imgEdit}
-          setImgEdit={setImgEdit}
-          nicknameEdit={nicknameEdit}
-        />
-      )}
       <ProfileEdit>
         {/* 사진 */}
         <div>
-          <ProfileImage img={imgEdit}></ProfileImage>
+          <ProfileImage img={profileimg}></ProfileImage>
           {/* 프로필 수정 */}
           <ProfileEditBtn onClick={editProfileModalButton}>
             내 정보 변경 {'>'}
@@ -99,10 +76,10 @@ const Profile = ({ followingCount, followCount }: propsType) => {
       </ProfileEdit>
       <ProfileText>
         <ProfileTextdiv>
-          {/* 닉네임 */}
           <ProfileNickname>
-            {authService.currentUser?.displayName}님{/* 로그아웃 */}
+            {authService.currentUser?.displayName}님 {/* 닉네임 */}
             <Link href={'/main?city=제주전체'}>
+              {/* 로그아웃 */}
               {authService.currentUser ? (
                 <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
               ) : null}
@@ -160,17 +137,19 @@ const ProfileEditBtn = styled.button`
 `;
 const ProfileText = styled.div`
   padding-right: 30px;
-  width: 100%;
+  width: 500px;
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
+  margin-left: 20px;
 `;
+
 const ProfileNickname = styled.span`
   font-family: Noto Sans CJK KR;
-  width: 70%;
+  width: 50%;
   height: 36px;
   font-style: normal;
   font-weight: 700;
@@ -178,6 +157,7 @@ const ProfileNickname = styled.span`
   text-align: left;
   padding-left: 20px;
 `;
+
 const SendMessage = styled.button`
   background-color: white;
   border: 1px black solid;

@@ -52,7 +52,7 @@ const Container = styled.div<{ width: string; height: string }>`
 `;
 
 const Canvas = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -63,5 +63,4 @@ const Canvas = styled.div`
 
 const Wrapper = styled.div`
   background-color: transparent;
-  width: 100%;
 `;

@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollow, getFollowing, getUser } from '@/api';
+import { getFollow, getFollowing } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -19,7 +19,7 @@ export default function Mypage() {
     isError,
   } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+      data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
   const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자

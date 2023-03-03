@@ -6,6 +6,7 @@ import {
   signUpModalAtom,
   forgotModalAtom,
   loginModalAtom,
+  editProfileModalAtom,
 } from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -17,6 +18,8 @@ import MessageSend from './message/MessageSend';
 import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
 import Auth from './main/auth/Auth';
+import ModalProfile from './mypage/Profile/ModalProfile';
+
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
   const [msgSendToggle, setMsgSendToggle] = useRecoilState(messageSendToggle);
@@ -26,6 +29,8 @@ function Layout() {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const [editProfileModal, setEditProfileModal] =
+    useRecoilState(editProfileModalAtom);
 
   return (
     <div>
@@ -56,8 +61,8 @@ function Layout() {
           <CustomModal
             modal={followingToggle}
             setModal={setfollowingToggle}
-            width="400"
-            height="650"
+            width="524"
+            height="695"
             element={<ModalFollowing />}
           />
         ) : null}
@@ -67,8 +72,8 @@ function Layout() {
           <CustomModal
             modal={followToggle}
             setModal={setFollowToggle}
-            width="400"
-            height="650"
+            width="524"
+            height="695"
             element={<ModalFollow />}
           />
         ) : null}
@@ -86,7 +91,7 @@ function Layout() {
           ''
         )}
       </div>
-      <div>
+      <>
         {forgotModal ? (
           <CustomModal
             modal={forgotModal}
@@ -96,7 +101,7 @@ function Layout() {
             element={<AuthForgot />}
           />
         ) : null}
-      </div>
+      </>
       <>
         {closeLoginModal ? (
           <CustomModal
@@ -109,6 +114,17 @@ function Layout() {
         ) : (
           ''
         )}
+      </>
+      <>
+        {editProfileModal ? (
+          <CustomModal
+            modal={editProfileModal}
+            setModal={setEditProfileModal}
+            width="524"
+            height="695"
+            element={<ModalProfile />}
+          />
+        ) : null}
       </>
     </div>
   );

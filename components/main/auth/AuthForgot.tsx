@@ -89,7 +89,6 @@ const AuthForgot = (): JSX.Element => {
 const ForgotPwContainer = styled.div`
   width: 100%;
   height: 100%;
-  /* margin-bottom: 50px; */
 `;
 
 const Heder = styled.header`
@@ -98,7 +97,7 @@ const Heder = styled.header`
   font-size: 15px;
   display: flex;
   margin-bottom: 50px;
-  margin-left: 20px;
+  margin-left: -50px;
 `;
 
 const ForgotText = styled.div`
@@ -142,6 +141,7 @@ const ResetPwBtn = styled.button`
   color: white;
   margin-right: 10px;
   font-size: 10px;
+  border-radius: 10px;
   cursor: pointer;
 `;
 

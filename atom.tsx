@@ -20,6 +20,11 @@ export const followToggleAtom = atom({
   default: false,
 });
 
+export const editAtom = atom({
+  key: `editAtom${uuidv4()}`,
+  default: {},
+});
+
 export const loginModalAtom = atom({
   key: `LoginModalAtom`,
   default: false,
@@ -32,5 +37,10 @@ export const signUpModalAtom = atom({
 
 export const forgotModalAtom = atom({
   key: `forgotModalAtom`,
+  default: false,
+});
+
+export const editProfileModalAtom = atom({
+  key: `editProfileModalAtom`,
   default: false,
 });
