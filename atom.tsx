@@ -39,3 +39,8 @@ export const forgotModalAtom = atom({
   key: `forgotModalAtom`,
   default: false,
 });
+
+export const editProfileModalAtom = atom({
+  key: `editProfileModalAtom`,
+  default: false,
+});

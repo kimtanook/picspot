@@ -7,6 +7,7 @@ import AuthSocial from './AuthSocial';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
+import { useMediaQuery } from 'react-responsive';
 
 interface AuthForm {
   email: string;
@@ -92,7 +93,15 @@ const Auth = (): JSX.Element => {
       html.style.overflowX = 'auto';
     };
   }, [closeLoginModal, signUpModal]);
+  // const Mobile = ({ children }) => {
+  //   const isMobile = useMediaQuery({ maxWidth: 767 });
+  //   return isMobile ? children : null;
+  // };
 
+  // const Pc = ({ children }) => {
+  //   const isPc = useMediaQuery({ minWidth: 767 });
+  //   return isPc ? children : null;
+  // };
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
       <Heder
@@ -103,11 +112,13 @@ const Auth = (): JSX.Element => {
         {' '}
         〈 취소{' '}
       </Heder>
+      <LogoImg src="logo.png" />
       <LoginTextDiv>
-        <div>
+        {/* <Mobile>픽스팟에 로그인하고, 제주 인생샷 알아보세요!</Mobile>
+        <Pc>
           <b>픽스팟에 로그인</b> 하고, <br></br>
           제주 인생샷 알아보세요!
-        </div>
+        </Pc> */}
       </LoginTextDiv>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -213,16 +224,36 @@ const LoginContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-bottom: 50px;
+  @media ${(props) => props.theme.mobile} {
+    background-color: #f7f7f7;
+    width: 400px;
+    height: 700px;
+  }
 `;
 const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
   display: flex;
-  margin-bottom: 50px;
-  margin-left: 20px;
+  margin-bottom: 40px;
+  margin-left: -30px;
+`;
+const LogoImg = styled.img`
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inherit;
+    width: 150px;
+    height: 50px;
+  }
 `;
 const LoginTextDiv = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
   margin-top: 0px;
   margin-bottom: 10px;
   font-family: 'Noto Sans CJK KR';
@@ -231,6 +262,16 @@ const LoginTextDiv = styled.div`
   line-height: 138.5%;
   text-align: center;
   color: #212121;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inherit;
+    width: 254px;
+    height: 21px;
+    font-size: 12px;
+  }
 `;
 const LoginEmailPwContainer = styled.div`
   display: flex;
@@ -247,13 +288,13 @@ const LoginInput = styled.input`
   display: flex;
   width: 394px;
   height: 48px;
-  margin: 0 auto;
+  margin-left: -20px;
 `;
 const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
-  margin-left: 40px;
+  margin-left: -20px;
 `;
 const EditInputBox = styled.div`
   width: 100%;
@@ -262,7 +303,7 @@ const EditInputBox = styled.div`
 const EditclearBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 50px;
+  right: 0px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -273,7 +314,7 @@ const EditclearBtn = styled.div`
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 50px;
+  right: 0px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
@@ -285,7 +326,6 @@ const EditPwShowBtn = styled.div`
 const RememberID = styled.label`
   display: flex;
   align-items: center;
-  margin-left: 60px;
   font-size: 15px;
 `;
 const LoginBtnContainer = styled.div`
@@ -299,7 +339,7 @@ const LoginBtn = styled.button`
   display: flex;
   width: 394px;
   height: 48px;
-  margin: 0 auto;
+  margin-left: -20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
