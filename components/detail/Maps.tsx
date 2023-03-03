@@ -20,7 +20,6 @@ const Maps = ({
     const { kakao } = window;
     //----------------------------카카오맵 셋팅/----------------------------
     kakao.maps.load(() => {
-      // const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
         level: 4,

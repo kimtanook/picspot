@@ -41,7 +41,7 @@ const Container = styled.div<{ width: string; height: string }>`
   padding: 8px;
   background-color: white;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
-  z-index: 9999;
+  z-index: 1000;
   color: black;
   display: flex;
   justify-content: center;
