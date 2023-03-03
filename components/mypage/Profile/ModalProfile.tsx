@@ -392,14 +392,13 @@ const Heder = styled.header`
   font-size: 14px;
 `;
 const ProfileContainerForm = styled.form`
-  border: 1px solid #000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
 const ProfileTextDiv = styled.div`
-  margin-top: 61px;
+  margin-top: 15px;
   margin-bottom: 16px;
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
@@ -472,7 +471,6 @@ const NicknameToggleContainer = styled.div`
   background-color: transparent;
   margin-top: 36px;
   width: 394px;
-  height: 48px;
   z-index: 2;
   display: 'flex';
   padding: '10px';
@@ -491,28 +489,29 @@ const NicknameToggleText = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 394px;
+  margin-left: 10px;
 `;
 const OpenNicknameToggleImg = styled.img`
   width: 12.03px;
   height: 22px;
-  padding-right: 10px;
   background: transparent;
 `;
 const CloseNicknameToggleImg = styled.img`
   width: 22px;
   height: 12px;
-  padding-right: 10px;
   background: transparent;
 `;
 const EditInputBox = styled.div`
   width: 100%;
   height: 48px;
   position: relative;
+  margin-left: 10px;
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 40%;
+  right: 30px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -531,7 +530,7 @@ const EditInput = styled.input`
 
 const PwToggleContainer = styled.div`
   background-color: transparent;
-  width: 470px;
+  width: 394px;
   height: 24px;
   z-index: 2;
   display: 'flex';
@@ -551,17 +550,17 @@ const PwToggleText = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 394px;
+  margin-left: 10px;
 `;
 const OpenPwToggleImg = styled.img`
   width: 12.03px;
   height: 22px;
-  padding-right: 10px;
   background: transparent;
 `;
 const ClosePwToggleImg = styled.img`
   width: 22px;
   height: 12px;
-  padding-right: 10px;
   background: transparent;
 `;
 const ProfileWarn = styled.p`
@@ -569,6 +568,7 @@ const ProfileWarn = styled.p`
   height: 12px;
   font-size: 12px;
   font-weight: 700px;
+  margin-left: 10px;
 `;
 const SaveEditBtnContainer = styled.div`
   display: flex;
