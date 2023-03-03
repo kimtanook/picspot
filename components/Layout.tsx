@@ -92,7 +92,7 @@ function Layout() {
             modal={forgotModal}
             setModal={setForgotModal}
             width="524"
-            height="695"
+            height="467"
             element={<AuthForgot />}
           />
         ) : null}
