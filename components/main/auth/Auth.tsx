@@ -78,16 +78,31 @@ const Auth = (): JSX.Element => {
     }
   }, [isRemember]);
 
+  useEffect(() => {
+    const html = document.documentElement;
+    if (closeLoginModal || signUpModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [closeLoginModal, signUpModal]);
+
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
-      <StHeder
+      <Heder
         onClick={() => {
           setCloseLoginModal(!closeLoginModal);
         }}
       >
         {' '}
         〈 취소{' '}
-      </StHeder>
+      </Heder>
       <LoginTextDiv>
         <div>
           <b>픽스팟에 로그인</b> 하고, <br></br>
@@ -197,15 +212,19 @@ const Auth = (): JSX.Element => {
 const LoginContainer = styled.div`
   width: 100%;
   height: 100%;
+  margin-bottom: 50px;
 `;
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
   display: flex;
+  margin-bottom: 50px;
+  margin-left: 20px;
 `;
 const LoginTextDiv = styled.div`
   margin-top: 0px;
+  margin-bottom: 10px;
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 20px;
@@ -234,6 +253,7 @@ const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
+  margin-left: 40px;
 `;
 const EditInputBox = styled.div`
   width: 100%;
