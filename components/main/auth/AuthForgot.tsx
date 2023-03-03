@@ -33,7 +33,7 @@ const AuthForgot = (): JSX.Element => {
 
   return (
     <ForgotPwContainer onClick={(e) => e.stopPropagation()}>
-      <StHeder
+      <Heder
         onClick={() => {
           setCloseLoginModal(!closeLoginModal);
           setForgotModal(!forgotModal);
@@ -41,7 +41,7 @@ const AuthForgot = (): JSX.Element => {
       >
         {' '}
         〈 돌아가기{' '}
-      </StHeder>
+      </Heder>
 
       {sent ? (
         <div>이미 당신의 이메일로 보냈습니다</div>
@@ -91,7 +91,7 @@ const ForgotPwContainer = styled.div`
   height: 100%;
 `;
 
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;

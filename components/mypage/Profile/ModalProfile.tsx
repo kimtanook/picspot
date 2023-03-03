@@ -189,7 +189,7 @@ function ModalProfile(props: Props) {
     <ModalStyled onClick={editProfileModal}>
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
         {/* 좌측 상단 취소 버튼 */}
-        <StHeder onClick={props.profileEditCancle}> 〈 취소 </StHeder>
+        <Heder onClick={props.profileEditCancle}> 〈 취소 </Heder>
         <ProfileContainerForm onSubmit={handleSubmit(onSubmit)}>
           <ProfileTextDiv>
             <b>회원정보 변경</b>
@@ -374,7 +374,7 @@ const ModalStyled = styled.div`
     overflow-y: auto;
   }
 `;
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 14px;

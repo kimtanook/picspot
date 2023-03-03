@@ -80,14 +80,14 @@ const Auth = (): JSX.Element => {
 
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
-      <StHeder
+      <Heder
         onClick={() => {
           setCloseLoginModal(!closeLoginModal);
         }}
       >
         {' '}
         〈 취소{' '}
-      </StHeder>
+      </Heder>
       <LoginTextDiv>
         <div>
           <b>픽스팟에 로그인</b> 하고, <br></br>
@@ -198,7 +198,7 @@ const LoginContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;

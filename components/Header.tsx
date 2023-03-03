@@ -32,7 +32,10 @@ const Header = ({
   return (
     <HeaderContainer>
       {/* picspot */}
-      <Link href="/" style={{ color: 'black', textDecorationLine: 'none' }}>
+      <Link
+        href="/main?city=제주전체"
+        style={{ color: 'black', textDecorationLine: 'none' }}
+      >
         <Title
           onClick={() => {
             // sessionStorage.clear();

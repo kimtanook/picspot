@@ -37,7 +37,7 @@ const DetailMap = ({
   }
 
   return (
-    <StMapContainer>
+    <MapContainer>
       <Map // 지도를 표시할 Container
         center={{
           // 지도의 중심좌표
@@ -69,46 +69,46 @@ const DetailMap = ({
               lng: item.long,
             }}
           >
-            <StOverLayWrap>
-              <StOverLayInfo>
-                <StOverLayTitle>
+            <OverLayWrap>
+              <OverLayInfo>
+                <OverLayTitle>
                   {item.title}
-                  <StOverLayClose
+                  <OverLayClose
                     className="close"
                     onClick={() => setIsOpen(false)}
                     title="닫기"
-                  ></StOverLayClose>
-                </StOverLayTitle>
-                <StOverLayBody>
-                  <StOverLayImg>
+                  ></OverLayClose>
+                </OverLayTitle>
+                <OverLayBody>
+                  <OverLayImg>
                     <Image
                       src={item.imgUrl}
                       alt="image"
                       height={100}
                       width={100}
                     />
-                  </StOverLayImg>
-                  <StOverLayDesc>
-                    <StOverLayEllipsis>{item.address}</StOverLayEllipsis>
-                    <StOverLayCounter>
+                  </OverLayImg>
+                  <OverLayDesc>
+                    <OverLayEllipsis>{item.address}</OverLayEllipsis>
+                    <OverLayCounter>
                       조회수 : {item.clickCounter}
-                    </StOverLayCounter>
-                  </StOverLayDesc>
-                </StOverLayBody>
-              </StOverLayInfo>
-            </StOverLayWrap>
+                    </OverLayCounter>
+                  </OverLayDesc>
+                </OverLayBody>
+              </OverLayInfo>
+            </OverLayWrap>
           </CustomOverlayMap>
         )} */}
       </Map>
-    </StMapContainer>
+    </MapContainer>
   );
 };
 
 export default DetailMap;
 
-const StMapContainer = styled.div``;
+const MapContainer = styled.div``;
 
-const StOverLayWrap = styled.div`
+const OverLayWrap = styled.div`
   position: absolute;
   left: 0;
   bottom: 50px;
@@ -124,7 +124,7 @@ const StOverLayWrap = styled.div`
   margin: 20;
 `;
 
-const StOverLayInfo = styled.div`
+const OverLayInfo = styled.div`
   width: 286px;
   height: 120px;
   border-radius: 5px;
@@ -152,7 +152,7 @@ const StOverLayInfo = styled.div`
   }
 `;
 
-const StOverLayTitle = styled.div`
+const OverLayTitle = styled.div`
   padding: 5px 0 0 10px;
   height: 30px;
   background: #eee;
@@ -161,7 +161,7 @@ const StOverLayTitle = styled.div`
   font-weight: bold;
 `;
 
-const StOverLayClose = styled.div`
+const OverLayClose = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -174,28 +174,28 @@ const StOverLayClose = styled.div`
   }
 `;
 
-const StOverLayBody = styled.div`
+const OverLayBody = styled.div`
   position: relative;
   overflow: hidden;
   cursor: inherit;
 `;
 
-const StOverLayDesc = styled.div`
+const OverLayDesc = styled.div`
   position: relative;
   margin: 13px 0 0 90px;
   height: 75px;
 `;
-const StOverLayEllipsis = styled.div`
+const OverLayEllipsis = styled.div`
   overflow: hidden;
   /* text-overflow: ellipsis; */
   white-space: nowrap;
 `;
-const StOverLayCounter = styled.div`
+const OverLayCounter = styled.div`
   font-size: 11px;
   color: #888;
   margin-top: -2px;
 `;
-const StOverLayImg = styled.div`
+const OverLayImg = styled.div`
   position: absolute;
   top: 6px;
   left: 5px;

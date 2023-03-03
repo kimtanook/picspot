@@ -160,17 +160,19 @@ const ProfileEditBtn = styled.button`
 `;
 const ProfileText = styled.div`
   padding-right: 30px;
-  width: 100%;
+  width: 500px;
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
+  margin-left: 20px;
 `;
+
 const ProfileNickname = styled.span`
   font-family: Noto Sans CJK KR;
-  width: 70%;
+  width: 50%;
   height: 36px;
   font-style: normal;
   font-weight: 700;
@@ -178,6 +180,7 @@ const ProfileNickname = styled.span`
   text-align: left;
   padding-left: 20px;
 `;
+
 const SendMessage = styled.button`
   background-color: white;
   border: 1px black solid;
