@@ -182,4 +182,8 @@ const DetailBtn = styled.label`
   height: 40px;
   bottom: 120px;
   font-size: 13px;
+  @media ${(props) => props.theme.mobile} {
+    top: 400px;
+    bottom: 0px;
+  }
 `;

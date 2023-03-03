@@ -104,7 +104,7 @@ const DetailMaps = ({
     });
   }, [searchPlace, setSaveAddress, setInfoDiv, setSaveLatLng]);
 
-  return <div id="map" style={{ width: '350px', height: '230px' }}></div>;
+  return <div id="map" style={{ width: '100%', height: '230px' }}></div>;
 };
 
 export default DetailMaps;
