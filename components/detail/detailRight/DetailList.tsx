@@ -1,6 +1,6 @@
 import { deleteData, updateData, visibleReset } from '@/api';
 import { authService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -45,7 +45,7 @@ const DetailList = ({
     onDeleteData(docId, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
-        customAlert('삭제를 완료하였습니다!');
+        customConfirm('삭제를 완료하였습니다!');
         router.push('/main?city=제주전체');
       },
     });
@@ -90,7 +90,7 @@ const DetailList = ({
     onUpdateData(data, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-        customAlert('수정을 완료하였습니다!');
+        customConfirm('수정을 완료하였습니다!');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
