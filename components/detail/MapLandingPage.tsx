@@ -33,16 +33,9 @@ const MapLandingPage = ({
           onChange={onchange}
           value={inputText}
         />
-        <CustomButton
-          width="80px"
-          borderRadius="20px"
-          height="35px"
-          margin="20px 10px"
-          color="white"
-          backgroundColor="black"
-        >
-          검색
-        </CustomButton>
+        <SearchButton type="submit">
+          <SearchImage src="/search.svg" />
+        </SearchButton>
       </StyledForm>
 
       <Maps
@@ -69,19 +62,44 @@ const StyledForm = styled.form`
   position: absolute;
   top: 10px;
   z-index: 999;
+  width: 80%;
   text-align: center;
 `;
 
 const StyledInput = styled.input`
+  margin-top: 3%;
   padding: 10px;
-  width: 300px;
-  border-radius: 16px;
-  border: 0.3px solid black;
+  width: 80%;
+  border-radius: 15px;
+  border: none;
+  position: relative;
+  box-shadow: 0 3px 2px 1px gray;
 `;
 
 const StyledInfo = styled.div`
   color: black;
+  background-color: #e7e7e7;
+
+  padding: 10px;
+  border: 0.3px solid gray;
+  box-shadow: 1px 1px 1px 1px gray;
+  opacity: 0.8;
+  font-size: 14px;
+  margin: auto;
+  margin-left: -50px;
+  width: 40%;
+`;
+const SearchImage = styled.img`
+  width: 15px;
+  height: 15px;
+`;
+const SearchButton = styled.button`
+  position: relative;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
   background-color: white;
-  padding: 5px 0px;
-  font-size: 16px;
+  position: absolute;
+  right: 11%;
+  bottom: 7%;
 `;

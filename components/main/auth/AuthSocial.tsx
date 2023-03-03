@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { authService } from '../../../firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import Image from 'next/image';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
@@ -36,7 +36,7 @@ const AuthSocial = (props: Props): JSX.Element => {
           userImg: '/profileicon.svg',
         };
         props.closeModal();
-        customAlert('로그인에 성공하였습니다!');
+        customConfirm('로그인에 성공하였습니다!');
       })
       //* 구글 로그인 시 user 추가하기
       .then(() => {

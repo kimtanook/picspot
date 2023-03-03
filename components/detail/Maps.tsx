@@ -1,3 +1,4 @@
+import { customAlert } from '@/utils/alerts';
 import React, { useEffect, useRef } from 'react';
 
 declare global {
@@ -19,7 +20,6 @@ const Maps = ({
     const { kakao } = window;
     //----------------------------카카오맵 셋팅/----------------------------
     kakao.maps.load(() => {
-      // const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
         level: 4,
@@ -50,9 +50,9 @@ const Maps = ({
           }
           map.setBounds(bounds);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          alert(' 제주도 지역명을 검색해주세요.');
+          customAlert(' 제주도 지역명을 검색해주세요.');
         } else if (status === kakao.maps.services.Status.ERROR) {
-          alert('에러입니다.');
+          customAlert('에러입니다.');
         }
       }
 

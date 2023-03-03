@@ -4,7 +4,7 @@ import { authService, storageService } from '@/firebase';
 import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { useMutation, useQuery } from 'react-query';
 import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
@@ -57,7 +57,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
       // Sign-out successful.
       // localStorage.clear();
       setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
+      customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
     });
   };
