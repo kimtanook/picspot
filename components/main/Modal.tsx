@@ -5,9 +5,9 @@ import PostForm from './PostForm';
 const Modal = ({ setOpenModal }: any) => {
   return (
     <ModalContainer>
-      <StDialogBox open>
+      <DialogBox open>
         <PostForm setOpenModal={setOpenModal} />
-      </StDialogBox>
+      </DialogBox>
       <Backdrop
         onClick={(e: any) => {
           e.preventDefault();
@@ -32,7 +32,7 @@ const ModalContainer = styled.div`
   /* align-items: center; */
 `;
 
-const StDialogBox = styled.dialog`
+const DialogBox = styled.dialog`
   width: 600px;
   /* height: 400px; */
   flex-direction: column;

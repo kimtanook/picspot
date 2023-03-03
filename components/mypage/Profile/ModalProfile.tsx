@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
-import { customAlert } from '@/utils/alerts';
+import { customConfirm } from '@/utils/alerts';
 import { useForm } from 'react-hook-form';
 import { authService, storageService } from '@/firebase';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
@@ -36,15 +36,6 @@ function ModalProfile(props: Props) {
   const [pwToggle, setPwToggle] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const googleIdUser = localStorage.getItem('googleUser');
-    if (googleIdUser) {
-      setGoolgleUser(false);
-    } else {
-      setGoolgleUser(true);
-    }
-  }, []);
-
   // 모달 창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
     document.body.style.cssText = `
@@ -68,6 +59,16 @@ function ModalProfile(props: Props) {
 
     props.setImgEdit(imgFile as string);
   };
+
+  // 구글 로그인 유저라면 비밀번호 토글 숨기기
+  useEffect(() => {
+    const googleIdUser = localStorage.getItem('googleUser');
+    if (googleIdUser) {
+      setGoolgleUser(false);
+    } else {
+      setGoolgleUser(true);
+    }
+  }, []);
 
   // 프로필 사진 변경 후 변경 사항 유지하기
   const saveImgFile = () => {
@@ -137,7 +138,7 @@ function ModalProfile(props: Props) {
       })
         .then((res) => {
           editProfileModal();
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
         })
 
         .catch((error) => {
@@ -152,7 +153,7 @@ function ModalProfile(props: Props) {
       await updatePassword(authService?.currentUser!, data.newPassword).then(
         (res) => {
           editProfileModal();
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
         }
       );
     } else if (nicknameToggle && pwToggle) {
@@ -165,7 +166,7 @@ function ModalProfile(props: Props) {
       await updatePassword(authService?.currentUser!, data.newPassword)
         .then((res) => {
           editProfileModal();
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
         })
         .catch((error) => {
           console.log(error);
@@ -176,7 +177,7 @@ function ModalProfile(props: Props) {
       })
         .then((res) => {
           editProfileModal();
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
         })
         .catch((error) => {
           console.log(error);
@@ -188,7 +189,7 @@ function ModalProfile(props: Props) {
     <ModalStyled onClick={editProfileModal}>
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
         {/* 좌측 상단 취소 버튼 */}
-        <StHeder onClick={props.profileEditCancle}> 〈 취소 </StHeder>
+        <Heder onClick={props.profileEditCancle}> 〈 취소 </Heder>
         <ProfileContainerForm onSubmit={handleSubmit(onSubmit)}>
           <ProfileTextDiv>
             <b>회원정보 변경</b>
@@ -373,7 +374,7 @@ const ModalStyled = styled.div`
     overflow-y: auto;
   }
 `;
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 14px;

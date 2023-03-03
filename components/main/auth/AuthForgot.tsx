@@ -1,31 +1,32 @@
 import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { forgotModalAtom, loginModalAtom } from '@/atom';
+import { customAlert, customConfirm } from '@/utils/alerts';
 
-interface Props {
-  forgotModalButton: () => void;
-}
-
-const AuthForgot = (props: Props): JSX.Element => {
+const AuthForgot = (): JSX.Element => {
   const [sending, setSending] = useState<boolean>(false);
   const [sent, setSent] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string>('');
   const authService = getAuth();
-
+  const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const resetPasswordRequest = async () => {
     if (error !== '') setError('');
 
     setSending(true);
     await sendPasswordResetEmail(authService, email)
       .then(() => {
-        alert('이메일에 링크를 보냈습니다');
+        customConfirm('이메일에 링크를 보냈습니다');
         setSent(true);
         setSending(false);
-        props.forgotModalButton();
+        setCloseLoginModal(false);
+        setForgotModal(false);
       })
       .catch((error) => {
-        alert('이메일 보내기에 실패하였습니다');
+        customAlert('이메일 보내기에 실패하였습니다');
         setError(error.message);
         setSending(false);
       });
@@ -33,7 +34,15 @@ const AuthForgot = (props: Props): JSX.Element => {
 
   return (
     <ForgotPwContainer onClick={(e) => e.stopPropagation()}>
-      <StHeder onClick={props.forgotModalButton}> 〈 돌아가기 </StHeder>
+      <Heder
+        onClick={() => {
+          setCloseLoginModal(!closeLoginModal);
+          setForgotModal(!forgotModal);
+        }}
+      >
+        {' '}
+        〈 돌아가기{' '}
+      </Heder>
 
       {sent ? (
         <div>이미 당신의 이메일로 보냈습니다</div>
@@ -60,11 +69,16 @@ const AuthForgot = (props: Props): JSX.Element => {
               disabled={sending}
               onClick={() => resetPasswordRequest()}
             >
-              메일 전송 〉
+              메일 전송 {'〉'}
             </ResetPwBtn>
           </ResetContainer>
 
-          <LoginReturnButton onClick={props.forgotModalButton}>
+          <LoginReturnButton
+            onClick={() => {
+              setCloseLoginModal(!closeLoginModal);
+              setForgotModal(!forgotModal);
+            }}
+          >
             로그인하러 가기
           </LoginReturnButton>
         </>
@@ -74,30 +88,31 @@ const AuthForgot = (props: Props): JSX.Element => {
 };
 
 const ForgotPwContainer = styled.div`
-  background-color: #ffffff;
-  width: 400px;
-  height: 50%;
-  padding: 30px 30px 30px 30px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  height: 100%;
+  /* margin-bottom: 50px; */
 `;
 
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
   display: flex;
+  margin-bottom: 50px;
+  margin-left: 20px;
 `;
 
 const ForgotText = styled.div`
   margin-top: 30px;
+  margin-bottom: 30px;
   font-size: 20px;
   font-weight: 700;
-  margin-top: 5vh;
   text-align: center;
 `;
 
 const ResetContainer = styled.div`
-  width: 80%;
+  width: 394px;
+  height: 48px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -105,7 +120,6 @@ const ResetContainer = styled.div`
   border: 1px solid #8e8e93;
   margin: auto;
   margin-top: 40px;
-  height: 40px;
 `;
 
 const ResetPwForm = styled.form``;
@@ -115,7 +129,9 @@ const ResetPwInput = styled.input`
   height: 30px;
   border: 1px solid white;
   margin-left: 10px;
-  font-size: 10px;
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-size: 13px;
 `;
 
 const ResetPwBtn = styled.button`
@@ -134,7 +150,6 @@ const LoginReturnButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
   border: transparent;
   transition: 0.1s;
   background-color: #8e8e93;
@@ -142,8 +157,10 @@ const LoginReturnButton = styled.button`
   font-size: 15px;
   cursor: pointer;
   margin: auto;
-  margin-top: 40px;
-  width: 80%;
+  margin-top: 90px;
+  margin-bottom: 50px;
+  width: 394px;
+  height: 48px;
 `;
 
 export default AuthForgot;

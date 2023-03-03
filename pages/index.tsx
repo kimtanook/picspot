@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
@@ -154,7 +153,7 @@ const CloudTop = styled.img`
   transform: translate(50%, -50%);
   @media ${(props) => props.theme.mobile} {
     top: 38%;
-    left: 65%;
+    left: 80%;
     transform: translate(-50%, -50%);
     width: 110px;
     height: 50px;
@@ -169,7 +168,7 @@ const CloudBottom = styled.img`
   transform: translate(-50%, -50%);
   @media ${(props) => props.theme.mobile} {
     top: 76%;
-    left: 33%;
+    left: 20%;
     width: 82px;
     height: 48px;
   }

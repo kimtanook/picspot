@@ -3,19 +3,17 @@ import styled from 'styled-components';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
+import { useRecoilState } from 'recoil';
+import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
 
 interface AuthForm {
   email: string;
   password: string;
   confirm: string;
   nickname: string;
-}
-interface Props {
-  changeModalButton: () => void;
-  closeLoginModal: () => void;
 }
 
 //* user 초기 데이터
@@ -25,14 +23,16 @@ let userState: any = {
   userImg: '/profileicon.svg',
 };
 
-const AuthSignUp = (props: Props) => {
+const AuthSignUp = () => {
   //* useMutation 사용해서 유저 추가하기
   const { mutate: onAddUser } = useMutation(addUser);
   const [registering, setRegistering] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [hidePassword, setHidePassword] = useState<boolean>(false);
-
+  const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
+  const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const {
     register,
     setValue,
@@ -60,8 +60,9 @@ const AuthSignUp = (props: Props) => {
           uid: authService.currentUser?.uid,
           userName: nickname,
         };
-        customAlert('회원가입을 축하합니다!');
-        props.closeLoginModal();
+        customConfirm('회원가입을 축하합니다!');
+        setCloseLoginModal(false);
+        setForgotModal(false);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
@@ -92,7 +93,15 @@ const AuthSignUp = (props: Props) => {
   };
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
-      <StHeder onClick={props.changeModalButton}> 〈 돌아가기 </StHeder>
+      <Heder
+        onClick={() => {
+          setCloseLoginModal(!closeLoginModal);
+          setSignUpModal(!signUpModal);
+        }}
+      >
+        {' '}
+        〈 돌아가기{' '}
+      </Heder>
 
       <SignUpTextDiv>회원가입하기</SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -211,27 +220,27 @@ const AuthSignUp = (props: Props) => {
 export default AuthSignUp;
 
 const SignUpContainer = styled.div`
-  background-color: #ffffff;
-  width: 400px;
-  height: 75%;
-  padding: 30px 30px 30px 30px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  height: 100%;
+  margin-bottom: 90px;
 `;
 
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
   display: flex;
+  margin-bottom: 50px;
+  margin-left: 20px;
 `;
 
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 30px;
   font-size: 20px;
   font-weight: 700;
-  margin-top: 2vh;
+  margin-top: 10px;
+  margin-bottom: 60px;
 `;
 
 const SignUpEmailPwContainer = styled.form`
@@ -243,12 +252,14 @@ const SignUpEmailPwContainer = styled.form`
 `;
 
 const SignUpInput = styled.input`
-  height: 40px;
-  width: 96%;
-  padding-left: 10px;
-  background-color: #fbfbfb;
+  padding-left: 16px;
+  background-color: #f4f4f4;
   border: 1px solid #8e8e93;
   font-size: 15px;
+  display: flex;
+  width: 394px;
+  height: 48px;
+  margin: 0 auto;
 `;
 const EditInputBox = styled.div`
   width: 100%;
@@ -257,7 +268,7 @@ const EditInputBox = styled.div`
 const EditclearBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 12px;
+  right: 50px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -268,7 +279,7 @@ const EditclearBtn = styled.div`
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 12px;
+  right: 50px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
@@ -280,7 +291,7 @@ const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
-  text-align: left;
+  margin-left: 40px;
 `;
 
 const SignUpBtnContainer = styled.div`
@@ -293,14 +304,18 @@ const SignUpBtnContainer = styled.div`
 
 const SignUpBtn = styled.button`
   display: flex;
+  width: 394px;
+  height: 48px;
+  margin: 0 auto;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 40px;
   border: transparent;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
   font-size: 15px;
+
   &:hover {
     cursor: pointer;
   }

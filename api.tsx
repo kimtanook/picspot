@@ -167,7 +167,6 @@ export const getComment = async ({ queryKey }: any) => {
 
 //* 댓글 추가
 export const addComment = async (item: AddComment) => {
-  console.log('item : ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -250,7 +249,7 @@ export const getFollowing = async () => {
 
   const querySnapshot = await getDocs(collection(dbService, 'following'));
   querySnapshot.forEach((doc) => {
-    response.push({ uid: doc.id, ...doc.data() });
+    response.push({ docId: doc.id, ...doc.data() });
   });
 
   return response;

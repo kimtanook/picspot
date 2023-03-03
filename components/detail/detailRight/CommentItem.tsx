@@ -30,28 +30,29 @@ function CommentItem({
     return <div>삭제중입니다.</div>;
   }
   return (
-    <StCommentContainer>
-      <StImage src={item.userImg} />
-      <StName>{item.userName}</StName>
-      <StComment>
+    <CommentContainer>
+      <Image2 src={item.userImg} />
+      <Name>{item.userName}</Name>
+      <Comment>
         <div>{item.contents}</div>
         {authService.currentUser?.uid === item.creatorUid ? (
-          <Stbutton onClick={onClickDelete}>삭제</Stbutton>
+          <Button onClick={onClickDelete}>삭제</Button>
         ) : null}
-      </StComment>
-    </StCommentContainer>
+      </Comment>
+    </CommentContainer>
   );
 }
 
 export default CommentItem;
 
-const StCommentContainer = styled.div`
+const CommentContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: 10px;
   background-color: #f8f8f8;
   border-radius: 10px;
   height: 40px;
+  margin-right: 10px;
   :hover {
     transition: 0.3s;
     background-color: #4cb2f6;
@@ -59,14 +60,14 @@ const StCommentContainer = styled.div`
   }
 `;
 
-const StImage = styled.img`
+const Image2 = styled.img`
   border-radius: 50%;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 `;
 
-const StName = styled.div`
+const Name = styled.div`
   width: 100px;
   display: flex;
   justify-content: center;
@@ -80,7 +81,7 @@ const StName = styled.div`
   -webkit-box-orient: vertical;
 `;
 
-const StComment = styled.div`
+const Comment = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -90,7 +91,7 @@ const StComment = styled.div`
   white-space: nowrap;
 `;
 
-const Stbutton = styled.div`
+const Button = styled.div`
   background-color: #1882ff;
   color: white;
   cursor: pointer;
@@ -102,5 +103,4 @@ const Stbutton = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row-reverse;
-  margin-right: 10px;
 `;

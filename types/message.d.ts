@@ -1,5 +1,5 @@
 declare interface SendTakeMessage {
-  id?: string;
+  id: string;
   takeUser?: string | string[] | undefined;
   takeUserName?: string | null | undefined;
   sendUser?: string | null | undefined;

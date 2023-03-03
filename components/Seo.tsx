@@ -1,6 +1,10 @@
 import Head from 'next/head';
 
-export default function Seo({ title }: any) {
+interface SeoProps {
+  title: string;
+}
+
+export default function Seo({ title }: SeoProps): JSX.Element {
   return (
     <Head>
       <title>{title} | PicSpot </title>

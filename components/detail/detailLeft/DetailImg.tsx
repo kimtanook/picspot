@@ -1,6 +1,6 @@
 import { updateData } from '@/api';
 import { authService, storageService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -8,7 +8,14 @@ import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomModal } from '@/components/common/CustomModal';
-const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
+import { useRecoilState } from 'recoil';
+import { editAtom } from '@/atom';
+
+const DetailImg = ({ item }: any) => {
+  let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+
+  const [imageUpload, setImageUpload]: any = useState(null);
+
   const [isModalImgActive, setIsModalImgActive]: any = useState(false);
   const queryClient = useQueryClient(); // *쿼리 최신화하기
   const editFileInput: any = useRef(); //* Input Dom 접근하기
@@ -69,7 +76,7 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
                 () => queryClient.invalidateQueries('detailData'),
                 500
               );
-              customAlert('수정을 완료하였습니다!');
+              customConfirm('수정을 완료하였습니다!');
               setImageUpload(null);
             },
           }
@@ -81,8 +88,8 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
 
   if (authService.currentUser?.uid !== item.creator) {
     return (
-      <StDetailImgContainer>
-        <StDetailImg
+      <DetailImgContainer>
+        <DetailImg3
           src={item.imgUrl}
           alt="image"
           onClick={onClickToggleImgModal}
@@ -93,27 +100,27 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
             setModal={setIsModalImgActive}
             width="300"
             height="300"
-            element={<StDetailImg2 src={item.imgUrl} alt="image" />}
+            element={<DetailImg2 src={item.imgUrl} alt="image" />}
           />
         ) : (
           ''
         )}
-      </StDetailImgContainer>
+      </DetailImgContainer>
     );
   } else {
     return (
-      <StDetailImgContainer>
+      <DetailImgContainer>
         {imageUpload ? (
-          <StDetailImg src={imageUpload} />
+          <DetailImg3 src={imageUpload} />
         ) : (
-          <StDetailImg src={item.imgUrl} alt="image" />
+          <DetailImg3 src={item.imgUrl} alt="image" />
         )}
         {imageUpload ? (
-          <StDetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
+          <DetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
             게시물 사진 수정 〉
-          </StDetailBtn>
+          </DetailBtn>
         ) : (
-          <StDetailBtn>
+          <DetailBtn>
             게시물 사진 변경 〉
             <input
               type="file"
@@ -125,37 +132,45 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
               id="file"
               style={{ height: '100%', width: '100%', display: 'none' }}
             />
-          </StDetailBtn>
+          </DetailBtn>
         )}
-      </StDetailImgContainer>
+      </DetailImgContainer>
     );
   }
 };
 
 export default DetailImg;
 
-const StDetailImgContainer = styled.div`
+const DetailImgContainer = styled.div`
   background-color: #f1f1f1;
-  height: 500px;
+  height: 530px;
   width: 350px;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media ${(props) => props.theme.mobile} {
+    height: 350px;
+  }
 `;
 
-const StDetailImg = styled.img`
+const DetailImg3 = styled.img`
   width: 100%;
   height: 100%;
   cursor: pointer;
   object-fit: contain;
 `;
-const StDetailImg2 = styled.img`
+
+const DetailImg2 = styled.img`
   width: 550px;
-  /* height: 600px; */
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 300px;
+    height: 400px;
+    object-fit: contain;
+  }
 `;
 
-const StDetailBtn = styled.label`
+const DetailBtn = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -167,4 +182,8 @@ const StDetailBtn = styled.label`
   height: 40px;
   bottom: 120px;
   font-size: 13px;
+  @media ${(props) => props.theme.mobile} {
+    top: 400px;
+    bottom: 0px;
+  }
 `;

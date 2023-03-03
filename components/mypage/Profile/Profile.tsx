@@ -4,7 +4,7 @@ import { authService, storageService } from '@/firebase';
 import { signOut, updateProfile } from 'firebase/auth';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { useMutation, useQuery } from 'react-query';
 import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
@@ -38,6 +38,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
+  // console.log('nowUser,uid: ', nowUser?.uid);
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -57,7 +58,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
       // Sign-out successful.
       // localStorage.clear();
       setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
+      customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
     });
   };
@@ -160,17 +161,19 @@ const ProfileEditBtn = styled.button`
 `;
 const ProfileText = styled.div`
   padding-right: 30px;
-  width: 100%;
+  width: 500px;
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
+  margin-left: 20px;
 `;
+
 const ProfileNickname = styled.span`
   font-family: Noto Sans CJK KR;
-  width: 70%;
+  width: 50%;
   height: 36px;
   font-style: normal;
   font-weight: 700;
@@ -178,6 +181,7 @@ const ProfileNickname = styled.span`
   text-align: left;
   padding-left: 20px;
 `;
+
 const SendMessage = styled.button`
   background-color: white;
   border: 1px black solid;
@@ -213,10 +217,14 @@ const MyProfileFollowing = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
-  width: 90px;
+  width: 120px;
   height: 85px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 const FollowingText = styled.div`
   font-family: Noto Sans CJK KR;
@@ -236,10 +244,14 @@ const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
-  width: 90px;
+  width: 120px;
   height: 85px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FollowerText = styled.div`

@@ -11,8 +11,12 @@ import CollectionButton from '@/components/detail/detailLeft/CollectionButton';
 import DetailImg from '@/components/detail/detailLeft/DetailImg';
 import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 
 const Post = ({ id }: any) => {
+  // console.log('id: ', id);
+
   //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
@@ -32,7 +36,6 @@ const Post = ({ id }: any) => {
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
-  // const [imageUpload, setImageUpload]: any = useState(null);
 
   //* input 토글
   const [inputToggle, setInputToggle] = useState(false);
@@ -40,15 +43,10 @@ const Post = ({ id }: any) => {
   //* collection 저장 state
   const [isOpen, setIsOpen] = useState(false);
 
-  const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
-  const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+  // const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
+  // const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
 
   const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
-
-  //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEditToggle = () => {
-    setEditBtnToggle(!editBtnToggle);
-  };
 
   //* 데이터 수정 시 보내주는 데이터
   let editData = {
@@ -61,7 +59,12 @@ const Post = ({ id }: any) => {
     address: saveAddress,
   };
 
-  //* useQuery 사용해서 포스트 데이터 불러오기
+  //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
+
+  //! useQuery 사용해서 포스트 데이터 불러오기
   const {
     data: detail,
     isLoading,
@@ -85,11 +88,11 @@ const Post = ({ id }: any) => {
     countMutate(id);
   }, []);
 
-  if (isLoading) return <h1>로딩 중입니다.</h1>;
-  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   return (
-    <StDetailContainer>
+    <DetailContainer>
       <Seo title="Detail" />
       <Header selectCity={undefined} onChangeSelectCity={undefined} />
 
@@ -98,26 +101,26 @@ const Post = ({ id }: any) => {
           return item.id === id;
         })
         .map((item: any) => (
-          <StDetailContents key={item.id}>
-            <StImgAndProfileAndFollowingAndCollection>
+          <DetailContents key={item.id}>
+            <ImgAndProfileAndFollowingAndCollection>
               <DetailImg
                 item={item}
-                imageUpload={imageUpload}
-                setImageUpload={setImageUpload}
-                editImg={editImg}
+                // imageUpload={imageUpload}
+                // setImageUpload={setImageUpload}
+                // editImg={editImg}
               />
 
-              <StProfileAndFollowingAndCollection>
-                <StProfileAndFollwing>
+              <ProfileAndFollowingAndCollection>
+                <ProfileAndFollwing>
                   <DetailProfile item={item} />
-                </StProfileAndFollwing>
+                </ProfileAndFollwing>
 
                 <FollowingButton item={item} />
                 <CollectionButton item={item} />
-              </StProfileAndFollowingAndCollection>
-            </StImgAndProfileAndFollowingAndCollection>
+              </ProfileAndFollowingAndCollection>
+            </ImgAndProfileAndFollowingAndCollection>
 
-            <StListAndMapAndComment>
+            <ListAndMapAndComment>
               <DetailList
                 item={item}
                 editBtnToggle={editBtnToggle}
@@ -137,6 +140,8 @@ const Post = ({ id }: any) => {
                 saveAddress={saveAddress}
                 setSaveAddress={setSaveAddress}
                 setEditBtnToggle={setEditBtnToggle}
+                setPlace={setPlace}
+                place={place}
               />
 
               <DetailMap
@@ -156,46 +161,75 @@ const Post = ({ id }: any) => {
               />
 
               <CommentList postId={id} />
-            </StListAndMapAndComment>
-          </StDetailContents>
+            </ListAndMapAndComment>
+          </DetailContents>
         ))}
-    </StDetailContainer>
+    </DetailContainer>
   );
 };
 
 export default Post;
 
-const StDetailContainer = styled.div``;
+const DetailContainer = styled.div`
+  position: relative;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
+`;
 
-const StDetailContents = styled.div`
+const DetailContents = styled.div`
   top: 50px;
-
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 600px;
+  @media ${(props) => props.theme.mobile} {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    margin-top: 40px;
+  }
 `;
 
-const StImgAndProfileAndFollowingAndCollection = styled.div`
-  width: 30%;
+const ImgAndProfileAndFollowingAndCollection = styled.div`
+  width: 400px;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 400px;
+  }
 `;
 
-const StProfileAndFollowingAndCollection = styled.div`
+const ProfileAndFollowingAndCollection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 350px;
   padding-top: 20px;
+  @media ${(props) => props.theme.mobile} {
+    height: 50px;
+    padding-top: 0px;
+    margin-top: 10px;
+  }
 `;
 
-const StProfileAndFollwing = styled.div`
+const ProfileAndFollwing = styled.div`
   display: flex;
+  /* justify-content: space-between; */
 `;
 
-const StListAndMapAndComment = styled.div`
-  width: 50%;
+const ListAndMapAndComment = styled.div`
+  width: 650px;
+  @media ${(props) => props.theme.mobile} {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 //* SSR방식으로 server에서 id 값 보내기

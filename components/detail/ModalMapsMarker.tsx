@@ -12,99 +12,95 @@ const ModalMapsMarker = ({ item, isOpen, setIsOpen }: any) => {
       {isOpen && isOpen.id === item.id && (
         <CustomOverlayMap
           position={{
-            // 지도의 중심좌표
             lat: item.lat,
             lng: item.long,
           }}
         >
-          <StOverLayClose
+          <OverLayClose
             className="close"
             onClick={() => setIsOpen(false)}
             title="닫기"
-          ></StOverLayClose>
-          <StOverLayWrap>
-            <StOverLayTitle>{item.title}</StOverLayTitle>
+          >
+            <SearchImageCloseIcon src="/close_icon.svg" />
+          </OverLayClose>
+          <OverLayWrap>
+            <OverLayTitle>{item.title}</OverLayTitle>
             <Link href={`/detail/${item.id}`} rel="noreferrer">
-              <StOverLayImg>
-                <StOverLayImgSrc
+              <OverLayImg>
+                <OverLayImgSrc
                   src={item.imgUrl}
                   alt="image"
                   height={150}
                   width={150}
                 />
-                <StOverLayHoverWrap>
-                  <StOveLayHoverIcon>
-                    <SearchImage src="/seeDetailsicon.svg" />
-                  </StOveLayHoverIcon>
-                  <StOverLayHoverText>글 보러가기</StOverLayHoverText>
-                </StOverLayHoverWrap>
-              </StOverLayImg>
+                <OverLayHoverWrap>
+                  <OveLayHoverIcon>
+                    <SearchImageRightIcon src="/seeDetailsicon.svg" />
+                  </OveLayHoverIcon>
+                  <OverLayHoverText>글 보러가기</OverLayHoverText>
+                </OverLayHoverWrap>
+              </OverLayImg>
             </Link>
-            <StOverLayContetnsWrap>
-              <StOverLayAddress>
-                <SearchImage1 src="/spot_icon.svg" />{' '}
+            <OverLayContetnsWrap>
+              <OverLayAddress>
+                <SearchImagePlaceIcon src="/spot_icon.svg" />{' '}
                 {item.address.slice(7, 20)}
-              </StOverLayAddress>
-              <StOverLayCounter>
-                <SearchImage2 src="/view_icon.svg" /> {item.clickCounter} view
-              </StOverLayCounter>
-            </StOverLayContetnsWrap>
-          </StOverLayWrap>
+              </OverLayAddress>
+              <OverLayCounter>
+                <SearchImageViewIcon src="/view_icon.svg" /> {item.clickCounter}{' '}
+                view
+              </OverLayCounter>
+            </OverLayContetnsWrap>
+          </OverLayWrap>
         </CustomOverlayMap>
       )}
     </div>
   );
 };
 
-const StOverLayWrap = styled.div`
-  width: 172px;
+const OverLayWrap = styled.div`
+  width: 185px;
   height: 256px;
   margin-top: -300px;
   background-color: white;
   box-shadow: 2.5px 5px 5px gray;
   border-radius: 3px;
   overflow: hidden;
-  /* position: relative; */
-`;
-
-const StOverLayTitle = styled.div`
-  padding: 15px 0 0 10px;
-  height: 30px;
   text-align: center;
-  font-size: 18px;
-  font-weight: bold;
 `;
 
-const StOverLayImg = styled.div`
+const OverLayTitle = styled.div`
+  height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+
+  margin-top: 20px;
+`;
+
+const OverLayImg = styled.div`
   position: relative;
-  width: 100%;
+  width: 80%;
   height: 150px;
+  margin: auto;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 `;
 
-const StOverLayImgSrc = styled(Image)`
+const OverLayImgSrc = styled(Image)`
   width: 100%;
   cursor: pointer;
 `;
 
-const StOverLayClose = styled.div`
+const OverLayClose = styled.div`
   position: absolute;
-  top: -330px;
-  right: 45%;
-  border-radius: 25px;
-  width: 17px;
-  height: 17px;
+  top: -340px;
+  right: 43%;
 
-  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
   :hover {
     cursor: pointer;
-    width: 17px;
-    height: 17px;
-    border-radius: 25px;
   }
 `;
 
-const StOverLayHoverWrap = styled.div`
+const OverLayHoverWrap = styled.div`
   color: #fff;
   position: absolute;
   left: 0;
@@ -112,18 +108,19 @@ const StOverLayHoverWrap = styled.div`
   background: rgba(0, 0, 0, 0.5);
   width: 100%;
   height: 150px;
-  padding: 20px;
-
   box-sizing: border-box;
   opacity: 0;
   transition: opacity 0.35s ease-in-out;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   :hover {
     opacity: 1;
   }
 `;
 
-const StOveLayHoverIcon = styled.h3`
+const OveLayHoverIcon = styled.h3`
   font-size: 16px;
   padding-bottom: 0.4em;
   overflow: hidden;
@@ -133,7 +130,7 @@ const StOveLayHoverIcon = styled.h3`
   text-align: center;
 `;
 
-const StOverLayHoverText = styled.h2`
+const OverLayHoverText = styled.h2`
   font-size: 16px;
   text-align: center;
   text-overflow: ellipsis;
@@ -141,41 +138,45 @@ const StOverLayHoverText = styled.h2`
   text-transform: uppercase;
 `;
 
-const StOverLayContetnsWrap = styled.div`
+const OverLayContetnsWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 15px;
-  margin-left: 5px;
+  width: 80%;
+  margin: 10px auto;
+  margin-top: 10px;
 `;
 
-const StOverLayAddress = styled.div`
+const OverLayAddress = styled.div`
   color: gray;
   font-size: 15px;
 `;
 
-const StOverLayCounter = styled.div`
-  font-size: 16px;
+const OverLayCounter = styled.div`
+  font-size: 15px;
   color: cornflowerblue;
-  font-weight: 600;
-  text-align: left;
 `;
 
-const SearchImage = styled.img`
+const SearchImageRightIcon = styled.img`
   width: 30px;
   height: 30px;
   margin-right: 10px;
   margin-left: 5px;
   font-size: 20px;
 `;
-const SearchImage1 = styled.img`
+const SearchImagePlaceIcon = styled.img`
   width: 20px;
   height: 15px;
 `;
-const SearchImage2 = styled.img`
+const SearchImageViewIcon = styled.img`
   width: 20px;
   height: 12px;
+`;
+
+const SearchImageCloseIcon = styled.img`
+  width: 25px;
+  height: 35px;
 `;
 
 export default ModalMapsMarker;

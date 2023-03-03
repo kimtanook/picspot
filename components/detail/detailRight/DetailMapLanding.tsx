@@ -56,6 +56,8 @@ const StyleContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  width: 100%;
+  height: 230px;
 `;
 
 const StyledForm = styled.form`
@@ -69,14 +71,4 @@ const StyledInput = styled.input`
   width: 400px;
   border-radius: 16px;
   border: 0.5px solid black;
-`;
-
-const StyledInfo = styled.div`
-  padding: 10px;
-  width: 50%;
-  margin-left: 120px;
-  border-radius: 5px;
-  background-color: gray;
-  color: white;
-  text-align: center;
 `;

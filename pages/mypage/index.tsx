@@ -2,12 +2,14 @@ import Header from '@/components/Header';
 import Seo from '@/components/Seo';
 import Profile from '@/components/mypage/Profile/Profile';
 import CollectionList from '@/components/mypage/CollectionList';
-import { getData, getFollow, getFollowing, getUser } from '@/api';
+import { getFollow, getFollowing } from '@/api';
 import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
+import DataLoading from '@/components/common/DataLoading';
+import DataError from '@/components/common/DataError';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
@@ -19,7 +21,7 @@ export default function Mypage() {
     isError,
   } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+      data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
   const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자
@@ -34,8 +36,8 @@ export default function Mypage() {
 
   const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
-  if (isLoading) return <h1>로딩 중입니다.</h1>;
-  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   return (
     <>
@@ -46,9 +48,9 @@ export default function Mypage() {
           <Profile followingCount={followingCount} followCount={followCount} />
         </MyProfileContainer>
       </MyContainer>
-      {/* 내 게시물과 저장한 게시물입니다 */}
+      {/* 내 게시물과 저장한 게시물입니다  */}
       <AllMyPostList>
-        <div style={{ margin: '40px 0px 10px 0px', textAlign: 'center' }}>
+        <CategoryBtn>
           {onSpot ? (
             <>
               <BlackBtn onClick={() => setOnSpot(true)}>게시한 스팟</BlackBtn>
@@ -60,7 +62,7 @@ export default function Mypage() {
               <BlackBtn onClick={() => setOnSpot(false)}>저장한 스팟</BlackBtn>
             </>
           )}
-        </div>
+        </CategoryBtn>
 
         <GridBox>{onSpot ? <MyPostList /> : <CollectionList />}</GridBox>
       </AllMyPostList>
@@ -85,14 +87,29 @@ const MyProfileContainer = styled.div`
 const AllMyPostList = styled.div`
   margin: auto;
   width: 1188px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
+`;
+
+const CategoryBtn = styled.div`
+  margin: 40px 0px 10px 0px;
+  text-align: center;
+  @media ${(props) => props.theme.mobile} {
+    /* text-align: left; */
+    margin: 0px;
+    width: 100%;
+  }
 `;
 
 const GridBox = styled.div`
   width: 1188px;
   margin-top: 19px;
   display: inline-flex;
-
   justify-content: space-between;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
 `;
 
 const GrayBtn = styled.button`
@@ -107,9 +124,17 @@ const GrayBtn = styled.button`
   line-height: 30px;
   letter-spacing: -0.015em;
   :hover {
-    border-bottom: 3.5px solid #212121;
-    color: #212121;
+    border-bottom: 3.5px solid #1882ff;
+    color: #1882ff;
     transition: all 0.3s;
+  }
+  @media ${(props) => props.theme.mobile} {
+    color: #d9d9d9;
+    font-size: 12px;
+    width: 50vw;
+    margin-right: 0px;
+    border-bottom: 0.5px solid #d9d9d9;
+    padding: 0px;
   }
 `;
 const BlackBtn = styled.button`
@@ -117,10 +142,17 @@ const BlackBtn = styled.button`
   font-weight: 700;
   border: none;
   background-color: white;
-  color: #212121;
-  border-bottom: 3.5px solid #212121;
+  color: #1882ff;
+  border-bottom: 3.5px solid #1882ff;
   padding-bottom: 5px;
   margin-right: 20px;
   line-height: 30px;
   letter-spacing: -0.015em;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 12px;
+    width: 50vw;
+    margin-right: 0px;
+    border-bottom: 0.5px solid #1882ff;
+    padding: 0px;
+  }
 `;
