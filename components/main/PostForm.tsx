@@ -131,20 +131,17 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
     setTown(e.target.value);
   };
 
-  // console.log('place', place);
-  // console.log('1', saveAddress.split(' ')[1]);
-  // console.log('2', saveAddress.split(' ')[2]);
+  console.log('1', saveAddress.split(' ')[1]);
+  console.log('2', saveAddress.split(' ')[2]);
   useEffect(() => {
     if (!saveAddress) {
       return;
     }
     const cityMap = saveAddress.split(' ')[1];
-    console.log(cityMap);
     const townMap = saveAddress.split(' ')[2];
-    setCity(cityMap);
 
-    console.log('townMap', townMap);
-    const jejuTownSub = [
+    // console.log('townMap', townMap);
+    const townSub = [
       '한림읍',
       '조천읍',
       '한경면',
@@ -152,20 +149,25 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
       '우도면',
       '구좌읍',
       '애월읍',
+      '표선면',
+      '대정읍',
+      '성산읍',
+      '안덕면',
+      '남원읍',
     ];
 
-    const SeogwipoTownSub = ['표선읍', '대정읍', '성산면', '안덕면', '남원읍'];
-
-    if (city === '제주시' && jejuTownSub.indexOf(townMap) < 0) {
+    if (city === '제주시' && townSub.indexOf(townMap) < 0) {
       setTown('제주시 시내');
     } else {
       setTown(townMap);
+      setCity(cityMap);
     }
 
-    if (city === '서귀포시' && SeogwipoTownSub.indexOf(townMap) < 0) {
+    if (city === '서귀포시' && townSub.indexOf(townMap) < 0) {
       setTown('서귀포시 시내');
     } else {
       setTown(townMap);
+      setCity(cityMap);
     }
   }, [saveAddress]);
   return (
@@ -218,7 +220,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                   <PostFormSelect value={town} onChange={onChangeFormSelectSub}>
                     {city === '제주시' ? (
                       <>
-                        <option value="읍/면 선택">읍/면 선택</option>
+                        {/* <option value="읍/면 선택">읍/면 선택</option> */}
                         <option value="제주시 시내">제주시 시내</option>
                         <option value="한림읍">한림읍</option>
                         <option value="조천읍">조천읍</option>
@@ -230,7 +232,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                       </>
                     ) : city === '서귀포시' ? (
                       <>
-                        <option value="읍/면 선택">읍/면 선택</option>
+                        {/* <option value="읍/면 선택">읍/면 선택</option> */}
                         <option value="서귀포시 시내">서귀포시 시내</option>
                         <option value="표선면">표선면</option>
                         <option value="대정읍">대정읍</option>
