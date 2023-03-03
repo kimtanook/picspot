@@ -8,7 +8,7 @@ function TownSelect({
   onClickSelectTown,
   onChangeSelectTown,
 }: any) {
-  console.log('selectTown : ', selectTown);
+  // console.log('selectTown : ', selectTown);
   const jejuTown = [
     '제주시 시내',
     '구좌읍',

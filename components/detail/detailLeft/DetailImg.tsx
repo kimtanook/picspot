@@ -143,11 +143,14 @@ export default DetailImg;
 
 const DetailImgContainer = styled.div`
   background-color: #f1f1f1;
-  height: 500px;
+  height: 530px;
   width: 350px;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media ${(props) => props.theme.mobile} {
+    height: 350px;
+  }
 `;
 
 const DetailImg3 = styled.img`
@@ -161,6 +164,11 @@ const DetailImg2 = styled.img`
   width: 550px;
   /* height: 600px; */
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 300px;
+    height: 400px;
+    object-fit: contain;
+  }
 `;
 
 const DetailBtn = styled.label`
