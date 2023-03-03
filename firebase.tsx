@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCxKx4AXNnQpn6q6fFK6VxvTMEgKChM10o',
-  authDomain: 'picspot-2e239.firebaseapp.com',
-  projectId: 'picspot-2e239',
-  storageBucket: 'picspot-2e239.appspot.com',
-  messagingSenderId: '250271284271',
-  appId: '1:250271284271:web:967a7916cc654f6f39dada',
+  apiKey: 'AIzaSyAm1Oo1wlRi_pfmI4hiS_Z-xSURpgsSrX0',
+  authDomain: 'testpicspot.firebaseapp.com',
+  projectId: 'testpicspot',
+  storageBucket: 'testpicspot.appspot.com',
+  messagingSenderId: '110955419725',
+  appId: '1:110955419725:web:7fad0ffe45eb75af49e404',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -72,3 +72,11 @@ export { app, authService, dbService, storageService };
 // storageBucket: "picspot33-d70df.appspot.com",
 // messagingSenderId: "1071145662979",
 // appId: "1:1071145662979:web:b0ad278354defe1ffdec36"
+
+//picspot44
+// apiKey: "AIzaSyBT47ZYn5TeHAeH8-Oh3BZfxSQFjr-sbmA",
+// authDomain: "pics-c722e.firebaseapp.com",
+// projectId: "pics-c722e",
+// storageBucket: "pics-c722e.appspot.com",
+// messagingSenderId: "122408562512",
+// appId: "1:122408562512:web:60526099dd34e1bd364655"

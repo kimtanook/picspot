@@ -23,8 +23,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const [textareaCount, setTextareaCount] = useState(0);
 
   //* 드롭다운 상태
-  const [city, setCity] = useState('제주시');
-  const [town, setTown] = useState('구좌읍');
+  const [city, setCity] = useState('');
+  const [town, setTown] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
@@ -70,7 +70,14 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
       customAlert('이미지를 추가해주세요.');
       return;
     }
-
+    if (town === '') {
+      customAlert('지역을 선택해주세요.');
+      return;
+    }
+    if (city === '읍/면 선택') {
+      customAlert('읍/면을 선택해주세요.');
+      return;
+    }
     if (title === '') {
       customAlert('제목을 입력해주세요');
       return;
@@ -81,16 +88,10 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
       return;
     }
 
-    if (city === '' || town === '') {
-      customAlert('카테고리를 입력해주세요');
-      return;
-    }
-
     if (saveLatLng === undefined || saveAddress === undefined) {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
-
     const imageRef = ref(storageService, `images/${uuidv4()}`);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
@@ -120,24 +121,17 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   };
 
   //select에서 value값 받아오기
-  const onChange = (e: any) => {
+  const onChangeFormSelect = (e: any) => {
     setCity(e.target.value);
   };
 
-  const onChange2 = (e: any) => {
+  const onChangeformSelectSub = (e: any) => {
     setPlace(e.target.value);
     setTown(e.target.value);
   };
 
-  // input 글자수 세기
-  const onInputHandler = (e: any) => {
-    setInputCount(e.target.value.length);
-  };
-
-  const onTextareaHandler = (e: any) => {
-    setTextareaCount(e.target.value.replace(e.target.value.length));
-  };
-
+  console.log('place', place);
+  console.log(saveAddress);
   return (
     <>
       <StPostFormWrap>
@@ -176,70 +170,17 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                 </Img>
               </div>
               <StPostFormContentTop>
-                <StPostFormContentName>사진정보</StPostFormContentName>
+                <StPostFormContentName>지역선택</StPostFormContentName>
                 <StPostFormCategoryWrap>
-                  {/* <StPostFormCategoryBoxWrap>
-              <CustomButton
-                width="80px"
-                borderRadius="20px"
-                height="35px"
-                margin="20px 10px"
-                color="white"
-                backgroundColor="black"
-                onClick={(e) => setDropdownVisibility(!dropdownVisibility)}
-              >
-                {dropdownVisibility ? '닫기' : '열기'}
-              </CustomButton>
-            </StPostFormCategoryBoxWrap>
-            <Dropdown visibility={dropdownVisibility}>
-              <div>
-                {' '}
-                <StPostFormCategoryMain>
-                   <li style={{ listStyle: 'none' }}>
-                  <input
-                    type="radio"
-                    id="제주도"
-                    name="제주도"
-                    value="제주도"
-                    checked={city === '제주도' ? true : false}
-                    onChange={(e) => setCity(e.target.value)}
-                  />
-                  제주도
-                </li> 
-                  <li style={{ listStyle: 'none' }}>
-                    <input
-                      type="radio"
-                      id="제주시"
-                      name="제주시"
-                      value="제주시"
-                      checked={city === '제주시' ? true : false}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
-                    제주시
-                  </li>
-                  <li style={{ listStyle: 'none' }}>
-                    <input
-                      type="radio"
-                      id="서귀포시"
-                      name="서귀포시"
-                      value="서귀포시"
-                      checked={city === '서귀포시' ? true : false}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
-                    서귀포시
-                  </li>
-                </StPostFormCategoryMain>
-              </div>
-            </Dropdown> */}
-                  <StPostFormSelect onChange={onChange}>
-                    {/* <option value="선택">시 선택</option> */}
+                  <StPostFormSelect onChange={onChangeFormSelect}>
+                    <option value="선택">시 선택</option>
                     <option value="제주시">제주시</option>
                     <option value="서귀포시">서귀포시</option>
                   </StPostFormSelect>
-                  <StPostFormSelect onChange={onChange2}>
+                  <StPostFormSelect onChange={onChangeformSelectSub}>
                     {city === '제주시' ? (
                       <>
-                        <option value="">선택</option>
+                        <option value="읍/면 선택">읍/면 선택</option>
                         <option value="제주시 시내">제주시 시내</option>
                         <option value="한림읍">한림읍</option>
                         <option value="조천읍">조천읍</option>
@@ -251,7 +192,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                       </>
                     ) : city === '서귀포시' ? (
                       <>
-                        <option value="">선택</option>
+                        <option value="읍/면 선택">읍/면 선택</option>
                         <option value="서귀포시 시내">서귀포시 시내</option>
                         <option value="표선면">표선면</option>
                         <option value="대정읍">대정읍</option>
@@ -264,44 +205,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                     )}
                   </StPostFormSelect>
                 </StPostFormCategoryWrap>
-
-                {/* <div>
-            <h4>카테고리를 골라주세요</h4>
-            <button onClick={onClickTown}>조천읍</button>
-            <button onClick={onClickTown}>제주시</button>
-            <button onClick={onClickTown}>성산읍</button>
-            <button onClick={onClickTown}>표선면</button>
-            <button onClick={onClickTown}>남원읍</button>
-            <button onClick={onClickTown}>서귀포</button>
-            <button onClick={onClickTown}>중문</button>
-            <button onClick={onClickTown}>안덕면</button>
-            <button onClick={onClickTown}>대정읍</button>
-            <button onClick={onClickTown}>애월읍</button>
-            <button onClick={onClickTown}>우도</button>
-            <button onClick={onClickTown}>마라도</button>
-          </div>   */}
-                <StPostFormButton>
-                  <CustomButton
-                    width="100px"
-                    backgroundColor="white"
-                    color="#1882FF"
-                    borderRadius="0px"
-                    border="1px solid #1882FF"
-                    height="33px"
-                  >
-                    이미지 회전
-                  </CustomButton>
-                  <CustomButton
-                    width="116px"
-                    backgroundColor="white"
-                    color="#1882FF"
-                    borderRadius="0px"
-                    border="1px solid #1882FF"
-                    height="33px"
-                  >
-                    다시 등록하기
-                  </CustomButton>
-                </StPostFormButton>
               </StPostFormContentTop>
             </StPostFormContentWrap>
 
@@ -309,7 +212,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
               <StPostFormInputTitle>제목</StPostFormInputTitle>
               <StPostFormInput
                 placeholder="사진을 소개하는 제목을 적어주세요!"
-                maxLength={20}
+                maxLength={15}
                 onChange={(e) => {
                   setTitle(e.target.value);
                   setInputCount(e.target.value.length);
@@ -317,7 +220,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
               />
               <StPostFormInputCount>
                 <span>{inputCount}</span>
-                <span>/20 자</span>
+                <span>/15 자</span>
               </StPostFormInputCount>
               <StPostFormInputTitle>내용</StPostFormInputTitle>
               <StPostFormTextareaWrap>
@@ -344,8 +247,6 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                 backgroundColor="#1882FF"
                 margin="0px 0px 0px 5px"
                 onClick={onClickAddData}
-
-                // border="0px"
               >
                 업로드하기
               </CustomButton>
@@ -409,7 +310,7 @@ const StPostFormContentTop = styled.div`
 `;
 
 const StPostFormContentName = styled.span`
-  font-weight: 500;
+  font-weight: 700;
   margin-right: 145px;
   padding: 10px;
   font-size: 20px;
@@ -421,14 +322,13 @@ const StPostFormCategoryWrap = styled.div`
   padding: 5px 0px;
   display: flex;
   margin-top: 10px;
-  margin-left: -30px;
 `;
 
 const StPostFormSelect = styled.select`
   font-size: 16px;
   font-weight: 400;
   height: 30px;
-  width: 100px;
+  width: 120px;
   border-radius: 20px;
   text-align: center;
   margin-left: 5px;

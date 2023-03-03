@@ -1,6 +1,6 @@
 import { updateData } from '@/api';
 import { authService, storageService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -69,7 +69,7 @@ const DetailImg = ({ item, imageUpload, setImageUpload, editImg }: any) => {
                 () => queryClient.invalidateQueries('detailData'),
                 500
               );
-              customAlert('수정을 완료하였습니다!');
+              customConfirm('수정을 완료하였습니다!');
               setImageUpload(null);
             },
           }
