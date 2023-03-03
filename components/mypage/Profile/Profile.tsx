@@ -38,6 +38,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
   );
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
+  // console.log('nowUser,uid: ', nowUser?.uid);
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {

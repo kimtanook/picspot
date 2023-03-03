@@ -393,7 +393,7 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   background-color: #f8f8f8;
-  width: 97%;
+  width: 100%;
   min-height: 50px;
   padding-left: 20px;
   color: #8e8e93;
