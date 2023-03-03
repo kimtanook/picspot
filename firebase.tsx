@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAm1Oo1wlRi_pfmI4hiS_Z-xSURpgsSrX0',
-  authDomain: 'testpicspot.firebaseapp.com',
-  projectId: 'testpicspot',
-  storageBucket: 'testpicspot.appspot.com',
-  messagingSenderId: '110955419725',
-  appId: '1:110955419725:web:7fad0ffe45eb75af49e404',
+  apiKey: 'AIzaSyCxKx4AXNnQpn6q6fFK6VxvTMEgKChM10o',
+  authDomain: 'picspot-2e239.firebaseapp.com',
+  projectId: 'picspot-2e239',
+  storageBucket: 'picspot-2e239.appspot.com',
+  messagingSenderId: '250271284271',
+  appId: '1:250271284271:web:967a7916cc654f6f39dada',
 };
 
 const app = initializeApp(firebaseConfig);
