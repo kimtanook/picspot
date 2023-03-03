@@ -45,6 +45,7 @@ const MapLandingPage = ({
         saveAddress={saveAddress}
         setSaveAddress={setSaveAddress}
         setInfoDiv={setInfoDiv}
+        infoDiv={infoDiv}
       />
     </StyleContainer>
   );
@@ -87,7 +88,7 @@ const StyledInfo = styled.div`
   font-size: 14px;
   margin: auto;
   margin-left: -50px;
-  width: 40%;
+  width: 50%;
 `;
 const SearchImage = styled.img`
   width: 15px;
