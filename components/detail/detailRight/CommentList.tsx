@@ -27,7 +27,7 @@ const CommentList = ({ postId }: postId) => {
   const onSubmitComment = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!authService.currentUser) {
-      return alert('로그인 후 댓글을 남겨보세요!');
+      return customAlert('로그인 후 댓글을 남겨보세요!');
     } else if (comment.length > 30) {
       customAlert('댓글이 30자를 초과했어요.');
       return;
@@ -42,7 +42,7 @@ const CommentList = ({ postId }: postId) => {
       );
       setComment('');
     } else {
-      alert('댓글을 입력해주세요!');
+      customAlert('댓글을 입력해주세요!');
     }
   };
 

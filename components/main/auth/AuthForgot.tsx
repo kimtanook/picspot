@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom } from '@/atom';
+import { customAlert, customConfirm } from '@/utils/alerts';
 
 const AuthForgot = (): JSX.Element => {
   const [sending, setSending] = useState<boolean>(false);
@@ -18,14 +19,14 @@ const AuthForgot = (): JSX.Element => {
     setSending(true);
     await sendPasswordResetEmail(authService, email)
       .then(() => {
-        alert('이메일에 링크를 보냈습니다');
+        customConfirm('이메일에 링크를 보냈습니다');
         setSent(true);
         setSending(false);
         setCloseLoginModal(false);
         setForgotModal(false);
       })
       .catch((error) => {
-        alert('이메일 보내기에 실패하였습니다');
+        customAlert('이메일 보내기에 실패하였습니다');
         setError(error.message);
         setSending(false);
       });
@@ -68,7 +69,7 @@ const AuthForgot = (): JSX.Element => {
               disabled={sending}
               onClick={() => resetPasswordRequest()}
             >
-              메일 전송 〉
+              메일 전송 {'〉'}
             </ResetPwBtn>
           </ResetContainer>
 
@@ -89,6 +90,7 @@ const AuthForgot = (): JSX.Element => {
 const ForgotPwContainer = styled.div`
   width: 100%;
   height: 100%;
+  /* margin-bottom: 50px; */
 `;
 
 const Heder = styled.header`
@@ -96,18 +98,21 @@ const Heder = styled.header`
   color: #1882ff;
   font-size: 15px;
   display: flex;
+  margin-bottom: 50px;
+  margin-left: 20px;
 `;
 
 const ForgotText = styled.div`
   margin-top: 30px;
+  margin-bottom: 30px;
   font-size: 20px;
   font-weight: 700;
-  margin-top: 5vh;
   text-align: center;
 `;
 
 const ResetContainer = styled.div`
-  width: 80%;
+  width: 394px;
+  height: 48px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -115,7 +120,6 @@ const ResetContainer = styled.div`
   border: 1px solid #8e8e93;
   margin: auto;
   margin-top: 40px;
-  height: 40px;
 `;
 
 const ResetPwForm = styled.form``;
@@ -125,7 +129,9 @@ const ResetPwInput = styled.input`
   height: 30px;
   border: 1px solid white;
   margin-left: 10px;
-  font-size: 10px;
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-size: 13px;
 `;
 
 const ResetPwBtn = styled.button`
@@ -144,7 +150,6 @@ const LoginReturnButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
   border: transparent;
   transition: 0.1s;
   background-color: #8e8e93;
@@ -152,8 +157,10 @@ const LoginReturnButton = styled.button`
   font-size: 15px;
   cursor: pointer;
   margin: auto;
-  margin-top: 40px;
-  width: 80%;
+  margin-top: 90px;
+  margin-bottom: 50px;
+  width: 394px;
+  height: 48px;
 `;
 
 export default AuthForgot;

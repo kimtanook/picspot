@@ -1,9 +1,9 @@
 import { deleteData, updateData, visibleReset } from '@/api';
 import { authService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -45,7 +45,7 @@ const DetailList = ({
     onDeleteData(docId, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
-        customAlert('삭제를 완료하였습니다!');
+        customConfirm('삭제를 완료하였습니다!');
         router.push('/main?city=제주전체');
       },
     });
@@ -57,7 +57,7 @@ const DetailList = ({
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
-    if (titleInput.current?.value === '') {
+    if (titleInput.current?.value === '' || data.title === '') {
       customAlert('제목을 입력해주세요');
       return;
     }
@@ -72,7 +72,7 @@ const DetailList = ({
       return;
     }
 
-    if (contentInput.current?.value === '') {
+    if (contentInput.current?.value === '' || data.content === '') {
       customAlert('내용을 입력해주세요');
       return;
     }
@@ -90,7 +90,7 @@ const DetailList = ({
     onUpdateData(data, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-        customAlert('수정을 완료하였습니다!');
+        customConfirm('수정을 완료하였습니다!');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
@@ -106,6 +106,17 @@ const DetailList = ({
     setEditTown(e.target.value);
     setPlace(e.target.value);
   };
+
+  useEffect(() => {
+    setEditTitle(item.title);
+    setEditContent(item.content);
+    setEditCity(item.city);
+    setEditTown(item.town);
+  }, []);
+
+  // console.log('titleInput.current.value: ', titleInput.current?.value);
+  // console.log('titleInput.current: ', titleInput.current);
+  // console.log('editTitle: ', editTitle);
 
   if (!editBtnToggle) {
     return (
@@ -171,7 +182,16 @@ const DetailList = ({
                 게시물 삭제 〉
               </EditBtn>
               <EditBtn
-                onClick={() => onClickEdit({ id: item.id, ...editData })}
+                onClick={() =>
+                  onClickEdit({
+                    id: item.id,
+                    ...editData,
+                    // title: titleInput.current?.value ? item.title : editTitle,
+                    // content: contentInput.current?.value
+                    //   ? item.content
+                    //   : editContent,
+                  })
+                }
               >
                 수정 완료 〉
               </EditBtn>
@@ -187,7 +207,11 @@ const DetailList = ({
                   height={20}
                   style={{ marginRight: 5 }}
                 />
-                <span style={{ color: '#1882FF' }}>
+                <span
+                  style={{
+                    color: '#1882FF',
+                  }}
+                >
                   {item.clickCounter} view
                 </span>
               </View>
@@ -278,6 +302,11 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+    height: 150px;
+    margin: auto;
+  }
 `;
 
 const TitleAndView = styled.div`
@@ -285,9 +314,9 @@ const TitleAndView = styled.div`
   flex-direction: row;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
+    width: 350px;
     position: absolute;
-    top: 70px;
-    padding-left: 10px;
+    top: 60px;
   }
 `;
 
@@ -312,6 +341,7 @@ const TitleInput = styled.input`
 const View = styled.div`
   display: flex;
   align-items: center;
+  width: 90px;
 `;
 
 const EditBtnCotainer = styled.div`
@@ -337,8 +367,7 @@ const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
-    padding-left: 10px;
-    margin-top: 10px;
+    width: 350px;
   }
 `;
 
@@ -353,7 +382,8 @@ const City = styled.div`
   text-align: center;
   padding-top: 4px;
   @media ${(props) => props.theme.mobile} {
-    width: 60px;
+    width: 75px;
+    font-size: 12px;
   }
 `;
 
@@ -377,7 +407,8 @@ const Town = styled.div`
   text-align: center;
   padding-top: 4px;
   @media ${(props) => props.theme.mobile} {
-    width: 60px;
+    width: 75px;
+    font-size: 12px;
   }
 `;
 
@@ -415,15 +446,13 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   background-color: #f8f8f8;
-  width: 97%;
+  width: 100%;
   min-height: 50px;
   padding-left: 20px;
   color: #8e8e93;
   margin-bottom: 5px;
   @media ${(props) => props.theme.mobile} {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
+    width: 350px;
   }
 `;
 
@@ -440,6 +469,9 @@ const ContentInput = styled.input`
 
 const TipSpan = styled.span`
   width: 50px;
+  @media ${(props) => props.theme.mobile} {
+    width: 30px;
+  }
 `;
 
 const ContentSpan = styled.span`

@@ -14,7 +14,7 @@ const DetailProfile = ({ item }: any) => {
     } else {
       router.push({
         pathname: `/userprofile/${obj.uid}`,
-        query: { name: obj.userName },
+        query: { name: obj.userName, userImg: obj.userImg },
       });
     }
   };
@@ -26,7 +26,7 @@ const DetailProfile = ({ item }: any) => {
       {user
         ?.filter((obj: any) => obj.uid === item.creator)
         .map((obj: any) => (
-          <ProfileCotainer
+          <ProfileContainer
             key={obj.uid}
             onClick={() => onClickRouteMypage(obj)}
           >
@@ -40,16 +40,8 @@ const DetailProfile = ({ item }: any) => {
                 <ProfileImg src={obj.userImg} alt="image" />
                 <ProfileName>{obj.userName}</ProfileName>
               </>
-              // <Link
-              //   href={{
-              //     pathname: `/userprofile/${obj.uid}`,
-              //     query: { name: obj.userName, userImg: obj.userImg },
-              //   }}
-              // >
-              //   <StProfileImg src={obj.userImg} alt="image" />
-              // </Link>
             )}
-          </ProfileCotainer>
+          </ProfileContainer>
         ))}
     </>
   );
@@ -57,12 +49,15 @@ const DetailProfile = ({ item }: any) => {
 
 export default DetailProfile;
 
-const ProfileCotainer = styled.div`
+const ProfileContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-right: 10px;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    height: 50px;
+  }
 `;
 
 const ProfileImg = styled.img`
@@ -70,6 +65,10 @@ const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
   margin-right: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 const ProfileName = styled.div`
@@ -79,4 +78,7 @@ const ProfileName = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  @media ${(props) => props.theme.mobile} {
+    width: 160px;
+  }
 `;

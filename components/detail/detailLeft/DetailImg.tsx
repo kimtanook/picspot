@@ -1,6 +1,6 @@
 import { updateData } from '@/api';
 import { authService, storageService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -76,7 +76,7 @@ const DetailImg = ({ item }: any) => {
                 () => queryClient.invalidateQueries('detailData'),
                 500
               );
-              customAlert('수정을 완료하였습니다!');
+              customConfirm('수정을 완료하였습니다!');
               setImageUpload(null);
             },
           }
@@ -143,13 +143,13 @@ export default DetailImg;
 
 const DetailImgContainer = styled.div`
   background-color: #f1f1f1;
-  height: 500px;
+  height: 530px;
   width: 350px;
   display: flex;
   justify-content: center;
   align-items: center;
   @media ${(props) => props.theme.mobile} {
-    height: 300px;
+    height: 350px;
   }
 `;
 
@@ -164,10 +164,9 @@ const DetailImg2 = styled.img`
   width: 550px;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    height: 300px;
     width: 300px;
+    height: 400px;
     object-fit: contain;
-    background-color: #f8f8f8;
   }
 `;
 

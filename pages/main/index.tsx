@@ -21,6 +21,7 @@ import DataError from '@/components/common/DataError';
 import { useRecoilState } from 'recoil';
 import { loginModalAtom } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
+import { customAlert } from '@/utils/alerts';
 
 export default function Main() {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -31,9 +32,9 @@ export default function Main() {
   const [selectCity, setSelectCity] = useState('');
   const [selectTown, setSelectTown] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
-
   const [isModalPostActive, setIsModalPostActive]: any = useState(false);
 
+  // 뒷 배경 스크롤 방지
   useEffect(() => {
     const html = document.documentElement;
     if (isModalActive || isModalPostActive) {
@@ -79,7 +80,8 @@ export default function Main() {
 
   const onClickChatToggle = () => {
     if (!authService.currentUser) {
-      alert('로그인을 해주세요.');
+      customAlert('로그인을 해주세요.');
+      setCloseLoginModal(!closeLoginModal);
       return;
     }
     if (
