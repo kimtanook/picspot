@@ -172,6 +172,10 @@ export default Post;
 
 const DetailContainer = styled.div`
   position: relative;
+
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
 `;
 
 const DetailContents = styled.div`
@@ -184,10 +188,24 @@ const DetailContents = styled.div`
   justify-content: center;
   width: 100%;
   height: 600px;
+
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 300px;
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 const ImgAndProfileAndFollowingAndCollection = styled.div`
   width: 400px;
+
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 const ProfileAndFollowingAndCollection = styled.div`
@@ -204,6 +222,10 @@ const ProfileAndFollwing = styled.div`
 
 const ListAndMapAndComment = styled.div`
   width: 650px;
+  @media ${(props) => props.theme.mobile} {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 //* SSR방식으로 server에서 id 값 보내기

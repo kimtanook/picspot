@@ -302,6 +302,7 @@ const Wrap = styled.div`
     width: 375px;
   }
 `;
+
 const MainContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     margin: auto;
