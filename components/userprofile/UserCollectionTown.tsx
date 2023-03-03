@@ -2,7 +2,7 @@ import { dbService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import Masonry from 'react-responsive-masonry';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import UserItem from './UserItem';
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
@@ -55,7 +55,7 @@ const UserCollectionTown = ({
             <CollectorTownTitle>{value}</CollectorTownTitle>
           </PostTownTitle>
           <MySpotImg>
-            <Masonry columnsCount={2} style={{ paddingRight: '25px' }}>
+            <Masonry columnsCount={2} style={{ gap: '10px' }}>
               {userCollectionTownItem?.map((item: any) => (
                 <UserItem key={uuidv4()} item={item} />
               ))}
@@ -75,13 +75,19 @@ const UserCollectionTown = ({
               <MorePostTownTitle>
                 <MoreMyPostTownTitle>{value}</MoreMyPostTownTitle>
               </MorePostTownTitle>
-              <Masonry columnsCount={4}>
-                {userCollectionTownItem?.map((item: any) => (
-                  <Link key={uuidv4()} href={`/detail/${item.id}`}>
-                    <MyPostImg src={item.imgUrl} />
-                  </Link>
-                ))}
-              </Masonry>
+              <GridBox>
+                <ResponsiveMasonry
+                  columnsCountBreakPoints={{ 425: 1, 750: 2, 900: 3, 1200: 4 }}
+                >
+                  <Masonry columnsCount={4}>
+                    {userCollectionTownItem?.map((item: any) => (
+                      <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                        <MyPostImg src={item.imgUrl} />
+                      </Link>
+                    ))}
+                  </Masonry>
+                </ResponsiveMasonry>
+              </GridBox>
               <MoreBtn onClick={onClickMoreBtn}>
                 <MoreBtnContents>
                   <ArrowImg src={'/arrow-left.png'} />
@@ -98,17 +104,35 @@ const UserCollectionTown = ({
 
 export default UserCollectionTown;
 
-const TownWrap = styled.div`
-  width: 365px;
-  height: 352px;
+const GridBox = styled.div`
+  margin: 0px 1%;
+  width: 100%;
 
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
+`;
+
+const TownWrap = styled.div`
+  width: 95%;
+  height: 352px;
   margin: 0px 1px 30px 1px;
-  padding-right: 25px;
+
+  :hover {
+    transition: all 0.7s;
+    transform: scale(1.01);
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 90%;
+    margin-bottom: 10px;
+    margin: auto;
+  }
 `;
 
 const PostTownTitle = styled.div`
   height: 43px;
-  border-bottom: 2px solid #212121;
+  border-bottom: 1px solid #212121;
+  margin-right: 3%;
 `;
 const CollectorTownTitle = styled.div`
   font-family: 'Noto Sans CJK KR';
@@ -120,11 +144,14 @@ const CollectorTownTitle = styled.div`
 `;
 
 const MySpotImg = styled.div`
-  width: 390px;
+  width: 97%;
   margin-top: 24px;
   height: 256px;
   overflow: hidden;
   display: grid;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
 `;
 
 const MoreBtn = styled.button`
@@ -149,21 +176,32 @@ const MoreBtn = styled.button`
 
 const FatherDiv = styled.div`
   background-color: white;
-  width: 100vw;
-  height: 100vw;
-  position: absolute;
-  left: 1px;
-  overflow: hidden;
+  width: 70%;
+  height: 100%;
+
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    height: 1000px;
+  }
 `;
 
 const MoreDiv = styled.div`
   background-color: white;
   z-index: 100;
   position: absolute;
-  width: 1188px;
+  width: 83%;
   transform: translate(-50%, 0%);
-  left: 50%;
+  left: 50vw;
   overflow: hidden;
+  height: 1000px;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    width: 90%;
+    overflow: auto;
+    margin: auto;
+    left: 50%;
+    height: 100%;
+  }
 `;
 const MyPostImg = styled.img`
   width: 275px;
@@ -172,12 +210,22 @@ const MyPostImg = styled.img`
     transition: all 0.3s;
     transform: scale(1.02);
   }
+  @media ${(props) => props.theme.mobile} {
+    width: 90%;
+    margin: auto;
+    padding: 5px;
+  }
 `;
 
 const MorePostTownTitle = styled.div`
   height: 43px;
   border-bottom: 1px solid #212121;
   margin-bottom: 25px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    margin: auto;
+    margin-bottom: 10px;
+  }
 `;
 
 const MoreMyPostTownTitle = styled.div`
