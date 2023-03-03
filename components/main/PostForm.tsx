@@ -223,8 +223,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                 <span>/15 자</span>
               </PostFormInputCount>
               <PostFormInputTitle>내용</PostFormInputTitle>
-              <PostFormTextareaWrap>
-                <PostFormTextarea
+              <PostFormContentTextWrap>
+                <PostFormContentText
                   placeholder="사진의 구도, 촬영장소로 가는 방법, 촬영시간 등 꿀팁을 적어주세요.!"
                   maxLength={100}
                   onChange={(e) => {
@@ -232,11 +232,11 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                     setTextareaCount(e.target.value.length);
                   }}
                 />
-                <PostFormTextareaCount>
+                <PostFormContentTextCount>
                   <span>{textareaCount}</span>
                   <span>/100 자</span>
-                </PostFormTextareaCount>
-              </PostFormTextareaWrap>
+                </PostFormContentTextCount>
+              </PostFormContentTextWrap>
             </PostFormInputWrap>
             <PostFormUploadButton>
               <CustomButton
@@ -355,10 +355,10 @@ const PostFormInput = styled.input`
   margin-bottom: 15px;
 `;
 
-const PostFormTextareaWrap = styled.div`
+const PostFormContentTextWrap = styled.div`
   vertical-align: sub;
 `;
-const PostFormTextarea = styled.textarea`
+const PostFormContentText = styled.input`
   width: 100%;
   height: 40px;
   border: none;
@@ -374,7 +374,7 @@ const PostFormInputCount = styled.div`
   margin-top: -10px;
 `;
 
-const PostFormTextareaCount = styled.div`
+const PostFormContentTextCount = styled.div`
   font-size: 12px;
   display: flex;
   justify-content: flex-end;

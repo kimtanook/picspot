@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom } from '@/atom';
+import { customAlert, customConfirm } from '@/utils/alerts';
 
 const AuthForgot = (): JSX.Element => {
   const [sending, setSending] = useState<boolean>(false);
@@ -18,14 +19,14 @@ const AuthForgot = (): JSX.Element => {
     setSending(true);
     await sendPasswordResetEmail(authService, email)
       .then(() => {
-        alert('이메일에 링크를 보냈습니다');
+        customConfirm('이메일에 링크를 보냈습니다');
         setSent(true);
         setSending(false);
         setCloseLoginModal(false);
         setForgotModal(false);
       })
       .catch((error) => {
-        alert('이메일 보내기에 실패하였습니다');
+        customAlert('이메일 보내기에 실패하였습니다');
         setError(error.message);
         setSending(false);
       });

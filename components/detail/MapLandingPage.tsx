@@ -79,7 +79,7 @@ const StyledInput = styled.input`
 const StyledInfo = styled.div`
   color: black;
   background-color: #e7e7e7;
-  /* border-radius: 15px; */
+
   padding: 10px;
   border: 0.3px solid gray;
   box-shadow: 1px 1px 1px 1px gray;
@@ -100,6 +100,6 @@ const SearchButton = styled.button`
   border: none;
   background-color: white;
   position: absolute;
-  right: 9%;
+  right: 11%;
   bottom: 7%;
 `;
