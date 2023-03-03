@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface ModalProps {
@@ -40,8 +40,8 @@ const Container = styled.div<{ width: string; height: string }>`
   height: ${(props) => props.height}px;
   padding: 8px;
   background-color: white;
-
-  z-index: 1000;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
   color: black;
   display: flex;
   justify-content: center;
@@ -52,11 +52,11 @@ const Container = styled.div<{ width: string; height: string }>`
 `;
 
 const Canvas = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 200vw;
-  height: 1000vh;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 999;
 `;
