@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
-import { customAlert } from '@/utils/alerts';
+import { customConfirm } from '@/utils/alerts';
 import { useForm } from 'react-hook-form';
 import { authService, storageService } from '@/firebase';
 import { uploadString, getDownloadURL, ref } from 'firebase/storage';
@@ -137,7 +137,7 @@ function ModalProfile() {
         photoURL: downloadUrl ?? '',
       })
         .then((res) => {
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
           setEditProfileModal(!editProfileModal);
         })
 
@@ -152,7 +152,7 @@ function ModalProfile() {
       });
       await updatePassword(authService?.currentUser!, data.newPassword).then(
         (res) => {
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
           setEditProfileModal(!editProfileModal);
         }
       );
@@ -165,8 +165,8 @@ function ModalProfile() {
       });
       await updatePassword(authService?.currentUser!, data.newPassword)
         .then((res) => {
-          customAlert('프로필 수정 완료하였습니다!');
           setEditProfileModal(!editProfileModal);
+          customConfirm('프로필 수정 완료하였습니다!');
         })
         .catch((error) => {
           console.log(error);
@@ -176,7 +176,7 @@ function ModalProfile() {
         photoURL: downloadUrl ?? '',
       })
         .then((res) => {
-          customAlert('프로필 수정 완료하였습니다!');
+          customConfirm('프로필 수정 완료하였습니다!');
           setEditProfileModal(!editProfileModal);
         })
         .catch((error) => {

@@ -27,7 +27,7 @@ const CommentList = ({ postId }: postId) => {
   const onSubmitComment = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!authService.currentUser) {
-      return alert('로그인 후 댓글을 남겨보세요!');
+      return customAlert('로그인 후 댓글을 남겨보세요!');
     } else if (comment.length > 30) {
       customAlert('댓글이 30자를 초과했어요.');
       return;
@@ -42,7 +42,7 @@ const CommentList = ({ postId }: postId) => {
       );
       setComment('');
     } else {
-      alert('댓글을 입력해주세요!');
+      customAlert('댓글을 입력해주세요!');
     }
   };
 
@@ -82,7 +82,14 @@ const CommentList = ({ postId }: postId) => {
 };
 export default CommentList;
 
-const CommentContainer = styled.div``;
+const CommentContainer = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+    height: 120px;
+    margin: auto;
+    margin-top: 10px;
+  }
+`;
 
 const CommentBox = styled.div`
   height: 150px;

@@ -1,6 +1,7 @@
 import { getCollection } from '@/api';
 import { useQuery } from 'react-query';
-import Masonry from 'react-responsive-masonry';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import UserCollectionTown from './UserCollectionTown';
 
@@ -28,18 +29,28 @@ const UserCollectionList = ({ userId }: { userId: string }) => {
     }
   );
   return (
-    <>
-      <Masonry columnsCount={3} style={{ marginRight: '27px' }}>
-        {uniqueTownArray?.map((item: string) => (
-          <UserCollectionTown
-            key={uuidv4()}
-            value={item}
-            postList={userCollectPost}
-          />
-        ))}
-      </Masonry>
-    </>
+    <GridBox>
+      <ResponsiveMasonry columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}>
+        <Masonry columnsCount={3}>
+          {uniqueTownArray?.map((item: string) => (
+            <UserCollectionTown
+              key={uuidv4()}
+              value={item}
+              postList={userCollectPost}
+            />
+          ))}
+        </Masonry>
+      </ResponsiveMasonry>
+    </GridBox>
   );
 };
 
 export default UserCollectionList;
+
+const GridBox = styled.div`
+  margin: 0px 1%;
+  width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
+`;

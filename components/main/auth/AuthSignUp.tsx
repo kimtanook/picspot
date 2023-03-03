@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
 import { useRecoilState } from 'recoil';
@@ -60,7 +60,7 @@ const AuthSignUp = () => {
           uid: authService.currentUser?.uid,
           userName: nickname,
         };
-        customAlert('회원가입을 축하합니다!');
+        customConfirm('회원가입을 축하합니다!');
         setCloseLoginModal(false);
         setForgotModal(false);
       })

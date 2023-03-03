@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
-import { customAlert } from '@/utils/alerts';
+import { customConfirm } from '@/utils/alerts';
 import { useQuery } from 'react-query';
-import { getTakeMessage } from '@/api';
+import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import {
@@ -32,6 +32,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
+  // console.log('nowUser,uid: ', nowUser?.uid);
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -50,7 +51,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
     signOut(authService).then(() => {
       // Sign-out successful.
       setCurrentUser(false);
-      customAlert('로그아웃에 성공하였습니다!');
+      customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
     });
   };
@@ -193,10 +194,14 @@ const MyProfileFollowing = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
-  width: 90px;
+  width: 120px;
   height: 85px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 const FollowingText = styled.div`
   font-family: Noto Sans CJK KR;
@@ -216,10 +221,14 @@ const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
-  width: 90px;
+  width: 120px;
   height: 85px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FollowerText = styled.div`

@@ -8,7 +8,7 @@ function TownSelect({
   onClickSelectTown,
   onChangeSelectTown,
 }: any) {
-  console.log('selectTown : ', selectTown);
+  // console.log('selectTown : ', selectTown);
   const jejuTown = [
     '제주시 시내',
     '구좌읍',
@@ -23,7 +23,6 @@ function TownSelect({
     '서귀포시 시내',
     '표선면',
     '대정읍',
-    '성산읍',
     '성산읍',
     '안덕면',
     '남원읍',

@@ -1,9 +1,11 @@
 import { deleteData, updateData, visibleReset } from '@/api';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 import { authService } from '@/firebase';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -45,7 +47,7 @@ const DetailList = ({
     onDeleteData(docId, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
-        customAlert('삭제를 완료하였습니다!');
+        customConfirm('삭제를 완료하였습니다!');
         router.push('/main?city=제주전체');
       },
     });
@@ -53,11 +55,11 @@ const DetailList = ({
   };
 
   //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdateData } = useMutation(updateData);
+  const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
-    if (titleInput.current?.value === '') {
+    if (titleInput.current?.value === '' || data.title === '') {
       customAlert('제목을 입력해주세요');
       return;
     }
@@ -72,7 +74,7 @@ const DetailList = ({
       return;
     }
 
-    if (contentInput.current?.value === '') {
+    if (contentInput.current?.value === '' || data.content === '') {
       customAlert('내용을 입력해주세요');
       return;
     }
@@ -90,7 +92,7 @@ const DetailList = ({
     onUpdateData(data, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-        customAlert('수정을 완료하였습니다!');
+        customConfirm('수정을 완료하였습니다!');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
@@ -106,6 +108,17 @@ const DetailList = ({
     setEditTown(e.target.value);
     setPlace(e.target.value);
   };
+
+  //* 페이지 처음 들어왔을 때 상태값 유지하기
+  useEffect(() => {
+    setEditTitle(item.title);
+    setEditContent(item.content);
+    setEditCity(item.city);
+    setEditTown(item.town);
+  }, []);
+
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   if (!editBtnToggle) {
     return (
@@ -171,7 +184,12 @@ const DetailList = ({
                 게시물 삭제 〉
               </EditBtn>
               <EditBtn
-                onClick={() => onClickEdit({ id: item.id, ...editData })}
+                onClick={() =>
+                  onClickEdit({
+                    id: item.id,
+                    ...editData,
+                  })
+                }
               >
                 수정 완료 〉
               </EditBtn>
@@ -187,7 +205,11 @@ const DetailList = ({
                   height={20}
                   style={{ marginRight: 5 }}
                 />
-                <span style={{ color: '#1882FF' }}>
+                <span
+                  style={{
+                    color: '#1882FF',
+                  }}
+                >
                   {item.clickCounter} view
                 </span>
               </View>
@@ -261,11 +283,6 @@ const DetailList = ({
           >
             {editContentInputCount} /35
           </span>
-          {/* <EditContentClearBtn
-            onClick={() => {
-              setEditContent('');
-            }}
-          ></EditContentClearBtn> */}
         </Content>
       </ListContainer>
     );
@@ -278,12 +295,22 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+    height: 120px;
+    margin: auto;
+  }
 `;
 
 const TitleAndView = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+    position: absolute;
+    top: 70px;
+  }
 `;
 
 const Title = styled.div`
@@ -293,6 +320,9 @@ const Title = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 20px;
+  }
 `;
 
 const TitleInput = styled.input`
@@ -307,6 +337,10 @@ const TitleInput = styled.input`
 const View = styled.div`
   display: flex;
   align-items: center;
+  width: 90px;
+  @media ${(props) => props.theme.mobile} {
+    width: 80px;
+  }
 `;
 
 const EditBtnCotainer = styled.div`
@@ -326,11 +360,18 @@ const EditBtn = styled.div`
   width: 120px;
   cursor: pointer;
   height: 50px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 
 const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+    margin-top: 10px;
+  }
 `;
 
 const City = styled.div`
@@ -343,6 +384,10 @@ const City = styled.div`
   height: 40px;
   text-align: center;
   padding-top: 4px;
+  @media ${(props) => props.theme.mobile} {
+    width: 75px;
+    font-size: 12px;
+  }
 `;
 
 const CityInput = styled.select`
@@ -364,6 +409,10 @@ const Town = styled.div`
   height: 40px;
   text-align: center;
   padding-top: 4px;
+  @media ${(props) => props.theme.mobile} {
+    width: 75px;
+    font-size: 12px;
+  }
 `;
 
 const TownInput = styled.select`
@@ -381,23 +430,33 @@ const Address = styled.div`
   align-items: center;
   gap: 10px;
   width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 200px;
+  }
 `;
 
 const AddressText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @media ${(props) => props.theme.mobile} {
+    overflow: visible;
+    white-space: normal;
+  }
 `;
 
 const Content = styled.div`
   display: flex;
   align-items: center;
   background-color: #f8f8f8;
-  width: 97%;
+  width: 100%;
   min-height: 50px;
   padding-left: 20px;
   color: #8e8e93;
   margin-bottom: 5px;
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+  }
 `;
 
 const ContentInput = styled.input`
@@ -413,6 +472,9 @@ const ContentInput = styled.input`
 
 const TipSpan = styled.span`
   width: 50px;
+  @media ${(props) => props.theme.mobile} {
+    width: 30px;
+  }
 `;
 
 const ContentSpan = styled.span`

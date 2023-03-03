@@ -50,9 +50,7 @@ const DetailMaps = ({
           }
           map.setBounds(bounds);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          // alert(' 제주도 지역명을 검색해주세요.');
         } else if (status === kakao.maps.services.Status.ERROR) {
-          // alert('에러입니다.');
         }
       }
 
@@ -104,7 +102,7 @@ const DetailMaps = ({
         }
       }
     });
-  }, [searchPlace]);
+  }, [searchPlace, setSaveAddress, setInfoDiv, setSaveLatLng]);
 
   return <div id="map" style={{ width: '100%', height: '230px' }}></div>;
 };
