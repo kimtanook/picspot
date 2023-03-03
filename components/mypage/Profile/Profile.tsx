@@ -216,7 +216,7 @@ const MyProfileFollowing = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
-  width: 90px;
+  width: 120px;
   height: 85px;
   text-align: center;
   cursor: pointer;
@@ -239,7 +239,7 @@ const MyProfileFollower = styled.div`
   border-radius: 20px;
   background-color: #f8f8f8;
   padding: 11px 20px;
-  width: 90px;
+  width: 120px;
   height: 85px;
   text-align: center;
   cursor: pointer;

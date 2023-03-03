@@ -148,6 +148,9 @@ const DetailImgContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media ${(props) => props.theme.mobile} {
+    height: 300px;
+  }
 `;
 
 const DetailImg3 = styled.img`
@@ -159,8 +162,13 @@ const DetailImg3 = styled.img`
 
 const DetailImg2 = styled.img`
   width: 550px;
-  /* height: 600px; */
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    height: 300px;
+    width: 300px;
+    object-fit: contain;
+    background-color: #f8f8f8;
+  }
 `;
 
 const DetailBtn = styled.label`

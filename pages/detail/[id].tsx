@@ -172,7 +172,6 @@ export default Post;
 
 const DetailContainer = styled.div`
   position: relative;
-
   @media ${(props) => props.theme.mobile} {
     width: 100%;
   }
@@ -188,9 +187,8 @@ const DetailContents = styled.div`
   justify-content: center;
   width: 100%;
   height: 600px;
-
   @media ${(props) => props.theme.mobile} {
-    margin-top: 300px;
+    margin-top: 210px;
     flex-direction: column;
     width: 100%;
   }
@@ -198,7 +196,6 @@ const DetailContents = styled.div`
 
 const ImgAndProfileAndFollowingAndCollection = styled.div`
   width: 400px;
-
   @media ${(props) => props.theme.mobile} {
     display: flex;
     flex-direction: column;

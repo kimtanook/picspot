@@ -284,6 +284,11 @@ const TitleAndView = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    top: 70px;
+    padding-left: 10px;
+  }
 `;
 
 const Title = styled.div`
@@ -331,6 +336,10 @@ const EditBtn = styled.div`
 const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
+  @media ${(props) => props.theme.mobile} {
+    padding-left: 10px;
+    margin-top: 10px;
+  }
 `;
 
 const City = styled.div`
@@ -343,6 +352,9 @@ const City = styled.div`
   height: 40px;
   text-align: center;
   padding-top: 4px;
+  @media ${(props) => props.theme.mobile} {
+    width: 60px;
+  }
 `;
 
 const CityInput = styled.select`
@@ -364,6 +376,9 @@ const Town = styled.div`
   height: 40px;
   text-align: center;
   padding-top: 4px;
+  @media ${(props) => props.theme.mobile} {
+    width: 60px;
+  }
 `;
 
 const TownInput = styled.select`
@@ -381,12 +396,19 @@ const Address = styled.div`
   align-items: center;
   gap: 10px;
   width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 200px;
+  }
 `;
 
 const AddressText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @media ${(props) => props.theme.mobile} {
+    overflow: visible;
+    white-space: normal;
+  }
 `;
 
 const Content = styled.div`
@@ -398,6 +420,11 @@ const Content = styled.div`
   padding-left: 20px;
   color: #8e8e93;
   margin-bottom: 5px;
+  @media ${(props) => props.theme.mobile} {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+  }
 `;
 
 const ContentInput = styled.input`
