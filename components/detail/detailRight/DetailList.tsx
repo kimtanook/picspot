@@ -1,4 +1,6 @@
 import { deleteData, updateData, visibleReset } from '@/api';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 import { authService } from '@/firebase';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import Image from 'next/image';
@@ -53,7 +55,7 @@ const DetailList = ({
   };
 
   //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdateData } = useMutation(updateData);
+  const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
@@ -114,6 +116,9 @@ const DetailList = ({
     setEditCity(item.city);
     setEditTown(item.town);
   }, []);
+
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   if (!editBtnToggle) {
     return (
