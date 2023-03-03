@@ -6,16 +6,14 @@ import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
+import { useRecoilState } from 'recoil';
+import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
 
 interface AuthForm {
   email: string;
   password: string;
   confirm: string;
   nickname: string;
-}
-interface Props {
-  changeModalButton: () => void;
-  closeLoginModal: () => void;
 }
 
 //* user 초기 데이터
@@ -25,14 +23,16 @@ let userState: any = {
   userImg: '/profileicon.svg',
 };
 
-const AuthSignUp = (props: Props) => {
+const AuthSignUp = () => {
   //* useMutation 사용해서 유저 추가하기
   const { mutate: onAddUser } = useMutation(addUser);
   const [registering, setRegistering] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [hidePassword, setHidePassword] = useState<boolean>(false);
-
+  const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
+  const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
+  const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const {
     register,
     setValue,
@@ -61,7 +61,8 @@ const AuthSignUp = (props: Props) => {
           userName: nickname,
         };
         customAlert('회원가입을 축하합니다!');
-        props.closeLoginModal();
+        setCloseLoginModal(false);
+        setForgotModal(false);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
@@ -92,7 +93,15 @@ const AuthSignUp = (props: Props) => {
   };
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
-      <StHeder onClick={props.changeModalButton}> 〈 돌아가기 </StHeder>
+      <Heder
+        onClick={() => {
+          setCloseLoginModal(!closeLoginModal);
+          setSignUpModal(!signUpModal);
+        }}
+      >
+        {' '}
+        〈 돌아가기{' '}
+      </Heder>
 
       <SignUpTextDiv>회원가입하기</SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -211,14 +220,14 @@ const AuthSignUp = (props: Props) => {
 export default AuthSignUp;
 
 const SignUpContainer = styled.div`
-  background-color: #ffffff;
-  width: 400px;
-  height: 75%;
-  padding: 30px 30px 30px 30px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+  /* background-color: #ffffff; */
+  width: 100%;
+  height: 100%;
+  /* padding: 30px 30px 30px 30px; */
+  /* box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05); */
 `;
 
-const StHeder = styled.header`
+const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;

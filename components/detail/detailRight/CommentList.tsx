@@ -29,7 +29,7 @@ const CommentList = ({ postId }: postId) => {
     if (!authService.currentUser) {
       return alert('로그인 후 댓글을 남겨보세요!');
     } else if (comment.length > 30) {
-      customAlert('30자를 초과했어요.');
+      customAlert('댓글이 30자를 초과했어요.');
       return;
     } else if (comment) {
       commentMutate(
@@ -50,14 +50,14 @@ const CommentList = ({ postId }: postId) => {
     return <div>로딩중입니다</div>;
   }
   return (
-    <StCommentContainer>
-      <StCommentBox>
+    <CommentContainer>
+      <CommentBox>
         {data.map((item: CommentItemType) => (
           <CommentItem key={uuidv4()} item={item} postId={postId} />
         ))}
-      </StCommentBox>
-      <StForm onSubmit={onSubmitComment}>
-        <StInput
+      </CommentBox>
+      <Form onSubmit={onSubmitComment}>
+        <Input
           onChange={(e) => {
             setComment(e.target.value);
             setInputCount(e.target.value.length);
@@ -70,28 +70,28 @@ const CommentList = ({ postId }: postId) => {
           }
           disabled={authService.currentUser ? false : true}
         />
-        <StInputBtnContainer>
+        <InputBtnContainer>
           <span style={{ color: '#8E8E93', paddingTop: 6, width: 50 }}>
             {inputCount} /30
           </span>
-          <StInputBtn>댓글 등록</StInputBtn>
-        </StInputBtnContainer>
-      </StForm>
-    </StCommentContainer>
+          <InputBtn>댓글 등록</InputBtn>
+        </InputBtnContainer>
+      </Form>
+    </CommentContainer>
   );
 };
 export default CommentList;
 
-const StCommentContainer = styled.div``;
+const CommentContainer = styled.div``;
 
-const StCommentBox = styled.div`
+const CommentBox = styled.div`
   height: 150px;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
 `;
 
-const StForm = styled.form`
+const Form = styled.form`
   display: flex;
   justify-content: space-between;
   background-color: #f8f8f8;
@@ -100,7 +100,7 @@ const StForm = styled.form`
   margin-top: 10px;
 `;
 
-const StInput = styled.input`
+const Input = styled.input`
   background-color: #f8f8f8;
   border: transparent;
   height: 20px;
@@ -108,11 +108,11 @@ const StInput = styled.input`
   padding-left: 20px;
 `;
 
-const StInputBtnContainer = styled.div`
+const InputBtnContainer = styled.div`
   display: flex;
 `;
 
-const StInputBtn = styled.button`
+const InputBtn = styled.button`
   cursor: pointer;
   background-color: #1882ff;
   color: white;

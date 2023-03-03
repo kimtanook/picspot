@@ -106,7 +106,7 @@ const DetailMaps = ({
     });
   }, [searchPlace]);
 
-  return <div id="map" style={{ width: '100%', height: '200px' }}></div>;
+  return <div id="map" style={{ width: '100%', height: '230px' }}></div>;
 };
 
 export default DetailMaps;

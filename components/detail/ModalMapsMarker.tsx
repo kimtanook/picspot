@@ -16,49 +16,49 @@ const ModalMapsMarker = ({ item, isOpen, setIsOpen }: any) => {
             lng: item.long,
           }}
         >
-          <StOverLayClose
+          <OverLayClose
             className="close"
             onClick={() => setIsOpen(false)}
             title="닫기"
           >
             <SearchImageCloseIcon src="/close_icon.svg" />
-          </StOverLayClose>
-          <StOverLayWrap>
-            <StOverLayTitle>{item.title}</StOverLayTitle>
+          </OverLayClose>
+          <OverLayWrap>
+            <OverLayTitle>{item.title}</OverLayTitle>
             <Link href={`/detail/${item.id}`} rel="noreferrer">
-              <StOverLayImg>
-                <StOverLayImgSrc
+              <OverLayImg>
+                <OverLayImgSrc
                   src={item.imgUrl}
                   alt="image"
                   height={150}
                   width={150}
                 />
-                <StOverLayHoverWrap>
-                  <StOveLayHoverIcon>
+                <OverLayHoverWrap>
+                  <OveLayHoverIcon>
                     <SearchImageRightIcon src="/seeDetailsicon.svg" />
-                  </StOveLayHoverIcon>
-                  <StOverLayHoverText>글 보러가기</StOverLayHoverText>
-                </StOverLayHoverWrap>
-              </StOverLayImg>
+                  </OveLayHoverIcon>
+                  <OverLayHoverText>글 보러가기</OverLayHoverText>
+                </OverLayHoverWrap>
+              </OverLayImg>
             </Link>
-            <StOverLayContetnsWrap>
-              <StOverLayAddress>
+            <OverLayContetnsWrap>
+              <OverLayAddress>
                 <SearchImagePlaceIcon src="/spot_icon.svg" />{' '}
                 {item.address.slice(7, 20)}
-              </StOverLayAddress>
-              <StOverLayCounter>
+              </OverLayAddress>
+              <OverLayCounter>
                 <SearchImageViewIcon src="/view_icon.svg" /> {item.clickCounter}{' '}
                 view
-              </StOverLayCounter>
-            </StOverLayContetnsWrap>
-          </StOverLayWrap>
+              </OverLayCounter>
+            </OverLayContetnsWrap>
+          </OverLayWrap>
         </CustomOverlayMap>
       )}
     </div>
   );
 };
 
-const StOverLayWrap = styled.div`
+const OverLayWrap = styled.div`
   width: 185px;
   height: 256px;
   margin-top: -300px;
@@ -69,14 +69,15 @@ const StOverLayWrap = styled.div`
   text-align: center;
 `;
 
-const StOverLayTitle = styled.div`
-  padding: 15px 0 0 0px;
+const OverLayTitle = styled.div`
   height: 30px;
   font-size: 16px;
   font-weight: bold;
+
+  margin-top: 20px;
 `;
 
-const StOverLayImg = styled.div`
+const OverLayImg = styled.div`
   position: relative;
   width: 80%;
   height: 150px;
@@ -84,12 +85,12 @@ const StOverLayImg = styled.div`
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 `;
 
-const StOverLayImgSrc = styled(Image)`
+const OverLayImgSrc = styled(Image)`
   width: 100%;
   cursor: pointer;
 `;
 
-const StOverLayClose = styled.div`
+const OverLayClose = styled.div`
   position: absolute;
   top: -340px;
   right: 43%;
@@ -99,7 +100,7 @@ const StOverLayClose = styled.div`
   }
 `;
 
-const StOverLayHoverWrap = styled.div`
+const OverLayHoverWrap = styled.div`
   color: #fff;
   position: absolute;
   left: 0;
@@ -119,7 +120,7 @@ const StOverLayHoverWrap = styled.div`
   }
 `;
 
-const StOveLayHoverIcon = styled.h3`
+const OveLayHoverIcon = styled.h3`
   font-size: 16px;
   padding-bottom: 0.4em;
   overflow: hidden;
@@ -129,7 +130,7 @@ const StOveLayHoverIcon = styled.h3`
   text-align: center;
 `;
 
-const StOverLayHoverText = styled.h2`
+const OverLayHoverText = styled.h2`
   font-size: 16px;
   text-align: center;
   text-overflow: ellipsis;
@@ -137,22 +138,22 @@ const StOverLayHoverText = styled.h2`
   text-transform: uppercase;
 `;
 
-const StOverLayContetnsWrap = styled.div`
+const OverLayContetnsWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   width: 80%;
   margin: 10px auto;
-  margin-top: 15px;
+  margin-top: 10px;
 `;
 
-const StOverLayAddress = styled.div`
+const OverLayAddress = styled.div`
   color: gray;
   font-size: 15px;
 `;
 
-const StOverLayCounter = styled.div`
+const OverLayCounter = styled.div`
   font-size: 15px;
   color: cornflowerblue;
 `;
