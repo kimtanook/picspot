@@ -11,6 +11,8 @@ import CollectionButton from '@/components/detail/detailLeft/CollectionButton';
 import DetailImg from '@/components/detail/detailLeft/DetailImg';
 import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 
 const Post = ({ id }: any) => {
   console.log('id: ', id);
@@ -88,8 +90,8 @@ const Post = ({ id }: any) => {
     countMutate(id);
   }, []);
 
-  if (isLoading) return <h1>로딩 중입니다.</h1>;
-  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   return (
     <DetailContainer>
