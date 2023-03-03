@@ -10,7 +10,6 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
-import { useMediaQuery } from 'react-responsive';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);

@@ -4,7 +4,6 @@ import { useQuery } from 'react-query';
 import CollectionCategory from './CollectionCategory';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
-import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 
 const CollectionList = () => {
@@ -30,12 +29,6 @@ const CollectionList = () => {
     }
   );
 
-  const isPc = useMediaQuery({
-    query: '(min-width: 425px)',
-  });
-  const isMobile = useMediaQuery({
-    query: '(max-width: 425px)',
-  });
   return (
     <GridBox>
       <ResponsiveMasonry columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}>

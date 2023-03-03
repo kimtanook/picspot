@@ -4,7 +4,6 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Link from 'next/link';
-import { useMediaQuery } from 'react-responsive';
 
 const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const [more, setMore] = useState(true);
@@ -18,13 +17,6 @@ const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const onClickMoreBtn = () => {
     setMore(!more);
   };
-
-  const isPc = useMediaQuery({
-    query: '(min-width: 425px)',
-  });
-  const isMobile = useMediaQuery({
-    query: '(max-width: 425px)',
-  });
 
   return (
     <div>
