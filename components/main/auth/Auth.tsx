@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
-import { customAlert } from '@/utils/alerts';
+import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
 
@@ -40,7 +40,7 @@ const Auth = (): JSX.Element => {
     }
     await signInWithEmailAndPassword(authService, data.email, data.password)
       .then((res) => {
-        customAlert('로그인에 성공하였습니다!');
+        customConfirm('로그인에 성공하였습니다!');
         setCloseLoginModal(!closeLoginModal);
       })
       .then(() => {})
