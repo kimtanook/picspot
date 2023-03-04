@@ -14,8 +14,7 @@ const client = new QueryClient({
   },
 });
 const theme = {
-  // mobile: `(max-width: 425px)`,
-  mobile: `(max-width: 820px)`,
+  mobile: `(max-width: 425px)`,
 };
 
 export default function App({ Component, pageProps }: AppProps) {
