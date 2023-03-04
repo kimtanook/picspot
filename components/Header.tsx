@@ -42,7 +42,7 @@ const Header = ({
             localStorage.clear();
           }}
         >
-          <LogoImg src="/logo.png" />
+          <LogoImg src="/logo.png" alt="logo" />
         </Title>
       </Link>
       {router.route === '/main' ? (
@@ -57,16 +57,16 @@ const Header = ({
         <div onClick={() => router.push('/mypage')}>
           <Profile>
             {userImg ? (
-              <ProfileImg src={userImg} />
+              <ProfileImg src={userImg} alt="profile" />
             ) : (
-              <ProfileImg src="/profileicon.svg" />
+              <ProfileImg src="/profileicon.svg" alt="profile" />
             )}
           </Profile>
         </div>
       ) : (
         <div onClick={closeLoginModalButton}>
           <Profile>
-            <ProfileImg src="/profileicon.svg" />
+            <ProfileImg src="/profileicon.svg" alt="profile" />
           </Profile>
         </div>
       )}

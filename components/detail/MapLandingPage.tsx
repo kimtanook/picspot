@@ -25,28 +25,31 @@ const MapLandingPage = ({
   };
 
   return (
-    <StyleContainer>
-      <StyledForm onSubmit={handleSubmit}>
-        <StyledInfo>{infoDiv}</StyledInfo>
-        <StyledInput
-          placeholder="제주도 지역명을 검색해주세요."
-          onChange={onchange}
-          value={inputText}
-        />
-        <SearchButton type="submit">
-          <SearchImage src="/search.svg" />
-        </SearchButton>
-      </StyledForm>
+    <MapWrap>
+      <StyleContainer>
+        <StyledForm onSubmit={handleSubmit}>
+          <StyledInfo>{infoDiv}</StyledInfo>
+          <StyledInput
+            placeholder="제주도 지역명을 검색해주세요."
+            onChange={onchange}
+            value={inputText}
+          />
+          <SearchButton type="submit">
+            <SearchImage src="/search.svg" />
+          </SearchButton>
+        </StyledForm>
 
-      <Maps
-        searchPlace={place ? place : searchCategory}
-        saveLatLng={saveLatLng}
-        setSaveLatLng={setSaveLatLng}
-        saveAddress={saveAddress}
-        setSaveAddress={setSaveAddress}
-        setInfoDiv={setInfoDiv}
-      />
-    </StyleContainer>
+        <Maps
+          searchPlace={place ? place : searchCategory}
+          saveLatLng={saveLatLng}
+          setSaveLatLng={setSaveLatLng}
+          saveAddress={saveAddress}
+          setSaveAddress={setSaveAddress}
+          setInfoDiv={setInfoDiv}
+          infoDiv={infoDiv}
+        />
+      </StyleContainer>
+    </MapWrap>
   );
 };
 
@@ -74,6 +77,10 @@ const StyledInput = styled.input`
   border: none;
   position: relative;
   box-shadow: 0 3px 2px 1px gray;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 5%;
+    /* width: 100%; */
+  }
 `;
 
 const StyledInfo = styled.div`
@@ -87,7 +94,10 @@ const StyledInfo = styled.div`
   font-size: 14px;
   margin: auto;
   margin-left: -50px;
-  width: 40%;
+  width: 50%;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const SearchImage = styled.img`
   width: 15px;
@@ -102,4 +112,14 @@ const SearchButton = styled.button`
   position: absolute;
   right: 11%;
   bottom: 7%;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
+`;
+
+const MapWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    width: 375;
+    margin-top: 280px;
+  }
 `;

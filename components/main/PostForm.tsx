@@ -1,5 +1,5 @@
 import { authService, storageService } from '@/firebase';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, visibleReset } from '@/api';
@@ -8,7 +8,10 @@ import MapLandingPage from '../detail/MapLandingPage';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
-const PostForm = ({ setIsModalPostActive, modal }: any) => {
+import { useRecoilState } from 'recoil';
+import { postModalAtom } from '@/atom';
+
+const PostForm = () => {
   const queryClient = useQueryClient();
 
   const [saveLatLng, setSaveLatLng]: any = useState([]);
@@ -22,14 +25,16 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const [inputCount, setInputCount] = useState(0);
   const [textareaCount, setTextareaCount] = useState(0);
 
-  //* 드롭다운 상태
+  //* 카테고리
   const [city, setCity] = useState('');
   const [town, setTown] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUpload, setImageUpload]: any = useState(null);
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
 
+  const [place, setPlace] = useState('');
   let postState: any = {
     title: title,
     content: content,
@@ -49,20 +54,43 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   const { mutate: onAddData } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
+  // 수정코드
   const handleImageChange = (e: any) => {
-    const {
-      target: { files },
-    } = e;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader?.readAsDataURL(theFile);
-    reader.onloadend = (finishedEvent) => {
+    const file: any = e.target.files;
+    if (file.length === 0) {
+      return;
+    } else {
       const {
-        currentTarget: { result },
-      }: any = finishedEvent;
-      setImageUpload(result);
-    };
+        currentTarget: { files },
+      } = e;
+
+      const theFile = files[0];
+      const reader = new FileReader();
+      reader?.readAsDataURL(theFile);
+      reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        }: any = finishedEvent;
+        setImageUpload(result);
+      };
+    }
   };
+
+  // 기존코드
+  // const handleImageChange = (e: any) => {
+  //   const {
+  //     target: { files },
+  //   } = e;
+  //   const theFile = files[0];
+  //   const reader = new FileReader();
+  //   reader?.readAsDataURL(theFile);
+  //   reader.onloadend = (finishedEvent) => {
+  //     const {
+  //       currentTarget: { result },
+  //     }: any = finishedEvent;
+  //     setImageUpload(result);
+  //   };
+  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -93,6 +121,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
       return;
     }
     const imageRef = ref(storageService, `images/${uuidv4()}`);
+
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
@@ -103,7 +132,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
         onAddData(postState, {
           onSuccess: () => {
             queryClient.invalidateQueries('infiniteData');
-            setIsModalPostActive(false);
+            setIsPostMapModal(false);
           },
         });
       });
@@ -113,37 +142,69 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
   };
 
   //* 카테고리버튼 눌렀을 때 실행하는 함수
-  const [place, setPlace] = useState('');
-  const onClickTown = (e: any) => {
-    setPlace('');
-    setTown(e.target.innerText);
-    setSearchCategory(e.target.innerText);
-  };
 
   //select에서 value값 받아오기
   const onChangeFormSelect = (e: any) => {
     setCity(e.target.value);
   };
 
-  const onChangeformSelectSub = (e: any) => {
+  const onChangeFormSelectSub = (e: any) => {
     setPlace(e.target.value);
     setTown(e.target.value);
   };
 
-  console.log('place', place);
-  console.log(saveAddress);
+  // 지도에 마커 변경시 카테고리 변경
+  useEffect(() => {
+    if (!saveAddress) {
+      return;
+    }
+    const cityMap = saveAddress.split(' ')[1];
+    const townMap = saveAddress.split(' ')[2];
+
+    // console.log('townMap', townMap);
+    const townSub = [
+      '한림읍',
+      '조천읍',
+      '한경면',
+      '추자면',
+      '우도면',
+      '구좌읍',
+      '애월읍',
+      '표선면',
+      '대정읍',
+      '성산읍',
+      '안덕면',
+      '남원읍',
+    ];
+
+    if (city === '제주시' && townSub.indexOf(townMap) < 0) {
+      setTown('제주시 시내');
+    } else {
+      setTown(townMap);
+      setCity(cityMap);
+    }
+
+    if (city === '서귀포시' && townSub.indexOf(townMap) < 0) {
+      setTown('서귀포시 시내');
+    } else {
+      setTown(townMap);
+      setCity(cityMap);
+    }
+  }, [saveAddress]);
   return (
     <>
       <PostFormWrap>
-        <MapLandingPage
-          searchCategory={searchCategory}
-          saveLatLng={saveLatLng}
-          setSaveLatLng={setSaveLatLng}
-          saveAddress={saveAddress}
-          setSaveAddress={setSaveAddress}
-          setPlace={setPlace}
-          place={place}
-        />
+        <MapLandingPageWrap>
+          <MapLandingPage
+            searchCategory={searchCategory}
+            saveLatLng={saveLatLng}
+            setSaveLatLng={setSaveLatLng}
+            saveAddress={saveAddress}
+            setSaveAddress={setSaveAddress}
+            setPlace={setPlace}
+            place={place}
+          />
+        </MapLandingPageWrap>
         <PostFormContainer>
           <PostFormContentBox>
             <PostFormConteTitle>내 스팟 추가하기</PostFormConteTitle>
@@ -172,15 +233,15 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
               <PostFormContentTop>
                 <PostFormContentName>지역선택</PostFormContentName>
                 <PostFormCategoryWrap>
-                  <PostFormSelect onChange={onChangeFormSelect}>
+                  <PostFormSelect value={city} onChange={onChangeFormSelect}>
                     <option value="선택">시 선택</option>
                     <option value="제주시">제주시</option>
                     <option value="서귀포시">서귀포시</option>
                   </PostFormSelect>
-                  <PostFormSelect onChange={onChangeformSelectSub}>
+                  <PostFormSelect value={town} onChange={onChangeFormSelectSub}>
                     {city === '제주시' ? (
                       <>
-                        <option value="읍/면 선택">읍/면 선택</option>
+                        {/* <option value="읍/면 선택">읍/면 선택</option> */}
                         <option value="제주시 시내">제주시 시내</option>
                         <option value="한림읍">한림읍</option>
                         <option value="조천읍">조천읍</option>
@@ -192,7 +253,7 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                       </>
                     ) : city === '서귀포시' ? (
                       <>
-                        <option value="읍/면 선택">읍/면 선택</option>
+                        {/* <option value="읍/면 선택">읍/면 선택</option> */}
                         <option value="서귀포시 시내">서귀포시 시내</option>
                         <option value="표선면">표선면</option>
                         <option value="대정읍">대정읍</option>
@@ -244,8 +305,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
                 height="48px"
                 borderRadius="0px"
                 color="white"
+                margin="0px"
                 backgroundColor="#1882FF"
-                margin="0px 0px 0px 5px"
                 onClick={onClickAddData}
               >
                 업로드하기
@@ -262,40 +323,61 @@ export default PostForm;
 
 const PostFormWrap = styled.div`
   display: flex;
-  /* background-color: Red; */
   width: 1200px;
-  /* justify-content: space-; */
-  /* align-items: center; */
-  /* background-color: yellow; */
-  /* border: 1px solid black; */
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 950px;
+    background-color: white;
+  }
+`;
+
+const MapLandingPageWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    /* flex-direction: column;
+    width: 100%; */
+  }
 `;
 
 const PostFormContainer = styled.div`
-  /* background-color: green; */
-  /* height: 300px; */
-  /* width: 400px; */
-  /* margin-top: -330px; */
   padding: 0px 60px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    /* background-color: Red; */
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+  }
 `;
 
 const PostFormConteTitle = styled.h4`
   margin-left: 10px;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+    text-align: center;
+    margin-left: 0px;
+  }
 `;
 
 const PostFormContentBox = styled.div`
-  /* background-color: green; */
   height: 300px;
   width: 400px;
-  /* margin-top: -330px; */
   padding: 10px;
+  @media ${(props) => props.theme.mobile} {
+    /* height: 1000px;
+    width: 100%; */
+  }
 `;
 
 const PostFormContentWrap = styled.div`
-  /* background-color: blue; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: -20px;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+  }
 `;
 
 const PostFormContentTop = styled.div`
@@ -305,7 +387,7 @@ const PostFormContentTop = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: -30px;
-  margin-left: -10px;
+  margin-right: 30px;
   padding: 5px;
 `;
 
@@ -314,14 +396,24 @@ const PostFormContentName = styled.span`
   margin-right: 145px;
   padding: 10px;
   font-size: 20px;
+  @media ${(props) => props.theme.mobile} {
+    margin: 0px;
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 21px;
+  }
 `;
 
 const PostFormCategoryWrap = styled.div`
   font-weight: 500;
-  /* background-color: beige; */
   padding: 5px 0px;
   display: flex;
   margin-top: 10px;
+  @media ${(props) => props.theme.mobile} {
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const PostFormSelect = styled.select`
@@ -334,17 +426,18 @@ const PostFormSelect = styled.select`
   margin-left: 5px;
   border: none;
   background-color: #e7e7e7;
-`;
-const PostFormButton = styled.div`
-  /* background-color: #e7e7e7; */
-  display: flex;
-  margin-top: 15px;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 10px;
+  }
 `;
 
 const PostFormInputWrap = styled.div`
   margin-top: 15px;
-  /* background-color: Red; */
   margin-left: 7px;
+  @media ${(props) => props.theme.mobile} {
+    width: 80%;
+    margin: 0 auto;
+  }
 `;
 const PostFormInput = styled.input`
   width: 100%;
@@ -353,6 +446,8 @@ const PostFormInput = styled.input`
   background-color: #f8f8f8;
   border-bottom: 1px solid blue;
   margin-bottom: 15px;
+  @media ${(props) => props.theme.mobile} {
+  }
 `;
 
 const PostFormContentTextWrap = styled.div`
@@ -388,6 +483,9 @@ const PostFormInputTitle = styled.p`
 
 const PostFormUploadButton = styled.div`
   margin-top: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
 `;
 
 const Img = styled.label`
