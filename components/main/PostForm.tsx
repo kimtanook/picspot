@@ -325,23 +325,30 @@ const PostFormWrap = styled.div`
   display: flex;
   width: 1200px;
   @media ${(props) => props.theme.mobile} {
-    display: flex;
+    width: 375px;
     flex-direction: column;
-    width: 400px;
     overflow-y: scroll;
-    height: 200vh;
+    height: auto;
     background-color: white;
   }
 `;
 
 const MapLandingPageWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
+    /* flex-direction: column;
+    width: 100%; */
   }
 `;
 
 const PostFormContainer = styled.div`
   padding: 0px 60px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    /* background-color: Red; */
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+  }
 `;
 
 const PostFormConteTitle = styled.h4`
@@ -349,6 +356,7 @@ const PostFormConteTitle = styled.h4`
   @media ${(props) => props.theme.mobile} {
     background-color: white;
     text-align: center;
+    margin-left: 0px;
   }
 `;
 
@@ -357,20 +365,18 @@ const PostFormContentBox = styled.div`
   width: 400px;
   padding: 10px;
   @media ${(props) => props.theme.mobile} {
-    height: 1000px;
-    width: 100%;
+    /* height: 1000px;
+    width: 100%; */
   }
 `;
 
 const PostFormContentWrap = styled.div`
-  /* background-color: blue; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
     background-color: white;
-    margin-left: -18%;
   }
 `;
 
@@ -391,10 +397,10 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    margin: 0px;
+    /* margin: 0px;
     margin-top: 20px;
     padding: 10px;
-    font-size: 21px;
+    font-size: 21px; */
   }
 `;
 
@@ -404,7 +410,7 @@ const PostFormCategoryWrap = styled.div`
   display: flex;
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: red; */
+    background-color: red;
     display: flex;
     flex-direction: column;
     width: 100px;
@@ -423,7 +429,7 @@ const PostFormSelect = styled.select`
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
     /* padding: 10px; */
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 `;
 
@@ -431,8 +437,8 @@ const PostFormInputWrap = styled.div`
   margin-top: 15px;
   margin-left: 7px;
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
-    margin-top: 20px;
+    /* width: 100%;
+    margin-top: 20px; */
   }
 `;
 const PostFormInput = styled.input`
@@ -443,7 +449,7 @@ const PostFormInput = styled.input`
   border-bottom: 1px solid blue;
   margin-bottom: 15px;
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
+    /* width: 100%; */
   }
 `;
 
