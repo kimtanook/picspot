@@ -43,3 +43,7 @@ export const postModalAtom = atom({
   key: `postModalAtom`,
   default: false,
 });
+export const editProfileModalAtom = atom({
+  key: `editProfileModalAtom`,
+  default: false,
+});

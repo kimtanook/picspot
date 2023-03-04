@@ -5,7 +5,11 @@ import styled from 'styled-components';
 import { addSendedMessage, addSendMessage } from '@/api';
 import { useRouter } from 'next/router';
 
-function MessageSend({ setModal }: any) {
+interface Props {
+  setModal: (value: boolean) => void;
+}
+
+function MessageSend({ setModal }: Props) {
   const router = useRouter();
   const profileImg = router.query.userImg as string;
   const userName = router.query.name;

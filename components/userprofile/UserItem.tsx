@@ -11,10 +11,13 @@ export default function UserItem({ item }: { item: userItem }) {
 }
 
 const UserPostImg = styled.img`
-  width: 170px;
-  margin-bottom: 10px;
+  width: 100%;
+  margin-bottom: 5px;
   :hover {
     transition: all 0.3s;
     transform: scale(1.03);
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 96%;
   }
 `;

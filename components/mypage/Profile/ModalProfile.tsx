@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { updateUser } from '@/api';
 import { useMutation } from 'react-query';
+import { useRecoilState } from 'recoil';
+import { editProfileModalAtom } from '@/atom';
 
 const imgFile = '/profileicon.svg';
 
@@ -18,46 +20,44 @@ interface SaveForm {
   newPassword: string;
   confirm: string;
 }
-interface Props {
-  profileEditCancle: () => void;
-  editProfileModal: () => void;
-  imgEdit: string;
-  setImgEdit: Dispatch<SetStateAction<string>>;
-  nicknameEdit: string;
-}
 
-function ModalProfile(props: Props) {
-  function editProfileModal() {
-    props.editProfileModal();
-  }
+function ModalProfile() {
+  const [editProfileModal, setEditProfileModal] =
+    useRecoilState(editProfileModalAtom);
   const [saveInformation, setSaveInformation] = useState<boolean>(false);
   const [nicknameToggle, setNicknameToggle] = useState(false);
+  const [nicknameEdit, setNicknameEdit] = useState<string>(
+    authService?.currentUser?.displayName as string
+  );
   const [googleUser, setGoolgleUser] = useState(true);
   const [pwToggle, setPwToggle] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
+  const profileimg = authService?.currentUser?.photoURL ?? imgFile;
+  const [imgEdit, setImgEdit] = useState<string>(profileimg);
 
   // 모달 창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
-    document.body.style.cssText = `
-    position: fixed; 
-    top: -${window.scrollY}px;
-    overflow-y: scroll;
-    width: 100%;`;
+    const html = document.documentElement;
+    if (editProfileModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY) * -1);
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
     };
-  }, []);
-
+  }, [editProfileModal]);
   // 프로필 사진 삭제
   const deleteImgFile = async () => {
     await updateProfile(authService?.currentUser!, {
-      displayName: props.nicknameEdit,
+      displayName: nicknameEdit,
       photoURL: '',
     });
 
-    props.setImgEdit(imgFile as string);
+    setImgEdit(imgFile as string);
   };
 
   // 구글 로그인 유저라면 비밀번호 토글 숨기기
@@ -79,7 +79,7 @@ function ModalProfile(props: Props) {
       reader.onloadend = () => {
         const resultImg = reader.result;
         localStorage.setItem('imgURL', resultImg as string);
-        props.setImgEdit(resultImg as string);
+        setImgEdit(resultImg as string);
       };
     }
   };
@@ -131,14 +131,15 @@ function ModalProfile(props: Props) {
       },
     });
 
+    // 사진만, 닉네임만, 비밀번호만 단독으로 고치는 것, 다 같이 고치는 것
     if (nicknameToggle && !pwToggle) {
       await updateProfile(authService?.currentUser!, {
         displayName: data.nickname,
         photoURL: downloadUrl ?? '',
       })
         .then((res) => {
-          editProfileModal();
           customConfirm('프로필 수정 완료하였습니다!');
+          setEditProfileModal(!editProfileModal);
         })
 
         .catch((error) => {
@@ -152,8 +153,8 @@ function ModalProfile(props: Props) {
       });
       await updatePassword(authService?.currentUser!, data.newPassword).then(
         (res) => {
-          editProfileModal();
           customConfirm('프로필 수정 완료하였습니다!');
+          setEditProfileModal(!editProfileModal);
         }
       );
     } else if (nicknameToggle && pwToggle) {
@@ -165,7 +166,7 @@ function ModalProfile(props: Props) {
       });
       await updatePassword(authService?.currentUser!, data.newPassword)
         .then((res) => {
-          editProfileModal();
+          setEditProfileModal(!editProfileModal);
           customConfirm('프로필 수정 완료하였습니다!');
         })
         .catch((error) => {
@@ -176,8 +177,8 @@ function ModalProfile(props: Props) {
         photoURL: downloadUrl ?? '',
       })
         .then((res) => {
-          editProfileModal();
           customConfirm('프로필 수정 완료하였습니다!');
+          setEditProfileModal(!editProfileModal);
         })
         .catch((error) => {
           console.log(error);
@@ -186,10 +187,22 @@ function ModalProfile(props: Props) {
   };
 
   return (
-    <ModalStyled onClick={editProfileModal}>
+    <ModalStyled
+      // 배경화면 누르면 취소
+      onClick={() => {
+        setEditProfileModal(!editProfileModal);
+      }}
+    >
       <div className="modalBody" onClick={(e) => e.stopPropagation()}>
         {/* 좌측 상단 취소 버튼 */}
-        <Heder onClick={props.profileEditCancle}> 〈 취소 </Heder>
+        <Heder
+          onClick={() => {
+            setEditProfileModal(!editProfileModal);
+          }}
+        >
+          {' '}
+          〈 취소{' '}
+        </Heder>
         <ProfileContainerForm onSubmit={handleSubmit(onSubmit)}>
           <ProfileTextDiv>
             <b>회원정보 변경</b>
@@ -199,8 +212,8 @@ function ModalProfile(props: Props) {
             <ProfilePhotoDeleteBtn>
               <CancleImg src="/cancle-button.png" onClick={deleteImgFile} />
               <ProfilePhotoLabel htmlFor="changePhoto">
-                <ProfilePhoto img={props.imgEdit}>
-                  <ProfilePhotoHover img={props.imgEdit}>
+                <ProfilePhoto img={imgEdit}>
+                  <ProfilePhotoHover img={imgEdit}>
                     <Image
                       src={'/gallery.png'}
                       alt="gallery"
@@ -386,7 +399,7 @@ const ProfileContainerForm = styled.form`
   justify-content: center;
 `;
 const ProfileTextDiv = styled.div`
-  margin-top: 61px;
+  margin-top: 15px;
   margin-bottom: 16px;
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
@@ -458,8 +471,7 @@ const ProfilePhotoInput = styled.input``;
 const NicknameToggleContainer = styled.div`
   background-color: transparent;
   margin-top: 36px;
-  width: 470px;
-  height: 24px;
+  width: 394px;
   z-index: 2;
   display: 'flex';
   padding: '10px';
@@ -478,28 +490,29 @@ const NicknameToggleText = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 394px;
+  margin-left: 10px;
 `;
 const OpenNicknameToggleImg = styled.img`
   width: 12.03px;
   height: 22px;
-  padding-right: 10px;
   background: transparent;
 `;
 const CloseNicknameToggleImg = styled.img`
   width: 22px;
   height: 12px;
-  padding-right: 10px;
   background: transparent;
 `;
 const EditInputBox = styled.div`
   width: 100%;
   height: 48px;
   position: relative;
+  margin-left: 10px;
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 45%;
-  right: 12px;
+  top: 40%;
+  right: 30px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -509,7 +522,7 @@ const EditclearBtn = styled.div`
 `;
 const EditInput = styled.input`
   height: 48px;
-  width: 97%;
+  width: 394px;
   padding-left: 10px;
   background-color: #fbfbfb;
   border: 1px solid #1882ff;
@@ -518,7 +531,7 @@ const EditInput = styled.input`
 
 const PwToggleContainer = styled.div`
   background-color: transparent;
-  width: 470px;
+  width: 394px;
   height: 24px;
   z-index: 2;
   display: 'flex';
@@ -538,17 +551,17 @@ const PwToggleText = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 394px;
+  margin-left: 10px;
 `;
 const OpenPwToggleImg = styled.img`
   width: 12.03px;
   height: 22px;
-  padding-right: 10px;
   background: transparent;
 `;
 const ClosePwToggleImg = styled.img`
   width: 22px;
   height: 12px;
-  padding-right: 10px;
   background: transparent;
 `;
 const ProfileWarn = styled.p`
@@ -556,6 +569,7 @@ const ProfileWarn = styled.p`
   height: 12px;
   font-size: 12px;
   font-weight: 700px;
+  margin-left: 10px;
 `;
 const SaveEditBtnContainer = styled.div`
   display: flex;
@@ -573,12 +587,13 @@ const SaveEditBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
   border: transparent;
   margin-top: 20px;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
+  width: 394px;
+  height: 48px;
   &:hover {
     cursor: pointer;
   }

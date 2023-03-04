@@ -103,7 +103,9 @@ const AuthSignUp = () => {
         〈 돌아가기{' '}
       </Heder>
 
-      <SignUpTextDiv>회원가입하기</SignUpTextDiv>
+      <SignUpTextDiv>
+        <b>회원가입하기</b>
+      </SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpEmailPwContainer>
           <EditInputBox>
@@ -220,11 +222,9 @@ const AuthSignUp = () => {
 export default AuthSignUp;
 
 const SignUpContainer = styled.div`
-  /* background-color: #ffffff; */
   width: 100%;
   height: 100%;
-  /* padding: 30px 30px 30px 30px; */
-  /* box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05); */
+  margin-bottom: 90px;
 `;
 
 const Heder = styled.header`
@@ -232,15 +232,17 @@ const Heder = styled.header`
   color: #1882ff;
   font-size: 15px;
   display: flex;
+  margin-bottom: 50px;
+  margin-left: -50px;
 `;
 
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 30px;
   font-size: 20px;
   font-weight: 700;
-  margin-top: 2vh;
+  margin-top: 10px;
+  margin-bottom: 60px;
 `;
 
 const SignUpEmailPwContainer = styled.form`
@@ -252,12 +254,14 @@ const SignUpEmailPwContainer = styled.form`
 `;
 
 const SignUpInput = styled.input`
-  height: 40px;
-  width: 96%;
-  padding-left: 10px;
-  background-color: #fbfbfb;
+  padding-left: 16px;
+  background-color: #f4f4f4;
   border: 1px solid #8e8e93;
   font-size: 15px;
+  display: flex;
+  width: 394px;
+  height: 48px;
+  margin-left: -20px;
 `;
 const EditInputBox = styled.div`
   width: 100%;
@@ -266,7 +270,7 @@ const EditInputBox = styled.div`
 const EditclearBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 12px;
+  right: -20px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -277,7 +281,7 @@ const EditclearBtn = styled.div`
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 12px;
+  right: -20px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
@@ -289,7 +293,7 @@ const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
-  text-align: left;
+  margin-left: -20px;
 `;
 
 const SignUpBtnContainer = styled.div`
@@ -302,14 +306,18 @@ const SignUpBtnContainer = styled.div`
 
 const SignUpBtn = styled.button`
   display: flex;
+  width: 394px;
+  height: 48px;
+  margin-left: -20px;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 40px;
   border: transparent;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
   font-size: 15px;
+
   &:hover {
     cursor: pointer;
   }
