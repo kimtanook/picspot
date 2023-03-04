@@ -330,6 +330,7 @@ const PostFormWrap = styled.div`
     width: 400px;
     overflow-y: scroll;
     height: 200vh;
+    background-color: white;
   }
 `;
 
@@ -392,6 +393,8 @@ const PostFormContentName = styled.span`
   @media ${(props) => props.theme.mobile} {
     margin: 0px;
     margin-top: 20px;
+    padding: 10px;
+    font-size: 21px;
   }
 `;
 
@@ -404,9 +407,7 @@ const PostFormCategoryWrap = styled.div`
     /* background-color: red; */
     display: flex;
     flex-direction: column;
-    padding: 10px 0;
     width: 100px;
-    margin-top: 15px;
   }
 `;
 
@@ -421,7 +422,6 @@ const PostFormSelect = styled.select`
   border: none;
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
-    background-color: yellow;
     /* padding: 10px; */
     margin-top: 20px;
   }
@@ -431,7 +431,6 @@ const PostFormInputWrap = styled.div`
   margin-top: 15px;
   margin-left: 7px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: yellow; */
     width: 100%;
     margin-top: 20px;
   }

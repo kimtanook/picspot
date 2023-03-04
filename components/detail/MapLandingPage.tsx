@@ -75,6 +75,10 @@ const StyledInput = styled.input`
   border: none;
   position: relative;
   box-shadow: 0 3px 2px 1px gray;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 500px;
+    width: 100%;
+  }
 `;
 
 const StyledInfo = styled.div`
@@ -103,4 +107,9 @@ const SearchButton = styled.button`
   position: absolute;
   right: 11%;
   bottom: 7%;
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    bottom: 33px;
+    left: 140px;
+  }
 `;

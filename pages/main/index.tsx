@@ -261,7 +261,11 @@ export default function Main() {
             setModal={setIsPostMapModal}
             width="1100"
             height="632"
-            element={<PostForm />}
+            element={
+              <PostFormWrap>
+                <PostForm />
+              </PostFormWrap>
+            }
           />
         ) : (
           ''
@@ -355,10 +359,6 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
-  @media ${(props) => props.theme.mobile} {
-    position: absolute;
-    right: -400px;
-  }
 `;
 
 const CategoriesWrap = styled.div`
@@ -459,5 +459,14 @@ const TopBtn = styled.button`
   }
   @media ${(props) => props.theme.mobile} {
     display: none;
+  }
+`;
+
+const PostFormWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+    /* background-color: red; */
+    height: 1240px;
+    overflow: hidden;
   }
 `;
