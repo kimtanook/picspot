@@ -134,4 +134,5 @@ const CollectionText = styled.div`
 const CollectionBtn = styled.div`
   cursor: pointer;
   margin-left: 10px;
+  
 `;

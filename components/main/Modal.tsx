@@ -6,7 +6,7 @@ const Modal = ({ setOpenModal }: any) => {
   return (
     <ModalContainer>
       <DialogBox open>
-        <PostForm setOpenModal={setOpenModal} />
+        {/* <PostForm setOpenModal={setOpenModal} /> */}
       </DialogBox>
       <Backdrop
         onClick={(e: any) => {

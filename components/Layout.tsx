@@ -6,6 +6,8 @@ import {
   signUpModalAtom,
   forgotModalAtom,
   loginModalAtom,
+  postModalAtom,
+  editProfileModalAtom,
 } from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -17,6 +19,9 @@ import MessageSend from './message/MessageSend';
 import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
 import Auth from './main/auth/Auth';
+import PostForm from './main/PostForm';
+import ModalProfile from './mypage/Profile/ModalProfile';
+
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
   const [msgSendToggle, setMsgSendToggle] = useRecoilState(messageSendToggle);
@@ -26,6 +31,9 @@ function Layout() {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
+  const [editProfileModal, setEditProfileModal] =
+    useRecoilState(editProfileModalAtom);
 
   return (
     <div>
@@ -86,7 +94,7 @@ function Layout() {
           ''
         )}
       </div>
-      <div>
+      <>
         {forgotModal ? (
           <CustomModal
             modal={forgotModal}
@@ -96,7 +104,7 @@ function Layout() {
             element={<AuthForgot />}
           />
         ) : null}
-      </div>
+      </>
       <>
         {closeLoginModal ? (
           <CustomModal
@@ -109,6 +117,26 @@ function Layout() {
         ) : (
           ''
         )}
+      </>
+      <>
+        {postMapModal ? (
+          <CustomModal
+            modal={postMapModal}
+            setModal={setIsPostMapModal}
+            width="1100"
+            height="632"
+            element={<PostForm />}
+          />
+        ) : null}
+        {editProfileModal ? (
+          <CustomModal
+            modal={editProfileModal}
+            setModal={setEditProfileModal}
+            width="524"
+            height="695"
+            element={<ModalProfile />}
+          />
+        ) : null}
       </>
     </div>
   );

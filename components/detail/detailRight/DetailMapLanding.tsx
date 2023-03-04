@@ -72,13 +72,3 @@ const StyledInput = styled.input`
   border-radius: 16px;
   border: 0.5px solid black;
 `;
-
-const StyledInfo = styled.div`
-  padding: 10px;
-  width: 50%;
-  margin-left: 120px;
-  border-radius: 5px;
-  background-color: gray;
-  color: white;
-  text-align: center;
-`;

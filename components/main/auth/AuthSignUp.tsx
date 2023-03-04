@@ -103,7 +103,9 @@ const AuthSignUp = () => {
         〈 돌아가기{' '}
       </Heder>
 
-      <SignUpTextDiv>회원가입하기</SignUpTextDiv>
+      <SignUpTextDiv>
+        <b>회원가입하기</b>
+      </SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpEmailPwContainer>
           <EditInputBox>
@@ -231,7 +233,7 @@ const Heder = styled.header`
   font-size: 15px;
   display: flex;
   margin-bottom: 50px;
-  margin-left: 20px;
+  margin-left: -50px;
 `;
 
 const SignUpTextDiv = styled.div`
@@ -259,7 +261,7 @@ const SignUpInput = styled.input`
   display: flex;
   width: 394px;
   height: 48px;
-  margin: 0 auto;
+  margin-left: -20px;
 `;
 const EditInputBox = styled.div`
   width: 100%;
@@ -268,7 +270,7 @@ const EditInputBox = styled.div`
 const EditclearBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 50px;
+  right: -20px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -279,7 +281,7 @@ const EditclearBtn = styled.div`
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 50px;
+  right: -20px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
@@ -291,7 +293,7 @@ const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
-  margin-left: 40px;
+  margin-left: -20px;
 `;
 
 const SignUpBtnContainer = styled.div`
@@ -306,7 +308,7 @@ const SignUpBtn = styled.button`
   display: flex;
   width: 394px;
   height: 48px;
-  margin: 0 auto;
+  margin-left: -20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;

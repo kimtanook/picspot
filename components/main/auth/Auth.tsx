@@ -4,9 +4,10 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
-import { customAlert, customConfirm } from '@/utils/alerts';
+import { customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
+import { useMediaQuery } from 'react-responsive';
 
 interface AuthForm {
   email: string;
@@ -21,6 +22,8 @@ const Auth = (): JSX.Element => {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
   const {
     register,
     setValue,
@@ -103,11 +106,17 @@ const Auth = (): JSX.Element => {
         {' '}
         〈 취소{' '}
       </Heder>
+      <LogoImg src="/logo.png" />
       <LoginTextDiv>
-        <div>
-          <b>픽스팟에 로그인</b> 하고, <br></br>
-          제주 인생샷 알아보세요!
-        </div>
+        {isMobile ? <p>픽스팟에 로그인하고, 제주 인생샷 알아보세요!</p> : ''}
+        {isPc ? (
+          <p>
+            <b>픽스팟에 로그인</b> 하고, <br></br>
+            제주 인생샷 알아보세요!
+          </p>
+        ) : (
+          ''
+        )}
       </LoginTextDiv>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -138,7 +147,7 @@ const Auth = (): JSX.Element => {
           <EditInputBox>
             <LoginInput
               {...register('password', {
-                required: '비밀번호를 입력해주세요.',
+                required: '*비밀번호를 입력해주세요',
                 minLength: {
                   value: 8,
                   message:
@@ -175,7 +184,8 @@ const Auth = (): JSX.Element => {
         </RememberID>
         <LoginBtnContainer>
           <LoginBtn type="submit" disabled={authenticating}>
-            <div>로그인 하기</div>
+            {isMobile ? <div>로그인</div> : ''}
+            {isPc ? <div>로그인 하기</div> : ''}
           </LoginBtn>
         </LoginBtnContainer>
       </form>
@@ -186,7 +196,16 @@ const Auth = (): JSX.Element => {
           setForgotModal(!forgotModal);
         }}
       >
-        <LoginCheckSignDiv>아이디/패스워드를 잊으셨나요?</LoginCheckSignDiv>
+        {isMobile ? (
+          <LoginCheckSignDiv>아이디/비밀번호 찾기</LoginCheckSignDiv>
+        ) : (
+          ''
+        )}
+        {isPc ? (
+          <LoginCheckSignDiv>아이디/패스워드를 잊으셨나요?</LoginCheckSignDiv>
+        ) : (
+          ''
+        )}
       </PwForgotContainer>
 
       <LoginGoogleContainer>
@@ -213,14 +232,34 @@ const LoginContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-bottom: 50px;
+  @media ${(props) => props.theme.mobile} {
+    background-color: #f7f7f7;
+    width: 400px;
+    height: 700px;
+  }
 `;
 const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
   display: flex;
-  margin-bottom: 50px;
-  margin-left: 20px;
+  margin-bottom: 40px;
+  margin-left: -30px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
+`;
+const LogoImg = styled.img`
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inherit;
+    width: 130px;
+    height: 40px;
+  }
 `;
 const LoginTextDiv = styled.div`
   margin-top: 0px;
@@ -231,6 +270,16 @@ const LoginTextDiv = styled.div`
   line-height: 138.5%;
   text-align: center;
   color: #212121;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -200%);
+    display: inherit;
+    width: 254px;
+    height: 21px;
+    font-size: 12px;
+  }
 `;
 const LoginEmailPwContainer = styled.div`
   display: flex;
@@ -238,6 +287,9 @@ const LoginEmailPwContainer = styled.div`
   width: 90%;
   margin: 0 auto;
   margin-top: 40px;
+  @media ${(props) => props.theme.mobile} {
+    gap: 8px;
+  }
 `;
 const LoginInput = styled.input`
   padding-left: 16px;
@@ -247,13 +299,30 @@ const LoginInput = styled.input`
   display: flex;
   width: 394px;
   height: 48px;
-  margin: 0 auto;
+  margin-left: -20px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(11%, -90%);
+    font-size: 12px;
+    width: 326px;
+    height: 48px;
+    top: 250.31px;
+    border: none;
+    border-bottom: 2px solid #1882ff;
+    background: #fbfbfb;
+    position: absolute;
+  }
 `;
 const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
-  margin-left: 40px;
+  margin-left: -20px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(10%, 2200%);
+    font-size: 10px;
+    border: none;
+    background: #fbfbfb;
+  }
 `;
 const EditInputBox = styled.div`
   width: 100%;
@@ -262,31 +331,39 @@ const EditInputBox = styled.div`
 const EditclearBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 50px;
+  right: 0px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
   background-repeat: no-repeat;
-
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(1300%, 920%);
+    position: inherit;
+  }
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 25%;
-  right: 50px;
+  right: 0px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
   background-repeat: no-repeat;
-
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(1300%, 930%);
+    position: inherit;
+  }
 `;
 
 const RememberID = styled.label`
   display: flex;
   align-items: center;
-  margin-left: 60px;
   font-size: 15px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const LoginBtnContainer = styled.div`
   display: flex;
@@ -299,7 +376,7 @@ const LoginBtn = styled.button`
   display: flex;
   width: 394px;
   height: 48px;
-  margin: 0 auto;
+  margin-left: -20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -312,6 +389,14 @@ const LoginBtn = styled.button`
   &:hover {
     cursor: pointer;
   }
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(11%, 30%);
+    font-size: 14px;
+    width: 326px;
+    height: 48px;
+    margin-top: 200px;
+    position: inherit;
+  }
 `;
 const PwForgotContainer = styled.span`
   display: flex;
@@ -321,6 +406,15 @@ const PwForgotContainer = styled.span`
   transition: color 0.2s ease-in;
   margin-top: 10px;
   color: #1882ff;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 14px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    transform: translate(-5%, 210%);
+    width: 300px;
+  }
 `;
 const LoginGoogleContainer = styled.div`
   display: flex;
@@ -328,6 +422,13 @@ const LoginGoogleContainer = styled.div`
   height: 48px;
   margin: 0 auto;
   margin-top: 30px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 14px;
+    width: 326px;
+    height: 48px;
+    transform: translate(0%, -100%);
+    position: inherit;
+  }
 `;
 const LoginCheckContainer = styled.span`
   display: flex;
@@ -337,6 +438,15 @@ const LoginCheckContainer = styled.span`
   transition: color 0.2s ease-in;
   margin-top: 20px;
   color: #1882ff;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 14px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    transform: translate(45%, -150%);
+    width: 300px;
+  }
 `;
 const LoginCheckSignDiv = styled.div`
   cursor: pointer;

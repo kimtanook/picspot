@@ -11,9 +11,11 @@ import CollectionButton from '@/components/detail/detailLeft/CollectionButton';
 import DetailImg from '@/components/detail/detailLeft/DetailImg';
 import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 
 const Post = ({ id }: any) => {
-  console.log('id: ', id);
+  // console.log('id: ', id);
 
   //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
@@ -60,8 +62,6 @@ const Post = ({ id }: any) => {
   //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
-    setEditCity(editCity);
-    setEditTown(editTown);
   };
 
   //! useQuery 사용해서 포스트 데이터 불러오기
@@ -88,8 +88,8 @@ const Post = ({ id }: any) => {
     countMutate(id);
   }, []);
 
-  if (isLoading) return <h1>로딩 중입니다.</h1>;
-  if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   return (
     <DetailContainer>
@@ -172,7 +172,6 @@ export default Post;
 
 const DetailContainer = styled.div`
   position: relative;
-
   @media ${(props) => props.theme.mobile} {
     width: 100%;
   }
@@ -180,7 +179,6 @@ const DetailContainer = styled.div`
 
 const DetailContents = styled.div`
   top: 50px;
-
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
@@ -188,23 +186,23 @@ const DetailContents = styled.div`
   justify-content: center;
   width: 100%;
   height: 600px;
-
   @media ${(props) => props.theme.mobile} {
-    margin-top: 300px;
     flex-direction: column;
     width: 100%;
+    height: auto;
+    margin-top: 40px;
   }
 `;
 
 const ImgAndProfileAndFollowingAndCollection = styled.div`
   width: 400px;
-
   @media ${(props) => props.theme.mobile} {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 400px;
   }
 `;
 
@@ -214,10 +212,16 @@ const ProfileAndFollowingAndCollection = styled.div`
   align-items: center;
   width: 350px;
   padding-top: 20px;
+  @media ${(props) => props.theme.mobile} {
+    height: 50px;
+    padding-top: 0px;
+    margin-top: 10px;
+  }
 `;
 
 const ProfileAndFollwing = styled.div`
   display: flex;
+  /* justify-content: space-between; */
 `;
 
 const ListAndMapAndComment = styled.div`
