@@ -6,6 +6,7 @@ import {
   signUpModalAtom,
   forgotModalAtom,
   loginModalAtom,
+  postModalAtom,
   editProfileModalAtom,
 } from '@/atom';
 import React from 'react';
@@ -18,6 +19,7 @@ import MessageSend from './message/MessageSend';
 import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
 import Auth from './main/auth/Auth';
+import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 
 function Layout() {
@@ -29,6 +31,7 @@ function Layout() {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
 
@@ -116,6 +119,15 @@ function Layout() {
         )}
       </>
       <>
+        {postMapModal ? (
+          <CustomModal
+            modal={postMapModal}
+            setModal={setIsPostMapModal}
+            width="1100"
+            height="632"
+            element={<PostForm />}
+          />
+        ) : null}
         {editProfileModal ? (
           <CustomModal
             modal={editProfileModal}
