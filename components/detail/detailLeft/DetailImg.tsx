@@ -162,7 +162,6 @@ const DetailImg3 = styled.img`
 
 const DetailImg2 = styled.img`
   width: 550px;
-  /* height: 600px; */
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     width: 300px;
@@ -183,4 +182,8 @@ const DetailBtn = styled.label`
   height: 40px;
   bottom: 120px;
   font-size: 13px;
+  @media ${(props) => props.theme.mobile} {
+    top: 400px;
+    bottom: 0px;
+  }
 `;

@@ -82,7 +82,14 @@ const CommentList = ({ postId }: postId) => {
 };
 export default CommentList;
 
-const CommentContainer = styled.div``;
+const CommentContainer = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    width: 350px;
+    height: 120px;
+    margin: auto;
+    margin-top: 10px;
+  }
+`;
 
 const CommentBox = styled.div`
   height: 150px;

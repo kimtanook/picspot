@@ -1,4 +1,6 @@
 import { deleteData, updateData, visibleReset } from '@/api';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 import { authService } from '@/firebase';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import Image from 'next/image';
@@ -53,7 +55,7 @@ const DetailList = ({
   };
 
   //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdateData } = useMutation(updateData);
+  const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: any) => {
@@ -107,6 +109,7 @@ const DetailList = ({
     setPlace(e.target.value);
   };
 
+  //* 페이지 처음 들어왔을 때 상태값 유지하기
   useEffect(() => {
     setEditTitle(item.title);
     setEditContent(item.content);
@@ -114,9 +117,8 @@ const DetailList = ({
     setEditTown(item.town);
   }, []);
 
-  // console.log('titleInput.current.value: ', titleInput.current?.value);
-  // console.log('titleInput.current: ', titleInput.current);
-  // console.log('editTitle: ', editTitle);
+  if (isLoading) return <DataLoading />;
+  if (isError) return <DataError />;
 
   if (!editBtnToggle) {
     return (
@@ -186,10 +188,6 @@ const DetailList = ({
                   onClickEdit({
                     id: item.id,
                     ...editData,
-                    // title: titleInput.current?.value ? item.title : editTitle,
-                    // content: contentInput.current?.value
-                    //   ? item.content
-                    //   : editContent,
                   })
                 }
               >
@@ -285,11 +283,6 @@ const DetailList = ({
           >
             {editContentInputCount} /35
           </span>
-          {/* <EditContentClearBtn
-            onClick={() => {
-              setEditContent('');
-            }}
-          ></EditContentClearBtn> */}
         </Content>
       </ListContainer>
     );
@@ -304,7 +297,7 @@ const ListContainer = styled.div`
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
-    height: 150px;
+    height: 120px;
     margin: auto;
   }
 `;
@@ -316,7 +309,7 @@ const TitleAndView = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 350px;
     position: absolute;
-    top: 60px;
+    top: 70px;
   }
 `;
 
@@ -327,6 +320,9 @@ const Title = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 20px;
+  }
 `;
 
 const TitleInput = styled.input`
@@ -342,6 +338,9 @@ const View = styled.div`
   display: flex;
   align-items: center;
   width: 90px;
+  @media ${(props) => props.theme.mobile} {
+    width: 80px;
+  }
 `;
 
 const EditBtnCotainer = styled.div`
@@ -361,6 +360,9 @@ const EditBtn = styled.div`
   width: 120px;
   cursor: pointer;
   height: 50px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 
 const CityAndTownAndAddress = styled.div`
@@ -368,6 +370,7 @@ const CityAndTownAndAddress = styled.div`
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
+    margin-top: 10px;
   }
 `;
 
@@ -436,6 +439,10 @@ const AddressText = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @media ${(props) => props.theme.mobile} {
+    overflow: visible;
+    white-space: normal;
+  }
 `;
 
 const Content = styled.div`
