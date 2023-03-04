@@ -305,8 +305,8 @@ const PostForm = () => {
                 height="48px"
                 borderRadius="0px"
                 color="white"
+                margin="0px"
                 backgroundColor="#1882FF"
-                margin="0px 0px 0px 5px"
                 onClick={onClickAddData}
               >
                 업로드하기
@@ -328,7 +328,7 @@ const PostFormWrap = styled.div`
     width: 375px;
     flex-direction: column;
     overflow-y: scroll;
-    height: auto;
+    height: 950px;
     background-color: white;
   }
 `;
@@ -387,7 +387,7 @@ const PostFormContentTop = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: -30px;
-  margin-left: -10px;
+  margin-right: 30px;
   padding: 5px;
 `;
 
@@ -397,10 +397,10 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    /* margin: 0px;
+    margin: 0px;
     margin-top: 20px;
     padding: 10px;
-    font-size: 21px; */
+    font-size: 21px;
   }
 `;
 
@@ -410,10 +410,9 @@ const PostFormCategoryWrap = styled.div`
   display: flex;
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    background-color: red;
+    /* background-color: red; */
     display: flex;
     flex-direction: column;
-    width: 100px;
   }
 `;
 
@@ -428,8 +427,7 @@ const PostFormSelect = styled.select`
   border: none;
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
-    /* padding: 10px; */
-    /* margin-top: 20px; */
+    margin-top: 10px;
   }
 `;
 
@@ -437,8 +435,8 @@ const PostFormInputWrap = styled.div`
   margin-top: 15px;
   margin-left: 7px;
   @media ${(props) => props.theme.mobile} {
-    /* width: 100%;
-    margin-top: 20px; */
+    width: 80%;
+    margin: 0 auto;
   }
 `;
 const PostFormInput = styled.input`
@@ -449,7 +447,6 @@ const PostFormInput = styled.input`
   border-bottom: 1px solid blue;
   margin-bottom: 15px;
   @media ${(props) => props.theme.mobile} {
-    /* width: 100%; */
   }
 `;
 
@@ -488,8 +485,6 @@ const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 100%;
-    margin-top: 20px;
-    margin-left: -80px;
   }
 `;
 
