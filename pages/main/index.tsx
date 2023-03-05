@@ -58,6 +58,7 @@ export default function Main() {
 
   const onClickTogglePostModal = () => {
     if (!authService.currentUser) {
+      customAlert('로그인을 해주세요.');
       setCloseLoginModal(true);
       return;
     }
@@ -173,7 +174,11 @@ export default function Main() {
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
       <MainContainer>
         <SearchAndForm>
-          <PostFormButton onClick={() => setIsPostMapModal(true)}>
+          <PostFormButton
+            onClick={() => {
+              onClickTogglePostModal();
+            }}
+          >
             + 나의 스팟 추가
           </PostFormButton>
 
