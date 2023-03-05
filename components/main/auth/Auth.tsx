@@ -247,7 +247,8 @@ const Heder = styled.header`
   margin-bottom: 40px;
   margin-left: -30px;
   @media ${(props) => props.theme.mobile} {
-    display: none;
+    transform: translate(40%, 350%);
+    width: 30%;
   }
 `;
 const LogoImg = styled.img`
