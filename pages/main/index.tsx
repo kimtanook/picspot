@@ -334,8 +334,8 @@ const CityCategory = styled.select`
 const SelectContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     display: flex;
+    flex-direction: column;
     margin: auto;
-    width: 150px;
   }
 `;
 const SearchAndForm = styled.div`
@@ -345,11 +345,13 @@ const SearchAndForm = styled.div`
   left: 70px;
   flex-direction: row-reverse;
   align-items: center;
-  margin-top: 10px;
-  margin-left: 55%;
+  margin-top: 3px;
+  margin-left: 53%;
   width: 440px;
   @media ${(props) => props.theme.mobile} {
-    display: none;
+    top: 30px;
+    left: 30%;
+    transform: translate(-100%, -50%);
   }
 `;
 const PostFormButton = styled.button`
@@ -360,6 +362,11 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 8px;
+    width: 84px;
+    height: 20px;
+  }
 `;
 
 const CategoriesWrap = styled.div`
