@@ -10,10 +10,11 @@ import MyPostList from '@/components/mypage/MyPostList';
 import { useState } from 'react';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
-
+  const isMobile = useMediaQuery({ maxWidth: 766 });
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
@@ -21,8 +22,10 @@ export default function Mypage() {
     isError,
   } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.docId === authService.currentUser?.uid)
-        ?.following,
+      data?.find(
+        (item: { docId: string | undefined }) =>
+          item.docId === authService.currentUser?.uid
+      )?.following,
   });
   const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자
 
@@ -30,7 +33,8 @@ export default function Mypage() {
   const { data: followData } = useQuery('FollowData', getFollow, {
     select: (data) =>
       data?.filter(
-        (item: any) => item.docId === authService.currentUser?.uid
+        (item: { docId: string | undefined }) =>
+          item.docId === authService.currentUser?.uid
       )[0]?.follow,
   });
 
@@ -42,7 +46,12 @@ export default function Mypage() {
   return (
     <>
       <Seo title="My" />
-      <Header selectCity={undefined} onChangeSelectCity={undefined} />
+      {isMobile ? (
+        ''
+      ) : (
+        <Header selectCity={undefined} onChangeSelectCity={undefined} />
+      )}
+
       <MyContainer>
         <MyProfileContainer>
           <Profile followingCount={followingCount} followCount={followCount} />

@@ -47,3 +47,7 @@ export const editProfileModalAtom = atom({
   key: `editProfileModalAtom`,
   default: false,
 });
+export const townArray = atom({
+  key: 'townArray',
+  default: [],
+});

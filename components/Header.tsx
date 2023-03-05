@@ -10,7 +10,7 @@ const Header = ({
   selectCity,
   onChangeSelectCity,
 }: {
-  selectCity: string | undefined;
+  selectCity: string | string[] | undefined;
   onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
 }) => {
   const [currentUser, setCurrentUser] = useState(false);

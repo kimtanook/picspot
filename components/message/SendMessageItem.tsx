@@ -39,7 +39,7 @@ function SendMessageItem({
         onChange={() => onClickDeleteMsg(item.id)}
         checked={deleteId?.includes(item.id) ? true : false}
       />
-      <MessageUser>{item.sendUserName}</MessageUser>
+      <MessageUser>{item.takeUserName}</MessageUser>
       <MessageBody onClick={() => setToggle(!toggle)}>
         {item.message}
       </MessageBody>
