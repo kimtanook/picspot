@@ -13,6 +13,7 @@ import {
   followToggleAtom,
   editProfileModalAtom,
 } from '@/atom';
+import { resetAmplitude } from '@/utils/amplitude';
 
 const imgFile = '/profileicon.svg';
 
@@ -53,6 +54,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
       setCurrentUser(false);
       customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
+      resetAmplitude();
     });
   };
 

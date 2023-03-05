@@ -108,7 +108,7 @@ function ModalProfile() {
       return;
     }
 
-    console.log('data: ', data);
+    // console.log('data: ', data);
 
     const imgRef = ref(
       storageService,
@@ -129,7 +129,7 @@ function ModalProfile() {
       userImg: downloadUrl === undefined ? '/profileicon.svg' : downloadUrl,
     };
 
-    console.log('editUser: ', editUser);
+    // console.log('editUser: ', editUser);
 
     onUpdateUser(editUser, {
       onSuccess: () => {
