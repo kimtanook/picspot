@@ -130,8 +130,8 @@ const PostForm = ({ setIsModalPostActive, modal }: any) => {
     setTown(e.target.value);
   };
 
-  console.log('place', place);
-  console.log(saveAddress);
+  // console.log('place', place);
+  // console.log(saveAddress);
   return (
     <>
       <PostFormWrap>

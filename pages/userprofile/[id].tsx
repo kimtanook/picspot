@@ -97,6 +97,8 @@ function Profile() {
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
   };
 
+  // console.log('getFollowingData?.length: ', getFollowingData?.length);
+
   return (
     <>
       <Seo title="My" />
@@ -127,13 +129,17 @@ function Profile() {
                 <MyProfileFollowing>
                   팔로잉
                   <FollowCount>
-                    {null ? '0' : getFollowingData?.length}
+                    {getFollowingData?.length === undefined
+                      ? '0'
+                      : getFollowingData?.length}
                   </FollowCount>
                 </MyProfileFollowing>
                 <MyProfileFollower>
                   팔로워
                   <FollowCount>
-                    {null ? '0' : getFollowData?.length}
+                    {getFollowData?.length === undefined
+                      ? '0'
+                      : getFollowData?.length}
                   </FollowCount>
                 </MyProfileFollower>
               </FollowWrap>

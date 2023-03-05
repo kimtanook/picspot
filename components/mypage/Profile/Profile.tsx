@@ -63,6 +63,9 @@ const Profile = ({ followingCount, followCount }: propsType) => {
   );
   const checked = takeMsgData?.filter((item) => item.checked === false);
 
+  // console.log('followingCount: ', followingCount);
+  // console.log('followCount: ', followCount);
+
   return (
     <ProfileContainer>
       <ProfileEdit>
@@ -96,11 +99,15 @@ const Profile = ({ followingCount, followCount }: propsType) => {
             onClick={() => setfollowingToggle(!followingToggle)}
           >
             <FollowingText>팔로잉</FollowingText>
-            <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
+            <FollowingCount>
+              {followingCount === undefined ? '0' : followingCount}
+            </FollowingCount>
           </MyProfileFollowing>
           <MyProfileFollower onClick={() => setFollowToggle(!followToggle)}>
             <FollowerText>팔로워</FollowerText>
-            <FollowerCount>{null ? '0' : followCount}</FollowerCount>
+            <FollowerCount>
+              {followCount === undefined ? '0' : followCount}
+            </FollowerCount>
           </MyProfileFollower>
         </Follow>
       </ProfileText>

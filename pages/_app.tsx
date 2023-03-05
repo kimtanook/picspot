@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import GlobalStyle from './global';
 import { ThemeProvider } from 'styled-components';
+// import { ReactQueryDevtools } from 'react-query/devtools';
 
 const client = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </ThemeProvider>
       </RecoilRoot>
+      {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
     </QueryClientProvider>
   );
 }
