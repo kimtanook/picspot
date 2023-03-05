@@ -247,17 +247,13 @@ const Heder = styled.header`
   display: flex;
   margin-bottom: 40px;
   margin-left: -30px;
-  /* @media ${(props) => props.theme.mobile} {
-    transform: translate(60%, 300%);
-    width: 30%;
-    font-size: 20px;
-    position: relative;
-    background-image: url(/Back-point.png);
-  } */
+  @media ${(props) => props.theme.mobile} {
+    /* height: 40px; */
+  }
 `;
 
 const MobileCancle = styled.img`
-  transform: translate(600%, 210%);
+  transform: translate(500%, 260%);
   width: 12px;
   font-size: 0px;
   position: relative;
