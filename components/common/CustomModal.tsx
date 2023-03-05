@@ -49,6 +49,9 @@ const Container = styled.div<{ width: string; height: string }>`
   align-items: center;
   font-size: 24px;
   border: 1px solid gray;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+  }
 `;
 
 const Canvas = styled.div`
@@ -57,8 +60,11 @@ const Canvas = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 
 const Wrapper = styled.div`

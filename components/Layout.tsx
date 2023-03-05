@@ -6,6 +6,7 @@ import {
   signUpModalAtom,
   forgotModalAtom,
   loginModalAtom,
+  postModalAtom,
   editProfileModalAtom,
 } from '@/atom';
 import React from 'react';
@@ -18,7 +19,9 @@ import MessageSend from './message/MessageSend';
 import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
 import Auth from './main/auth/Auth';
+import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
+import { useMediaQuery } from 'react-responsive';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -29,8 +32,11 @@ function Layout() {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   return (
     <div>
@@ -103,19 +109,43 @@ function Layout() {
         ) : null}
       </>
       <>
-        {closeLoginModal ? (
-          <CustomModal
-            modal={closeLoginModal}
-            setModal={setCloseLoginModal}
-            width="524"
-            height="695"
-            element={<Auth />}
-          />
-        ) : (
-          ''
+        {closeLoginModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={closeLoginModal}
+                  setModal={setCloseLoginModal}
+                  width="1000"
+                  height="3000"
+                  element={<Auth />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={closeLoginModal}
+                  setModal={setCloseLoginModal}
+                  width="524"
+                  height="695"
+                  element={<Auth />}
+                />
+              )}
+            </>
+          </>
         )}
       </>
       <>
+        {postMapModal ? (
+          <CustomModal
+            modal={postMapModal}
+            setModal={setIsPostMapModal}
+            width="1100"
+            height="632"
+            element={<PostForm />}
+          />
+        ) : null}
         {editProfileModal ? (
           <CustomModal
             modal={editProfileModal}

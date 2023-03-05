@@ -60,26 +60,30 @@ const ModalMapsMarker = ({ item, isOpen, setIsOpen }: any) => {
 
 const OverLayWrap = styled.div`
   width: 185px;
-  height: 256px;
+  /* height: 256px; */
   margin-top: -300px;
   background-color: white;
   box-shadow: 2.5px 5px 5px gray;
   border-radius: 3px;
   overflow: hidden;
-  text-align: center;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
 `;
 
 const OverLayTitle = styled.div`
-  height: 30px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-
-  margin-top: 20px;
+  padding: 13px;
+  white-space: normal;
 `;
 
 const OverLayImg = styled.div`
   position: relative;
-  width: 80%;
+  width: 150px;
   height: 150px;
   margin: auto;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
@@ -143,9 +147,9 @@ const OverLayContetnsWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  width: 80%;
-  margin: 10px auto;
-  margin-top: 10px;
+  width: 100%;
+  margin: 10px 0;
+  box-sizing: border-box;
 `;
 
 const OverLayAddress = styled.div`

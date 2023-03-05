@@ -18,26 +18,29 @@ import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
-import { useRecoilState } from 'recoil';
-import { loginModalAtom } from '../../atom';
+import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
+import { useRecoilState } from 'recoil';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Main() {
+  const router = useRouter();
+  const selectCity = router.query.city;
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
-  const [selectCity, setSelectCity] = useState('');
-  const [selectTown, setSelectTown] = useState([]);
+  const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
-  const [isModalPostActive, setIsModalPostActive]: any = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
 
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   // 뒷 배경 스크롤 방지
   useEffect(() => {
     const html = document.documentElement;
-    if (isModalActive || isModalPostActive) {
+    if (isModalActive || postMapModal) {
       html.style.overflowY = 'hidden';
       html.style.overflowX = 'hidden';
     } else {
@@ -48,7 +51,7 @@ export default function Main() {
       html.style.overflowY = 'auto';
       html.style.overflowX = 'auto';
     };
-  }, [isModalActive, isModalPostActive]);
+  }, [isModalActive, postMapModal]);
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
@@ -56,17 +59,15 @@ export default function Main() {
 
   const onClickTogglePostModal = () => {
     if (!authService.currentUser) {
+      customAlert('로그인을 해주세요.');
       setCloseLoginModal(true);
       return;
     }
     if (authService.currentUser) {
-      setIsModalPostActive(true);
+      setIsPostMapModal(true);
       return;
     }
-    // setIsModalPostActive(!isModalPostActive);
   };
-
-  const router = useRouter();
 
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
@@ -97,7 +98,6 @@ export default function Main() {
 
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectCity('제주전체');
     setSelectTown([]);
     visibleReset();
     setSearchOption(searchOptionRef.current?.value);
@@ -117,10 +117,9 @@ export default function Main() {
       pathname: '/main',
       query: { city: event.target.value },
     });
-    setSelectCity(event.target.value);
   };
   // [카테고리] 타운 카테고리 onClick
-  const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
+  const onClickSelectTown = async (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
     const townName = event.currentTarget.value as never;
@@ -133,13 +132,7 @@ export default function Main() {
       setSelectTown(cancelSelect);
     }
   };
-  const onChangeSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
-    setSearchValue('');
-    visibleReset();
-    const townName = event.currentTarget.value as never;
-    setSelectTown([townName]);
-  };
-
+  console.log('selectTown : ', selectTown);
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열
@@ -159,19 +152,36 @@ export default function Main() {
   // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
   useBottomScrollListener(fetchNextPage, { offset: 300 });
 
+  // 아이템 클릭 시 스크롤 위치 저장
+  const saveScroll = () => {
+    sessionStorage.setItem('scrollY', String(window.scrollY));
+  };
+
+  // 뒤로가기로 메인 페이지 진입 시 스크롤 위치 복원 및 삭제
+  const scrollRevert = () => {
+    window.scrollTo(0, Number(sessionStorage.getItem('scrollY')));
+    sessionStorage.removeItem('scrollY');
+  };
+
   useEffect(() => {
-    setSelectCity(`${router.query.city}`);
-    visibleReset();
+    // 무한스크롤로 인해 스크롤 복원 시 제대로 된 위치로 가지 않아서 임시로 setTimeout 사용
+    setTimeout(() => scrollRevert(), 300);
     setChatToggle(false);
-  }, [router]);
+  }, []);
 
   return (
     <Wrap>
       <Seo title="Home" />
+
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
+
       <MainContainer>
         <SearchAndForm>
-          <PostFormButton onClick={onClickTogglePostModal}>
+          <PostFormButton
+            onClick={() => {
+              onClickTogglePostModal();
+            }}
+          >
             + 나의 스팟 추가
           </PostFormButton>
 
@@ -195,7 +205,6 @@ export default function Main() {
                 selectCity={selectCity}
                 selectTown={selectTown}
                 onClickSelectTown={onClickSelectTown}
-                onChangeSelectTown={onChangeSelectTown}
               />
             </TownCategory>
           </CategoriesWrap>
@@ -231,7 +240,7 @@ export default function Main() {
                 <Masonry columnsCount={4}>
                   {data?.pages.map((data) =>
                     data?.map((item: { [key: string]: string }) => (
-                      <ItemBox key={uuidv4()}>
+                      <ItemBox key={uuidv4()} onClick={saveScroll}>
                         <Content item={item} />
                       </ItemBox>
                     ))
@@ -255,13 +264,17 @@ export default function Main() {
           </ChatWrap>
         </div>
 
-        {isModalPostActive ? (
+        {postMapModal ? (
           <CustomModal
-            modal={isModalPostActive}
-            setModal={setIsModalPostActive}
+            modal={postMapModal}
+            setModal={setIsPostMapModal}
             width="1100"
             height="632"
-            element={<PostForm setIsModalPostActive={setIsModalPostActive} />}
+            element={
+              <PostFormWrap>
+                <PostForm />
+              </PostFormWrap>
+            }
           />
         ) : (
           ''
@@ -329,8 +342,8 @@ const CityCategory = styled.select`
 const SelectContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     display: flex;
+    flex-direction: column;
     margin: auto;
-    width: 150px;
   }
 `;
 const SearchAndForm = styled.div`
@@ -340,11 +353,13 @@ const SearchAndForm = styled.div`
   left: 70px;
   flex-direction: row-reverse;
   align-items: center;
-  margin-top: 10px;
-  margin-left: 55%;
+  margin-top: 3px;
+  margin-left: 53%;
   width: 440px;
   @media ${(props) => props.theme.mobile} {
-    display: none;
+    top: 30px;
+    left: 30%;
+    transform: translate(-100%, -50%);
   }
 `;
 const PostFormButton = styled.button`
@@ -355,6 +370,11 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 8px;
+    width: 84px;
+    height: 20px;
+  }
 `;
 
 const CategoriesWrap = styled.div`
@@ -455,5 +475,14 @@ const TopBtn = styled.button`
   }
   @media ${(props) => props.theme.mobile} {
     display: none;
+  }
+`;
+
+const PostFormWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    width: 375px;
+    /* background-color: red; */
+    height: 1240px;
+    overflow: hidden;
   }
 `;

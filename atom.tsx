@@ -39,8 +39,15 @@ export const forgotModalAtom = atom({
   key: `forgotModalAtom`,
   default: false,
 });
-
+export const postModalAtom = atom({
+  key: `postModalAtom`,
+  default: false,
+});
 export const editProfileModalAtom = atom({
   key: `editProfileModalAtom`,
   default: false,
+});
+export const townArray = atom({
+  key: 'townArray',
+  default: [],
 });
