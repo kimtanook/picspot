@@ -19,19 +19,20 @@ import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 
-import { loginModalAtom, postModalAtom } from '../../atom';
+import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 
 export default function Main() {
+  const router = useRouter();
+  const selectCity = router.query.city;
   const [isOpenModal, setOpenModal] = useState(false);
   const [chatToggle, setChatToggle] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
-  const [selectCity, setSelectCity] = useState('');
-  const [selectTown, setSelectTown] = useState([]);
+  const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
@@ -66,8 +67,6 @@ export default function Main() {
     }
   };
 
-  const router = useRouter();
-
   const onClickToggleModal = () => {
     if (!authService.currentUser) {
       setCloseLoginModal(!closeLoginModal);
@@ -97,7 +96,6 @@ export default function Main() {
 
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectCity('제주전체');
     setSelectTown([]);
     visibleReset();
     setSearchOption(searchOptionRef.current?.value);
@@ -117,10 +115,9 @@ export default function Main() {
       pathname: '/main',
       query: { city: event.target.value },
     });
-    setSelectCity(event.target.value);
   };
   // [카테고리] 타운 카테고리 onClick
-  const onClickSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
+  const onClickSelectTown = async (event: MouseEvent<HTMLButtonElement>) => {
     setSearchValue('');
     visibleReset();
     const townName = event.currentTarget.value as never;
@@ -133,13 +130,7 @@ export default function Main() {
       setSelectTown(cancelSelect);
     }
   };
-  const onChangeSelectTown = (event: MouseEvent<HTMLButtonElement>) => {
-    setSearchValue('');
-    visibleReset();
-    const townName = event.currentTarget.value as never;
-    setSelectTown([townName]);
-  };
-
+  console.log('selectTown : ', selectTown);
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열
@@ -159,11 +150,22 @@ export default function Main() {
   // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
   useBottomScrollListener(fetchNextPage, { offset: 300 });
 
+  // 아이템 클릭 시 스크롤 위치 저장
+  const saveScroll = () => {
+    sessionStorage.setItem('scrollY', String(window.scrollY));
+  };
+
+  // 뒤로가기로 메인 페이지 진입 시 스크롤 위치 복원 및 삭제
+  const scrollRevert = () => {
+    window.scrollTo(0, Number(sessionStorage.getItem('scrollY')));
+    sessionStorage.removeItem('scrollY');
+  };
+
   useEffect(() => {
-    setSelectCity(`${router.query.city}`);
-    visibleReset();
+    // 무한스크롤로 인해 스크롤 복원 시 제대로 된 위치로 가지 않아서 임시로 setTimeout 사용
+    setTimeout(() => scrollRevert(), 300);
     setChatToggle(false);
-  }, [router]);
+  }, []);
 
   return (
     <Wrap>
@@ -195,7 +197,6 @@ export default function Main() {
                 selectCity={selectCity}
                 selectTown={selectTown}
                 onClickSelectTown={onClickSelectTown}
-                onChangeSelectTown={onChangeSelectTown}
               />
             </TownCategory>
           </CategoriesWrap>
@@ -231,7 +232,7 @@ export default function Main() {
                 <Masonry columnsCount={4}>
                   {data?.pages.map((data) =>
                     data?.map((item: { [key: string]: string }) => (
-                      <ItemBox key={uuidv4()}>
+                      <ItemBox key={uuidv4()} onClick={saveScroll}>
                         <Content item={item} />
                       </ItemBox>
                     ))

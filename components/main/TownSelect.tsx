@@ -2,12 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 
-function TownSelect({
-  selectCity,
-  selectTown,
-  onClickSelectTown,
-  onChangeSelectTown,
-}: any) {
+function TownSelect({ selectCity, selectTown, onClickSelectTown }: any) {
   // console.log('selectTown : ', selectTown);
   const jejuTown = [
     '제주시 시내',
@@ -87,7 +82,7 @@ function TownSelect({
       </WebSelect>
       <MobileSelect>
         {selectCity === '제주시' ? (
-          <Select onChange={onChangeSelectTown} value={selectTown}>
+          <Select onChange={onClickSelectTown} value={selectTown}>
             <option value="">제주시 전체</option>
             {jejuTown.map((item: string) => (
               <TownOption key={uuidv4()} value={item}>
@@ -96,7 +91,7 @@ function TownSelect({
             ))}
           </Select>
         ) : selectCity === '서귀포시' ? (
-          <Select onChange={onChangeSelectTown} value={selectTown}>
+          <Select onChange={onClickSelectTown} value={selectTown}>
             <option value="">서귀포시 전체</option>
             {seogwipoTown.map((item: string) => (
               <TownOption key={uuidv4()} value={item}>
@@ -105,7 +100,7 @@ function TownSelect({
             ))}
           </Select>
         ) : (
-          <Select onChange={onChangeSelectTown} value={selectTown}>
+          <Select onChange={onClickSelectTown} value={selectTown}>
             <option value="">제주도 전체</option>
             {allTown.map((item: string) => (
               <TownOption key={uuidv4()} value={item}>
