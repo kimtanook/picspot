@@ -34,7 +34,9 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
+
   const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   // 뒷 배경 스크롤 방지
@@ -283,10 +285,25 @@ export default function Main() {
           <CustomModal
             modal={isModalActive}
             setModal={setIsModalActive}
-            width="1200"
-            height="700"
+            width="500"
+            height="0"
             element={
-              <ModalMaps selectTown={selectTown} selectCity={selectCity} />
+              <>
+                <ModalMapsWrap>
+                  <ModalMaps
+                    selectTown={selectTown}
+                    selectCity={selectCity}
+                  ></ModalMaps>
+                </ModalMapsWrap>
+                <ModalMapsBackButton
+                  onClick={() => {
+                    setIsModalActive(!isModalActive);
+                  }}
+                >
+                  {isMobile && <MobileCancle src="/Back-point.png" />}
+                  {isPc && ''}
+                </ModalMapsBackButton>
+              </>
             }
           />
         ) : (
@@ -486,3 +503,20 @@ const PostFormWrap = styled.div`
     overflow: hidden;
   }
 `;
+
+const ModalMapsWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    margin-top: 55%;
+  }
+`;
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    left: 15%;
+    top: 3%;
+    z-index: 1000;
+  }
+`;
+
+const MobileCancle = styled.img``;

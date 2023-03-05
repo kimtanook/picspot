@@ -20,7 +20,7 @@ const ModalMaps = ({ selectTown, selectCity }: any) => {
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
   return (
-    <div>
+    <MapModalMainWrap>
       <Map // 지도를 표시할 Container
         center={{
           // 지도의 중심좌표
@@ -58,8 +58,13 @@ const ModalMaps = ({ selectTown, selectCity }: any) => {
             );
           })}
       </Map>
-    </div>
+    </MapModalMainWrap>
   );
 };
 
+const MapModalMainWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    border-radius: 25%;
+  }
+`;
 export default ModalMaps;
