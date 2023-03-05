@@ -21,7 +21,7 @@ const Maps = ({
     //----------------------------카카오맵 셋팅/----------------------------
     kakao.maps.load(() => {
       const options = {
-        center: new kakao.maps.LatLng(3.37713123240438, 126.54331893240735),
+        center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
         level: 10,
       };
       const map = new kakao.maps.Map(container.current, options); // useRef를 쓰기 위해 container.current를 넣어줌
