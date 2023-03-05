@@ -167,6 +167,7 @@ export const getComment = async ({ queryKey }: any) => {
 
 //* 댓글 추가
 export const addComment = async (item: AddComment) => {
+  // console.log('item: ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -174,7 +175,6 @@ export const addComment = async (item: AddComment) => {
 };
 
 //* 댓글 삭제
-
 export const deleteComment = async (item: DeleteComment) => {
   deleteDoc(doc(dbService, `post/${item.postId}/comment/${item.commentId}`));
 };
