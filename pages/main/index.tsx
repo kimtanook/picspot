@@ -18,11 +18,11 @@ import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
-
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Main() {
   const router = useRouter();
@@ -34,6 +34,7 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   // 뒷 배경 스크롤 방지
@@ -171,7 +172,9 @@ export default function Main() {
   return (
     <Wrap>
       <Seo title="Home" />
+
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
+
       <MainContainer>
         <SearchAndForm>
           <PostFormButton

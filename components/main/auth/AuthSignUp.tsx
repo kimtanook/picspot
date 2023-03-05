@@ -62,6 +62,7 @@ const AuthSignUp = () => {
         };
         customConfirm('회원가입을 축하합니다!');
         setCloseLoginModal(false);
+        setSignUpModal(false);
         setForgotModal(false);
       })
       .then(() => {

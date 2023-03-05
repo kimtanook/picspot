@@ -21,6 +21,7 @@ import ModalFollowing from './mypage/Profile/ModalFollowing';
 import Auth from './main/auth/Auth';
 import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
+import { useMediaQuery } from 'react-responsive';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -34,6 +35,8 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   return (
     <div>
@@ -106,16 +109,31 @@ function Layout() {
         ) : null}
       </>
       <>
-        {closeLoginModal ? (
-          <CustomModal
-            modal={closeLoginModal}
-            setModal={setCloseLoginModal}
-            width="524"
-            height="695"
-            element={<Auth />}
-          />
-        ) : (
-          ''
+        {closeLoginModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={closeLoginModal}
+                  setModal={setCloseLoginModal}
+                  width="1000"
+                  height="3000"
+                  element={<Auth />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={closeLoginModal}
+                  setModal={setCloseLoginModal}
+                  width="524"
+                  height="695"
+                  element={<Auth />}
+                />
+              )}
+            </>
+          </>
         )}
       </>
       <>
