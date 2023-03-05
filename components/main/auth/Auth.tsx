@@ -180,7 +180,8 @@ const Auth = (): JSX.Element => {
             checked={isRemember}
             onChange={handleSaveIDFlag}
           />
-          <div>아이디 저장</div>
+          {isMobile ? <div>로그인 정보 저장</div> : ''}
+          {isPc ? <div>아이디 저장</div> : ''}
         </RememberID>
         <LoginBtnContainer>
           <LoginBtn type="submit" disabled={authenticating}>
@@ -361,8 +362,10 @@ const RememberID = styled.label`
   display: flex;
   align-items: center;
   font-size: 15px;
+  font-family: Noto Sans CJK KR;
   @media ${(props) => props.theme.mobile} {
-    display: none;
+    transform: translate(9%, 1150%);
+    font-size: 12px;
   }
 `;
 const LoginBtnContainer = styled.div`
