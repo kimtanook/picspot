@@ -10,6 +10,7 @@ import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { postModalAtom } from '@/atom';
+import DataLoading from '@/components/common/DataLoading';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
@@ -51,7 +52,7 @@ const PostForm = () => {
   };
 
   //* useMutation 사용해서 포스트 추가하기
-  const { mutate: onAddData } = useMutation(addData);
+  const { mutate: onAddData, isLoading } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
   // 수정코드
@@ -191,6 +192,11 @@ const PostForm = () => {
       setCity(cityMap);
     }
   }, [saveAddress]);
+
+  if (isLoading) {
+    return <DataLoading />;
+  }
+
   return (
     <>
       <PostFormWrap>
