@@ -103,8 +103,8 @@ const Auth = (): JSX.Element => {
           setCloseLoginModal(!closeLoginModal);
         }}
       >
-        {' '}
-        〈 취소{' '}
+        {isMobile && <MobileCancle src="/Back-point.png" />}
+        {isPc && '〈 취소 '}
       </Heder>
       <LogoImg src="/logo.png" />
       <LoginTextDiv>
@@ -241,24 +241,35 @@ const LoginContainer = styled.div`
 `;
 const Heder = styled.header`
   cursor: pointer;
+  z-index: 1000000;
   color: #1882ff;
   font-size: 15px;
   display: flex;
   margin-bottom: 40px;
   margin-left: -30px;
-  @media ${(props) => props.theme.mobile} {
-    transform: translate(50%, 400%);
+  /* @media ${(props) => props.theme.mobile} {
+    transform: translate(60%, 300%);
     width: 30%;
-    font-size: 12px;
-  }
+    font-size: 20px;
+    position: relative;
+    background-image: url(/Back-point.png);
+  } */
 `;
+
+const MobileCancle = styled.img`
+  transform: translate(600%, 210%);
+  width: 12px;
+  font-size: 0px;
+  position: relative;
+`;
+
 const LogoImg = styled.img`
   display: none;
   @media ${(props) => props.theme.mobile} {
     position: absolute;
     top: 15%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 2000%);
     display: inherit;
     width: 130px;
     height: 40px;
@@ -277,7 +288,7 @@ const LoginTextDiv = styled.div`
     position: absolute;
     top: 25%;
     left: 50%;
-    transform: translate(-50%, -200%);
+    transform: translate(-50%, 2600%);
     display: inherit;
     width: 254px;
     height: 21px;
@@ -292,6 +303,7 @@ const LoginEmailPwContainer = styled.div`
   margin-top: 40px;
   @media ${(props) => props.theme.mobile} {
     gap: 8px;
+    z-index: 10;
   }
 `;
 const LoginInput = styled.input`
