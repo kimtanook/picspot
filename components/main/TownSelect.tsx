@@ -93,6 +93,10 @@ const SelectContainer = styled.div`
   }
 `;
 const SelectTownWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  margin: auto;
   @media ${(props) => props.theme.mobile} {
     width: 282px;
     height: 40px;
