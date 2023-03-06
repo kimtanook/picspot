@@ -97,6 +97,7 @@ const MyContainer = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: 64px;
+  overflow: hidden;
 `;
 const MyProfileContainer = styled.div`
   width: 600px;
