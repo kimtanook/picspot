@@ -105,10 +105,10 @@ const Auth = (): JSX.Element => {
           setCloseLoginModal(!closeLoginModal);
         }}
       >
-        {isMobile && <MobileCancle src="/Back-point.png" />}
+        {isMobile && <MobileCancle src="/Back-point.png" alt="image" />}
         {isPc && '〈 취소 '}
       </Heder>
-      <LogoImg src="/logo.png" />
+      <LogoImg src="/logo.png" alt="image" />
       <LoginTextDiv>
         {isMobile ? <p>픽스팟에 로그인하고, 제주 인생샷 알아보세요!</p> : ''}
         {isPc ? (
@@ -250,7 +250,8 @@ const Heder = styled.header`
   margin-bottom: 40px;
   margin-left: -30px;
   @media ${(props) => props.theme.mobile} {
-    /* height: 40px; */
+    transform: translate(40%, 350%);
+    width: 30%;
   }
 `;
 
@@ -343,8 +344,8 @@ const EditInputBox = styled.div`
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: 0px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -357,8 +358,8 @@ const EditclearBtn = styled.div`
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: 0px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);

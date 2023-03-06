@@ -136,19 +136,19 @@ function Profile() {
               <FollowWrap>
                 <MyProfileFollowing>
                   팔로잉
-                  <FollowCount>
+                  <FollowerCount>
                     {getFollowingData?.length === undefined
                       ? '0'
                       : getFollowingData?.length}
-                  </FollowCount>
+                  </FollowerCount>
                 </MyProfileFollowing>
                 <MyProfileFollower>
                   팔로워
-                  <FollowCount>
+                  <FollowerCount>
                     {getFollowData?.length === undefined
                       ? '0'
                       : getFollowData?.length}
-                  </FollowCount>
+                  </FollowerCount>
                 </MyProfileFollower>
               </FollowWrap>
             </ProfileText>
@@ -336,7 +336,7 @@ const FollowWrap = styled.div`
   margin-top: 10px;
   margin-left: 27px;
 `;
-const FollowCount = styled.div`
+const FollowerCount = styled.div`
   margin-top: 10px;
 `;
 const MyProfileFollowing = styled.div`
