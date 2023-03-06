@@ -286,8 +286,8 @@ export default function Main() {
                   <>
                     <ModalMapsWrap>
                       <ModalMaps
-                        selectTown={selectTown}
-                        selectCity={selectCity}
+                      // selectTown={selectTown}
+                      // selectCity={selectCity}
                       ></ModalMaps>
                       <ModalMapsBackButton
                         onClick={() => {
@@ -319,8 +319,8 @@ export default function Main() {
                   <>
                     <ModalMapsWrap>
                       <ModalMaps
-                        selectTown={selectTown}
-                        selectCity={selectCity}
+                      // selectTown={selectTown}
+                      // selectCity={selectCity}
                       ></ModalMaps>
                       <ModalMapsBackButton
                         onClick={() => {

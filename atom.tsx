@@ -49,7 +49,7 @@ export const editProfileModalAtom = atom({
 });
 export const townArray = atom({
   key: 'townArray',
-  default: [],
+  default: [] as string[],
 });
 
 export const selectCityAtom = atom({
