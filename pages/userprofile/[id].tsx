@@ -18,6 +18,7 @@ import UserCollectionList from '@/components/userprofile/UserCollectionList';
 import { useRecoilState } from 'recoil';
 import { messageSendToggle } from '@/atom';
 import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 
 function Profile() {
   const queryClient = useQueryClient();
@@ -98,6 +99,11 @@ function Profile() {
   };
 
   // console.log('getFollowingData?.length: ', getFollowingData?.length);
+
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('유저 프로필 페이지', { from: 'userprofile page' });
+  }, []);
 
   return (
     <>

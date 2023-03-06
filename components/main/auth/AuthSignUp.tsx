@@ -8,6 +8,7 @@ import { useMutation } from 'react-query';
 import { addUser } from '@/api';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
+import { setAmplitudeUserId } from '@/utils/amplitude';
 
 interface AuthForm {
   email: string;
@@ -64,6 +65,7 @@ const AuthSignUp = () => {
         setCloseLoginModal(false);
         setSignUpModal(false);
         setForgotModal(false);
+        setAmplitudeUserId(authService.currentUser?.uid);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
