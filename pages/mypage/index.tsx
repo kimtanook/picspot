@@ -106,13 +106,13 @@ const MyProfileContainer = styled.div`
 const AllMyPostList = styled.div`
   margin: auto;
   width: 1188px;
+  background-color: #ffffff;
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
   }
 `;
 
 const CategoryBtn = styled.div`
-  margin: 40px 0px 10px 0px;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
     /* text-align: left; */
@@ -123,7 +123,7 @@ const CategoryBtn = styled.div`
 
 const GridBox = styled.div`
   width: 1188px;
-  margin-top: 19px;
+  margin-top: 44px;
   display: inline-flex;
   justify-content: space-between;
   @media ${(props) => props.theme.mobile} {

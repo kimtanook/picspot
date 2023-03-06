@@ -508,6 +508,10 @@ const ProfilePhotoHover = styled.div<{ img: string }>`
     );
     color: white;
   }
+  @media ${(props) => props.theme.mobile} {
+    width: 100px;
+    height: 100px;
+  }
 `;
 const EditProfileContainer = styled.div`
   display: flex;
@@ -658,7 +662,7 @@ const SaveEditBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  width: 470px;
+  width: 400px;
   bottom: 120px;
   position: absolute;
   bottom: 0;
