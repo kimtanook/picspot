@@ -497,6 +497,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
+    z-index: 999;
   }
 `;
 const PinImg = styled.img`

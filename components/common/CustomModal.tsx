@@ -50,6 +50,7 @@ const Container = styled.div<{ width: string; height: string }>`
 
   @media ${(props) => props.theme.mobile} {
     height: 94%;
+    padding: 0px;
   }
 `;
 
@@ -62,10 +63,13 @@ const Canvas = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   @media ${(props) => props.theme.mobile} {
-    /* display: none; */
+    display: none;
   }
 `;
 
 const Wrapper = styled.div`
   background-color: transparent;
+  @media ${(props) => props.theme.mobile} {
+    overflow-y: scroll;
+  }
 `;

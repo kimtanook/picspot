@@ -137,15 +137,33 @@ function Layout() {
         )}
       </>
       <>
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="500"
-            height="500"
-            element={<PostForm />}
-          />
-        ) : null}
+        {postMapModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={postMapModal}
+                  setModal={setIsPostMapModal}
+                  width="400px"
+                  height="400px"
+                  element={<PostForm />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={postMapModal}
+                  setModal={setIsPostMapModal}
+                  width="500"
+                  height="500"
+                  element={<PostForm />}
+                />
+              )}
+            </>
+          </>
+        )}
+
         {editProfileModal ? (
           <CustomModal
             modal={editProfileModal}

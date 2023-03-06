@@ -1,5 +1,6 @@
 import { customAlert } from '@/utils/alerts';
 import React, { useEffect, useRef } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 declare global {
   interface Window {
@@ -16,6 +17,8 @@ const Maps = ({
   setInfoDiv,
 }: any) => {
   const container = useRef(null);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
   useEffect(() => {
     const { kakao } = window;
     //----------------------------카카오맵 셋팅/----------------------------
@@ -107,11 +110,22 @@ const Maps = ({
   }, [searchPlace, setInfoDiv, setSaveAddress, setSaveLatLng]);
 
   return (
-    <div
-      id="map"
-      ref={container}
-      style={{ width: '620px', height: '630px' }}
-    ></div>
+    <>
+      {isMobile && (
+        <div
+          id="map"
+          ref={container}
+          style={{ width: '100%', height: '40vh' }}
+        ></div>
+      )}
+      {isPc && (
+        <div
+          id="map"
+          ref={container}
+          style={{ width: '620px', height: '630px' }}
+        ></div>
+      )}
+    </>
   );
 };
 

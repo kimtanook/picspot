@@ -336,23 +336,21 @@ const PostFormWrap = styled.div`
   display: flex;
   /* width: 1200px; */
   @media ${(props) => props.theme.mobile} {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
-    background-color: white;
-    width: 375px;
-    /* margin-top: -50%; */
+    /* background-color: green; */
+    width: 100vw;
+    /* margin-top: 85vh; */
+    /* height: 100vh; */
     z-index: 9999;
   }
 `;
 
 const MapLandingPageWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
-    width: 375px;
-    height: 400px;
-    position: absolute;
-    display: none;
+    width: 100vw;
   }
 `;
 
@@ -360,6 +358,7 @@ const PostFormContainer = styled.div`
   padding: 0px 60px;
   background-color: white;
   @media ${(props) => props.theme.mobile} {
+    padding: 0px;
     /* width: 100%; */
     /* background-color: Red; */
     /* display: flex;
@@ -372,8 +371,8 @@ const PostFormConteTitle = styled.h4`
   margin-left: 10px;
   @media ${(props) => props.theme.mobile} {
     /* background-color: white;
-    text-align: center;
-    margin-left: 0px; */
+    text-align: center;*/
+    padding: 10px;
   }
 `;
 
@@ -382,8 +381,11 @@ const PostFormContentBox = styled.div`
   width: 400px;
   padding: 10px;
   @media ${(props) => props.theme.mobile} {
+    width: 425px;
     /* height: 1000px;
     width: 100%; */
+    /* top: 30px; */
+    /* background-color: yellow; */
   }
 `;
 
@@ -393,7 +395,7 @@ const PostFormContentWrap = styled.div`
   /* align-items: center; */
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: white; */
+    padding: 0 10px;
   }
 `;
 
@@ -417,7 +419,7 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     /* padding: 10px; */
     font-size: 18px;
   }
@@ -503,6 +505,7 @@ const PostFormInputTitle = styled.p`
 const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
+    margin-left: 10px;
   }
 `;
 
