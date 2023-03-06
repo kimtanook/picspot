@@ -35,7 +35,9 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
+
   const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
 
@@ -270,13 +272,13 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-
+        {/* 
         {postMapModal ? (
           <CustomModal
             modal={postMapModal}
             setModal={setIsPostMapModal}
-            width="1100"
-            height="632"
+            width="500"
+            height="500"
             element={
               <PostFormWrap>
                 <PostForm />
@@ -285,19 +287,69 @@ export default function Main() {
           />
         ) : (
           ''
+        )} */}
+
+        {isMobile && (
+          <>
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="-20"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps
+                        selectTown={selectTown}
+                        selectCity={selectCity}
+                      ></ModalMaps>
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      >
+                        {isMobile && <MobileCancle src="/Back-point.png" />}
+                        {/* {isPc && ''} */}
+                      </ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
-        {isModalActive ? (
-          <CustomModal
-            modal={isModalActive}
-            setModal={setIsModalActive}
-            width="1200"
-            height="700"
-            element={
-              <ModalMaps selectTown={selectTown} selectCity={selectCity} />
-            }
-          />
-        ) : (
-          ''
+        {isPc && (
+          <>
+            {' '}
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="500"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps
+                        selectTown={selectTown}
+                        selectCity={selectCity}
+                      ></ModalMaps>
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      ></ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
 
         <MapModalBtn onClick={onClickToggleMapModal}>
@@ -452,6 +504,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
+    z-index: 999;
   }
 `;
 const PinImg = styled.img`
@@ -493,3 +546,20 @@ const PostFormWrap = styled.div`
     overflow: hidden;
   }
 `;
+
+const ModalMapsWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    display: flex;
+  }
+`;
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 1000;
+    top: 5vw;
+    left: 3vh;
+  }
+`;
+
+const MobileCancle = styled.img``;
