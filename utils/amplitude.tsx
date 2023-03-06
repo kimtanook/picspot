@@ -1,9 +1,7 @@
 import { init, track, setUserId, reset } from '@amplitude/analytics-browser';
 
-const API_KEY = 'e579522099b0ce6296a946a184165cf3';
-
 export const initAmplitude = () => {
-  init(API_KEY);
+  init(`${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}`);
 };
 
 export const logEvent = (eventName: any, eventProperties: any) => {

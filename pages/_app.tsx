@@ -23,7 +23,7 @@ const theme = {
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    init('e579522099b0ce6296a946a184165cf3');
+    init(`${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}`);
   }, []);
 
   return (
