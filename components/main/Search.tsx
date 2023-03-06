@@ -6,8 +6,8 @@ const Search = ({
   searchValue,
   onChangeSearchValue,
 }: {
-  searchOptionRef: RefObject<HTMLSelectElement>;
-  searchValue: string;
+  searchOptionRef: RefObject<HTMLSelectElement> | undefined;
+  searchValue: string | undefined;
   onChangeSearchValue: ChangeEventHandler<HTMLInputElement>;
 }) => {
   return (

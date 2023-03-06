@@ -35,7 +35,9 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
+
   const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
 
@@ -57,18 +59,6 @@ export default function Main() {
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
-  };
-
-  const onClickTogglePostModal = () => {
-    if (!authService.currentUser) {
-      customAlert('로그인을 해주세요.');
-      setCloseLoginModal(true);
-      return;
-    }
-    if (authService.currentUser) {
-      setIsPostMapModal(true);
-      return;
-    }
   };
 
   const onClickToggleModal = () => {
@@ -180,24 +170,15 @@ export default function Main() {
     <Wrap>
       <Seo title="Home" />
 
-      <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
+      <Header
+        selectCity={selectCity}
+        onChangeSelectCity={onChangeSelectCity}
+        searchOptionRef={searchOptionRef}
+        searchValue={searchValue}
+        onChangeSearchValue={onChangeSearchValue}
+      />
 
       <MainContainer>
-        <SearchAndForm>
-          <PostFormButton
-            onClick={() => {
-              onClickTogglePostModal();
-            }}
-          >
-            + 나의 스팟 추가
-          </PostFormButton>
-
-          <Search
-            searchOptionRef={searchOptionRef}
-            searchValue={searchValue}
-            onChangeSearchValue={onChangeSearchValue}
-          />
-        </SearchAndForm>
         <SelectContainer>
           {router.route === '/main' ? (
             <CityCategory value={selectCity} onChange={onChangeSelectCity}>
@@ -270,13 +251,13 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-
+        {/* 
         {postMapModal ? (
           <CustomModal
             modal={postMapModal}
             setModal={setIsPostMapModal}
-            width="1100"
-            height="632"
+            width="500"
+            height="500"
             element={
               <PostFormWrap>
                 <PostForm />
@@ -285,19 +266,69 @@ export default function Main() {
           />
         ) : (
           ''
+        )} */}
+
+        {isMobile && (
+          <>
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="-20"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps
+                        selectTown={selectTown}
+                        selectCity={selectCity}
+                      ></ModalMaps>
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      >
+                        {isMobile && <MobileCancle src="/Back-point.png" />}
+                        {/* {isPc && ''} */}
+                      </ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
-        {isModalActive ? (
-          <CustomModal
-            modal={isModalActive}
-            setModal={setIsModalActive}
-            width="1200"
-            height="700"
-            element={
-              <ModalMaps selectTown={selectTown} selectCity={selectCity} />
-            }
-          />
-        ) : (
-          ''
+        {isPc && (
+          <>
+            {' '}
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="500"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps
+                        selectTown={selectTown}
+                        selectCity={selectCity}
+                      ></ModalMaps>
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      ></ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
 
         <MapModalBtn onClick={onClickToggleMapModal}>
@@ -319,10 +350,8 @@ export default function Main() {
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  margin: auto;
-  @media ${(props) => props.theme.mobile} {
-    width: 375px;
-  }
+  /* margin: auto; */
+  width: 100vw;
 `;
 
 const MainContainer = styled.div`
@@ -330,7 +359,6 @@ const MainContainer = styled.div`
     margin: auto;
     display: flex;
     flex-direction: column;
-    width: 375px;
   }
 `;
 const CityCategory = styled.select`
@@ -353,36 +381,6 @@ const SelectContainer = styled.div`
     margin: auto;
   }
 `;
-const SearchAndForm = styled.div`
-  display: flex;
-  position: absolute;
-  top: 16px;
-  left: 70px;
-  flex-direction: row-reverse;
-  align-items: center;
-  margin-top: 3px;
-  margin-left: 53%;
-  width: 440px;
-  @media ${(props) => props.theme.mobile} {
-    top: 30px;
-    left: 30%;
-    transform: translate(-100%, -50%);
-  }
-`;
-const PostFormButton = styled.button`
-  border-radius: 20px;
-  color: #1882ff;
-  border: 1px solid cornflowerblue;
-  background-color: white;
-  cursor: pointer;
-  width: 121.16px;
-  height: 31px;
-  @media ${(props) => props.theme.mobile} {
-    font-size: 8px;
-    width: 84px;
-    height: 20px;
-  }
-`;
 
 const CategoriesWrap = styled.div`
   display: flex;
@@ -399,7 +397,7 @@ const TownCategory = styled.div`
 
 const GridBox = styled.div`
   margin: auto;
-  width: 1188px;
+  width: 80%;
   @media ${(props) => props.theme.mobile} {
     width: 375px;
   }
@@ -452,6 +450,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
+    z-index: 999;
   }
 `;
 const PinImg = styled.img`
@@ -493,3 +492,20 @@ const PostFormWrap = styled.div`
     overflow: hidden;
   }
 `;
+
+const ModalMapsWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    display: flex;
+  }
+`;
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 1000;
+    top: 5vw;
+    left: 3vh;
+  }
+`;
+
+const MobileCancle = styled.img``;

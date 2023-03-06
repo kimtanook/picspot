@@ -40,17 +40,7 @@ function Layout() {
 
   return (
     <div>
-      <div>
-        {msgBoxToggle ? (
-          <CustomModal
-            modal={msgBoxToggle}
-            setModal={setMsgBoxToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageBox />}
-          />
-        ) : null}
-      </div>
+      <div>{msgBoxToggle ? <MessageBox /> : null}</div>
       <div>
         {msgSendToggle ? (
           <CustomModal
@@ -137,15 +127,33 @@ function Layout() {
         )}
       </>
       <>
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="1100"
-            height="632"
-            element={<PostForm />}
-          />
-        ) : null}
+        {postMapModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={postMapModal}
+                  setModal={setIsPostMapModal}
+                  width="400px"
+                  height="400px"
+                  element={<PostForm />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={postMapModal}
+                  setModal={setIsPostMapModal}
+                  width="500"
+                  height="500"
+                  element={<PostForm />}
+                />
+              )}
+            </>
+          </>
+        )}
+
         {editProfileModal ? (
           <CustomModal
             modal={editProfileModal}

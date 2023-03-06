@@ -93,14 +93,15 @@ const SelectContainer = styled.div`
   }
 `;
 const SelectTownWrap = styled.div`
-  display: flex;
-  flex-direction: row;
-
   margin: auto;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  overflow-x: scroll;
   @media ${(props) => props.theme.mobile} {
-    width: 282px;
     height: 40px;
-    display: flex;
     overflow-x: scroll;
   }
 `;
