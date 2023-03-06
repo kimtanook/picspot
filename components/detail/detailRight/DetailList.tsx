@@ -3,6 +3,7 @@ import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService } from '@/firebase';
 import { customAlert, customConfirm } from '@/utils/alerts';
+import { logEvent } from '@/utils/amplitude';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -47,6 +48,7 @@ const DetailList = ({
     onDeleteData(docId, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
+        logEvent('게시물 삭제 버튼', { from: 'detail page' });
         customConfirm('삭제를 완료하였습니다!');
         router.push('/main?city=제주전체');
       },
@@ -92,6 +94,7 @@ const DetailList = ({
     onUpdateData(data, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
+        logEvent('수정 완료 버튼', { from: 'detail page' });
         customConfirm('수정을 완료하였습니다!');
         setSaveLatLng([]);
         setSaveAddress('');
