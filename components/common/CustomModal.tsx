@@ -40,7 +40,6 @@ const Container = styled.div<{ width: string; height: string }>`
   height: ${(props) => props.height}px;
   padding: 8px;
   background-color: white;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
   z-index: 1000;
   color: black;
   display: flex;
@@ -48,7 +47,6 @@ const Container = styled.div<{ width: string; height: string }>`
   flex-direction: column;
   align-items: center;
   font-size: 24px;
-  border: 1px solid gray;
 
   @media ${(props) => props.theme.mobile} {
     height: 94%;
@@ -70,5 +68,4 @@ const Canvas = styled.div`
 
 const Wrapper = styled.div`
   background-color: transparent;
-  /* background-color: green; */
 `;

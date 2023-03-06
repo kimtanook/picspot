@@ -281,33 +281,68 @@ export default function Main() {
         ) : (
           ''
         )} */}
-        {isModalActive ? (
-          <CustomModal
-            modal={isModalActive}
-            setModal={setIsModalActive}
-            width="500"
-            height="-10"
-            element={
-              <>
-                <ModalMapsWrap>
-                  <ModalMaps
-                    selectTown={selectTown}
-                    selectCity={selectCity}
-                  ></ModalMaps>
-                  <ModalMapsBackButton
-                    onClick={() => {
-                      setIsModalActive(!isModalActive);
-                    }}
-                  >
-                    {isMobile && <MobileCancle src="/Back-point.png" />}
-                    {isPc && ''}
-                  </ModalMapsBackButton>
-                </ModalMapsWrap>
-              </>
-            }
-          />
-        ) : (
-          ''
+
+        {isMobile && (
+          <>
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="-20"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps
+                        selectTown={selectTown}
+                        selectCity={selectCity}
+                      ></ModalMaps>
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      >
+                        {isMobile && <MobileCancle src="/Back-point.png" />}
+                        {/* {isPc && ''} */}
+                      </ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
+        )}
+        {isPc && (
+          <>
+            {' '}
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="500"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps
+                        selectTown={selectTown}
+                        selectCity={selectCity}
+                      ></ModalMaps>
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      ></ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
 
         <MapModalBtn onClick={onClickToggleMapModal}>
@@ -507,7 +542,6 @@ const PostFormWrap = styled.div`
 const ModalMapsWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: relative;
-    /* margin-top: 55%; */
     display: flex;
   }
 `;
