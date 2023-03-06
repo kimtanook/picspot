@@ -21,7 +21,7 @@ import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
 
@@ -34,28 +34,13 @@ export default function Main() {
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
+
   const [isModalActive, setIsModalActive] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
-
-  // 뒷 배경 스크롤 방지
-  useEffect(() => {
-    const html = document.documentElement;
-    if (isModalActive || postMapModal) {
-      html.style.overflowY = 'hidden';
-      html.style.overflowX = 'hidden';
-    } else {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    }
-    return () => {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    };
-  }, [isModalActive, postMapModal]);
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
@@ -178,6 +163,22 @@ export default function Main() {
     logEvent('메인 페이지', { from: 'main page' });
   }, []);
 
+  // 뒷 배경 스크롤 방지
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalActive || postMapModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalActive, postMapModal]);
+
   return (
     <Wrap>
       <Seo title="Home" />
@@ -272,22 +273,6 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-        {/* 
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="500"
-            height="500"
-            element={
-              <PostFormWrap>
-                <PostForm />
-              </PostFormWrap>
-            }
-          />
-        ) : (
-          ''
-        )} */}
 
         {isMobile && (
           <>
