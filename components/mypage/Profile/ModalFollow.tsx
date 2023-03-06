@@ -40,7 +40,7 @@ const ModalFollow = () => {
       )[0]?.follow,
   });
   // console.log('followData: ', followData);
-  const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
+  const followerCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
   //* user에서 나를 팔로우한 사람 데이터 뽑기
   const { data: followUserData } = useQuery('UserData', getUser, {
@@ -120,7 +120,7 @@ const ModalFollow = () => {
         <div style={{ fontSize: 30, marginBottom: 20 }}>내 팔로워 목록</div>
         <FollowTotal>
           <FollowText>팔로워</FollowText>
-          <FollowCount>{null ? '0' : followCount}</FollowCount>
+          <FollowerCount>{null ? '0' : followerCount}</FollowerCount>
         </FollowTotal>
       </FollowList>
       {followUserData?.map((item: ItemType) => (
@@ -186,7 +186,7 @@ const FollowText = styled.div`
   padding-top: 10px;
 `;
 
-const FollowCount = styled.div`
+const FollowerCount = styled.div`
   color: #212121;
   font-size: 20px;
   padding-top: 10px;

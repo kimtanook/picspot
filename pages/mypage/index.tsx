@@ -38,7 +38,7 @@ export default function Mypage() {
       )[0]?.follow,
   });
 
-  const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
+  const followerCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -54,7 +54,10 @@ export default function Mypage() {
 
       <MyContainer>
         <MyProfileContainer>
-          <Profile followingCount={followingCount} followCount={followCount} />
+          <Profile
+            followingCount={followingCount}
+            followerCount={followerCount}
+          />
         </MyProfileContainer>
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다  */}
