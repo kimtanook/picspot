@@ -1,6 +1,9 @@
-import { deleteComment } from '@/api';
+import { deleteComment, getCommentUser } from '@/api';
+import DataError from '@/components/common/DataError';
+import DataLoading from '@/components/common/DataLoading';
 import { authService } from '@/firebase';
-import { useMutation, useQueryClient } from 'react-query';
+import { logEvent } from '@/utils/amplitude';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
 function CommentItem({
@@ -10,8 +13,15 @@ function CommentItem({
   item: CommentItemType;
   postId: string | string[] | undefined;
 }) {
+  const {
+    data: commentItem,
+    isLoading,
+    isError,
+  } = useQuery(['CommentUser', item.creatorUid], getCommentUser);
+  // console.log('commentItem: ', commentItem);
+
   const queryClient = useQueryClient();
-  const { isLoading, mutate } = useMutation(deleteComment);
+  const { mutate } = useMutation(deleteComment);
 
   const onClickDelete = () => {
     if (confirm('정말 삭제하시겠습니까?')) {
@@ -20,6 +30,7 @@ function CommentItem({
         {
           onSuccess: () => {
             setTimeout(() => queryClient.invalidateQueries('comments'), 500);
+            logEvent('댓글 삭제 버튼', { from: 'detail page' });
           },
         }
       );
@@ -27,14 +38,19 @@ function CommentItem({
   };
 
   if (isLoading) {
-    return <div>삭제중입니다.</div>;
+    return <DataLoading />;
   }
+
+  if (isError) {
+    return <DataError />;
+  }
+
   return (
     <CommentContainer>
-      <Image2 src={item.userImg} />
-      <Name>{item.userName}</Name>
+      <Image2 src={commentItem?.userImg} />
+      <Name>{commentItem?.userName}</Name>
       <Comment>
-        <div>{item.contents}</div>
+        <div>{item?.contents}</div>
         {authService.currentUser?.uid === item.creatorUid ? (
           <Button onClick={onClickDelete}>삭제</Button>
         ) : null}

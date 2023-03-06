@@ -13,9 +13,12 @@ import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
+import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 
 const Post = ({ id }: any) => {
   // console.log('id: ', id);
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
 
   //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
@@ -88,13 +91,24 @@ const Post = ({ id }: any) => {
     countMutate(id);
   }, []);
 
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('디테일 페이지', { from: 'detail page' });
+  }, []);
+
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
 
   return (
     <DetailContainer>
       <Seo title="Detail" />
-      <Header selectCity={undefined} onChangeSelectCity={undefined} />
+      <Header
+        selectCity={undefined}
+        onChangeSelectCity={undefined}
+        searchOptionRef={undefined}
+        searchValue={undefined}
+        onChangeSearchValue={undefined}
+      />
 
       {detail
         ?.filter((item: any) => {

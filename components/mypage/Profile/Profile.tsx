@@ -8,7 +8,6 @@ import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import {
-  messageBoxToggle,
   followingToggleAtom,
   followToggleAtom,
   editProfileModalAtom,
@@ -58,13 +57,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       resetAmplitude();
     });
   };
-
-  // 쪽지함 버튼에 확인하지 않은 메세지 표시
-  const { data: takeMsgData } = useQuery(
-    ['getTakeMessageData', nowUser?.uid],
-    getTakeMessage
-  );
-  const checked = takeMsgData?.filter((item) => item.checked === false);
 
   // console.log('followingCount: ', followingCount);
   // console.log('followCount: ', followCount);
