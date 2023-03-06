@@ -7,6 +7,7 @@ import {
 } from '@/api';
 import { followToggleAtom } from '@/atom';
 import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -27,7 +28,6 @@ const ModalFollow = () => {
   const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
 
   //! follow 핸들링 //////////////////////////////////////////////////////
-
   //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
   const {
     data: followData,
@@ -70,11 +70,10 @@ const ModalFollow = () => {
   });
 
   //! following 핸들링 ///////////////////////////////////////////////////
-
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const { data: followingData } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+      data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
   // console.log('followingData: ', followingData);
@@ -96,12 +95,14 @@ const ModalFollow = () => {
   const onClickFollowingBtn = (item: any) => {
     console.log('item: ', item);
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('팔로잉 버튼', { from: 'mypage follow modal' });
   };
 
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowingBtn = (item: any) => {
     console.log('item: ', item);
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('언팔로잉 버튼', { from: 'mypage follow modal' });
   };
 
   //* 팔로우한 사람 버튼을 눌렀을때 실행하는 함수

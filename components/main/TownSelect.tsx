@@ -1,9 +1,11 @@
+import { townArray } from '@/atom';
 import React from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 
 function TownSelect({ selectCity, selectTown, onClickSelectTown }: any) {
-  // console.log('selectTown : ', selectTown);
+  const [selectTownArr, setSelectArrTown] = useRecoilState(townArray);
   const jejuTown = [
     '제주시 시내',
     '구좌읍',
@@ -38,6 +40,9 @@ function TownSelect({ selectCity, selectTown, onClickSelectTown }: any) {
   ];
   return (
     <SelectContainer>
+      <TownResetWrap onClick={() => setSelectArrTown([])}>
+        <TownReset src="/town-reset.png" />
+      </TownResetWrap>
       {selectCity === '제주시' ? (
         <SelectTownWrap>
           {jejuTown.map((item: string) => (
@@ -88,19 +93,38 @@ function TownSelect({ selectCity, selectTown, onClickSelectTown }: any) {
 export default TownSelect;
 
 const SelectContainer = styled.div`
+  width: 100vw;
+  display: flex;
   @media ${(props) => props.theme.mobile} {
     height: 30px;
   }
 `;
-const SelectTownWrap = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  margin: auto;
+const TownResetWrap = styled.div`
+  display: none;
   @media ${(props) => props.theme.mobile} {
-    width: 282px;
-    height: 40px;
     display: flex;
+    align-items: center;
+    width: 50px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+`;
+const TownReset = styled.img`
+  width: 28px;
+  height: 28px;
+`;
+const SelectTownWrap = styled.div`
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  overflow-x: scroll;
+  @media ${(props) => props.theme.mobile} {
+    padding-left: 50px;
+    height: 40px;
     overflow-x: scroll;
   }
 `;

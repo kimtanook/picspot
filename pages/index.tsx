@@ -1,11 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import { logEvent } from '@/utils/amplitude';
 
 function Landing() {
   const [imageTopHover, setImageTopHover] = useState(false);
   const [imageBottomHover, setImageBottomHover] = useState(false);
   const router = useRouter();
+
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('렌딩 페이지', { from: 'landing page' });
+  }, []);
 
   return (
     <LandingWrap>

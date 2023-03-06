@@ -7,14 +7,16 @@ import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import { useMediaQuery } from 'react-responsive';
+import { logEvent } from '@/utils/amplitude';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 823 });
+
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
@@ -40,6 +42,11 @@ export default function Mypage() {
 
   const followerCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('마이 페이지', { from: 'my page' });
+  }, []);
+
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
 
@@ -49,7 +56,13 @@ export default function Mypage() {
       {isMobile ? (
         ''
       ) : (
-        <Header selectCity={undefined} onChangeSelectCity={undefined} />
+        <Header
+          selectCity={undefined}
+          onChangeSelectCity={undefined}
+          searchOptionRef={undefined}
+          searchValue={undefined}
+          onChangeSearchValue={undefined}
+        />
       )}
 
       <MyContainer>

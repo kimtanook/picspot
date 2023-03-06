@@ -8,7 +8,6 @@ import { getTakeMessage, updateUser } from '@/api';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import {
-  messageBoxToggle,
   followingToggleAtom,
   followToggleAtom,
   editProfileModalAtom,
@@ -63,13 +62,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
     });
   };
 
-  // 쪽지함 버튼에 확인하지 않은 메세지 표시
-  const { data: takeMsgData } = useQuery(
-    ['getTakeMessageData', nowUser?.uid],
-    getTakeMessage
-  );
-  const checked = takeMsgData?.filter((item) => item.checked === false);
-
   // console.log('followingCount: ', followingCount);
   // console.log('followCount: ', followCount);
 
@@ -110,10 +102,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
               <ChangeOpenModal src="/open-arrow.png" alt="image" />
             </LogoutProfileButton>
           </ProfileNickname>
-
-          {/* <SendMessage onClick={() => setMsgToggle(true)}>
-            쪽지함/미확인{checked?.length}개
-          </SendMessage> */}
         </ProfileTextdiv>
         <Follow>
           <div onClick={() => setFollowToggle(!followToggle)}>

@@ -306,6 +306,23 @@ export const getUser = async () => {
   return response;
 };
 
+//* 댓글 작성한 유저만 가져오기
+export const getCommentUser = async ({ queryKey }: any) => {
+  // console.log('queryKey: ', queryKey);
+  const [, creatorId] = queryKey;
+  // console.log('creatorId: ', creatorId);
+  const q = query(collection(dbService, 'user'), where('uid', '==', creatorId));
+
+  const response: any = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    // console.log('doc.data(): ', doc.data());
+    response.push(doc.data());
+  });
+  // console.log('response[0]: ', response[0]);
+  return response[0];
+};
+
 //* 유저 수정하기
 export const updateUser: any = (data: any) => {
   updateDoc(doc(dbService, 'user', data.uid), data);

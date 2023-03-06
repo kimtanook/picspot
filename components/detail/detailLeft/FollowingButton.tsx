@@ -41,7 +41,7 @@ const FollowingButton = ({ item }: any) => {
     userMutate(creatorUserData);
     userMutate(authUserData);
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
-    logEvent('Following Button Clicked', { from: 'detail page' });
+    logEvent('팔로잉 버튼', { from: 'detail page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로우 삭제 데이터 보내기
@@ -53,7 +53,7 @@ const FollowingButton = ({ item }: any) => {
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
-    logEvent('Unfollowing Button Clicked', { from: 'detail page' });
+    logEvent('언팔로잉 버튼', { from: 'detail page' });
   };
 
   //* useQuery 사용해서 following 데이터 불러오기

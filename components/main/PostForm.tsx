@@ -11,6 +11,7 @@ import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { postModalAtom } from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
+import { useMediaQuery } from 'react-responsive';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
@@ -34,7 +35,8 @@ const PostForm = () => {
   const [imageUpload, setImageUpload]: any = useState(null);
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
-
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
   const [place, setPlace] = useState('');
   let postState: any = {
     title: title,
@@ -213,10 +215,24 @@ const PostForm = () => {
         </MapLandingPageWrap>
         <PostFormContainer>
           <PostFormContentBox>
-            <PostFormConteTitle>내 스팟 추가하기</PostFormConteTitle>
+            <PostFormContenTitle>
+              <ModalMapsBackButton
+                onClick={() => {
+                  setIsPostMapModal(!postMapModal);
+                }}
+              >
+                {isMobile && <MobileCancle src="/Back-point.png" />}
+                {/* {isPc && ''} */}
+              </ModalMapsBackButton>
+              내 스팟 추가하기
+            </PostFormContenTitle>
             <PostFormContentWrap>
               <div
-                style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}
+                style={{
+                  display: 'flex',
+                  width: 'auto',
+                  flexDirection: 'row',
+                }}
               >
                 <Img>
                   <input
@@ -307,11 +323,12 @@ const PostForm = () => {
             </PostFormInputWrap>
             <PostFormUploadButton>
               <CustomButton
-                width="400px"
+                width="373px"
                 height="48px"
                 borderRadius="0px"
                 color="white"
-                margin="0px"
+                margin="0px 5px"
+                padding="0px"
                 backgroundColor="#1882FF"
                 onClick={onClickAddData}
               >
@@ -329,40 +346,46 @@ export default PostForm;
 
 const PostFormWrap = styled.div`
   display: flex;
-  width: 1200px;
+  /* width: 1200px; */
   @media ${(props) => props.theme.mobile} {
-    width: 375px;
-    flex-direction: column;
-    overflow-y: scroll;
-    height: 950px;
-    background-color: white;
+    /* overflow-y: scroll; */
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    /* background-color: green; */
+    width: 100vw;
+    /* margin-top: 85vh; */
+    /* height: 100vh; */
+    z-index: 9999;
   }
 `;
 
 const MapLandingPageWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
-    /* flex-direction: column;
-    width: 100%; */
+    width: 100vw;
   }
 `;
 
 const PostFormContainer = styled.div`
   padding: 0px 60px;
+  background-color: white;
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
+    padding: 0px;
+    /* width: 100%; */
     /* background-color: Red; */
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    margin: 0 auto;
+    margin: 0 auto; */
   }
 `;
 
-const PostFormConteTitle = styled.h4`
+const PostFormContenTitle = styled.h4`
   margin-left: 10px;
   @media ${(props) => props.theme.mobile} {
+    position: relative;
     background-color: white;
-    text-align: center;
-    margin-left: 0px;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -371,18 +394,21 @@ const PostFormContentBox = styled.div`
   width: 400px;
   padding: 10px;
   @media ${(props) => props.theme.mobile} {
+    width: 425px;
     /* height: 1000px;
     width: 100%; */
+    /* top: 30px; */
+    /* background-color: yellow; */
   }
 `;
 
 const PostFormContentWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
-    background-color: white;
+    padding: 0 10px;
   }
 `;
 
@@ -393,8 +419,11 @@ const PostFormContentTop = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: -30px;
-  margin-right: 30px;
-  padding: 5px;
+  @media ${(props) => props.theme.mobile} {
+    /* background-color: coral; */
+    margin-right: 10px;
+    margin-top: 0px;
+  }
 `;
 
 const PostFormContentName = styled.span`
@@ -403,10 +432,9 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    margin: 0px;
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 21px;
+    /* margin-top: 20px; */
+    /* padding: 10px; */
+    font-size: 18px;
   }
 `;
 
@@ -417,8 +445,8 @@ const PostFormCategoryWrap = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     /* background-color: red; */
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
   }
 `;
 
@@ -433,7 +461,7 @@ const PostFormSelect = styled.select`
   border: none;
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
-    margin-top: 10px;
+    /* margin-top: 10px; */
   }
 `;
 
@@ -490,7 +518,7 @@ const PostFormInputTitle = styled.p`
 const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
+    margin-left: 10px;
   }
 `;
 
@@ -502,6 +530,10 @@ const Img = styled.label`
   background-color: red;
   cursor: pointer;
   margin: 10px;
+  @media ${(props) => props.theme.mobile} {
+    height: 100px;
+    width: 100px;
+  }
 `;
 
 const SpotImg = styled.img`
@@ -510,3 +542,12 @@ const SpotImg = styled.img`
   align-items: center;
   object-fit: contain;
 `;
+
+// 모바일 시 뒤로가기 버튼
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    left: 5%;
+  }
+`;
+const MobileCancle = styled.img``;

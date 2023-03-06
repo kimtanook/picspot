@@ -18,6 +18,7 @@ import UserCollectionList from '@/components/userprofile/UserCollectionList';
 import { useRecoilState } from 'recoil';
 import { messageSendToggle } from '@/atom';
 import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 
 function Profile() {
   const queryClient = useQueryClient();
@@ -78,6 +79,7 @@ function Profile() {
     // console.log('item: ', item);
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
     followMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('팔로잉 버튼', { from: 'userprofile page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
@@ -95,14 +97,26 @@ function Profile() {
     // console.log('item: ', item);
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('언팔로잉 버튼', { from: 'userprofile page' });
   };
 
   // console.log('getFollowingData?.length: ', getFollowingData?.length);
 
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('유저 프로필 페이지', { from: 'userprofile page' });
+  }, []);
+
   return (
     <>
       <Seo title="My" />
-      <Header selectCity={undefined} onChangeSelectCity={undefined} />
+      <Header
+        selectCity={undefined}
+        onChangeSelectCity={undefined}
+        searchOptionRef={undefined}
+        searchValue={undefined}
+        onChangeSearchValue={undefined}
+      />
       <UserContainer>
         <UserProfileContainer>
           <ProfileContainer>
