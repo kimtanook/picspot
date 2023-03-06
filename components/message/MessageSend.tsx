@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { addSendedMessage, addSendMessage } from '@/api';
 import { useRouter } from 'next/router';
+import { customAlert } from '@/utils/alerts';
 
 interface Props {
   setModal: (value: boolean) => void;
@@ -40,27 +41,21 @@ function MessageSend({ setModal }: Props) {
     };
     addMessage(sendMessageData, {
       onSuccess: () => {
-        setTimeout(
-          () => queryClient.invalidateQueries('getTakeMessageData'),
-          300
-        );
         setMessageValue('');
       },
     });
     sendedMessage(sendMessageData, {
       onSuccess: () => {
-        setTimeout(
-          () => queryClient.invalidateQueries('getSendMessageData'),
-          300
-        );
         setMessageValue('');
       },
     });
+    alert('전송완료!');
+    setModal(false);
   };
   return (
     <Wrap>
-      <CancelButton onClick={() => setModal(false)}>{'<'} 취소</CancelButton>
       <SendWrap>
+        <CancelButton onClick={() => setModal(false)}>〈 취소</CancelButton>
         <SendUserName>
           <UserProfileImg src={profileImg} alt="userImg" />
           {userName} 님께 쪽지 보내기
@@ -85,7 +80,15 @@ function MessageSend({ setModal }: Props) {
 
 export default MessageSend;
 
-const Wrap = styled.div``;
+const Wrap = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #00000061;
+  width: 100vw;
+  height: 100vh;
+`;
 const CancelButton = styled.button`
   background-color: white;
   color: #1882ff;
@@ -97,11 +100,20 @@ const CancelButton = styled.button`
 `;
 
 const SendWrap = styled.div`
-  width: 420px;
-  height: 374px;
+  background-color: white;
+  width: 524px;
+  height: 467px;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  @media ${(props) => props.theme.mobile} {
+    width: 300px;
+  }
 `;
 const SendUserName = styled.div`
   display: flex;
@@ -116,6 +128,9 @@ const SendUserName = styled.div`
   margin: 0 auto 0 auto;
   border-radius: 999px;
   font-weight: 700;
+  @media ${(props) => props.theme.mobile} {
+    width: 230px;
+  }
 `;
 const UserProfileImg = styled.img`
   width: 52px;
@@ -127,16 +142,24 @@ const SendContainer = styled.div`
   height: 161px;
   width: 420px;
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @media ${(props) => props.theme.mobile} {
+    width: 240px;
+  }
 `;
 const BodyText = styled.div`
   font-size: 16px;
   font-weight: 700;
   margin-bottom: 10px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const SendTextArea = styled.textarea`
   padding: 15px;
   background-color: #fbfbfb;
-  width: 390px;
   height: 128px;
   resize: none;
   border: none;
@@ -145,6 +168,10 @@ const SendTextArea = styled.textarea`
 const TextCount = styled.div`
   display: flex;
   justify-content: flex-end;
+  width: 420px;
+  @media ${(props) => props.theme.mobile} {
+    width: 240px;
+  }
 `;
 const Count = styled.div`
   color: #8e8e93;
@@ -157,4 +184,7 @@ const SendButton = styled.button`
   width: 420px;
   height: 48px;
   margin-top: 30px;
+  @media ${(props) => props.theme.mobile} {
+    width: 240px;
+  }
 `;
