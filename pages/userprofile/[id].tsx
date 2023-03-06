@@ -110,7 +110,13 @@ function Profile() {
   return (
     <>
       <Seo title="My" />
-      <Header selectCity={undefined} onChangeSelectCity={undefined} />
+      <Header
+        selectCity={undefined}
+        onChangeSelectCity={undefined}
+        searchOptionRef={undefined}
+        searchValue={undefined}
+        onChangeSearchValue={undefined}
+      />
       <UserContainer>
         <UserProfileContainer>
           <ProfileContainer>

@@ -40,17 +40,7 @@ function Layout() {
 
   return (
     <div>
-      <div>
-        {msgBoxToggle ? (
-          <CustomModal
-            modal={msgBoxToggle}
-            setModal={setMsgBoxToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageBox />}
-          />
-        ) : null}
-      </div>
+      <div>{msgBoxToggle ? <MessageBox /> : null}</div>
       <div>
         {msgSendToggle ? (
           <CustomModal
