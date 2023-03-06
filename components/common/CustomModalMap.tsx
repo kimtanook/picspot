@@ -9,7 +9,7 @@ interface ModalProps {
   setModal: Dispatch<SetStateAction<boolean>>;
 }
 
-export const CustomModal = ({
+export const CustomModalMap = ({
   modal,
   width,
   height,
@@ -49,7 +49,7 @@ const Container = styled.div<{ width: string; height: string }>`
   font-size: 24px;
 
   @media ${(props) => props.theme.mobile} {
-    /* height: 94%; */
+    height: 94%;
     padding: 0px;
   }
 `;

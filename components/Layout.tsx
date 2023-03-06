@@ -22,6 +22,7 @@ import Auth from './main/auth/Auth';
 import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
+import { CustomModalMap } from './common/CustomModalMap';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -141,7 +142,7 @@ function Layout() {
           <>
             <>
               {isMobile && (
-                <CustomModal
+                <CustomModalMap
                   modal={postMapModal}
                   setModal={setIsPostMapModal}
                   width="400px"
@@ -152,7 +153,7 @@ function Layout() {
             </>
             <>
               {isPc && (
-                <CustomModal
+                <CustomModalMap
                   modal={postMapModal}
                   setModal={setIsPostMapModal}
                   width="500"

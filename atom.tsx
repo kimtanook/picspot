@@ -51,3 +51,8 @@ export const townArray = atom({
   key: 'townArray',
   default: [],
 });
+
+export const selectCityAtom = atom({
+  key: 'selectCity',
+  default: false,
+});
