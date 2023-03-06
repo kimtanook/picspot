@@ -7,6 +7,7 @@ import {
 } from '@/api';
 import { followToggleAtom } from '@/atom';
 import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -27,7 +28,6 @@ const ModalFollow = () => {
   const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
 
   //! follow 핸들링 //////////////////////////////////////////////////////
-
   //* follow에서 docId와 현재 uid가 같은 follow만 뽑기
   const {
     data: followData,
@@ -40,7 +40,7 @@ const ModalFollow = () => {
       )[0]?.follow,
   });
   // console.log('followData: ', followData);
-  const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
+  const followerCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
   //* user에서 나를 팔로우한 사람 데이터 뽑기
   const { data: followUserData } = useQuery('UserData', getUser, {
@@ -70,11 +70,10 @@ const ModalFollow = () => {
   });
 
   //! following 핸들링 ///////////////////////////////////////////////////
-
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const { data: followingData } = useQuery('FollowingData', getFollowing, {
     select: (data) =>
-      data?.find((item: any) => item.uid === authService.currentUser?.uid)
+      data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
   // console.log('followingData: ', followingData);
@@ -96,12 +95,14 @@ const ModalFollow = () => {
   const onClickFollowingBtn = (item: any) => {
     console.log('item: ', item);
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('팔로잉 버튼', { from: 'mypage follow modal' });
   };
 
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowingBtn = (item: any) => {
     console.log('item: ', item);
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('언팔로잉 버튼', { from: 'mypage follow modal' });
   };
 
   //* 팔로우한 사람 버튼을 눌렀을때 실행하는 함수
@@ -120,7 +121,7 @@ const ModalFollow = () => {
         <div style={{ fontSize: 30, marginBottom: 20 }}>내 팔로워 목록</div>
         <FollowTotal>
           <FollowText>팔로워</FollowText>
-          <FollowCount>{null ? '0' : followCount}</FollowCount>
+          <FollowerCount>{null ? '0' : followerCount}</FollowerCount>
         </FollowTotal>
       </FollowList>
       {followUserData?.map((item: ItemType) => (
@@ -186,7 +187,7 @@ const FollowText = styled.div`
   padding-top: 10px;
 `;
 
-const FollowCount = styled.div`
+const FollowerCount = styled.div`
   color: #212121;
   font-size: 20px;
   padding-top: 10px;

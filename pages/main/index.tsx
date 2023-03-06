@@ -23,6 +23,7 @@ import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
+import { logEvent } from '@/utils/amplitude';
 
 export default function Main() {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function Main() {
   const isPc = useMediaQuery({ minWidth: 767 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
+
   // 뒷 배경 스크롤 방지
   useEffect(() => {
     const html = document.documentElement;
@@ -134,7 +136,7 @@ export default function Main() {
       setSelectTown(cancelSelect);
     }
   };
-  console.log('selectTown : ', selectTown);
+  // console.log('selectTown : ', selectTown);
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열
@@ -169,6 +171,11 @@ export default function Main() {
     // 무한스크롤로 인해 스크롤 복원 시 제대로 된 위치로 가지 않아서 임시로 setTimeout 사용
     setTimeout(() => scrollRevert(), 300);
     setChatToggle(false);
+  }, []);
+
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('메인 페이지', { from: 'main page' });
   }, []);
 
   return (

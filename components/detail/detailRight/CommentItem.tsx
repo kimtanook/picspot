@@ -1,5 +1,6 @@
 import { deleteComment } from '@/api';
 import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
@@ -20,6 +21,7 @@ function CommentItem({
         {
           onSuccess: () => {
             setTimeout(() => queryClient.invalidateQueries('comments'), 500);
+            logEvent('댓글 삭제 버튼', { from: 'detail page' });
           },
         }
       );

@@ -14,10 +14,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const authService = getAuth(app);
+4;
 const dbService = getFirestore(app);
 const storageService = getStorage(app);
 
 export { app, authService, dbService, storageService };
+
+// apiKey: "AIzaSyDLGl2U1Mr6y014lyHUJbQza7OLym6gmAc",
+// authDomain: "picspot-test1.firebaseapp.com",
+// projectId: "picspot-test1",
+// storageBucket: "picspot-test1.appspot.com",
+// messagingSenderId: "194196294348",
+// appId: "1:194196294348:web:fa3f70cf6e6db5a1c65069"
 
 // apiKey: "AIzaSyBFvyZWuGs9QhnRO3elDmPIysIMVoBAvpk",
 //     authDomain: "picspotofficial-2fb64.firebaseapp.com",

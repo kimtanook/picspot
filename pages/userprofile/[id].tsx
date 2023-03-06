@@ -18,6 +18,7 @@ import UserCollectionList from '@/components/userprofile/UserCollectionList';
 import { useRecoilState } from 'recoil';
 import { messageSendToggle } from '@/atom';
 import { authService } from '@/firebase';
+import { logEvent } from '@/utils/amplitude';
 
 function Profile() {
   const queryClient = useQueryClient();
@@ -78,6 +79,7 @@ function Profile() {
     // console.log('item: ', item);
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
     followMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('팔로잉 버튼', { from: 'userprofile page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
@@ -95,7 +97,15 @@ function Profile() {
     // console.log('item: ', item);
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('언팔로잉 버튼', { from: 'userprofile page' });
   };
+
+  // console.log('getFollowingData?.length: ', getFollowingData?.length);
+
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('유저 프로필 페이지', { from: 'userprofile page' });
+  }, []);
 
   return (
     <>
@@ -126,15 +136,19 @@ function Profile() {
               <FollowWrap>
                 <MyProfileFollowing>
                   팔로잉
-                  <FollowCount>
-                    {null ? '0' : getFollowingData?.length}
-                  </FollowCount>
+                  <FollowerCount>
+                    {getFollowingData?.length === undefined
+                      ? '0'
+                      : getFollowingData?.length}
+                  </FollowerCount>
                 </MyProfileFollowing>
                 <MyProfileFollower>
                   팔로워
-                  <FollowCount>
-                    {null ? '0' : getFollowData?.length}
-                  </FollowCount>
+                  <FollowerCount>
+                    {getFollowData?.length === undefined
+                      ? '0'
+                      : getFollowData?.length}
+                  </FollowerCount>
                 </MyProfileFollower>
               </FollowWrap>
             </ProfileText>
@@ -322,7 +336,7 @@ const FollowWrap = styled.div`
   margin-top: 10px;
   margin-left: 27px;
 `;
-const FollowCount = styled.div`
+const FollowerCount = styled.div`
   margin-top: 10px;
 `;
 const MyProfileFollowing = styled.div`

@@ -8,6 +8,7 @@ import { useMutation } from 'react-query';
 import { addUser } from '@/api';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
+import { setAmplitudeUserId } from '@/utils/amplitude';
 
 interface AuthForm {
   email: string;
@@ -64,6 +65,7 @@ const AuthSignUp = () => {
         setCloseLoginModal(false);
         setSignUpModal(false);
         setForgotModal(false);
+        setAmplitudeUserId(authService.currentUser?.uid);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
@@ -270,8 +272,8 @@ const EditInputBox = styled.div`
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -281,8 +283,8 @@ const EditclearBtn = styled.div`
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
