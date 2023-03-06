@@ -265,13 +265,13 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-
+        {/* 
         {postMapModal ? (
           <CustomModal
             modal={postMapModal}
             setModal={setIsPostMapModal}
-            width="1100"
-            height="632"
+            width="500"
+            height="500"
             element={
               <PostFormWrap>
                 <PostForm />
@@ -280,13 +280,13 @@ export default function Main() {
           />
         ) : (
           ''
-        )}
+        )} */}
         {isModalActive ? (
           <CustomModal
             modal={isModalActive}
             setModal={setIsModalActive}
             width="500"
-            height="0"
+            height="-10"
             element={
               <>
                 <ModalMapsWrap>
@@ -294,15 +294,15 @@ export default function Main() {
                     selectTown={selectTown}
                     selectCity={selectCity}
                   ></ModalMaps>
+                  <ModalMapsBackButton
+                    onClick={() => {
+                      setIsModalActive(!isModalActive);
+                    }}
+                  >
+                    {isMobile && <MobileCancle src="/Back-point.png" />}
+                    {isPc && ''}
+                  </ModalMapsBackButton>
                 </ModalMapsWrap>
-                <ModalMapsBackButton
-                  onClick={() => {
-                    setIsModalActive(!isModalActive);
-                  }}
-                >
-                  {isMobile && <MobileCancle src="/Back-point.png" />}
-                  {isPc && ''}
-                </ModalMapsBackButton>
               </>
             }
           />
@@ -507,15 +507,16 @@ const PostFormWrap = styled.div`
 const ModalMapsWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: relative;
-    margin-top: 55%;
+    /* margin-top: 55%; */
+    display: flex;
   }
 `;
 const ModalMapsBackButton = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: absolute;
-    left: 15%;
-    top: 3%;
     z-index: 1000;
+    top: 5vw;
+    left: 3vh;
   }
 `;
 
