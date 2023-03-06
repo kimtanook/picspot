@@ -19,8 +19,8 @@ const Header = ({
 }: {
   selectCity: string | string[] | undefined;
   onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
-  searchValue: string;
-  searchOptionRef: RefObject<HTMLSelectElement>;
+  searchValue: string | undefined;
+  searchOptionRef: RefObject<HTMLSelectElement> | undefined;
   onChangeSearchValue: any;
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
