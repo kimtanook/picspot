@@ -132,7 +132,7 @@ export default function Main() {
       setSelectTown(cancelSelect);
     }
   };
-  console.log('selectTown : ', selectTown);
+  // console.log('selectTown : ', selectTown);
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열

@@ -112,7 +112,7 @@ const Input = styled.input`
   border: transparent;
   height: 20px;
   width: 70%;
-  padding-left: 20px;
+  margin-left: 20px;
 `;
 
 const InputBtnContainer = styled.div`

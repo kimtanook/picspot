@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import GlobalStyle from './global';
 import { ThemeProvider } from 'styled-components';
+import { useEffect } from 'react';
+import { init } from '@amplitude/analytics-browser';
+// import { ReactQueryDevtools } from 'react-query/devtools';
 
 const client = new QueryClient({
   defaultOptions: {
@@ -19,6 +22,10 @@ const theme = {
 };
 
 export default function App({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    init('e579522099b0ce6296a946a184165cf3');
+  }, []);
+
   return (
     <QueryClientProvider client={client}>
       <RecoilRoot>
@@ -28,6 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </ThemeProvider>
       </RecoilRoot>
+      {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
     </QueryClientProvider>
   );
 }

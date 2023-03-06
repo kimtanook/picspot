@@ -96,8 +96,8 @@ function ModalProfile() {
   //* useMutation 사용해서 user 데이터 수정하기
   let editUser: any = {
     uid: authService.currentUser?.uid,
-    userName: '',
-    userImg: '',
+    userName: authService.currentUser?.displayName,
+    userImg: authService.currentUser?.photoURL,
   };
   const { mutate: onUpdateUser } = useMutation(updateUser);
 
@@ -107,6 +107,9 @@ function ModalProfile() {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
+
+    // console.log('data: ', data);
+
     const imgRef = ref(
       storageService,
       `${authService.currentUser?.uid}${uuidv4()}`
@@ -119,9 +122,15 @@ function ModalProfile() {
     }
     editUser = {
       ...editUser,
-      userName: data.nickname,
-      userImg: downloadUrl,
+      userName:
+        data.nickname === undefined
+          ? authService.currentUser?.displayName
+          : data.nickname,
+      userImg: downloadUrl === undefined ? '/profileicon.svg' : downloadUrl,
     };
+
+    // console.log('editUser: ', editUser);
+
     onUpdateUser(editUser, {
       onSuccess: () => {
         console.log('유저수정 요청 성공');
