@@ -79,6 +79,7 @@ function Profile() {
     // console.log('item: ', item);
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
     followMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('팔로잉 버튼', { from: 'userprofile page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
@@ -96,6 +97,7 @@ function Profile() {
     // console.log('item: ', item);
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
+    logEvent('언팔로잉 버튼', { from: 'userprofile page' });
   };
 
   // console.log('getFollowingData?.length: ', getFollowingData?.length);

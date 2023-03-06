@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { followingToggleAtom } from '@/atom';
+import { logEvent } from '@amplitude/analytics-browser';
 
 interface ItemType {
   uid: string;
@@ -52,6 +53,7 @@ const ModalFollowing = () => {
   //* 언팔로잉 버튼 눌렀을때 실행하는 함수
   const onClickDeleteFollowing = (item: any) => {
     deleteFollowingMutate({ ...item, uid: authService.currentUser?.uid });
+    logEvent('언팔로잉 버튼', { from: 'mypage following modal' });
   };
 
   //* 팔로잉한 사람 버튼을 눌렀을때 실행하는 함수
