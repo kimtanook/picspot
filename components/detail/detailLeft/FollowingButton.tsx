@@ -7,6 +7,7 @@ import {
   updateUser,
 } from '@/api';
 import { authService } from '@/firebase';
+import { logEvent } from '@amplitude/analytics-browser';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -40,6 +41,7 @@ const FollowingButton = ({ item }: any) => {
     userMutate(creatorUserData);
     userMutate(authUserData);
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
+    logEvent('Following Button Clicked', { from: 'detail page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로우 삭제 데이터 보내기
@@ -51,6 +53,7 @@ const FollowingButton = ({ item }: any) => {
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
+    logEvent('Unfollowing Button Clicked', { from: 'detail page' });
   };
 
   //* useQuery 사용해서 following 데이터 불러오기

@@ -8,6 +8,7 @@ import { customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
 import { useMediaQuery } from 'react-responsive';
+import { setAmplitudeUserId } from '@/utils/amplitude';
 
 interface AuthForm {
   email: string;
@@ -45,6 +46,7 @@ const Auth = (): JSX.Element => {
       .then((res) => {
         customConfirm('로그인에 성공하였습니다!');
         setCloseLoginModal(!closeLoginModal);
+        setAmplitudeUserId(authService.currentUser?.uid);
       })
       .then(() => {})
       .catch(() => {

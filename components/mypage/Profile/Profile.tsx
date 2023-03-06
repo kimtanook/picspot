@@ -13,6 +13,7 @@ import {
   followToggleAtom,
   editProfileModalAtom,
 } from '@/atom';
+import { resetAmplitude } from '@/utils/amplitude';
 
 const imgFile = '/profileicon.svg';
 
@@ -53,6 +54,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       setCurrentUser(false);
       customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
+      resetAmplitude();
     });
   };
 
@@ -62,6 +64,9 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
     getTakeMessage
   );
   const checked = takeMsgData?.filter((item) => item.checked === false);
+
+  // console.log('followingCount: ', followingCount);
+  // console.log('followCount: ', followCount);
 
   return (
     <ProfileContainer>
@@ -97,15 +102,14 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
         <Follow>
           <div onClick={() => setfollowingToggle(!followingToggle)}>
             <FollowerCount>
-              {null ? followingCount : '0'}팔로잉
+              {followingCount === undefined ? '0' : followingCount}팔로잉
               <FollowingOpenModal src="/open-arrow.png" alt="image" />
             </FollowerCount>
           </div>
           <FollowBtween>|</FollowBtween>
           <div onClick={() => setFollowToggle(!followToggle)}>
             <FollowerCount>
-              {null ? followerCount : '0'}
-              팔로워
+              {followerCount === undefined ? '0' : followerCount}팔로우
             </FollowerCount>
           </div>
         </Follow>
