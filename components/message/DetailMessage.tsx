@@ -15,38 +15,47 @@ function DetailMessage({
   const queryClient = useQueryClient();
   const { mutate: checkedMutate } = useMutation(checkedMessageData);
   const checkedMessage = () => {
-    if (item.checked) {
+    if (box === '보낸메세지') {
+      setToggle(false);
+    } else if (item.checked) {
       setToggle(false);
     } else {
       checkedMutate(
         { user: item.takeUser, id: item.id },
         {
           onSuccess: () => {
-            setTimeout(() => {
-              if (box === '받은메세지') {
-                queryClient.invalidateQueries('getTakeMessageData');
-              } else {
-                queryClient.invalidateQueries('getSendMessageData');
-              }
-            }, 300);
+            if (box === '받은메세지') {
+              setTimeout(
+                () => queryClient.invalidateQueries('getTakeMessageData'),
+                300
+              );
+            }
+            setToggle(false);
           },
         }
       );
-      setTimeout(() => setToggle(false), 300);
     }
   };
-
+  const day = new Date(item.time! + 9 * 60 * 60 * 1000).toLocaleString(
+    'ko-KR',
+    {
+      timeZone: 'UTC',
+    }
+  );
   return (
     <Wrap>
-      <div>내용</div>
-      <div>{item.message}</div>
-      <div
-        onClick={() => {
-          checkedMessage();
-        }}
-      >
-        닫기
-      </div>
+      <MessageContainer>
+        <ItemTitleText>내용</ItemTitleText>
+        <ItemDay>{day}</ItemDay>
+        <MessageContent>{item.message}</MessageContent>
+        <CloseButton
+          onClick={() => {
+            checkedMessage();
+          }}
+        >
+          닫기
+        </CloseButton>
+      </MessageContainer>
     </Wrap>
   );
 }
@@ -54,11 +63,44 @@ function DetailMessage({
 export default DetailMessage;
 
 const Wrap = styled.div`
-  background-color: aqua;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  max-height: 300px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+`;
+const MessageContainer = styled.div`
+  background-color: white;
+  width: 370px;
+  height: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+`;
+const ItemTitleText = styled.div`
+  font-size: 20px;
+  width: 320px;
+`;
+const ItemDay = styled.div``;
+const MessageContent = styled.div`
+  padding: 12px;
+  width: 320px;
+  height: 260px;
+  border: 1px solid gray;
+`;
+const CloseButton = styled.button`
+  width: 320px;
+  height: 38px;
+  border: none;
+  background-color: #1882ff;
+  color: white;
+  cursor: pointer;
 `;

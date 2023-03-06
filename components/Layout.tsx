@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import {
   messageBoxToggle,
   messageSendToggle,
@@ -8,6 +9,7 @@ import {
   loginModalAtom,
   postModalAtom,
   editProfileModalAtom,
+  mobileProfileModalAtom,
 } from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -22,6 +24,7 @@ import Auth from './main/auth/Auth';
 import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
+import Profile from './mypage/Profile/Profile';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -35,32 +38,17 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
+  const [mobileProfileModal, setMobileProfileModal] = useRecoilState(
+    mobileProfileModalAtom
+  );
 
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   return (
     <div>
+      <div>{msgBoxToggle ? <MessageBox /> : null}</div>
       <div>
-        {msgBoxToggle ? (
-          <CustomModal
-            modal={msgBoxToggle}
-            setModal={setMsgBoxToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageBox />}
-          />
-        ) : null}
-      </div>
-      <div>
-        {msgSendToggle ? (
-          <CustomModal
-            modal={msgSendToggle}
-            setModal={setMsgSendToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageSend setModal={setMsgSendToggle} />}
-          />
-        ) : null}
+        {msgSendToggle ? <MessageSend setModal={setMsgSendToggle} /> : null}
       </div>
       <div>
         {followingToggle ? (
@@ -136,6 +124,19 @@ function Layout() {
           </>
         )}
       </>
+      {/* <>
+        {mobileProfileModal ? (
+          <CustomModal
+            modal={mobileProfileModal}
+            setModal={setMobileProfileModal}
+            width="100"
+            height="100"
+            element={
+              <Profile followingCount={undefined} followerCount={undefined} />
+            }
+          />
+        ) : null}{' '}
+      </> */}
       <>
         {postMapModal && (
           <>
@@ -179,3 +180,10 @@ function Layout() {
 }
 
 export default Layout;
+
+const ProfileModal = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    width: 300px;
+    height: 300px;
+  }
+`;

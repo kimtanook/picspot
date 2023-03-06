@@ -15,8 +15,7 @@ import { logEvent } from '@/utils/amplitude';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-
+  const isMobile = useMediaQuery({ maxWidth: 823 });
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
@@ -56,7 +55,13 @@ export default function Mypage() {
       {isMobile ? (
         ''
       ) : (
-        <Header selectCity={undefined} onChangeSelectCity={undefined} />
+        <Header
+          selectCity={undefined}
+          onChangeSelectCity={undefined}
+          searchOptionRef={undefined}
+          searchValue={undefined}
+          onChangeSearchValue={undefined}
+        />
       )}
 
       <MyContainer>
@@ -102,6 +107,9 @@ const MyContainer = styled.div`
 const MyProfileContainer = styled.div`
   width: 600px;
   height: 200px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+  }
 `;
 
 const AllMyPostList = styled.div`
