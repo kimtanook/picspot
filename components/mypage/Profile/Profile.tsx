@@ -13,15 +13,16 @@ import {
   followToggleAtom,
   editProfileModalAtom,
 } from '@/atom';
+import { resetAmplitude } from '@/utils/amplitude';
 
 const imgFile = '/profileicon.svg';
 
 interface propsType {
   followingCount: number;
-  followCount: number;
+  followerCount: number;
 }
 
-const Profile = ({ followingCount, followCount }: propsType) => {
+const Profile = ({ followingCount, followerCount }: propsType) => {
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
   const [followingToggle, setfollowingToggle] =
@@ -53,6 +54,7 @@ const Profile = ({ followingCount, followCount }: propsType) => {
       setCurrentUser(false);
       customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
+      resetAmplitude();
     });
   };
 
@@ -63,18 +65,16 @@ const Profile = ({ followingCount, followCount }: propsType) => {
   );
   const checked = takeMsgData?.filter((item) => item.checked === false);
 
+  // console.log('followingCount: ', followingCount);
+  // console.log('followCount: ', followCount);
+
   return (
     <ProfileContainer>
-      <ProfileEdit>
-        {/* 사진 */}
-        <div>
-          <ProfileImage img={profileimg}></ProfileImage>
-          {/* 프로필 수정 */}
-          <ProfileEditBtn onClick={editProfileModalButton}>
-            내 정보 변경 {'>'}
-          </ProfileEditBtn>
-        </div>
-      </ProfileEdit>
+      {/* 사진 */}
+      <div>
+        <ProfileImage img={profileimg}></ProfileImage>
+      </div>
+
       <ProfileText>
         <ProfileTextdiv>
           <ProfileNickname>
@@ -82,26 +82,36 @@ const Profile = ({ followingCount, followCount }: propsType) => {
             <Link href={'/main?city=제주전체'}>
               {/* 로그아웃 */}
               {authService.currentUser ? (
-                <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+                <LogoutProfileButton onClick={logOut}>
+                  로그아웃
+                </LogoutProfileButton>
               ) : null}
             </Link>
+            {/* 프로필 수정 */}
+            <LogoutProfileButton onClick={editProfileModalButton}>
+              내 정보 변경
+              <ChangeOpenModal src="/open-arrow.png" alt="image" />
+            </LogoutProfileButton>
           </ProfileNickname>
-          <SendMessage onClick={() => setMsgToggle(true)}>
+
+          {/* <SendMessage onClick={() => setMsgToggle(true)}>
             쪽지함/미확인{checked?.length}개
-          </SendMessage>
+          </SendMessage> */}
         </ProfileTextdiv>
 
         <Follow>
-          <MyProfileFollowing
-            onClick={() => setfollowingToggle(!followingToggle)}
-          >
-            <FollowingText>팔로잉</FollowingText>
-            <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
-          </MyProfileFollowing>
-          <MyProfileFollower onClick={() => setFollowToggle(!followToggle)}>
-            <FollowerText>팔로워</FollowerText>
-            <FollowerCount>{null ? '0' : followCount}</FollowerCount>
-          </MyProfileFollower>
+          <div onClick={() => setfollowingToggle(!followingToggle)}>
+            <FollowerCount>
+              {followingCount === undefined ? '0' : followingCount}팔로잉
+              <FollowingOpenModal src="/open-arrow.png" alt="image" />
+            </FollowerCount>
+          </div>
+          <FollowBtween>|</FollowBtween>
+          <div onClick={() => setFollowToggle(!followToggle)}>
+            <FollowerCount>
+              {followerCount === undefined ? '0' : followerCount}팔로우
+            </FollowerCount>
+          </div>
         </Follow>
       </ProfileText>
     </ProfileContainer>
@@ -114,133 +124,94 @@ const ProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const ProfileEdit = styled.div``;
 const ProfileImage = styled.div<{ img: string }>`
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 100px;
   background-size: cover;
   background-image: url(${(props) => props.img});
   background-position: center center;
 `;
-const ProfileEditBtn = styled.button`
-  font-family: Noto Sans CJK KR;
-  border: none;
-  background-color: transparent;
-  color: #1882ff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  padding-top: 15px;
-  padding-left: 35px;
-  cursor: pointer;
-`;
+
 const ProfileText = styled.div`
-  padding-right: 30px;
-  width: 500px;
+  padding-left: 30px;
+  width: 330px;
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-  margin-left: 20px;
+  justify-content: left;
+  padding-bottom: 5px;
 `;
 
 const ProfileNickname = styled.span`
   font-family: Noto Sans CJK KR;
-  width: 50%;
-  height: 36px;
+  color: #212121;
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
   text-align: left;
-  padding-left: 20px;
 `;
-
-const SendMessage = styled.button`
-  background-color: white;
-  border: 1px black solid;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: 0.5s;
-  :hover {
-    background-color: black;
-    color: white;
-    transition: 0.5s;
-  }
-`;
-const LogoutButton = styled.button`
+const LogoutProfileButton = styled.button`
   font-family: Noto Sans CJK KR;
-  color: #8e8e93;
   border: none;
   background-color: transparent;
+  color: #5b5b5f;
   text-decoration-line: underline;
-  font-weight: 400;
   font-size: 14px;
-  width: 80px;
-  height: 40px;
   cursor: pointer;
 `;
-const Follow = styled.div`
-  display: flex;
+const ChangeOpenModal = styled.img`
+  background-color: transparent;
+  padding-left: 7px;
+  width: 15px;
+  height: 14px;
+  display: inline-flex;
   justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const FollowingOpenModal = styled.img`
+  background-color: transparent;
+  padding-left: 7px;
+  width: 17px;
+  height: 16px;
+  cursor: pointer;
+`;
+
+// const SendMessage = styled.button`
+//   background-color: white;
+//   border: 1px black solid;
+//   border-radius: 16px;
+//   cursor: pointer;
+//   transition: 0.5s;
+//   :hover {
+//     background-color: black;
+//     color: white;
+//     transition: 0.5s;
+//   }
+// `;
+
+const Follow = styled.div`
+  font-size: 16px;
+  font-family: Noto Sans CJK KR;
+  color: #5b5b5f;
+  display: flex;
+  text-align: left;
   align-items: center;
   gap: 16px;
 `;
-const MyProfileFollowing = styled.div`
-  font-family: Noto Sans CJK KR;
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  padding: 11px 20px;
-  width: 120px;
-  height: 85px;
-  text-align: center;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-const FollowingText = styled.div`
-  font-family: Noto Sans CJK KR;
-  color: 5B5B5F;
-  font-size: 20px;
-  padding-top: 10px;
-`;
-
-const FollowingCount = styled.div`
-  font-family: Noto Sans CJK KR;
-  color: #212121;
-  font-size: 20px;
-  padding-top: 10px;
-`;
-
-const MyProfileFollower = styled.div`
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  padding: 11px 20px;
-  width: 120px;
-  height: 85px;
-  text-align: center;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const FollowerText = styled.div`
-  font-family: Noto Sans CJK KR;
-  color: 5B5B5F;
-  font-size: 20px;
-  padding-top: 10px;
-`;
 
 const FollowerCount = styled.div`
+  font-size: 16px;
   font-family: Noto Sans CJK KR;
-  color: #212121;
-  font-size: 20px;
-  padding: 10px;
+  color: #5b5b5f;
+  padding-top: 10px;
+`;
+
+const FollowBtween = styled.div`
+  font-size: 25px;
+  font-family: Noto Sans CJK KR;
+  color: #d9d9d9;
+  padding-top: 10px;
 `;

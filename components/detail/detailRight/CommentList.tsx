@@ -6,6 +6,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { authService } from '@/firebase';
 import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
+import { logEvent } from '@amplitude/analytics-browser';
 
 const CommentList = ({ postId }: postId) => {
   const [inputCount, setInputCount] = useState(0);
@@ -37,6 +38,7 @@ const CommentList = ({ postId }: postId) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries('comments');
+            logEvent('댓글 등록 버튼', { from: 'detail page' });
           },
         }
       );
@@ -112,7 +114,7 @@ const Input = styled.input`
   border: transparent;
   height: 20px;
   width: 70%;
-  padding-left: 20px;
+  margin-left: 20px;
 `;
 
 const InputBtnContainer = styled.div`

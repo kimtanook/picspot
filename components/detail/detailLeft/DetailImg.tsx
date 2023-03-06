@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CustomModal } from '@/components/common/CustomModal';
 import { useRecoilState } from 'recoil';
 import { editAtom } from '@/atom';
+import { logEvent } from '@/utils/amplitude';
 
 const DetailImg = ({ item }: any) => {
   let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
@@ -78,6 +79,7 @@ const DetailImg = ({ item }: any) => {
               );
               customConfirm('수정을 완료하였습니다!');
               setImageUpload(null);
+              logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
             },
           }
         );
