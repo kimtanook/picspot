@@ -35,10 +35,8 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
-
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
-
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
 
   // 뒷 배경 스크롤 방지
