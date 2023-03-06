@@ -85,7 +85,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
             {/* 프로필 수정 */}
             <LogoutProfileButton onClick={editProfileModalButton}>
               내 정보 변경
-              <ChangeOpenModal src="/open-arrow.png" />
+              <ChangeOpenModal src="/open-arrow.png" alt="image" />
             </LogoutProfileButton>
           </ProfileNickname>
 
@@ -98,7 +98,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
           <div onClick={() => setfollowingToggle(!followingToggle)}>
             <FollowerCount>
               {null ? followingCount : '0'}팔로잉
-              <FollowingOpenModal src="/open-arrow.png" />
+              <FollowingOpenModal src="/open-arrow.png" alt="image" />
             </FollowerCount>
           </div>
           <FollowBtween>|</FollowBtween>
@@ -158,7 +158,7 @@ const LogoutProfileButton = styled.button`
 `;
 const ChangeOpenModal = styled.img`
   background-color: transparent;
-  padding-left: 4px;
+  padding-left: 7px;
   width: 15px;
   height: 14px;
   display: inline-flex;
@@ -169,7 +169,7 @@ const ChangeOpenModal = styled.img`
 
 const FollowingOpenModal = styled.img`
   background-color: transparent;
-  padding-left: 4px;
+  padding-left: 7px;
   width: 17px;
   height: 16px;
   cursor: pointer;

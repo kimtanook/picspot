@@ -38,78 +38,49 @@ function TownSelect({ selectCity, selectTown, onClickSelectTown }: any) {
   ];
   return (
     <SelectContainer>
-      <WebSelect>
-        {selectCity === '제주시' ? (
-          <div>
-            {jejuTown.map((item: string) => (
+      {selectCity === '제주시' ? (
+        <SelectTownWrap>
+          {jejuTown.map((item: string) => (
+            <div key={uuidv4()}>
               <TownBtn
-                key={uuidv4()}
                 town={selectTown}
                 value={item}
                 onClick={onClickSelectTown}
               >
                 {item}
               </TownBtn>
-            ))}
-          </div>
-        ) : selectCity === '서귀포시' ? (
-          <div>
-            {seogwipoTown.map((item: string) => (
+            </div>
+          ))}
+        </SelectTownWrap>
+      ) : selectCity === '서귀포시' ? (
+        <SelectTownWrap>
+          {seogwipoTown.map((item: string) => (
+            <div key={uuidv4()}>
               <TownBtn
-                key={uuidv4()}
                 town={selectTown}
                 value={item}
                 onClick={onClickSelectTown}
               >
                 {item}
               </TownBtn>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {allTown.map((item: string) => (
+            </div>
+          ))}
+        </SelectTownWrap>
+      ) : (
+        <SelectTownWrap>
+          {allTown.map((item: string) => (
+            <div key={uuidv4()}>
               <TownBtn
-                key={uuidv4()}
                 town={selectTown}
                 value={item}
                 onClick={onClickSelectTown}
               >
                 {item}
               </TownBtn>
-            ))}
-          </div>
-        )}
-      </WebSelect>
-      <MobileSelect>
-        {selectCity === '제주시' ? (
-          <Select onChange={onClickSelectTown} value={selectTown}>
-            <option value="">제주시 전체</option>
-            {jejuTown.map((item: string) => (
-              <TownOption key={uuidv4()} value={item}>
-                {item}
-              </TownOption>
-            ))}
-          </Select>
-        ) : selectCity === '서귀포시' ? (
-          <Select onChange={onClickSelectTown} value={selectTown}>
-            <option value="">서귀포시 전체</option>
-            {seogwipoTown.map((item: string) => (
-              <TownOption key={uuidv4()} value={item}>
-                {item}
-              </TownOption>
-            ))}
-          </Select>
-        ) : (
-          <Select onChange={onClickSelectTown} value={selectTown}>
-            <option value="">제주도 전체</option>
-            {allTown.map((item: string) => (
-              <TownOption key={uuidv4()} value={item}>
-                {item}
-              </TownOption>
-            ))}
-          </Select>
-        )}
-      </MobileSelect>
+            </div>
+          ))}
+        </SelectTownWrap>
+      )}
     </SelectContainer>
   );
 }
@@ -118,23 +89,19 @@ export default TownSelect;
 
 const SelectContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
+    height: 30px;
   }
 `;
+const SelectTownWrap = styled.div`
+  display: flex;
+  flex-direction: row;
 
-const WebSelect = styled.div`
   margin: auto;
   @media ${(props) => props.theme.mobile} {
-    display: none;
-  }
-`;
-const Select = styled.select`
-  border: none;
-  background-color: inherit;
-`;
-const MobileSelect = styled.div`
-  display: none;
-  @media ${(props) => props.theme.mobile} {
-    display: inherit;
+    width: 282px;
+    height: 40px;
+    display: flex;
+    overflow-x: scroll;
   }
 `;
 
@@ -149,4 +116,3 @@ const TownBtn = styled.button<{ town: string[]; value: string }>`
   border: ${({ value, town }) =>
     town.includes(value) ? '2px solid #FEB819' : 'none'};
 `;
-const TownOption = styled.option``;

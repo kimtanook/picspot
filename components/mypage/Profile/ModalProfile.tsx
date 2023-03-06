@@ -210,7 +210,11 @@ function ModalProfile() {
           {/* 사진 변경 또는 삭제 */}
           <div>
             <ProfilePhotoDeleteBtn>
-              <CancleImg src="/cancle-button.png" onClick={deleteImgFile} />
+              <CancleImg
+                src="/cancle-button.png"
+                alt="image"
+                onClick={deleteImgFile}
+              />
               <ProfilePhotoLabel htmlFor="changePhoto">
                 <ProfilePhoto img={imgEdit}>
                   <ProfilePhotoHover img={imgEdit}>
@@ -244,9 +248,9 @@ function ModalProfile() {
               <NicknameToggleText>
                 닉네임 변경하기
                 {nicknameToggle ? (
-                  <CloseNicknameToggleImg src="/under-arrow.png" />
+                  <CloseNicknameToggleImg src="/under-arrow.png" alt="image" />
                 ) : (
-                  <OpenNicknameToggleImg src="/right-arrow.png" />
+                  <OpenNicknameToggleImg src="/right-arrow.png" alt="image" />
                 )}
               </NicknameToggleText>
             </NicknameToggleContainer>
@@ -284,9 +288,9 @@ function ModalProfile() {
                   <PwToggleText>
                     비밀번호 변경하기
                     {pwToggle ? (
-                      <ClosePwToggleImg src="/under-arrow.png" />
+                      <ClosePwToggleImg src="/under-arrow.png" alt="image" />
                     ) : (
-                      <OpenPwToggleImg src="/right-arrow.png" />
+                      <OpenPwToggleImg src="/right-arrow.png" alt="image" />
                     )}
                   </PwToggleText>
                 </PwToggleContainer>

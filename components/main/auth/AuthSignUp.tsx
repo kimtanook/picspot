@@ -270,8 +270,8 @@ const EditInputBox = styled.div`
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -281,8 +281,8 @@ const EditclearBtn = styled.div`
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);

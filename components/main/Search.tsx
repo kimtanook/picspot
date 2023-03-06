@@ -37,12 +37,11 @@ const SearchWrap = styled.div`
   width: 24px;
   margin-right: 4px;
   transition: 1s;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
   :hover {
     width: 300px;
-    transition: 1s;
-  }
-  & > input :focus {
-    background-color: aqua;
     transition: 1s;
   }
 `;
@@ -50,6 +49,9 @@ const Select = styled.select`
   border: none;
   border-radius: 10px;
   margin-right: 5px;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const SearchInput = styled.input`
   padding-left: 28px;

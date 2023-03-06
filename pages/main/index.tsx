@@ -18,11 +18,11 @@ import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
-
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Main() {
   const router = useRouter();
@@ -34,6 +34,7 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   // 뒷 배경 스크롤 방지
@@ -58,6 +59,7 @@ export default function Main() {
 
   const onClickTogglePostModal = () => {
     if (!authService.currentUser) {
+      customAlert('로그인을 해주세요.');
       setCloseLoginModal(true);
       return;
     }
@@ -170,10 +172,16 @@ export default function Main() {
   return (
     <Wrap>
       <Seo title="Home" />
+
       <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
+
       <MainContainer>
         <SearchAndForm>
-          <PostFormButton onClick={() => setIsPostMapModal(true)}>
+          <PostFormButton
+            onClick={() => {
+              onClickTogglePostModal();
+            }}
+          >
             + 나의 스팟 추가
           </PostFormButton>
 
@@ -334,8 +342,8 @@ const CityCategory = styled.select`
 const SelectContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     display: flex;
+    flex-direction: column;
     margin: auto;
-    width: 150px;
   }
 `;
 const SearchAndForm = styled.div`
@@ -345,11 +353,13 @@ const SearchAndForm = styled.div`
   left: 70px;
   flex-direction: row-reverse;
   align-items: center;
-  margin-top: 10px;
-  margin-left: 55%;
+  margin-top: 3px;
+  margin-left: 53%;
   width: 440px;
   @media ${(props) => props.theme.mobile} {
-    display: none;
+    top: 30px;
+    left: 30%;
+    transform: translate(-100%, -50%);
   }
 `;
 const PostFormButton = styled.button`
@@ -360,6 +370,11 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 8px;
+    width: 84px;
+    height: 20px;
+  }
 `;
 
 const CategoriesWrap = styled.div`
