@@ -30,15 +30,11 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
   const [followingToggle, setfollowingToggle] =
     useRecoilState(followingToggleAtom);
   const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
-  const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
   const [isOpen, setIsOpen] = useState(false);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [currentUser, setCurrentUser] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
-
-  const isMobile = useMediaQuery({ maxWidth: 823 });
-  const isPc = useMediaQuery({ minWidth: 824 });
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -75,7 +71,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
 
   return (
     <ProfileContainer>
-      <di>
+      <div>
         <div onClick={() => setIsOpen(!isOpen)}>
           <MenuPointImg src="/three-point.png" />
         </div>
@@ -86,7 +82,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
             <MenuItem onClick={logOut}>로그아웃</MenuItem>
           </Menu>
         ) : null}
-      </di>
+      </div>
       {/* 사진 */}
       <ProfileImageDiv>
         <ProfileImage img={profileimg}></ProfileImage>
@@ -110,10 +106,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
               <ChangeOpenModal src="/open-arrow.png" alt="image" />
             </LogoutProfileButton>
           </ProfileNickname>
-
-          {/* <SendMessage onClick={() => setMsgToggle(true)}>
-            쪽지함/미확인{checked?.length}개
-          </SendMessage> */}
         </ProfileTextdiv>
         <Follow>
           <div onClick={() => setFollowToggle(!followToggle)}>
