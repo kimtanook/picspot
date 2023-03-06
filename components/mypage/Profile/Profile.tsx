@@ -246,6 +246,7 @@ const LogoutProfileButton = styled.button`
   color: #5b5b5f;
   text-decoration-line: underline;
   font-size: 14px;
+  display: inline-flex;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     display: none;

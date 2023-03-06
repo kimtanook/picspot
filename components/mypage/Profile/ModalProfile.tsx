@@ -12,6 +12,7 @@ import { updateUser } from '@/api';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { editProfileModalAtom } from '@/atom';
+import { useMediaQuery } from 'react-responsive';
 
 const imgFile = '/profileicon.svg';
 
@@ -34,6 +35,9 @@ function ModalProfile() {
   const imgRef = useRef<HTMLInputElement>(null);
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [imgEdit, setImgEdit] = useState<string>(profileimg);
+
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   // 모달 창이 나왔을때 백그라운드 클릭이 안되게 하고 스크롤도 고정하는 방법
   useEffect(() => {
@@ -209,15 +213,15 @@ function ModalProfile() {
             setEditProfileModal(!editProfileModal);
           }}
         >
-          {' '}
-          〈 취소{' '}
+          {isMobile && <ProfileEditCancleBtn src={'/Back-point.png'} />}
+          {isPc && <>〈 취소 </>}
         </Heder>
         <ProfileContainerForm onSubmit={handleSubmit(onSubmit)}>
           <ProfileTextDiv>
             <b>회원정보 변경</b>
           </ProfileTextDiv>
           {/* 사진 변경 또는 삭제 */}
-          <div>
+          <ProfilePhotoDeleteBtnDiv>
             <ProfilePhotoDeleteBtn>
               <CancleImg
                 src="/cancle-button.png"
@@ -230,15 +234,15 @@ function ModalProfile() {
                     <Image
                       src={'/gallery.png'}
                       alt="gallery"
-                      width={19.5}
-                      height={19.5}
+                      width={16.5}
+                      height={16.5}
                     />
                     <span>프로필 사진 변경</span>
                   </ProfilePhotoHover>
                 </ProfilePhoto>
               </ProfilePhotoLabel>
             </ProfilePhotoDeleteBtn>
-          </div>
+          </ProfilePhotoDeleteBtnDiv>
           <EditProfileContainer>
             <ProfilePhotoInput
               hidden
@@ -248,7 +252,7 @@ function ModalProfile() {
               onChange={saveImgFile}
               ref={imgRef}
             />
-            {/* 닉네임 변경 */}
+            {/* 임 변경 */}
             <NicknameToggleContainer
               onClick={() => {
                 setNicknameToggle((e) => !e);
@@ -384,6 +388,9 @@ const ModalStyled = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+  }
 
   .modalBody {
     position: relative;
@@ -398,12 +405,26 @@ const ModalStyled = styled.div`
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
     overflow-y: auto;
+    @media ${(props) => props.theme.mobile} {
+      width: 100%;
+      height: 30000px;
+    }
   }
 `;
 const Heder = styled.header`
   cursor: pointer;
   color: #1882ff;
   font-size: 14px;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    left: 6%;
+    top: 7%;
+  }
+`;
+
+const ProfileEditCancleBtn = styled.img`
+  width: 12px;
+  height: 28px;
 `;
 const ProfileContainerForm = styled.form`
   display: flex;
@@ -421,7 +442,16 @@ const ProfileTextDiv = styled.div`
   line-height: 138.5%;
   text-align: center;
   color: #212121;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 20px;
+  }
 `;
+const ProfilePhotoDeleteBtnDiv = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    margin-left: 20px;
+  }
+`;
+
 const ProfilePhotoDeleteBtn = styled.div`
   background-color: transparent;
   border: none;
@@ -450,6 +480,11 @@ const ProfilePhoto = styled.div<{ img: string }>`
   justify-content: center;
   align-items: center;
   opacity: 1;
+  @media ${(props) => props.theme.mobile} {
+    width: 100px;
+    height: 100px;
+    margin-top: 30px;
+  }
 `;
 const ProfilePhotoHover = styled.div<{ img: string }>`
   width: 120px;
@@ -473,14 +508,25 @@ const ProfilePhotoHover = styled.div<{ img: string }>`
     );
     color: white;
   }
+  @media ${(props) => props.theme.mobile} {
+    width: 100px;
+    height: 100px;
+  }
 `;
 const EditProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
+  @media ${(props) => props.theme.mobile} {
+    width: 84vw;
+  }
 `;
-const ProfilePhotoInput = styled.input``;
+const ProfilePhotoInput = styled.input`
+  @media ${(props) => props.theme.mobile} {
+    width: 1px;
+  }
+`;
 const NicknameToggleContainer = styled.div`
   background-color: transparent;
   margin-top: 36px;
@@ -490,6 +536,10 @@ const NicknameToggleContainer = styled.div`
   padding: '10px';
   box-sizing: 'border-box';
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    display: flow-root;
+  }
 `;
 const NicknameToggleText = styled.div`
   font-family: 'Noto Sans CJK KR';
@@ -505,6 +555,11 @@ const NicknameToggleText = styled.div`
   justify-content: space-between;
   width: 394px;
   margin-left: 10px;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    width: 100%;
+    margin-left: 0px;
+  }
 `;
 const OpenNicknameToggleImg = styled.img`
   width: 12.03px;
@@ -521,6 +576,11 @@ const EditInputBox = styled.div`
   height: 48px;
   position: relative;
   margin-left: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 90vw;
+    margin-left: 0px;
+    margin-top: 5px;
+  }
 `;
 const EditclearBtn = styled.div`
   position: absolute;
@@ -540,6 +600,11 @@ const EditInput = styled.input`
   background-color: #fbfbfb;
   border: 1px solid #1882ff;
   margin-top: 8px;
+  @media ${(props) => props.theme.mobile} {
+    width: 83.5vw;
+    border: 0px;
+    border-bottom: 2px solid #1882ff;
+  }
 `;
 
 const PwToggleContainer = styled.div`
@@ -551,6 +616,10 @@ const PwToggleContainer = styled.div`
   padding: '10px';
   box-sizing: 'border-box';
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    display: flow-root;
+  }
 `;
 const PwToggleText = styled.div`
   font-family: 'Noto Sans CJK KR';
@@ -566,6 +635,11 @@ const PwToggleText = styled.div`
   justify-content: space-between;
   width: 394px;
   margin-left: 10px;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    width: 100%;
+    margin-left: 0px;
+  }
 `;
 const OpenPwToggleImg = styled.img`
   width: 12.03px;
@@ -588,13 +662,18 @@ const SaveEditBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  width: 470px;
+  width: 400px;
   bottom: 120px;
   position: absolute;
   bottom: 0;
   left: 0;
   margin-left: 64px;
   margin-bottom: 64px;
+  @media ${(props) => props.theme.mobile} {
+    margin-left: 0px;
+    width: 100%;
+    align-items: center;
+  }
 `;
 const SaveEditBtn = styled.button`
   display: flex;
@@ -609,5 +688,10 @@ const SaveEditBtn = styled.button`
   height: 48px;
   &:hover {
     cursor: pointer;
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 84%;
+    height: 41px;
+    align-items: center;
   }
 `;
