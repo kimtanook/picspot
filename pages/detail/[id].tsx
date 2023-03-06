@@ -18,7 +18,7 @@ import { logEvent } from '@/utils/amplitude';
 
 const Post = ({ id }: any) => {
   // console.log('id: ', id);
-  console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
+  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
 
   //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
