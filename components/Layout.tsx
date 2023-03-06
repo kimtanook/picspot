@@ -48,15 +48,7 @@ function Layout() {
     <div>
       <div>{msgBoxToggle ? <MessageBox /> : null}</div>
       <div>
-        {msgSendToggle ? (
-          <CustomModal
-            modal={msgSendToggle}
-            setModal={setMsgSendToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageSend setModal={setMsgSendToggle} />}
-          />
-        ) : null}
+        {msgSendToggle ? <MessageSend setModal={setMsgSendToggle} /> : null}
       </div>
       <div>
         {followingToggle ? (

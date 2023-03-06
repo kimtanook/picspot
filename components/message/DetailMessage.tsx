@@ -15,7 +15,9 @@ function DetailMessage({
   const queryClient = useQueryClient();
   const { mutate: checkedMutate } = useMutation(checkedMessageData);
   const checkedMessage = () => {
-    if (item.checked) {
+    if (box === '보낸메세지') {
+      setToggle(false);
+    } else if (item.checked) {
       setToggle(false);
     } else {
       checkedMutate(
@@ -25,11 +27,6 @@ function DetailMessage({
             if (box === '받은메세지') {
               setTimeout(
                 () => queryClient.invalidateQueries('getTakeMessageData'),
-                300
-              );
-            } else {
-              setTimeout(
-                () => queryClient.invalidateQueries('getSendMessageData'),
                 300
               );
             }

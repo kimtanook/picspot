@@ -123,9 +123,10 @@ const SelectTownWrap = styled.div`
   flex-direction: row;
   overflow-x: scroll;
   @media ${(props) => props.theme.mobile} {
-    padding-left: 50px;
     height: 40px;
     overflow-x: scroll;
+    justify-content: inherit;
+    align-items: inherit;
   }
 `;
 
