@@ -23,8 +23,8 @@ const Auth = (): JSX.Element => {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   const {
     register,
     setValue,
