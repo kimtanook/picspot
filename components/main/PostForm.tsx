@@ -11,6 +11,7 @@ import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { postModalAtom } from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
+import { useMediaQuery } from 'react-responsive';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
@@ -34,7 +35,8 @@ const PostForm = () => {
   const [imageUpload, setImageUpload]: any = useState(null);
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
-
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
   const [place, setPlace] = useState('');
   let postState: any = {
     title: title,
@@ -213,7 +215,17 @@ const PostForm = () => {
         </MapLandingPageWrap>
         <PostFormContainer>
           <PostFormContentBox>
-            <PostFormConteTitle>내 스팟 추가하기</PostFormConteTitle>
+            <PostFormContenTitle>
+              <ModalMapsBackButton
+                onClick={() => {
+                  setIsPostMapModal(!postMapModal);
+                }}
+              >
+                {isMobile && <MobileCancle src="/Back-point.png" />}
+                {/* {isPc && ''} */}
+              </ModalMapsBackButton>
+              내 스팟 추가하기
+            </PostFormContenTitle>
             <PostFormContentWrap>
               <div
                 style={{
@@ -367,12 +379,13 @@ const PostFormContainer = styled.div`
   }
 `;
 
-const PostFormConteTitle = styled.h4`
+const PostFormContenTitle = styled.h4`
   margin-left: 10px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: white;
-    text-align: center;*/
-    padding: 10px;
+    position: relative;
+    background-color: white;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -529,3 +542,12 @@ const SpotImg = styled.img`
   align-items: center;
   object-fit: contain;
 `;
+
+// 모바일 시 뒤로가기 버튼
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    left: 5%;
+  }
+`;
+const MobileCancle = styled.img``;
