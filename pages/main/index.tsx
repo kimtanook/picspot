@@ -149,6 +149,7 @@ export default function Main() {
     logEvent('메인 페이지', { from: 'main page' });
   }, []);
 
+  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
   useEffect(() => {
     setIsMobile(mobile);
   }, [mobile]);

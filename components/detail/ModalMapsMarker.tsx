@@ -4,8 +4,18 @@ import React from 'react';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import MapPanTo from './MapPanTo';
+// 타입해결하기
+interface IModalMapsMarkerProps {
+  item: IMarkerData;
+  isOpen: any;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const ModalMapsMarker = ({ item, isOpen, setIsOpen }: any) => {
+const ModalMapsMarker = ({
+  item,
+  isOpen,
+  setIsOpen,
+}: IModalMapsMarkerProps) => {
   return (
     <div>
       <MapPanTo item={item} setIsOpen={setIsOpen} />
