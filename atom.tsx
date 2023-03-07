@@ -53,5 +53,31 @@ export const mobileProfileModalAtom = atom({
 });
 export const townArray = atom({
   key: 'townArray',
-  default: [],
+  default: [] as string[],
+});
+
+// export const townArray = atom<string[]>({
+//   key: 'townArray',
+//   default: []
+// });
+
+export const saveLatLngAtom = atom({
+  key: 'saveLatLng',
+  default: [] as any,
+});
+export const saveAddressAtom = atom({
+  key: 'saveAddress',
+  default: false,
+});
+export const searchCategoryAtom = atom({
+  key: 'searchCategory',
+  default: [] as any,
+});
+export const placeAtom = atom({
+  key: 'place',
+  default: [] as any,
+});
+export const infoDivAtom = atom({
+  key: 'infoDiv',
+  default: false,
 });
