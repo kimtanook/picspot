@@ -11,10 +11,12 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^1.9.1",
     "@next/font": "13.1.6",
+    "@types/browser-image-compression": "^1.0.9",
     "@types/react-responsive": "^8.0.5",
     "@types/react-responsive-masonry": "^2.1.0",
     "@types/uuid": "^9.0.0",
     "babel-plugin-styled-components": "^2.0.7",
+    "browser-image-compression": "^2.0.2",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "firebase": "^9.17.1",

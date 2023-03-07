@@ -105,15 +105,15 @@ const PostTownTitle = styled.div`
 
 const MyPostTownTitle = styled.div`
   font-family: 'Noto Sans CJK KR';
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 16px;
+  line-height: 38px;
   text-align: left;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: -0.015em;
 `;
 const MySpotImg = styled.div`
   width: 97%;
-  margin-top: 24px;
+  margin-top: 12px;
   height: 256px;
   overflow: hidden;
   display: grid;
@@ -167,7 +167,7 @@ const MyPostImg = styled.img`
 const MorePostTownTitle = styled.div`
   height: 43px;
   border-bottom: 1px solid #212121;
-  margin-bottom: 25px;
+  margin-bottom: 14px;
   @media ${(props) => props.theme.mobile} {
     width: 100%;
     margin: auto;
@@ -177,10 +177,10 @@ const MorePostTownTitle = styled.div`
 
 const MoreMyPostTownTitle = styled.div`
   font-family: 'Noto Sans CJK KR';
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 16px;
+  line-height: 38px;
   text-align: left;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: -0.015em;
 `;
 const MoreBtn = styled.button`
