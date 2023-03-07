@@ -24,6 +24,7 @@ import { customAlert } from '@/utils/alerts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
+import Image from 'next/image';
 
 export default function Main() {
   const router = useRouter();
@@ -251,7 +252,10 @@ export default function Main() {
                 '닫기'
               ) : (
                 <ChatLogoWrap>
-                  <ChatLogo src="/chat-logo.png" />
+                  <ChatLogeBox>
+                    {/* <ChatLogo src="/chat-logo.png" /> */}
+                    <Image src="/chat-logo.png" alt="chatLogo" layout="fill" />
+                  </ChatLogeBox>
                 </ChatLogoWrap>
               )}
             </ChatToggleBtn>
@@ -316,7 +320,9 @@ export default function Main() {
 
         <MapModalBtn onClick={onClickToggleMapModal}>
           <div>
-            <PinImg src="/pin.png" />
+            <PinImgBox>
+              <Image src="/pin.png" alt="pinImg" layout="fill" />
+            </PinImgBox>
           </div>
           <div>지도에서 핀 보기</div>
         </MapModalBtn>
@@ -436,12 +442,21 @@ const MapModalBtn = styled.button`
     z-index: 1;
   }
 `;
+const PinImgBox = styled.div`
+  position: relative;
+  margin-right: 3px;
+`;
 const PinImg = styled.img`
   margin-right: 3px;
 `;
 const ChatLogoWrap = styled.div`
   display: flex;
   justify-content: center;
+`;
+const ChatLogeBox = styled.div`
+  position: relative;
+  width: 40px;
+  height: 40px;
 `;
 const ChatLogo = styled.img`
   width: 40px;

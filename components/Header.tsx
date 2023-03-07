@@ -9,6 +9,7 @@ import { getTakeMessage } from '@/api';
 import { useQuery } from 'react-query';
 import { customAlert } from '@/utils/alerts';
 import Search from './main/Search';
+import Image from 'next/image';
 
 const Header = ({
   selectCity,
@@ -78,7 +79,15 @@ const Header = ({
             localStorage.clear();
           }}
         >
-          <LogoImg src="/logo.png" alt="logo" />
+          {/* <LogoImg src="/logo.png" alt="logo" /> */}
+          <LogoImgBox>
+            <Image
+              src="/logo.png"
+              alt="logoImg"
+              layout="fill"
+              priority={true}
+            />
+          </LogoImgBox>
         </Title>
       </Link>
       {router.route === '/main' ? (
@@ -108,10 +117,19 @@ const Header = ({
         {nowUser ? (
           <MessageImgWrap>
             <div>
-              <Menu
+              {/* <Menu
                 src="/menu.png"
                 onClick={() => setMenuToggle(!menuToggle)}
-              />
+              /> */}
+              <MenuImgBox>
+                <Image
+                  src="/menu.png"
+                  alt="meunImg"
+                  layout="fill"
+                  priority={true}
+                  onClick={() => setMenuToggle(!menuToggle)}
+                />
+              </MenuImgBox>
             </div>
             {menuToggle ? (
               <DropMenu>
@@ -125,10 +143,19 @@ const Header = ({
               </DropMenu>
             ) : null}
             <MessageWrap>
-              <MessageImg
+              {/* <MessageImg
                 onClick={() => setMsgToggle(true)}
                 src="/message/message-icon.png"
+              /> */}
+              {/* <MessageImgBox> */}
+              <Image
+                src="/message/message-icon.png"
+                alt="messageImg"
+                layout="fill"
+                priority={true}
+                onClick={() => setMsgToggle(true)}
               />
+              {/* </MessageImgBox> */}
               {checked?.length === 0 ? null : (
                 <CheckedCount>{checked?.length}</CheckedCount>
               )}
@@ -139,9 +166,25 @@ const Header = ({
         {currentUser ? (
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
-              <ProfileImg src={userImg} alt="profile" />
+              // <ProfileImg src={userImg} alt="profile" />
+              <ProfileImgBox>
+                <Image
+                  src={userImg}
+                  alt="profileImg"
+                  layout="fill"
+                  priority={true}
+                />
+              </ProfileImgBox>
             ) : (
-              <ProfileImg src="/profileicon.svg" alt="profile" />
+              // <ProfileImg src="/profileicon.svg" alt="profile" />
+              <ProfileImgBox>
+                <Image
+                  src="/profileicon.svg"
+                  alt="profileImg"
+                  layout="fill"
+                  priority={true}
+                />
+              </ProfileImgBox>
             )}
           </div>
         ) : (
@@ -183,14 +226,24 @@ const Title = styled.div`
   }
 `;
 
-const LogoImg = styled.img`
+const LogoImgBox = styled.div`
   width: 107px;
   height: 29px;
+  position: relative;
   @media ${(props) => props.theme.mobile} {
     width: 92px;
     height: 25px;
   }
 `;
+
+// const LogoImg = styled.img`
+//   width: 107px;
+//   height: 29px;
+//   @media ${(props) => props.theme.mobile} {
+//     width: 92px;
+//     height: 25px;
+//   }
+// `;
 
 const CityCategory = styled.select`
   position: absolute;
@@ -244,7 +297,9 @@ const HeaderRight = styled.div`
   @media ${(props) => props.theme.mobile} {
   }
 `;
-const Menu = styled.img`
+
+const MenuImgBox = styled.div`
+  position: relative;
   display: none;
   @media ${(props) => props.theme.mobile} {
     display: inherit;
@@ -253,6 +308,17 @@ const Menu = styled.img`
     margin-right: 8px;
   }
 `;
+
+// const Menu = styled.img`
+//   display: none;
+//   @media ${(props) => props.theme.mobile} {
+//     display: inherit;
+//     width: 24px;
+//     height: 24px;
+//     margin-right: 8px;
+//   }
+// `;
+
 const DropMenu = styled.div`
   background-color: #ffffff;
   width: 100px;
@@ -279,18 +345,29 @@ const PostFormButtonMobile = styled.button`
     height: 28px;
   }
 `;
+
+// const MessageImgBox = styled.div`
+//   position: relative;
+//   cursor: pointer;
+// `;
+
 const MessageWrap = styled.div`
+  width: 25px;
+  height: 25px;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  position: relative;
+  cursor: pointer;
 `;
+
 const MessageImgWrap = styled.div`
   display: flex;
   margin: 0 8px 0 0;
 `;
-const MessageImg = styled.img`
-  cursor: pointer;
-`;
+// const MessageImg = styled.img`
+//   cursor: pointer;
+// `;
 const CheckedCount = styled.div`
   background-color: red;
   color: white;
@@ -299,6 +376,15 @@ const CheckedCount = styled.div`
   width: 12px;
   height: 12px;
 `;
+
+const ProfileImgBox = styled.div`
+  position: relative;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+`;
+
 const ProfileImg = styled.img`
   border-radius: 50%;
   width: 30px;

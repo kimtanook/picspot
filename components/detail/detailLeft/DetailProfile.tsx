@@ -1,5 +1,6 @@
 import { getUser } from '@/api';
 import { authService } from '@/firebase';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
@@ -21,7 +22,7 @@ const DetailProfile = ({ item }: any) => {
 
   //* useQuery 사용해서 유저 데이터 불러오기
   const { data: user } = useQuery('data', getUser);
-  
+
   return (
     <>
       {user
@@ -33,7 +34,15 @@ const DetailProfile = ({ item }: any) => {
           >
             {authService.currentUser?.uid === obj.uid ? (
               <>
-                <ProfileImg src={obj.userImg} alt="image" />
+                {/* <ProfileImg src={obj.userImg} alt="image" /> */}
+                <ProfileImgBox>
+                  <Image
+                    src={obj.userImg}
+                    alt="userImage"
+                    layout="fill"
+                    priority={true}
+                  />
+                </ProfileImgBox>
                 <ProfileName>{obj.userName}</ProfileName>
               </>
             ) : (
@@ -58,6 +67,18 @@ const ProfileContainer = styled.div`
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     height: 50px;
+  }
+`;
+
+const ProfileImgBox = styled.div`
+  position: relative;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 30px;
+    height: 30px;
   }
 `;
 
