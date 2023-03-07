@@ -79,5 +79,5 @@ export const placeAtom = atom({
 });
 export const infoDivAtom = atom({
   key: 'infoDiv',
-  default: false,
+  default: [] as any,
 });

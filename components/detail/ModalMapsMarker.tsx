@@ -60,7 +60,6 @@ const ModalMapsMarker = ({ item, isOpen, setIsOpen }: any) => {
 
 const OverLayWrap = styled.div`
   width: 185px;
-  /* height: 256px; */
   margin-top: -300px;
   background-color: white;
   box-shadow: 2.5px 5px 5px gray;
