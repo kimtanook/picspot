@@ -30,11 +30,9 @@ function Landing() {
             </LandingTitleItem>
           </LandingTitle>
         </LogoTitleWrap>
-        {/* <TouchImage src="/landing/touch.png" /> */}
         <TouchImageBox>
           <Image src="/landing/touch.webp" alt="LandingTouch" layout="fill" />
         </TouchImageBox>
-        {/* <CloudTop src="/landing/cloud_1.svg" /> */}
         <CloudTopBox>
           <Image
             src="/landing/cloud_1.webp"
@@ -42,7 +40,6 @@ function Landing() {
             layout="fill"
           />
         </CloudTopBox>
-        {/* <CloudBottom src="/landing/cloud_2.svg" /> */}
 
         <CloudBottomBox>
           <Image
@@ -52,18 +49,6 @@ function Landing() {
           />
         </CloudBottomBox>
         <LandTop>
-          {/* <ImageTop
-            src={imageTopHover ? '/landing/top-hover.svg' : '/landing/top.svg'}
-            onMouseOver={() => setImageTopHover(true)}
-            onMouseOut={() => setImageTopHover(false)}
-            onClick={() =>
-              router.push({
-                pathname: '/main',
-                query: { city: '제주시' },
-              })
-            }
-            alt="land-top"
-          /> */}
           <ImageTopBox>
             <Image
               src={
@@ -84,22 +69,6 @@ function Landing() {
         </LandTop>
         <LandBottom>
           <ImageBottomBox>
-            {/* <ImageBottom
-            src={
-              imageBottomHover
-                ? '/landing/bottom-hover.svg'
-                : '/landing/bottom.svg'
-            }
-            onMouseOver={() => setImageBottomHover(true)}
-            onMouseOut={() => setImageBottomHover(false)}
-            onClick={() =>
-              router.push({
-                pathname: '/main',
-                query: { city: '서귀포시' },
-              })
-            }
-            alt="land-bottom"
-          /> */}
             <Image
               src={
                 imageBottomHover

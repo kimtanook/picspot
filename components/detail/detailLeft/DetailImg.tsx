@@ -11,6 +11,7 @@ import { CustomModal } from '@/components/common/CustomModal';
 import { useRecoilState } from 'recoil';
 import { editAtom } from '@/atom';
 import { logEvent } from '@/utils/amplitude';
+import imageCompression from 'browser-image-compression';
 
 const DetailImg = ({ item }: any) => {
   let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
@@ -41,14 +42,31 @@ const DetailImg = ({ item }: any) => {
   };
 
   //* 파일 선택 버튼을 눌렀을때 실행하는 함수
-  const onChangeEditImgUrl = (e: any) => {
-    const theFile = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(theFile);
-    reader.onloadend = (finishedEvent) => {
-      const { result }: any = finishedEvent.currentTarget;
-      setImageUpload(result);
+  const onChangeEditImgUrl = async (e: any) => {
+    const options = {
+      maxSizeMB: 1, //* 허용하는 최대 사이즈 지정
+      maxWidthOrHeight: 500, //* 허용하는 최대 width, height 값 지정
+      useWebWorker: true, //* webworker 사용 여부
     };
+
+    const theFile = e.target.files[0];
+
+    try {
+      const compressedFile = await imageCompression(theFile, options);
+      // console.log('compressedFile: ', compressedFile);
+
+      const reader = new FileReader();
+      // reader?.readAsDataURL(theFile);
+      reader?.readAsDataURL(compressedFile);
+      reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        }: any = finishedEvent;
+        setImageUpload(result);
+      };
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //* useMutation 사용해서 데이터 수정하기
@@ -60,7 +78,8 @@ const DetailImg = ({ item }: any) => {
       customAlert('이미지를 추가해주세요.');
     }
 
-    const imageRef = ref(storageService, `images/${uuidv4()}`);
+    // const imageRef = ref(storageService, `images/${uuidv4()}`);
+    const imageRef = ref(storageService, `image/${uuidv4()}`);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
@@ -147,7 +166,7 @@ const DetailImg = ({ item }: any) => {
             게시물 사진 변경 〉
             <input
               type="file"
-              accept="image/png, image/jpeg, image/jpg"
+              accept="image/png, image/jpeg, image/jpg, image/webp"
               onChange={onChangeEditImgUrl}
               src={imageUpload}
               ref={editFileInput}

@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil';
 import { postModalAtom } from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
 import { useMediaQuery } from 'react-responsive';
+import imageCompression from 'browser-image-compression';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
@@ -32,7 +33,10 @@ const PostForm = () => {
   const [town, setTown] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  //* 이미지 업로드
   const [imageUpload, setImageUpload]: any = useState(null);
+
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
   const isMobile = useMediaQuery({ maxWidth: 766 });
@@ -58,8 +62,9 @@ const PostForm = () => {
 
   //* image 업로드 후 화면 표시 함수
   // 수정코드
-  const handleImageChange = (e: any) => {
-    const file: any = e.target.files;
+  const handleImageChange = async (e: any) => {
+    let file: any = e.target.files;
+
     if (file.length === 0) {
       return;
     } else {
@@ -67,33 +72,33 @@ const PostForm = () => {
         currentTarget: { files },
       } = e;
 
-      const theFile = files[0];
-      const reader = new FileReader();
-      reader?.readAsDataURL(theFile);
-      reader.onloadend = (finishedEvent) => {
-        const {
-          currentTarget: { result },
-        }: any = finishedEvent;
-        setImageUpload(result);
+      const options = {
+        maxSizeMB: 1, //* 허용하는 최대 사이즈 지정
+        maxWidthOrHeight: 500, //* 허용하는 최대 width, height 값 지정
+        useWebWorker: true, //* webworker 사용 여부
       };
+
+      let theFile = files[0];
+      // console.log('theFile; ', theFile);
+
+      try {
+        const compressedFile = await imageCompression(theFile, options);
+        // console.log('compressedFile: ', compressedFile);
+
+        const reader = new FileReader();
+        // reader?.readAsDataURL(theFile);
+        reader?.readAsDataURL(compressedFile);
+        reader.onloadend = (finishedEvent) => {
+          const {
+            currentTarget: { result },
+          }: any = finishedEvent;
+          setImageUpload(result);
+        };
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
-
-  // 기존코드
-  // const handleImageChange = (e: any) => {
-  //   const {
-  //     target: { files },
-  //   } = e;
-  //   const theFile = files[0];
-  //   const reader = new FileReader();
-  //   reader?.readAsDataURL(theFile);
-  //   reader.onloadend = (finishedEvent) => {
-  //     const {
-  //       currentTarget: { result },
-  //     }: any = finishedEvent;
-  //     setImageUpload(result);
-  //   };
-  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -123,7 +128,8 @@ const PostForm = () => {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
-    const imageRef = ref(storageService, `images/${uuidv4()}`);
+    // const imageRef = ref(storageService, `images/${uuidv4()}`);
+    const imageRef = ref(storageService, `image/${uuidv4()}`);
 
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
@@ -237,7 +243,7 @@ const PostForm = () => {
                 <Img>
                   <input
                     type="file"
-                    accept="image/png, image/jpeg, image/jpg"
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
                     onChange={handleImageChange}
                     src={imageUpload}
                     ref={fileInput}
