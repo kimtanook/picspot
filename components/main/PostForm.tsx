@@ -21,22 +21,17 @@ import { useMediaQuery } from 'react-responsive';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
-
-  // const [saveLatLng, setSaveLatLng]: any = useState([]);
   const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
-  const [saveAddress, setSaveAddress] = useRecoilState<any>(saveAddressAtom);
-  // const [saveAddress, setSaveAddress]: any = useState();
+  const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory] =
     useRecoilState(searchCategoryAtom);
-  // const [searchCategory, setSearchCategory]: any = useState('');
-  console.log('searchCategory', searchCategory);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
   const [textareaCount, setTextareaCount] = useState(0);
-  console.log('saveAddress', saveAddress);
+
   //* 카테고리
   const [city, setCity] = useState('');
   const [town, setTown] = useState('');
@@ -68,7 +63,7 @@ const PostForm = () => {
   const { mutate: onAddData, isLoading } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
-  // 수정코드
+
   const handleImageChange = (e: any) => {
     const file: any = e.target.files;
     if (file.length === 0) {
@@ -89,22 +84,6 @@ const PostForm = () => {
       };
     }
   };
-
-  // 기존코드
-  // const handleImageChange = (e: any) => {
-  //   const {
-  //     target: { files },
-  //   } = e;
-  //   const theFile = files[0];
-  //   const reader = new FileReader();
-  //   reader?.readAsDataURL(theFile);
-  //   reader.onloadend = (finishedEvent) => {
-  //     const {
-  //       currentTarget: { result },
-  //     }: any = finishedEvent;
-  //     setImageUpload(result);
-  //   };
-  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -166,7 +145,7 @@ const PostForm = () => {
     setPlace(e.target.value);
     setTown(e.target.value);
   };
-  console.log('saveLatLng', saveLatLng);
+
   // 지도에 마커 변경시 카테고리 변경
   useEffect(() => {
     if (!saveAddress) {

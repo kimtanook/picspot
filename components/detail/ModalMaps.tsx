@@ -3,7 +3,7 @@ import { townArray } from '@/atom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CustomOverlayMap,
   Map,
@@ -19,14 +19,17 @@ import ModalMapsMarker from './ModalMapsMarker';
 const ModalMaps = () => {
   const { data, isLoading, isError } = useQuery('bringData', getData) as any;
   const [isOpen, setIsOpen]: any = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
+  // const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const router = useRouter();
   const selectCity = router.query.city;
+  // const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
-  console.log('data', data);
+
   return (
     <MapModalMainWrap>
       {isMobile && (
@@ -50,7 +53,7 @@ const ModalMaps = () => {
 
           {data
 
-            .filter((item: any) =>
+            .filter((item: IMarkerData) =>
               selectTown.length === 0 && selectCity === '제주전체'
                 ? true
                 : selectTown.length === 0 && item.city === selectCity
@@ -58,7 +61,7 @@ const ModalMaps = () => {
                 : selectTown.includes(item.town)
             )
 
-            .map((item: any) => {
+            .map((item: IMarkerData) => {
               return (
                 <ModalMapsMarker
                   item={item}
@@ -90,7 +93,7 @@ const ModalMaps = () => {
 
           {data
 
-            .filter((item: any) =>
+            .filter((item: IMarkerData) =>
               selectTown.length === 0 && selectCity === '제주전체'
                 ? true
                 : selectTown.length === 0 && item.city === selectCity
@@ -98,7 +101,7 @@ const ModalMaps = () => {
                 : selectTown.includes(item.town)
             )
 
-            .map((item: any) => {
+            .map((item: IMarkerData) => {
               return (
                 <ModalMapsMarker
                   item={item}
