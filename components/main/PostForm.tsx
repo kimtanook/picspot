@@ -9,24 +9,34 @@ import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
-import { postModalAtom } from '@/atom';
+import {
+  placeAtom,
+  postModalAtom,
+  saveAddressAtom,
+  saveLatLngAtom,
+  searchCategoryAtom,
+} from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
 import { useMediaQuery } from 'react-responsive';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
 
-  const [saveLatLng, setSaveLatLng]: any = useState([]);
-  const [saveAddress, setSaveAddress]: any = useState();
+  // const [saveLatLng, setSaveLatLng]: any = useState([]);
+  const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
+  const [saveAddress, setSaveAddress] = useRecoilState<any>(saveAddressAtom);
+  // const [saveAddress, setSaveAddress]: any = useState();
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory]: any = useState('');
-
+  const [searchCategory, setSearchCategory] =
+    useRecoilState(searchCategoryAtom);
+  // const [searchCategory, setSearchCategory]: any = useState('');
+  console.log('searchCategory', searchCategory);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
   const [textareaCount, setTextareaCount] = useState(0);
-
+  console.log('saveAddress', saveAddress);
   //* 카테고리
   const [city, setCity] = useState('');
   const [town, setTown] = useState('');
@@ -37,7 +47,8 @@ const PostForm = () => {
   const nickname = authService?.currentUser?.displayName;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
-  const [place, setPlace] = useState('');
+  // const [place, setPlace] = useState('');
+  const [place, setPlace] = useRecoilState(placeAtom);
   let postState: any = {
     title: title,
     content: content,
@@ -155,7 +166,7 @@ const PostForm = () => {
     setPlace(e.target.value);
     setTown(e.target.value);
   };
-
+  console.log('saveLatLng', saveLatLng);
   // 지도에 마커 변경시 카테고리 변경
   useEffect(() => {
     if (!saveAddress) {
@@ -203,15 +214,7 @@ const PostForm = () => {
     <>
       <PostFormWrap>
         <MapLandingPageWrap>
-          <MapLandingPage
-            searchCategory={searchCategory}
-            saveLatLng={saveLatLng}
-            setSaveLatLng={setSaveLatLng}
-            saveAddress={saveAddress}
-            setSaveAddress={setSaveAddress}
-            setPlace={setPlace}
-            place={place}
-          />
+          <MapLandingPage />
         </MapLandingPageWrap>
         <PostFormContainer>
           <PostFormContentBox>

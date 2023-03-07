@@ -42,6 +42,22 @@ export default function Main() {
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
 
+  // 뒷 배경 스크롤 방지
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalActive || postMapModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalActive, postMapModal]);
+
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
   };
@@ -162,22 +178,6 @@ export default function Main() {
   useEffect(() => {
     logEvent('메인 페이지', { from: 'main page' });
   }, []);
-
-  // 뒷 배경 스크롤 방지
-  useEffect(() => {
-    const html = document.documentElement;
-    if (isModalActive || postMapModal) {
-      html.style.overflowY = 'hidden';
-      html.style.overflowX = 'hidden';
-    } else {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    }
-    return () => {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    };
-  }, [isModalActive, postMapModal]);
 
   return (
     <Wrap>
