@@ -167,24 +167,25 @@ const Header = ({
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
               // <ProfileImg src={userImg} alt="profile" />
-              <ProfileImgBox>
-                <Image
-                  src={userImg}
-                  alt="profileImg"
-                  layout="fill"
-                  priority={true}
-                />
-              </ProfileImgBox>
+
+              <Image
+                src={userImg}
+                alt="profileImg"
+                width={30}
+                height={30}
+                priority={true}
+                style={{ borderRadius: '50%', cursor: 'pointer' }}
+              />
             ) : (
               // <ProfileImg src="/profileicon.svg" alt="profile" />
-              <ProfileImgBox>
-                <Image
-                  src="/profileicon.svg"
-                  alt="profileImg"
-                  layout="fill"
-                  priority={true}
-                />
-              </ProfileImgBox>
+              <Image
+                src="/profileicon.svg"
+                alt="profileImg"
+                width={30}
+                height={30}
+                style={{ borderRadius: '50%', cursor: 'pointer' }}
+                priority={true}
+              />
             )}
           </div>
         ) : (
@@ -375,14 +376,6 @@ const CheckedCount = styled.div`
   border-radius: 50%;
   width: 12px;
   height: 12px;
-`;
-
-const ProfileImgBox = styled.div`
-  position: relative;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
 `;
 
 const ProfileImg = styled.img`
