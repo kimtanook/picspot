@@ -1,5 +1,13 @@
+import {
+  infoDivAtom,
+  placeAtom,
+  saveAddressAtom,
+  saveLatLngAtom,
+} from '@/atom';
 import { customAlert } from '@/utils/alerts';
 import React, { useEffect, useRef } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useRecoilState } from 'recoil';
 
 declare global {
   interface Window {
@@ -7,21 +15,25 @@ declare global {
   }
 }
 
-const Maps = ({
-  searchPlace,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  setInfoDiv,
-}: any) => {
+const Maps = () => {
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
   const container = useRef(null);
+  const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
+  const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
+
+  const [place, setPlace] = useRecoilState(placeAtom);
+
+  const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
+
+  const searchPlace = place;
+
   useEffect(() => {
     const { kakao } = window;
     //----------------------------카카오맵 셋팅/----------------------------
     kakao.maps.load(() => {
       const options = {
-        center: new kakao.maps.LatLng(3.37713123240438, 126.54331893240735),
+        center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
         level: 10,
       };
       const map = new kakao.maps.Map(container.current, options); // useRef를 쓰기 위해 container.current를 넣어줌
@@ -36,9 +48,11 @@ const Maps = ({
       //----------------------------장소 검색/----------------------------
 
       const ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성
-      ps.keywordSearch(`제주특별자치도 ${searchPlace}`, placeSearchDB); //키워드로 장소를 검색
+      if (searchPlace !== '') {
+        ps.keywordSearch(`제주특별자치도 ${searchPlace}`, placeSearchDB); //키워드로 장소를 검색
+      }
 
-      function placeSearchDB(data: any, status: any, pagination: any) {
+      function placeSearchDB(data: IData[], status: string) {
         //키워드 검색 완료 시 호출되는 콜백함수
         if (status === kakao.maps.services.Status.OK) {
           // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -70,18 +84,19 @@ const Maps = ({
         position: map.getCenter(),
       });
 
-      kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
-        const latlng = mouseEvent.latLng;
-        searchDetailAddrFromCoords(
-          mouseEvent.latLng,
-          function (result: any, status: any) {
+      kakao.maps.event.addListener(
+        map,
+        'click',
+        function (mouseEvent: IMouseEvent) {
+          const latlng = mouseEvent.latLng;
+          searchDetailAddrFromCoords(mouseEvent.latLng, function (result: any) {
             marker.setPosition(latlng);
             setSaveLatLng(latlng);
             marker.setMap(map);
             setSaveAddress(result[0]?.address.address_name);
-          }
-        );
-      });
+          });
+        }
+      );
 
       //----------------------------현재 지도 중심으로 상단에 주소 랜더링/----------------------------
       kakao.maps.event.addListener(map, 'idle', function () {
@@ -92,7 +107,8 @@ const Maps = ({
         geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
       }
 
-      function displayCenterInfo(result: any, status: any) {
+      function displayCenterInfo(result: any, status: string) {
+        console.log('result', result);
         if (status === kakao.maps.services.Status.OK) {
           for (var i = 0; i < result.length; i++) {
             // 행정동의 region_type 값은 'H' 이므로
@@ -113,6 +129,24 @@ const Maps = ({
       style={{ width: '620px', height: '630px' }}
     ></div>
   );
+  // return (
+  //   <>
+  //     {isMobile && (
+  //       <div
+  //         id="map"
+  //         ref={container}
+  //         style={{ width: '100%', height: '40vh' }}
+  //       ></div>
+  //     )}
+  //     {isPc && (
+  //       <div
+  //         id="map"
+  //         ref={container}
+  //         style={{ width: '620px', height: '630px' }}
+  //       ></div>
+  //     )}
+  //   </>
+  // );
 };
 
 export default Maps;

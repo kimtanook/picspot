@@ -47,7 +47,32 @@ export const editProfileModalAtom = atom({
   key: `editProfileModalAtom`,
   default: false,
 });
+export const mobileProfileModalAtom = atom({
+  key: `mobileProfileModalAtom`,
+  default: false,
+});
 export const townArray = atom({
   key: 'townArray',
-  default: [],
+  default: [] as string[],
+});
+
+export const saveLatLngAtom = atom({
+  key: 'saveLatLng',
+  default: [] as any,
+});
+export const saveAddressAtom = atom<string>({
+  key: 'saveAddress',
+  default: '',
+});
+export const searchCategoryAtom = atom<ISearchCategory | undefined>({
+  key: 'searchCategory',
+  default: undefined,
+});
+export const placeAtom = atom<string>({
+  key: 'place',
+  default: '',
+});
+export const infoDivAtom = atom<string>({
+  key: 'infoDiv',
+  default: '',
 });

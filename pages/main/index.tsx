@@ -21,8 +21,10 @@ import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
+import { logEvent } from '@/utils/amplitude';
+import Image from 'next/image';
 
 export default function Main() {
   const router = useRouter();
@@ -34,39 +36,20 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
-  // 뒷 배경 스크롤 방지
+
+  const isPc = useMediaQuery({ minWidth: 824 });
+
+  const [isMobile, setIsMobile] = useState(false);
+  const mobile = useMediaQuery({ maxWidth: 823 });
+
+  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
   useEffect(() => {
-    const html = document.documentElement;
-    if (isModalActive || postMapModal) {
-      html.style.overflowY = 'hidden';
-      html.style.overflowX = 'hidden';
-    } else {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    }
-    return () => {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    };
-  }, [isModalActive, postMapModal]);
+    setIsMobile(mobile);
+  }, [mobile]);
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
-  };
-
-  const onClickTogglePostModal = () => {
-    if (!authService.currentUser) {
-      customAlert('로그인을 해주세요.');
-      setCloseLoginModal(true);
-      return;
-    }
-    if (authService.currentUser) {
-      setIsPostMapModal(true);
-      return;
-    }
   };
 
   const onClickToggleModal = () => {
@@ -132,7 +115,7 @@ export default function Main() {
       setSelectTown(cancelSelect);
     }
   };
-  console.log('selectTown : ', selectTown);
+
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열
@@ -169,28 +152,40 @@ export default function Main() {
     setChatToggle(false);
   }, []);
 
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('메인 페이지', { from: 'main page' });
+  }, []);
+
+  // 뒷 배경 스크롤 방지
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalActive || postMapModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalActive, postMapModal]);
+
   return (
     <Wrap>
       <Seo title="Home" />
 
-      <Header selectCity={selectCity} onChangeSelectCity={onChangeSelectCity} />
+      <Header
+        selectCity={selectCity}
+        onChangeSelectCity={onChangeSelectCity}
+        searchOptionRef={searchOptionRef}
+        searchValue={searchValue}
+        onChangeSearchValue={onChangeSearchValue}
+      />
 
       <MainContainer>
-        <SearchAndForm>
-          <PostFormButton
-            onClick={() => {
-              onClickTogglePostModal();
-            }}
-          >
-            + 나의 스팟 추가
-          </PostFormButton>
-
-          <Search
-            searchOptionRef={searchOptionRef}
-            searchValue={searchValue}
-            onChangeSearchValue={onChangeSearchValue}
-          />
-        </SearchAndForm>
         <SelectContainer>
           {router.route === '/main' ? (
             <CityCategory value={selectCity} onChange={onChangeSelectCity}>
@@ -257,45 +252,77 @@ export default function Main() {
                 '닫기'
               ) : (
                 <ChatLogoWrap>
-                  <ChatLogo src="/chat-logo.png" />
+                  <ChatLogeBox>
+                    {/* <ChatLogo src="/chat-logo.png" /> */}
+                    <Image src="/chat-logo.png" alt="chatLogo" layout="fill" />
+                  </ChatLogeBox>
                 </ChatLogoWrap>
               )}
             </ChatToggleBtn>
           </ChatWrap>
         </div>
 
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="1100"
-            height="632"
-            element={
-              <PostFormWrap>
-                <PostForm />
-              </PostFormWrap>
-            }
-          />
-        ) : (
-          ''
+        {isMobile && (
+          <>
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="-20"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps />
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      >
+                        <MobileCancle src="/Back-point.png" />
+                      </ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
-        {isModalActive ? (
-          <CustomModal
-            modal={isModalActive}
-            setModal={setIsModalActive}
-            width="1200"
-            height="700"
-            element={
-              <ModalMaps selectTown={selectTown} selectCity={selectCity} />
-            }
-          />
-        ) : (
-          ''
+
+        {isPc && (
+          <>
+            {isModalActive ? (
+              <CustomModal
+                modal={isModalActive}
+                setModal={setIsModalActive}
+                width="500"
+                height="500"
+                element={
+                  <>
+                    <ModalMapsWrap>
+                      <ModalMaps />
+                      <ModalMapsBackButton
+                        onClick={() => {
+                          setIsModalActive(!isModalActive);
+                        }}
+                      ></ModalMapsBackButton>
+                    </ModalMapsWrap>
+                  </>
+                }
+              />
+            ) : (
+              ''
+            )}
+          </>
         )}
 
         <MapModalBtn onClick={onClickToggleMapModal}>
           <div>
-            <PinImg src="/pin.png" />
+            <PinImgBox>
+              <Image src="/pin.png" alt="pinImg" layout="fill" />
+            </PinImgBox>
           </div>
           <div>지도에서 핀 보기</div>
         </MapModalBtn>
@@ -312,10 +339,8 @@ export default function Main() {
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  margin: auto;
-  @media ${(props) => props.theme.mobile} {
-    width: 375px;
-  }
+  /* margin: auto; */
+  width: 100vw;
 `;
 
 const MainContainer = styled.div`
@@ -323,7 +348,6 @@ const MainContainer = styled.div`
     margin: auto;
     display: flex;
     flex-direction: column;
-    width: 375px;
   }
 `;
 const CityCategory = styled.select`
@@ -346,36 +370,6 @@ const SelectContainer = styled.div`
     margin: auto;
   }
 `;
-const SearchAndForm = styled.div`
-  display: flex;
-  position: absolute;
-  top: 16px;
-  left: 70px;
-  flex-direction: row-reverse;
-  align-items: center;
-  margin-top: 3px;
-  margin-left: 53%;
-  width: 440px;
-  @media ${(props) => props.theme.mobile} {
-    top: 30px;
-    left: 30%;
-    transform: translate(-100%, -50%);
-  }
-`;
-const PostFormButton = styled.button`
-  border-radius: 20px;
-  color: #1882ff;
-  border: 1px solid cornflowerblue;
-  background-color: white;
-  cursor: pointer;
-  width: 121.16px;
-  height: 31px;
-  @media ${(props) => props.theme.mobile} {
-    font-size: 8px;
-    width: 84px;
-    height: 20px;
-  }
-`;
 
 const CategoriesWrap = styled.div`
   display: flex;
@@ -392,7 +386,7 @@ const TownCategory = styled.div`
 
 const GridBox = styled.div`
   margin: auto;
-  width: 1188px;
+  width: 80%;
   @media ${(props) => props.theme.mobile} {
     width: 375px;
   }
@@ -445,7 +439,12 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
+    z-index: 1;
   }
+`;
+const PinImgBox = styled.div`
+  position: relative;
+  margin-right: 3px;
 `;
 const PinImg = styled.img`
   margin-right: 3px;
@@ -453,6 +452,11 @@ const PinImg = styled.img`
 const ChatLogoWrap = styled.div`
   display: flex;
   justify-content: center;
+`;
+const ChatLogeBox = styled.div`
+  position: relative;
+  width: 40px;
+  height: 40px;
 `;
 const ChatLogo = styled.img`
   width: 40px;
@@ -486,3 +490,20 @@ const PostFormWrap = styled.div`
     overflow: hidden;
   }
 `;
+
+const ModalMapsWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: relative;
+    display: flex;
+  }
+`;
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 1000;
+    top: 5vw;
+    left: 3vh;
+  }
+`;
+
+const MobileCancle = styled.img``;

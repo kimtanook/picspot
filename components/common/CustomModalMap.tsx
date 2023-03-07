@@ -9,7 +9,7 @@ interface ModalProps {
   setModal: Dispatch<SetStateAction<boolean>>;
 }
 
-export const CustomModal = ({
+export const CustomModalMap = ({
   modal,
   width,
   height,
@@ -63,7 +63,7 @@ const Canvas = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   @media ${(props) => props.theme.mobile} {
-    display: none;
+    /* display: none; */
   }
 `;
 
@@ -71,5 +71,6 @@ const Wrapper = styled.div`
   background-color: transparent;
   @media ${(props) => props.theme.mobile} {
     overflow-y: scroll;
+    width: 100vh;
   }
 `;

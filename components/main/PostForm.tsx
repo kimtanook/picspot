@@ -9,18 +9,25 @@ import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
-import { postModalAtom } from '@/atom';
+import {
+  placeAtom,
+  postModalAtom,
+  saveAddressAtom,
+  saveLatLngAtom,
+  searchCategoryAtom,
+} from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
+import { useMediaQuery } from 'react-responsive';
+import imageCompression from 'browser-image-compression';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
-
-  const [saveLatLng, setSaveLatLng]: any = useState([]);
-  const [saveAddress, setSaveAddress]: any = useState();
+  const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
+  const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory]: any = useState('');
-
+  const [searchCategory, setSearchCategory] =
+    useRecoilState(searchCategoryAtom);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
@@ -31,11 +38,20 @@ const PostForm = () => {
   const [town, setTown] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  //* 이미지 업로드
   const [imageUpload, setImageUpload]: any = useState(null);
+
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
-  const [place, setPlace] = useState('');
+  const [place, setPlace] = useRecoilState(placeAtom);
+  const [isOpenMap, setIsOpenMap] = useState(false);
+  const onClickOpen = () => {
+    setIsOpenMap(!isOpenMap);
+  };
   let postState: any = {
     title: title,
     content: content,
@@ -56,8 +72,9 @@ const PostForm = () => {
 
   //* image 업로드 후 화면 표시 함수
   // 수정코드
-  const handleImageChange = (e: any) => {
-    const file: any = e.target.files;
+  const handleImageChange = async (e: any) => {
+    let file: any = e.target.files;
+
     if (file.length === 0) {
       return;
     } else {
@@ -65,33 +82,33 @@ const PostForm = () => {
         currentTarget: { files },
       } = e;
 
-      const theFile = files[0];
-      const reader = new FileReader();
-      reader?.readAsDataURL(theFile);
-      reader.onloadend = (finishedEvent) => {
-        const {
-          currentTarget: { result },
-        }: any = finishedEvent;
-        setImageUpload(result);
+      const options = {
+        maxSizeMB: 1, //* 허용하는 최대 사이즈 지정
+        maxWidthOrHeight: 500, //* 허용하는 최대 width, height 값 지정
+        useWebWorker: true, //* webworker 사용 여부
       };
+
+      let theFile = files[0];
+      // console.log('theFile; ', theFile);
+
+      try {
+        const compressedFile = await imageCompression(theFile, options);
+        // console.log('compressedFile: ', compressedFile);
+
+        const reader = new FileReader();
+        // reader?.readAsDataURL(theFile);
+        reader?.readAsDataURL(compressedFile);
+        reader.onloadend = (finishedEvent) => {
+          const {
+            currentTarget: { result },
+          }: any = finishedEvent;
+          setImageUpload(result);
+        };
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
-
-  // 기존코드
-  // const handleImageChange = (e: any) => {
-  //   const {
-  //     target: { files },
-  //   } = e;
-  //   const theFile = files[0];
-  //   const reader = new FileReader();
-  //   reader?.readAsDataURL(theFile);
-  //   reader.onloadend = (finishedEvent) => {
-  //     const {
-  //       currentTarget: { result },
-  //     }: any = finishedEvent;
-  //     setImageUpload(result);
-  //   };
-  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -121,7 +138,8 @@ const PostForm = () => {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
-    const imageRef = ref(storageService, `images/${uuidv4()}`);
+    // const imageRef = ref(storageService, `images/${uuidv4()}`);
+    const imageRef = ref(storageService, `image/${uuidv4()}`);
 
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
@@ -201,27 +219,34 @@ const PostForm = () => {
     <>
       <PostFormWrap>
         <MapLandingPageWrap>
-          <MapLandingPage
-            searchCategory={searchCategory}
-            saveLatLng={saveLatLng}
-            setSaveLatLng={setSaveLatLng}
-            saveAddress={saveAddress}
-            setSaveAddress={setSaveAddress}
-            setPlace={setPlace}
-            place={place}
-          />
+          <MapLandingPage />
         </MapLandingPageWrap>
+
         <PostFormContainer>
           <PostFormContentBox>
-            <PostFormConteTitle>내 스팟 추가하기</PostFormConteTitle>
+            <PostFormContenTitle>
+              <ModalMapsBackButton
+                onClick={() => {
+                  setIsPostMapModal(!postMapModal);
+                }}
+              >
+                {isMobile && <MobileCancle src="/Back-point.png" />}
+                {/* {isPc && ''} */}
+              </ModalMapsBackButton>
+              내 스팟 추가하기
+            </PostFormContenTitle>
             <PostFormContentWrap>
               <div
-                style={{ display: 'flex', width: 'auto', flexDirection: 'row' }}
+                style={{
+                  display: 'flex',
+                  width: 'auto',
+                  flexDirection: 'row',
+                }}
               >
                 <Img>
                   <input
                     type="file"
-                    accept="image/png, image/jpeg, image/jpg"
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
                     onChange={handleImageChange}
                     src={imageUpload}
                     ref={fileInput}
@@ -307,11 +332,12 @@ const PostForm = () => {
             </PostFormInputWrap>
             <PostFormUploadButton>
               <CustomButton
-                width="400px"
+                width="100%"
                 height="48px"
                 borderRadius="0px"
                 color="white"
-                margin="0px"
+                margin="0px 5px"
+                padding="0px"
                 backgroundColor="#1882FF"
                 onClick={onClickAddData}
               >
@@ -329,40 +355,43 @@ export default PostForm;
 
 const PostFormWrap = styled.div`
   display: flex;
-  width: 1200px;
+  /* width: 1200px; */
   @media ${(props) => props.theme.mobile} {
-    width: 375px;
-    flex-direction: column;
-    overflow-y: scroll;
-    height: 950px;
-    background-color: white;
+    /* overflow-y: scroll; */
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
   }
 `;
 
 const MapLandingPageWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
-    /* flex-direction: column;
-    width: 100%; */
+    width: 100vw;
+    height: 100vh;
   }
 `;
 
 const PostFormContainer = styled.div`
   padding: 0px 60px;
+  background-color: white;
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
-    /* background-color: Red; */
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
+    padding: 0px;
+    height: 50vh;
+    z-index: 999;
   }
 `;
 
-const PostFormConteTitle = styled.h4`
+const PostFormContenTitle = styled.h4`
   margin-left: 10px;
   @media ${(props) => props.theme.mobile} {
+    position: relative;
     background-color: white;
-    text-align: center;
-    margin-left: 0px;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -371,30 +400,31 @@ const PostFormContentBox = styled.div`
   width: 400px;
   padding: 10px;
   @media ${(props) => props.theme.mobile} {
-    /* height: 1000px;
-    width: 100%; */
+    width: 425px;
   }
 `;
 
 const PostFormContentWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
-    background-color: white;
+    padding: 0 10px;
   }
 `;
 
 const PostFormContentTop = styled.div`
-  /* background-color: red; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: -30px;
-  margin-right: 30px;
-  padding: 5px;
+  @media ${(props) => props.theme.mobile} {
+    /* background-color: coral; */
+    margin-right: 10px;
+    margin-top: 0px;
+  }
 `;
 
 const PostFormContentName = styled.span`
@@ -403,10 +433,9 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    margin: 0px;
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 21px;
+    /* margin-top: 20px; */
+    /* padding: 10px; */
+    font-size: 18px;
   }
 `;
 
@@ -417,8 +446,8 @@ const PostFormCategoryWrap = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     /* background-color: red; */
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
   }
 `;
 
@@ -433,7 +462,7 @@ const PostFormSelect = styled.select`
   border: none;
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
-    margin-top: 10px;
+    /* margin-top: 10px; */
   }
 `;
 
@@ -490,7 +519,7 @@ const PostFormInputTitle = styled.p`
 const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    width: 100%;
+    margin: 5px -10px;
   }
 `;
 
@@ -499,9 +528,12 @@ const Img = styled.label`
   width: 160px;
   background-image: url(/Light.png);
   background-position: center;
-  background-color: red;
   cursor: pointer;
   margin: 10px;
+  @media ${(props) => props.theme.mobile} {
+    height: 100px;
+    width: 100px;
+  }
 `;
 
 const SpotImg = styled.img`
@@ -510,3 +542,12 @@ const SpotImg = styled.img`
   align-items: center;
   object-fit: contain;
 `;
+
+// 모바일 시 뒤로가기 버튼
+const ModalMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    left: 5%;
+  }
+`;
+const MobileCancle = styled.img``;

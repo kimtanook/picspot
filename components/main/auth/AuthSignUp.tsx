@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { authService } from '@/firebase';
-import { customAlert, customConfirm } from '@/utils/alerts';
+import { customConfirm } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
+import { setAmplitudeUserId } from '@/utils/amplitude';
+import { useMediaQuery } from 'react-responsive';
 
 interface AuthForm {
   email: string;
@@ -33,6 +35,8 @@ const AuthSignUp = () => {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
+  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const isPc = useMediaQuery({ minWidth: 784 });
   const {
     register,
     setValue,
@@ -64,6 +68,7 @@ const AuthSignUp = () => {
         setCloseLoginModal(false);
         setSignUpModal(false);
         setForgotModal(false);
+        setAmplitudeUserId(authService.currentUser?.uid);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
@@ -100,12 +105,13 @@ const AuthSignUp = () => {
           setSignUpModal(!signUpModal);
         }}
       >
-        {' '}
-        〈 돌아가기{' '}
+        {isMobile && <MobileCancle src="/Back-point.png" alt="image" />}
+        {isPc && '〈 돌아가기 '}{' '}
       </Heder>
 
       <SignUpTextDiv>
-        <b>회원가입하기</b>
+        {isMobile && <b>회원가입</b>}
+        {isPc && <b>회원가입하기</b>}
       </SignUpTextDiv>
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpEmailPwContainer>
@@ -235,8 +241,13 @@ const Heder = styled.header`
   display: flex;
   margin-bottom: 50px;
   margin-left: -50px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(55%, 200%);
+    width: 30%;
+  }
 `;
 
+const MobileCancle = styled.img``;
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -244,6 +255,12 @@ const SignUpTextDiv = styled.div`
   font-weight: 700;
   margin-top: 10px;
   margin-bottom: 60px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(50%, -95%);
+    width: 50%;
+    font-family: 'Noto Sans CJK KR';
+    font-size: 14px;
+  }
 `;
 
 const SignUpEmailPwContainer = styled.form`
@@ -263,6 +280,17 @@ const SignUpInput = styled.input`
   width: 394px;
   height: 48px;
   margin-left: -20px;
+  @media ${(props) => props.theme.mobile} {
+    /* transform: translate(11%, -90%); */
+    font-size: 12px;
+    width: 326px;
+    height: 48px;
+    /* top: 250.31px; */
+    border: none;
+    border-bottom: 2px solid #1882ff;
+    background: #fbfbfb;
+    /* position: absolute; */
+  }
 `;
 const EditInputBox = styled.div`
   width: 100%;
@@ -270,25 +298,31 @@ const EditInputBox = styled.div`
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
   background-repeat: no-repeat;
-
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(-200%, 0%);
+    position: inherit;
+  }
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: -20px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
   background-repeat: no-repeat;
-
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(-200%, 0%);
+    position: inherit;
+  }
 `;
 const AuthWarn = styled.p`
   color: red;
@@ -318,8 +352,14 @@ const SignUpBtn = styled.button`
   background-color: #1882ff;
   color: white;
   font-size: 15px;
-
   &:hover {
     cursor: pointer;
+  }
+  @media ${(props) => props.theme.mobile} {
+    /* transform: translate(11%, 30%); */
+    font-size: 14px;
+    width: 326px;
+    height: 48px;
+    position: inherit;
   }
 `;

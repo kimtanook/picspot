@@ -7,14 +7,16 @@ import { authService } from '@/firebase';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import MyPostList from '@/components/mypage/MyPostList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import { useMediaQuery } from 'react-responsive';
+import { logEvent } from '@/utils/amplitude';
+import Link from 'next/link';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isMobile = useMediaQuery({ maxWidth: 823 });
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
@@ -38,7 +40,12 @@ export default function Mypage() {
       )[0]?.follow,
   });
 
-  const followCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
+  const followerCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
+
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('마이 페이지', { from: 'my page' });
+  }, []);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -49,12 +56,21 @@ export default function Mypage() {
       {isMobile ? (
         ''
       ) : (
-        <Header selectCity={undefined} onChangeSelectCity={undefined} />
+        <Header
+          selectCity={undefined}
+          onChangeSelectCity={undefined}
+          searchOptionRef={undefined}
+          searchValue={undefined}
+          onChangeSearchValue={undefined}
+        />
       )}
 
       <MyContainer>
         <MyProfileContainer>
-          <Profile followingCount={followingCount} followCount={followCount} />
+          <Profile
+            followingCount={followingCount}
+            followerCount={followerCount}
+          />
         </MyProfileContainer>
       </MyContainer>
       {/* 내 게시물과 저장한 게시물입니다  */}
@@ -87,22 +103,27 @@ const MyContainer = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: 64px;
+  overflow: hidden;
 `;
 const MyProfileContainer = styled.div`
   width: 600px;
   height: 200px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+    height: 40vw;
+  }
 `;
 
 const AllMyPostList = styled.div`
   margin: auto;
   width: 1188px;
+  background-color: #ffffff;
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
   }
 `;
 
 const CategoryBtn = styled.div`
-  margin: 40px 0px 10px 0px;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
     /* text-align: left; */
@@ -113,7 +134,7 @@ const CategoryBtn = styled.div`
 
 const GridBox = styled.div`
   width: 1188px;
-  margin-top: 19px;
+  margin-top: 44px;
   display: inline-flex;
   justify-content: space-between;
   @media ${(props) => props.theme.mobile} {

@@ -8,6 +8,7 @@ import { customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
 import { useMediaQuery } from 'react-responsive';
+import { setAmplitudeUserId } from '@/utils/amplitude';
 
 interface AuthForm {
   email: string;
@@ -22,8 +23,8 @@ const Auth = (): JSX.Element => {
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
+  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const isPc = useMediaQuery({ minWidth: 784 });
   const {
     register,
     setValue,
@@ -45,6 +46,7 @@ const Auth = (): JSX.Element => {
       .then((res) => {
         customConfirm('로그인에 성공하였습니다!');
         setCloseLoginModal(!closeLoginModal);
+        setAmplitudeUserId(authService.currentUser?.uid);
       })
       .then(() => {})
       .catch(() => {
@@ -98,15 +100,17 @@ const Auth = (): JSX.Element => {
 
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
-      <Heder
-        onClick={() => {
-          setCloseLoginModal(!closeLoginModal);
-        }}
-      >
-        {isMobile && <MobileCancle src="/Back-point.png" />}
-        {isPc && '〈 취소 '}
+      <Heder>
+        <div
+          onClick={() => {
+            setCloseLoginModal(!closeLoginModal);
+          }}
+        >
+          {isMobile && <MobileCancle src="/Back-point.png" alt="image" />}
+          {isPc && <div style={{ cursor: 'pointer' }}>〈 취소</div>}
+        </div>
       </Heder>
-      <LogoImg src="/logo.png" />
+      <LogoImg src="/logo.png" alt="image" />
       <LoginTextDiv>
         {isMobile ? <p>픽스팟에 로그인하고, 제주 인생샷 알아보세요!</p> : ''}
         {isPc ? (
@@ -240,7 +244,6 @@ const LoginContainer = styled.div`
   }
 `;
 const Heder = styled.header`
-  cursor: pointer;
   z-index: 1000000;
   color: #1882ff;
   font-size: 15px;
@@ -248,16 +251,12 @@ const Heder = styled.header`
   margin-bottom: 40px;
   margin-left: -30px;
   @media ${(props) => props.theme.mobile} {
-    /* height: 40px; */
+    transform: translate(55%, 200%);
+    width: 30%;
   }
 `;
 
-const MobileCancle = styled.img`
-  transform: translate(500%, 260%);
-  width: 12px;
-  font-size: 0px;
-  position: relative;
-`;
+const MobileCancle = styled.img``;
 
 const LogoImg = styled.img`
   display: none;
@@ -341,8 +340,8 @@ const EditInputBox = styled.div`
 `;
 const EditclearBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: 0px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
@@ -355,8 +354,8 @@ const EditclearBtn = styled.div`
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
-  top: 25%;
-  right: 0px;
+  top: 35%;
+  left: 340px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
@@ -398,7 +397,6 @@ const LoginBtn = styled.button`
   background-color: #1882ff;
   color: white;
   font-size: 15px;
-
   &:hover {
     cursor: pointer;
   }

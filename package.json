@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.9.1",
     "@next/font": "13.1.6",
+    "@types/browser-image-compression": "^1.0.9",
     "@types/react-responsive": "^8.0.5",
     "@types/react-responsive-masonry": "^2.1.0",
     "@types/uuid": "^9.0.0",
     "babel-plugin-styled-components": "^2.0.7",
+    "browser-image-compression": "^2.0.2",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "firebase": "^9.17.1",
@@ -45,6 +48,7 @@
     "@types/recoil": "^0.0.9",
     "@types/socket.io": "^3.0.2",
     "@types/socket.io-client": "^3.0.0",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "kakao.maps.d.ts": "^0.1.33"
   }
 }

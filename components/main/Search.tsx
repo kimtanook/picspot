@@ -6,13 +6,13 @@ const Search = ({
   searchValue,
   onChangeSearchValue,
 }: {
-  searchOptionRef: RefObject<HTMLSelectElement>;
-  searchValue: string;
+  searchOptionRef: RefObject<HTMLSelectElement> | undefined;
+  searchValue: string | undefined;
   onChangeSearchValue: ChangeEventHandler<HTMLInputElement>;
 }) => {
   return (
     <SearchWrap>
-      <SearchImage src="/search.svg" />
+      <SearchImage src="/search.svg" alt="search-Image" />
       <Select ref={searchOptionRef}>
         <option value="address">주소</option>
         <option value="title">제목</option>

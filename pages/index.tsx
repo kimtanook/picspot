@@ -1,17 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import { logEvent } from '@/utils/amplitude';
+import Image from 'next/image';
 
 function Landing() {
   const [imageTopHover, setImageTopHover] = useState(false);
   const [imageBottomHover, setImageBottomHover] = useState(false);
   const router = useRouter();
 
+  //* Amplitude 이벤트 생성
+  useEffect(() => {
+    logEvent('렌딩 페이지', { from: 'landing page' });
+  }, []);
+
   return (
     <LandingWrap>
       <LandContainer>
         <LogoTitleWrap>
-          <LogoImg src="logo.png" />
+          <LogoImg src="/landing/logo.webp" />
           <LandingTitle>
             <LandingTitleItem>
               <div>제주의 멋진 사진이 있는</div> &nbsp;
@@ -23,40 +30,63 @@ function Landing() {
             </LandingTitleItem>
           </LandingTitle>
         </LogoTitleWrap>
-        <TouchImage src="/landing/touch.png" />
-        <CloudTop src="/landing/cloud_1.svg" />
-        <CloudBottom src="/landing/cloud_2.svg" />
-        <LandTop>
-          <ImageTop
-            src={imageTopHover ? '/landing/top-hover.svg' : '/landing/top.svg'}
-            onMouseOver={() => setImageTopHover(true)}
-            onMouseOut={() => setImageTopHover(false)}
-            onClick={() =>
-              router.push({
-                pathname: '/main',
-                query: { city: '제주시' },
-              })
-            }
-            alt="land-top"
+        <TouchImageBox>
+          <Image src="/landing/touch.webp" alt="LandingTouch" layout="fill" />
+        </TouchImageBox>
+        <CloudTopBox>
+          <Image
+            src="/landing/cloud_1.webp"
+            alt="LandingTopCloud"
+            layout="fill"
           />
+        </CloudTopBox>
+
+        <CloudBottomBox>
+          <Image
+            src="/landing/cloud_2.webp"
+            alt="LandingBottonCloud"
+            layout="fill"
+          />
+        </CloudBottomBox>
+        <LandTop>
+          <ImageTopBox>
+            <Image
+              src={
+                imageTopHover ? '/landing/top-hover.webp' : '/landing/top.webp'
+              }
+              onMouseOver={() => setImageTopHover(true)}
+              onMouseOut={() => setImageTopHover(false)}
+              onClick={() =>
+                router.push({
+                  pathname: '/main',
+                  query: { city: '제주시' },
+                })
+              }
+              alt="land-top"
+              layout="fill"
+            />
+          </ImageTopBox>
         </LandTop>
         <LandBottom>
-          <ImageBottom
-            src={
-              imageBottomHover
-                ? '/landing/bottom-hover.svg'
-                : '/landing/bottom.svg'
-            }
-            onMouseOver={() => setImageBottomHover(true)}
-            onMouseOut={() => setImageBottomHover(false)}
-            onClick={() =>
-              router.push({
-                pathname: '/main',
-                query: { city: '서귀포시' },
-              })
-            }
-            alt="land-bottom"
-          />
+          <ImageBottomBox>
+            <Image
+              src={
+                imageBottomHover
+                  ? '/landing/bottom-hover.webp'
+                  : '/landing/bottom.webp'
+              }
+              onMouseOver={() => setImageBottomHover(true)}
+              onMouseOut={() => setImageBottomHover(false)}
+              onClick={() =>
+                router.push({
+                  pathname: '/main',
+                  query: { city: '서귀포시' },
+                })
+              }
+              alt="land-bottom"
+              layout="fill"
+            />
+          </ImageBottomBox>
         </LandBottom>
         <SkipButton
           onClick={() =>
@@ -124,6 +154,19 @@ const LandingTitle = styled.div`
     font-size: 16px;
   }
 `;
+const TouchImageBox = styled.div`
+  position: relative;
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inherit;
+    width: 47px;
+    height: 82px;
+  }
+`;
 const TouchImage = styled.img`
   display: none;
   @media ${(props) => props.theme.mobile} {
@@ -144,6 +187,22 @@ const LandingTitleItem = styled.div`
 const BoldFont = styled.div`
   font-weight: 700;
 `;
+const CloudTopBox = styled.div`
+  position: relative;
+  width: 214px;
+  height: 100px;
+  position: absolute;
+  top: 23%;
+  left: 80%;
+  transform: translate(50%, -50%);
+  @media ${(props) => props.theme.mobile} {
+    top: 38%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 50px;
+  }
+`;
 const CloudTop = styled.img`
   width: 214px;
   height: 100px;
@@ -157,6 +216,21 @@ const CloudTop = styled.img`
     transform: translate(-50%, -50%);
     width: 110px;
     height: 50px;
+  }
+`;
+const CloudBottomBox = styled.div`
+  position: relative;
+  width: 214px;
+  height: 100px;
+  position: absolute;
+  top: 75%;
+  left: -5%;
+  transform: translate(-50%, -50%);
+  @media ${(props) => props.theme.mobile} {
+    top: 76%;
+    left: 20%;
+    width: 82px;
+    height: 48px;
   }
 `;
 const CloudBottom = styled.img`
@@ -187,6 +261,15 @@ const LandTop = styled.div`
     cursor: pointer;
   }
 `;
+const ImageTopBox = styled.div`
+  position: relative;
+  width: 692.61px;
+  height: 208.82px;
+  @media ${(props) => props.theme.mobile} {
+    width: 337px;
+    height: 102px;
+  }
+`;
 const ImageTop = styled.img`
   width: 692.61px;
   height: 208.82px;
@@ -205,6 +288,15 @@ const LandBottom = styled.div`
   }
   @media ${(props) => props.theme.mobile} {
     top: 65%;
+  }
+`;
+const ImageBottomBox = styled.div`
+  position: relative;
+  width: 708.27px;
+  height: 229.41px;
+  @media ${(props) => props.theme.mobile} {
+    width: 345px;
+    height: 112px;
   }
 `;
 const ImageBottom = styled.img`

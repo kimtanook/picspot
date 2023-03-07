@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import {
   messageBoxToggle,
   messageSendToggle,
@@ -22,6 +23,7 @@ import Auth from './main/auth/Auth';
 import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
+import { CustomModalMap } from './common/CustomModalMap';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -35,32 +37,14 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
 
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   return (
     <div>
+      <div>{msgBoxToggle ? <MessageBox /> : null}</div>
       <div>
-        {msgBoxToggle ? (
-          <CustomModal
-            modal={msgBoxToggle}
-            setModal={setMsgBoxToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageBox />}
-          />
-        ) : null}
-      </div>
-      <div>
-        {msgSendToggle ? (
-          <CustomModal
-            modal={msgSendToggle}
-            setModal={setMsgSendToggle}
-            width={'500'}
-            height={'500'}
-            element={<MessageSend setModal={setMsgSendToggle} />}
-          />
-        ) : null}
+        {msgSendToggle ? <MessageSend setModal={setMsgSendToggle} /> : null}
       </div>
       <div>
         {followingToggle ? (
@@ -84,19 +68,34 @@ function Layout() {
           />
         ) : null}
       </div>
-      <div>
-        {signUpModal ? (
-          <CustomModal
-            modal={signUpModal}
-            setModal={setSignUpModal}
-            width="524"
-            height="695"
-            element={<AuthSignUp />}
-          />
-        ) : (
-          ''
+      <>
+        {signUpModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={signUpModal}
+                  setModal={setSignUpModal}
+                  width="1000"
+                  height="3000"
+                  element={<AuthSignUp />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={signUpModal}
+                  setModal={setSignUpModal}
+                  width="524"
+                  height="695"
+                  element={<AuthSignUp />}
+                />
+              )}
+            </>
+          </>
         )}
-      </div>
+      </>
       <>
         {forgotModal ? (
           <CustomModal
@@ -137,15 +136,33 @@ function Layout() {
         )}
       </>
       <>
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="1100"
-            height="632"
-            element={<PostForm />}
-          />
-        ) : null}
+        {postMapModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModalMap
+                  modal={postMapModal}
+                  setModal={setIsPostMapModal}
+                  width="90%"
+                  height="100%"
+                  element={<PostForm />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModalMap
+                  modal={postMapModal}
+                  setModal={setIsPostMapModal}
+                  width="500"
+                  height="500"
+                  element={<PostForm />}
+                />
+              )}
+            </>
+          </>
+        )}
+
         {editProfileModal ? (
           <CustomModal
             modal={editProfileModal}
