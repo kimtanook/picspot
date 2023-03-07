@@ -91,11 +91,16 @@ const DetailImg = ({ item }: any) => {
   if (authService.currentUser?.uid !== item.creator) {
     return (
       <DetailImgContainer>
-        <DetailImg3
-          src={item.imgUrl}
-          alt="image"
-          onClick={onClickToggleImgModal}
-        />
+        <DetailImgBox>
+          <Image
+            src={item.imgUrl}
+            alt="UploadImage"
+            layout="fill"
+            style={{ objectFit: 'contain' }}
+            onClick={onClickToggleImgModal}
+            priority={true}
+          />
+        </DetailImgBox>
         {isModalImgActive ? (
           <CustomModal
             modal={isModalImgActive}
@@ -113,9 +118,25 @@ const DetailImg = ({ item }: any) => {
     return (
       <DetailImgContainer>
         {imageUpload ? (
-          <DetailImg3 src={imageUpload} />
+          <DetailImgBox>
+            <Image
+              src={imageUpload}
+              alt="UploadImage"
+              layout="fill"
+              style={{ objectFit: 'contain' }}
+              priority={true}
+            />
+          </DetailImgBox>
         ) : (
-          <DetailImg3 src={item.imgUrl} alt="image" />
+          <DetailImgBox>
+            <Image
+              src={item.imgUrl}
+              alt="MyImage"
+              layout="fill"
+              style={{ objectFit: 'contain' }}
+              priority={true}
+            />
+          </DetailImgBox>
         )}
         {imageUpload ? (
           <DetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
@@ -155,11 +176,11 @@ const DetailImgContainer = styled.div`
   }
 `;
 
-const DetailImg3 = styled.img`
+const DetailImgBox = styled.div`
   width: 100%;
   height: 100%;
   cursor: pointer;
-  object-fit: contain;
+  position: relative;
 `;
 
 const DetailImg2 = styled.img`
