@@ -143,8 +143,8 @@ function Layout() {
                 <CustomModalMap
                   modal={postMapModal}
                   setModal={setIsPostMapModal}
-                  width="400px"
-                  height="400px"
+                  width="90%"
+                  height="100%"
                   element={<PostForm />}
                 />
               )}
