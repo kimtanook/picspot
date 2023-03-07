@@ -1,6 +1,14 @@
+import {
+  infoDivAtom,
+  placeAtom,
+  saveAddressAtom,
+  saveLatLngAtom,
+  searchCategoryAtom,
+} from '@/atom';
 import { customAlert } from '@/utils/alerts';
 import React, { useEffect, useRef } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useRecoilState } from 'recoil';
 
 declare global {
   interface Window {
@@ -8,17 +16,23 @@ declare global {
   }
 }
 
-const Maps = ({
-  searchPlace,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  setInfoDiv,
-}: any) => {
+const Maps = ({}: // searchPlace,
+// setSaveLatLng,
+// setSaveAddress,
+// setInfoDiv,
+// saveAddress,
+// saveLatLng,
+any) => {
   const container = useRef(null);
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
+  const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
+  const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
+  const [searchCategory, setSearchCategory] =
+    useRecoilState(searchCategoryAtom);
+  const [place, setPlace] = useRecoilState(placeAtom);
+  const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
+  const searchPlace = place ? place : searchCategory;
   useEffect(() => {
     const { kakao } = window;
     //----------------------------카카오맵 셋팅/----------------------------
@@ -108,6 +122,15 @@ const Maps = ({
       }
     });
   }, [searchPlace, setInfoDiv, setSaveAddress, setSaveLatLng]);
+
+  //   return (
+  //     <div
+  //       id="map"
+  //       ref={container}
+  //       style={{ width: '620px', height: '630px' }}
+  //     ></div>
+  //   );
+  // };
 
   return (
     <>

@@ -21,7 +21,7 @@ import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
 
@@ -34,6 +34,7 @@ export default function Main() {
   const [searchOption, setSearchOption] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
+
   const [isModalActive, setIsModalActive] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 823 });
   const isPc = useMediaQuery({ minWidth: 824 });
@@ -249,22 +250,6 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-        {/* 
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="500"
-            height="500"
-            element={
-              <PostFormWrap>
-                <PostForm />
-              </PostFormWrap>
-            }
-          />
-        ) : (
-          ''
-        )} */}
 
         {isMobile && (
           <>
@@ -278,8 +263,8 @@ export default function Main() {
                   <>
                     <ModalMapsWrap>
                       <ModalMaps
-                        selectTown={selectTown}
-                        selectCity={selectCity}
+                      // selectTown={selectTown}
+                      // selectCity={selectCity}
                       ></ModalMaps>
                       <ModalMapsBackButton
                         onClick={() => {
@@ -311,8 +296,8 @@ export default function Main() {
                   <>
                     <ModalMapsWrap>
                       <ModalMaps
-                        selectTown={selectTown}
-                        selectCity={selectCity}
+                      // selectTown={selectTown}
+                      // selectCity={selectCity}
                       ></ModalMaps>
                       <ModalMapsBackButton
                         onClick={() => {
