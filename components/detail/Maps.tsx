@@ -3,7 +3,6 @@ import {
   placeAtom,
   saveAddressAtom,
   saveLatLngAtom,
-  searchCategoryAtom,
 } from '@/atom';
 import { customAlert } from '@/utils/alerts';
 import React, { useEffect, useRef } from 'react';
@@ -22,12 +21,11 @@ const Maps = () => {
   const container = useRef(null);
   const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
-  const [searchCategory, setSearchCategory] =
-    useRecoilState(searchCategoryAtom);
+
   const [place, setPlace] = useRecoilState(placeAtom);
 
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
-  // const searchPlace = place ? place : searchCategory;
+
   const searchPlace = place;
 
   useEffect(() => {
@@ -86,18 +84,19 @@ const Maps = () => {
         position: map.getCenter(),
       });
 
-      kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
-        const latlng = mouseEvent.latLng;
-        searchDetailAddrFromCoords(
-          mouseEvent.latLng,
-          function (result: any, status: any) {
+      kakao.maps.event.addListener(
+        map,
+        'click',
+        function (mouseEvent: IMouseEvent) {
+          const latlng = mouseEvent.latLng;
+          searchDetailAddrFromCoords(mouseEvent.latLng, function (result: any) {
             marker.setPosition(latlng);
             setSaveLatLng(latlng);
             marker.setMap(map);
             setSaveAddress(result[0]?.address.address_name);
-          }
-        );
-      });
+          });
+        }
+      );
 
       //----------------------------현재 지도 중심으로 상단에 주소 랜더링/----------------------------
       kakao.maps.event.addListener(map, 'idle', function () {
@@ -109,6 +108,7 @@ const Maps = () => {
       }
 
       function displayCenterInfo(result: any, status: string) {
+        console.log('result', result);
         if (status === kakao.maps.services.Status.OK) {
           for (var i = 0; i < result.length; i++) {
             // 행정동의 region_type 값은 'H' 이므로
