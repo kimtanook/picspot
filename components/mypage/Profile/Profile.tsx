@@ -11,7 +11,6 @@ import {
   followingToggleAtom,
   followToggleAtom,
   editProfileModalAtom,
-  mobileProfileModalAtom,
 } from '@/atom';
 import { resetAmplitude } from '@/utils/amplitude';
 import { useMediaQuery } from 'react-responsive';
@@ -57,9 +56,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       resetAmplitude();
     });
   };
-
-  // console.log('followingCount: ', followingCount);
-  // console.log('followCount: ', followCount);
 
   return (
     <ProfileContainer>
@@ -123,6 +119,7 @@ const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 4vw;
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     display: flex;
@@ -132,40 +129,6 @@ const ProfileContainer = styled.div`
     margin-left: 20px;
   }
 `;
-
-const Profiles = styled.div`
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  z-index: 999;
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  background-color: white;
-  cursor: pointer;
-  /* @media ${(props) => props.theme.mobile} {
-    position: absolute;
-    top: 15px;
-
-    width: 70px;
-    height: 70px;
-    border-radius: 20px;
-    background-color: blue;
-  } */
-`;
-
-// const ProfileMenu = styled.div`
-//   @media ${(props) => props.theme.mobile} {
-//     position: absolute;
-//     top: 15px;
-//     right: 20px;
-//     z-index: 999;
-//     width: 70px;
-//     height: 70px;
-//     border-radius: 20px;
-//     background-color: blue;
-//   }
-// `;
 
 const MenuPointImg = styled.img`
   display: none;
@@ -219,8 +182,11 @@ const ProfileImage = styled.div<{ img: string }>`
 `;
 
 const ProfileText = styled.div`
-  padding-left: 20px;
+  padding-left: 55px;
   width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    padding-left: 25px;
+  }
 `;
 const ProfileTextdiv = styled.div`
   display: flex;
@@ -270,19 +236,6 @@ const FollowingOpenModal = styled.img`
   height: 16px;
   cursor: pointer;
 `;
-
-// const SendMessage = styled.button`
-//   background-color: white;
-//   border: 1px black solid;
-//   border-radius: 16px;
-//   cursor: pointer;
-//   transition: 0.5s;
-//   :hover {
-//     background-color: black;
-//     color: white;
-//     transition: 0.5s;
-//   }
-// `;
 
 const Follow = styled.div`
   font-size: 16px;

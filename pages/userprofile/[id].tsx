@@ -19,12 +19,14 @@ import { useRecoilState } from 'recoil';
 import { messageSendToggle } from '@/atom';
 import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
+import { useMediaQuery } from 'react-responsive';
 
 function Profile() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const userId = router.query.id as string;
-
+  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const isPc = useMediaQuery({ minWidth: 786 });
   const [onSpot, setOnSpot] = useState(true);
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
@@ -110,13 +112,16 @@ function Profile() {
   return (
     <>
       <Seo title="My" />
-      <Header
-        selectCity={undefined}
-        onChangeSelectCity={undefined}
-        searchOptionRef={undefined}
-        searchValue={undefined}
-        onChangeSearchValue={undefined}
-      />
+      {isPc && (
+        <Header
+          selectCity={undefined}
+          onChangeSelectCity={undefined}
+          searchOptionRef={undefined}
+          searchValue={undefined}
+          onChangeSearchValue={undefined}
+        />
+      )}
+
       <UserContainer>
         <UserProfileContainer>
           <ProfileContainer>
@@ -126,6 +131,10 @@ function Profile() {
                 <ProfileNickname>{userData?.userName}님</ProfileNickname>
                 {getMyFollowing?.indexOf(userId) === -1 ? (
                   <FollowingBtn onClick={() => onClickFollowingBtn(userData)}>
+                    <FollowingCheckAirplane
+                      src="/following-checked.png"
+                      alt="image"
+                    />
                     팔로잉
                   </FollowingBtn>
                 ) : (
@@ -135,28 +144,61 @@ function Profile() {
                     언팔로잉
                   </FollowingBtn>
                 )}
-                <SendMessage onClick={() => setSendMsgToggle(true)}>
+                <SendMsg onClick={() => setSendMsgToggle(true)}>
+                  <FollowingCheckAirplane
+                    src="/airplane-white.png"
+                    alt="image"
+                  />{' '}
                   쪽지보내기
-                </SendMessage>
+                </SendMsg>
               </ProfileTextWrap>
-              <FollowWrap>
-                <MyProfileFollowing>
-                  팔로잉
-                  <FollowerCount>
-                    {getFollowingData?.length === undefined
-                      ? '0'
-                      : getFollowingData?.length}
-                  </FollowerCount>
-                </MyProfileFollowing>
-                <MyProfileFollower>
+
+              <Follow>
+                <FollowerCount>
+                  {getFollowData?.length === undefined
+                    ? '0'
+                    : getFollowData?.length}{' '}
                   팔로워
-                  <FollowerCount>
-                    {getFollowData?.length === undefined
-                      ? '0'
-                      : getFollowData?.length}
-                  </FollowerCount>
-                </MyProfileFollower>
-              </FollowWrap>
+                </FollowerCount>
+                <FollowBtween>|</FollowBtween>
+                <FollowerCount>
+                  {getFollowingData?.length === undefined
+                    ? '0'
+                    : getFollowingData?.length}{' '}
+                  팔로잉
+                  <FollowingOpenModal src="/open-arrow.png" alt="image" />
+                </FollowerCount>
+              </Follow>
+              <>
+                {isMobile && (
+                  <ProfileTextWrap>
+                    {getMyFollowing?.indexOf(userId) === -1 ? (
+                      <FollowingBotton
+                        onClick={() => onClickFollowingBtn(userData)}
+                      >
+                        <FollowingCheckAirplane
+                          src="/following-checked.png"
+                          alt="image"
+                        />
+                        팔로잉
+                      </FollowingBotton>
+                    ) : (
+                      <FollowingBotton
+                        onClick={() => onClickDeleteFollowingBtn(userData)}
+                      >
+                        언팔로잉
+                      </FollowingBotton>
+                    )}
+                    <SendMessage onClick={() => setSendMsgToggle(true)}>
+                      <FollowingCheckAirplane
+                        src="/airplane-white.png"
+                        alt="image"
+                      />{' '}
+                      쪽지보내기
+                    </SendMessage>
+                  </ProfileTextWrap>
+                )}
+              </>
             </ProfileText>
           </ProfileContainer>
         </UserProfileContainer>
@@ -188,6 +230,7 @@ function Profile() {
     </>
   );
 }
+export default Profile;
 
 const UserContainer = styled.div`
   width: 100%;
@@ -202,6 +245,10 @@ const UserContainer = styled.div`
 const UserProfileContainer = styled.div`
   width: 600px;
   height: 200px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+    height: 150px;
+  }
 `;
 
 const UserPostTownList = styled.div`
@@ -215,7 +262,6 @@ const CategoryBtn = styled.div`
   margin: 40px 0px 10px 0px;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
-    /* text-align: left; */
     margin: 0px;
     width: 100%;
   }
@@ -276,57 +322,133 @@ const BlackBtn = styled.button`
   }
 `;
 
-export default Profile;
-
 const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 4vw;
+  @media ${(props) => props.theme.mobile} {
+    width: 90vw;
+    display: inline-flex;
+    margin-left: 45px;
+  }
 `;
 
 const ProfileImage = styled.div<{ img: string }>`
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 100px;
   background-size: cover;
   background-image: url(${(props) => props.img});
   background-position: center center;
+  @media ${(props) => props.theme.mobile} {
+    width: 112px;
+    height: 112px;
+  }
 `;
 
 const ProfileText = styled.div`
-  padding-left: 15px;
-  width: 60%;
+  padding-left: 35px;
+  width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    padding-left: 25px;
+  }
 `;
 const ProfileTextWrap = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
+
+  margin-top: 5px;
 `;
 const ProfileNickname = styled.div`
-  width: 150px;
-  line-height: 36px;
-  height: 36px;
+  font-family: Noto Sans CJK KR;
+  color: #212121;
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
-  text-align: center;
+  text-align: left;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 18px;
+  }
 `;
 
 const FollowingBtn = styled.div`
   background-color: #4cb2f6;
   color: white;
-  cursor: pointer;
   width: 80px;
-  padding-top: 10px;
+  height: 32px;
+  padding-top: 7px;
   padding-bottom: 10px;
   border-radius: 30px;
-  margin-right: 20px;
+  margin-right: 12px;
+  margin-left: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  :hover {
+    background-color: #32aaff;
+    color: white;
+    transition: 0.5s;
+  }
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
-
+const FollowingBotton = styled.div`
+  background-color: #4cb2f6;
+  color: white;
+  width: 71px;
+  height: 28px;
+  padding-top: 7px;
+  padding-bottom: 10px;
+  border-radius: 30px;
+  margin-right: 12px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  :hover {
+    background-color: #32aaff;
+    color: white;
+    transition: 0.5s;
+  }
+`;
+const SendMsg = styled.button`
+  color: white;
+  font-size: 14px;
+  width: 109px;
+  height: 32px;
+  border: 1px solid #5b5b5f;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.5s;
+  :hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
+`;
 const SendMessage = styled.button`
-  background-color: white;
-  border: 1px black solid;
-  border-radius: 16px;
+  background-color: #5b5b5f;
+  color: white;
+  font-size: 12px;
+  width: 97px;
+  height: 28px;
+  border: 1px solid #5b5b5f;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
   cursor: pointer;
   transition: 0.5s;
   :hover {
@@ -335,33 +457,49 @@ const SendMessage = styled.button`
     transition: 0.5s;
   }
 `;
+const Follow = styled.div`
+  font-size: 16px;
+  font-family: Noto Sans CJK KR;
+  color: #5b5b5f;
+  display: flex;
+  text-align: left;
+  align-items: center;
+  gap: 16px;
 
-const FollowWrap = styled.div`
-  display: grid;
-  grid-template-columns: 35% 35%;
-  margin-top: 10px;
-  margin-left: 27px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 14px;
+  }
 `;
 const FollowerCount = styled.div`
-  margin-top: 10px;
+  font-size: 16px;
+  font-family: Noto Sans CJK KR;
+  color: #5b5b5f;
+  padding-top: 10px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 14px;
+  }
 `;
-const MyProfileFollowing = styled.div`
-  color: 5B5B5F;
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  padding: 7%;
-  font-size: 18pt;
-  width: 90px;
-  height: 85px;
-  text-align: center;
+const FollowBtween = styled.div`
+  font-size: 25px;
+  font-family: Noto Sans CJK KR;
+  color: #d9d9d9;
+  padding-top: 10px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 14px;
+  }
 `;
-const MyProfileFollower = styled.div`
-  color: 5B5B5F;
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  padding: 7%;
-  font-size: 18pt;
-  width: 90px;
-  height: 85px;
-  text-align: center;
+const FollowingCheckAirplane = styled.img`
+  background-color: transparent;
+  margin-right: 5px;
+  width: 17px;
+  height: 16px;
+  cursor: pointer;
+`;
+
+const FollowingOpenModal = styled.img`
+  background-color: transparent;
+  margin-left: 5px;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
 `;
