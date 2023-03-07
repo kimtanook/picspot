@@ -1,24 +1,22 @@
+import { infoDivAtom, placeAtom, searchCategoryAtom } from '@/atom';
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { CustomButton } from '../common/CustomButton';
 import Maps from './Maps';
 
-const MapLandingPage = ({
-  searchCategory,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  setPlace,
-  place,
-}: any) => {
+const MapLandingPage = () => {
+  const [place, setPlace] = useRecoilState(placeAtom);
+
   const [inputText, setInputText] = useState('');
-  const [infoDiv, setInfoDiv] = useState('');
-  const onchange = (e: any) => {
-    setInputText(e.target.value);
+  // const [infoDiv, setInfoDiv] = useState('');
+  const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
+
+  const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.currentTarget.value);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPlace(inputText);
     setInputText('');
@@ -39,15 +37,7 @@ const MapLandingPage = ({
           </SearchButton>
         </StyledForm>
 
-        <Maps
-          searchPlace={place ? place : searchCategory}
-          saveLatLng={saveLatLng}
-          setSaveLatLng={setSaveLatLng}
-          saveAddress={saveAddress}
-          setSaveAddress={setSaveAddress}
-          setInfoDiv={setInfoDiv}
-          infoDiv={infoDiv}
-        />
+        <Maps />
       </StyleContainer>
     </MapWrap>
   );

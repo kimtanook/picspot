@@ -17,30 +17,9 @@ const UserCollectionTown = ({
 }) => {
   const [more, setMore] = useState(true);
 
-  //* town 기준 데이터들 가져오기
-  const getTownDatas = async ({ queryKey }: { queryKey: string[] }) => {
-    const [_, town] = queryKey;
-    const response: { id: string }[] = [];
-    let q = query(
-      collection(dbService, 'collection'),
-      where('town', '==', town)
-    );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      response.push({ id: doc.id, ...doc.data() });
-    });
-
-    return response;
-  };
-
-  //* 사용자가 collection한 town별 데이터들
-  const { data: userCollectData } = useQuery(['datas', value], getTownDatas);
-  //* 사용자가 담은 collection의 uid값
-  const userCollectionUid = postList?.map((item: any) => item.uid);
-  //* 모든 collection 중 사용자가 담은 collection의 uid와 비교하여 일치하는 값
-  const userCollectionTownItem = userCollectData?.filter(
-    (item: { id: string }) => userCollectionUid?.includes(item.id)
+  // town과 현재 town value가 같은 게시글 추출
+  const townSameValueData = postList?.filter(
+    (item: userItem) => item.town === value
   );
 
   const onClickMoreBtn = () => {
@@ -56,7 +35,7 @@ const UserCollectionTown = ({
           </PostTownTitle>
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '10px' }}>
-              {userCollectionTownItem?.map((item: any) => (
+              {townSameValueData?.map((item: any) => (
                 <UserItem key={uuidv4()} item={item} />
               ))}
             </Masonry>
@@ -80,7 +59,7 @@ const UserCollectionTown = ({
                   columnsCountBreakPoints={{ 425: 1, 750: 2, 900: 3, 1200: 4 }}
                 >
                   <Masonry columnsCount={4}>
-                    {userCollectionTownItem?.map((item: any) => (
+                    {townSameValueData?.map((item: any) => (
                       <Link key={uuidv4()} href={`/detail/${item.id}`}>
                         <MyPostImg src={item.imgUrl} />
                       </Link>

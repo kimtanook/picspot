@@ -6,8 +6,9 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { followingToggleAtom } from '@/atom';
+import { editProfileModalAtom, followingToggleAtom } from '@/atom';
 import { logEvent } from '@amplitude/analytics-browser';
+import { useMediaQuery } from 'react-responsive';
 
 interface ItemType {
   uid: string;
@@ -16,6 +17,9 @@ interface ItemType {
 }
 
 const ModalFollowing = () => {
+  const profileImage = authService.currentUser?.photoURL as string;
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
   // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
   const [followingToggle, setfollowingToggle] =
     useRecoilState(followingToggleAtom);
@@ -68,11 +72,33 @@ const ModalFollowing = () => {
 
   return (
     <FollowingContainer>
+      <Heder>
+        {isMobile && (
+          <ProfileEditCancleBtn
+            onClick={() => {
+              setfollowingToggle(!followingToggle);
+            }}
+            src={'/Back-point.png'}
+          />
+        )}
+        {isPc && (
+          <CancleBtn
+            onClick={() => {
+              setfollowingToggle(!followingToggle);
+            }}
+          >
+            〈 취소{' '}
+          </CancleBtn>
+        )}
+      </Heder>
+      {isMobile && <FollowText>팔로잉 목록</FollowText>}
       <FollowingList>
-        <div style={{ fontSize: 30, marginBottom: 20 }}>내 팔로잉 목록</div>
         <FollowingTotal>
-          <FollowingText>팔로잉</FollowingText>
-          <FollowingCount>{null ? '0' : followingCount}</FollowingCount>
+          <ProfileImg src={profileImage} />
+          <UserNicknameFollow>
+            <UserNickname>{authService.currentUser?.displayName}</UserNickname>
+            님이 팔로잉중인 사람
+          </UserNicknameFollow>
         </FollowingTotal>
       </FollowingList>
       {userData?.map((item: ItemType) => (
@@ -104,38 +130,87 @@ const FollowingContainer = styled.div`
   height: 650px;
 `;
 
+const Heder = styled.header`
+  height: 20px;
+  @media ${(props) => props.theme.mobile} {
+    margin: 30px 0px 0px 95px;
+  }
+`;
+
+const CancleBtn = styled.button`
+  cursor: pointer;
+  color: #1882ff;
+  font-size: 14px;
+  margin-left: 25px;
+  background-color: white;
+  border: 0px;
+`;
+const FollowText = styled.div`
+  text-align: center;
+  position: absolute;
+  left: 40%;
+  top: 5.8%;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 138.5%;
+`;
+
+const ProfileEditCancleBtn = styled.img`
+  width: 12px;
+  height: 28px;
+`;
+
 const FollowingList = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 30px;
-  height: 30%;
+  height: 25%;
   width: 524px;
-  margin-bottom: 40px;
-  border-bottom: 1px solid black;
+  margin-bottom: 32px;
+  box-shadow: 0px 12px 15px rgba(0, 0, 0, 0.08);
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 20px;
+    height: 20%;
+  }
 `;
 
 const FollowingTotal = styled.div`
-  border-radius: 20px;
+  border-radius: 50px;
   background-color: #f8f8f8;
-  padding: 11px 20px;
-  width: 120px;
-  height: 70px;
+  width: 300px;
+  height: 68px;
   text-align: center;
   margin-bottom: 30px;
-  padding-bottom: 20px;
+  gap: 10px;
+  display: flex;
+  align-items: center;
 `;
 
-const FollowingText = styled.div`
-  color: #5b5b5f;
-  padding-top: 10px;
+const ProfileImg = styled.img`
+  width: 52px;
+  height: 52px;
+  border-radius: 30px;
+  margin: 15px;
 `;
 
-const FollowingCount = styled.div`
-  color: #212121;
-  font-size: 20px;
-  padding-top: 10px;
+const UserNicknameFollow = styled.div`
+  display: flex;
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+`;
+
+const UserNickname = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
 `;
 
 const FollowingProfile = styled.div`
@@ -145,7 +220,11 @@ const FollowingProfile = styled.div`
   width: 400px;
   overflow-y: scroll;
   margin: auto;
-  padding-bottom: 20px;
+  border-bottom: 2px solid #f4f4f4;
+  padding: 10px 0px 10px 0px;
+  @media ${(props) => props.theme.mobile} {
+    width: 85vw;
+  }
 `;
 
 const FollowingUser = styled.div`
@@ -165,11 +244,14 @@ const FollowingBtn = styled.div`
   background-color: #4cb2f6;
   color: white;
   font-size: 12px;
-  width: 60px;
-  height: 30px;
+  width: 62px;
+  height: 28px;
   border-radius: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 20px;
+  @media ${(props) => props.theme.mobile} {
+    margin-right: 0px;
+  }
 `;

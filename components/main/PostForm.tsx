@@ -9,20 +9,25 @@ import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
-import { postModalAtom } from '@/atom';
+import {
+  placeAtom,
+  postModalAtom,
+  saveAddressAtom,
+  saveLatLngAtom,
+  searchCategoryAtom,
+} from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
 import { useMediaQuery } from 'react-responsive';
 import imageCompression from 'browser-image-compression';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
-
-  const [saveLatLng, setSaveLatLng]: any = useState([]);
-  const [saveAddress, setSaveAddress]: any = useState();
+  const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
+  const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory]: any = useState('');
-
+  const [searchCategory, setSearchCategory] =
+    useRecoilState(searchCategoryAtom);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
@@ -41,7 +46,8 @@ const PostForm = () => {
   const nickname = authService?.currentUser?.displayName;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
-  const [place, setPlace] = useState('');
+  // const [place, setPlace] = useState('');
+  const [place, setPlace] = useRecoilState(placeAtom);
   let postState: any = {
     title: title,
     content: content,
@@ -209,15 +215,7 @@ const PostForm = () => {
     <>
       <PostFormWrap>
         <MapLandingPageWrap>
-          <MapLandingPage
-            searchCategory={searchCategory}
-            saveLatLng={saveLatLng}
-            setSaveLatLng={setSaveLatLng}
-            saveAddress={saveAddress}
-            setSaveAddress={setSaveAddress}
-            setPlace={setPlace}
-            place={place}
-          />
+          <MapLandingPage />
         </MapLandingPageWrap>
         <PostFormContainer>
           <PostFormContentBox>
