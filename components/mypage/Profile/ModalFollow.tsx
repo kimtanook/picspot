@@ -23,6 +23,7 @@ interface ItemType {
 }
 
 const ModalFollow = () => {
+  const profileImage = authService.currentUser?.photoURL as string;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
 
@@ -142,7 +143,7 @@ const ModalFollow = () => {
 
       <FollowList>
         <FollowTotal>
-          <ProfileImg src={authService.currentUser?.photoURL} />
+          <ProfileImg src={profileImage} />
           <UserNicknameFollow>
             <UserNickname>{authService.currentUser?.displayName}</UserNickname>
             님을 팔로잉중인 사람

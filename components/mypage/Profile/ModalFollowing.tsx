@@ -17,6 +17,7 @@ interface ItemType {
 }
 
 const ModalFollowing = () => {
+  const profileImage = authService.currentUser?.photoURL as string;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
   // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
@@ -93,7 +94,7 @@ const ModalFollowing = () => {
       {isMobile && <FollowText>팔로잉 목록</FollowText>}
       <FollowingList>
         <FollowingTotal>
-          <ProfileImg src={authService.currentUser?.photoURL} />
+          <ProfileImg src={profileImage} />
           <UserNicknameFollow>
             <UserNickname>{authService.currentUser?.displayName}</UserNickname>
             님이 팔로잉중인 사람
