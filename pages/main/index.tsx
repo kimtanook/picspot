@@ -21,7 +21,7 @@ import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
 
@@ -35,25 +35,10 @@ export default function Main() {
   const [searchValue, setSearchValue] = useState('');
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 823 });
-  const isPc = useMediaQuery({ minWidth: 824 });
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
-
-  // 뒷 배경 스크롤 방지
-  useEffect(() => {
-    const html = document.documentElement;
-    if (isModalActive || postMapModal) {
-      html.style.overflowY = 'hidden';
-      html.style.overflowX = 'hidden';
-    } else {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    }
-    return () => {
-      html.style.overflowY = 'auto';
-      html.style.overflowX = 'auto';
-    };
-  }, [isModalActive, postMapModal]);
+  const isPc = useMediaQuery({ minWidth: 824 });
+  const [isMobile, setIsMobile] = useState(false);
+  const mobile = useMediaQuery({ maxWidth: 823 });
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
@@ -122,7 +107,7 @@ export default function Main() {
       setSelectTown(cancelSelect);
     }
   };
-  // console.log('selectTown : ', selectTown);
+
   // 무한 스크롤
   const {
     data, // data.pages를 갖고 있는 배열
@@ -163,6 +148,27 @@ export default function Main() {
   useEffect(() => {
     logEvent('메인 페이지', { from: 'main page' });
   }, []);
+
+  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
+  useEffect(() => {
+    setIsMobile(mobile);
+  }, [mobile]);
+
+  // 뒷 배경 스크롤 방지
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isModalActive || postMapModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [isModalActive, postMapModal]);
 
   return (
     <Wrap>
@@ -249,22 +255,6 @@ export default function Main() {
             </ChatToggleBtn>
           </ChatWrap>
         </div>
-        {/* 
-        {postMapModal ? (
-          <CustomModal
-            modal={postMapModal}
-            setModal={setIsPostMapModal}
-            width="500"
-            height="500"
-            element={
-              <PostFormWrap>
-                <PostForm />
-              </PostFormWrap>
-            }
-          />
-        ) : (
-          ''
-        )} */}
 
         {isMobile && (
           <>
@@ -277,17 +267,13 @@ export default function Main() {
                 element={
                   <>
                     <ModalMapsWrap>
-                      <ModalMaps
-                        selectTown={selectTown}
-                        selectCity={selectCity}
-                      ></ModalMaps>
+                      <ModalMaps />
                       <ModalMapsBackButton
                         onClick={() => {
                           setIsModalActive(!isModalActive);
                         }}
                       >
-                        {isMobile && <MobileCancle src="/Back-point.png" />}
-                        {/* {isPc && ''} */}
+                        <MobileCancle src="/Back-point.png" />
                       </ModalMapsBackButton>
                     </ModalMapsWrap>
                   </>
@@ -298,9 +284,9 @@ export default function Main() {
             )}
           </>
         )}
+
         {isPc && (
           <>
-            {' '}
             {isModalActive ? (
               <CustomModal
                 modal={isModalActive}
@@ -310,10 +296,7 @@ export default function Main() {
                 element={
                   <>
                     <ModalMapsWrap>
-                      <ModalMaps
-                        selectTown={selectTown}
-                        selectCity={selectCity}
-                      ></ModalMaps>
+                      <ModalMaps />
                       <ModalMapsBackButton
                         onClick={() => {
                           setIsModalActive(!isModalActive);

@@ -9,19 +9,24 @@ import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
-import { postModalAtom } from '@/atom';
+import {
+  placeAtom,
+  postModalAtom,
+  saveAddressAtom,
+  saveLatLngAtom,
+  searchCategoryAtom,
+} from '@/atom';
 import DataLoading from '@/components/common/DataLoading';
 import { useMediaQuery } from 'react-responsive';
 
 const PostForm = () => {
   const queryClient = useQueryClient();
-
-  const [saveLatLng, setSaveLatLng]: any = useState([]);
-  const [saveAddress, setSaveAddress]: any = useState();
+  const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
+  const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory]: any = useState('');
-
+  const [searchCategory, setSearchCategory] =
+    useRecoilState(searchCategoryAtom);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
@@ -37,7 +42,8 @@ const PostForm = () => {
   const nickname = authService?.currentUser?.displayName;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
-  const [place, setPlace] = useState('');
+  // const [place, setPlace] = useState('');
+  const [place, setPlace] = useRecoilState(placeAtom);
   let postState: any = {
     title: title,
     content: content,
@@ -57,7 +63,7 @@ const PostForm = () => {
   const { mutate: onAddData, isLoading } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
-  // 수정코드
+
   const handleImageChange = (e: any) => {
     const file: any = e.target.files;
     if (file.length === 0) {
@@ -78,22 +84,6 @@ const PostForm = () => {
       };
     }
   };
-
-  // 기존코드
-  // const handleImageChange = (e: any) => {
-  //   const {
-  //     target: { files },
-  //   } = e;
-  //   const theFile = files[0];
-  //   const reader = new FileReader();
-  //   reader?.readAsDataURL(theFile);
-  //   reader.onloadend = (finishedEvent) => {
-  //     const {
-  //       currentTarget: { result },
-  //     }: any = finishedEvent;
-  //     setImageUpload(result);
-  //   };
-  // };
 
   //* 추가버튼 눌렀을때 실행하는 함수
   const onClickAddData = async () => {
@@ -203,15 +193,7 @@ const PostForm = () => {
     <>
       <PostFormWrap>
         <MapLandingPageWrap>
-          <MapLandingPage
-            searchCategory={searchCategory}
-            saveLatLng={saveLatLng}
-            setSaveLatLng={setSaveLatLng}
-            saveAddress={saveAddress}
-            setSaveAddress={setSaveAddress}
-            setPlace={setPlace}
-            place={place}
-          />
+          <MapLandingPage />
         </MapLandingPageWrap>
         <PostFormContainer>
           <PostFormContentBox>
