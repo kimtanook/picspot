@@ -7,14 +7,16 @@ import Maps from './Maps';
 
 const MapLandingPage = () => {
   const [place, setPlace] = useRecoilState(placeAtom);
+
   const [inputText, setInputText] = useState('');
   // const [infoDiv, setInfoDiv] = useState('');
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
-  const onchange = (e: any) => {
-    setInputText(e.target.value);
+
+  const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.currentTarget.value);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPlace(inputText);
     setInputText('');
@@ -35,15 +37,7 @@ const MapLandingPage = () => {
           </SearchButton>
         </StyledForm>
 
-        <Maps
-        // searchPlace={place ? place : searchCategory} //리코일 사용함
-        // saveLatLng={saveLatLng} //리코일 사용함
-        // setSaveLatLng={setSaveLatLng} //리코일 사용함
-        // saveAddress={saveAddress}//리코일 사용함
-        // setSaveAddress={setSaveAddress}//리코일 사용함
-        // setInfoDiv={setInfoDiv}
-        // infoDiv={infoDiv}
-        />
+        <Maps />
       </StyleContainer>
     </MapWrap>
   );

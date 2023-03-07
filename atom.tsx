@@ -56,28 +56,23 @@ export const townArray = atom({
   default: [] as string[],
 });
 
-// export const townArray = atom<string[]>({
-//   key: 'townArray',
-//   default: []
-// });
-
 export const saveLatLngAtom = atom({
   key: 'saveLatLng',
   default: [] as any,
 });
-export const saveAddressAtom = atom({
+export const saveAddressAtom = atom<string>({
   key: 'saveAddress',
-  default: false,
+  default: '',
 });
-export const searchCategoryAtom = atom({
+export const searchCategoryAtom = atom<ISearchCategory | undefined>({
   key: 'searchCategory',
-  default: [] as any,
+  default: undefined,
 });
-export const placeAtom = atom({
+export const placeAtom = atom<string>({
   key: 'place',
-  default: [] as any,
+  default: '',
 });
-export const infoDivAtom = atom({
+export const infoDivAtom = atom<string>({
   key: 'infoDiv',
-  default: [] as any,
+  default: '',
 });

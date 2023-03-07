@@ -53,7 +53,7 @@ const ModalMaps = () => {
 
           {data
 
-            .filter((item: any) =>
+            .filter((item: IMarkerData) =>
               selectTown.length === 0 && selectCity === '제주전체'
                 ? true
                 : selectTown.length === 0 && item.city === selectCity
@@ -61,7 +61,7 @@ const ModalMaps = () => {
                 : selectTown.includes(item.town)
             )
 
-            .map((item: any) => {
+            .map((item: IMarkerData) => {
               return (
                 <ModalMapsMarker
                   item={item}
@@ -93,7 +93,7 @@ const ModalMaps = () => {
 
           {data
 
-            .filter((item: any) =>
+            .filter((item: IMarkerData) =>
               selectTown.length === 0 && selectCity === '제주전체'
                 ? true
                 : selectTown.length === 0 && item.city === selectCity
@@ -101,7 +101,7 @@ const ModalMaps = () => {
                 : selectTown.includes(item.town)
             )
 
-            .map((item: any) => {
+            .map((item: IMarkerData) => {
               return (
                 <ModalMapsMarker
                   item={item}
