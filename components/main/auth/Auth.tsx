@@ -251,17 +251,12 @@ const Heder = styled.header`
   margin-bottom: 40px;
   margin-left: -30px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(40%, 350%);
+    transform: translate(55%, 200%);
     width: 30%;
   }
 `;
 
-const MobileCancle = styled.img`
-  transform: translate(500%, 260%);
-  width: 12px;
-  font-size: 0px;
-  position: relative;
-`;
+const MobileCancle = styled.img``;
 
 const LogoImg = styled.img`
   display: none;
