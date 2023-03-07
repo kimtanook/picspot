@@ -416,10 +416,11 @@ const FollowingBotton = styled.div`
 `;
 const SendMsg = styled.button`
   color: white;
+  background-color: gray;
   font-size: 14px;
   width: 109px;
   height: 32px;
-  border: 1px solid #5b5b5f;
+  border: 0px;
   border-radius: 22px;
   display: flex;
   flex-direction: row;
@@ -428,7 +429,7 @@ const SendMsg = styled.button`
   cursor: pointer;
   transition: 0.5s;
   :hover {
-    background-color: black;
+    background-color: darkgray;
     color: white;
     transition: 0.5s;
   }

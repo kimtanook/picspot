@@ -33,6 +33,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
+  const isMobile = useMediaQuery({ maxWidth: 785 });
 
   // 프로필 수정 모달 창 버튼
   const editProfileModalButton = () => {
@@ -59,6 +60,20 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
 
   return (
     <ProfileContainer>
+      <>
+        {isMobile && (
+          <Link href="/main?city=제주전체">
+            <Back
+              onClick={() => {
+                // sessionStorage.clear();
+                localStorage.clear();
+              }}
+            >
+              <MobileBack src="/Back-point.png" alt="image" />
+            </Back>
+          </Link>
+        )}
+      </>
       <div>
         <div onClick={() => setIsOpen(!isOpen)}>
           <MenuPointImg src="/three-point.png" />
@@ -66,7 +81,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
         {isOpen === true ? (
           <Menu>
             <MenuItem onClick={editProfileModalButton}>내 정보 변경</MenuItem>
-
             <MenuItem onClick={logOut}>로그아웃</MenuItem>
           </Menu>
         ) : null}
@@ -129,7 +143,16 @@ const ProfileContainer = styled.div`
     margin-left: 20px;
   }
 `;
-
+const Back = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    transform: translate(10%, -350%);
+  }
+`;
+const MobileBack = styled.img`
+  width: 12px;
+  height: 22px;
+`;
 const MenuPointImg = styled.img`
   display: none;
   @media ${(props) => props.theme.mobile} {
@@ -137,7 +160,7 @@ const MenuPointImg = styled.img`
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: translate(8500%, -550%);
+    transform: translate(8200%, -550%);
   }
 `;
 
@@ -160,7 +183,12 @@ const Menu = styled.div`
     background-color: #f4f4f4;
   }
 `;
-const MenuItem = styled.div``;
+const MenuItem = styled.div`
+  display: none;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+  }
+`;
 
 const ProfileImageDiv = styled.div`
   @media ${(props) => props.theme.mobile} {
