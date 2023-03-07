@@ -49,7 +49,7 @@ const Container = styled.div<{ width: string; height: string }>`
   font-size: 24px;
 
   @media ${(props) => props.theme.mobile} {
-    height: 94%;
+    /* height: 94%; */
     padding: 0px;
   }
 `;

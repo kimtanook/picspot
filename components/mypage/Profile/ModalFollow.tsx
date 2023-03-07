@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
@@ -22,7 +23,8 @@ interface ItemType {
 }
 
 const ModalFollow = () => {
-  // console.log('authService.currentUser?.uid', authService.currentUser?.uid);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const isPc = useMediaQuery({ minWidth: 767 });
 
   const queryClient = useQueryClient();
   const [followToggle, setFollowToggle] = useRecoilState(followToggleAtom);
@@ -117,11 +119,34 @@ const ModalFollow = () => {
 
   return (
     <FollowContainer>
+      <Heder>
+        {isMobile && (
+          <ProfileEditCancleBtn
+            onClick={() => {
+              setFollowToggle(!followToggle);
+            }}
+            src={'/Back-point.png'}
+          />
+        )}
+        {isPc && (
+          <CancleBtn
+            onClick={() => {
+              setFollowToggle(!followToggle);
+            }}
+          >
+            〈 취소{' '}
+          </CancleBtn>
+        )}
+      </Heder>
+      {isMobile && <FollowText>팔로우 목록</FollowText>}
+
       <FollowList>
-        <div style={{ fontSize: 30, marginBottom: 20 }}>내 팔로워 목록</div>
         <FollowTotal>
-          <FollowText>팔로워</FollowText>
-          <FollowerCount>{null ? '0' : followerCount}</FollowerCount>
+          <ProfileImg src={authService.currentUser?.photoURL} />
+          <UserNicknameFollow>
+            <UserNickname>{authService.currentUser?.displayName}</UserNickname>
+            님을 팔로잉중인 사람
+          </UserNicknameFollow>
         </FollowTotal>
       </FollowList>
       {followUserData?.map((item: ItemType) => (
@@ -159,38 +184,89 @@ const FollowContainer = styled.div`
   height: 650px;
 `;
 
+const Heder = styled.div`
+  height: 20px;
+  width: 90px;
+  @media ${(props) => props.theme.mobile} {
+    margin: 30px 0px 0px 95px;
+  }
+`;
+
+const FollowText = styled.div`
+  text-align: center;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 138.5%;
+  position: absolute;
+  left: 40%;
+  top: 5.8%;
+`;
+
+const ProfileEditCancleBtn = styled.img`
+  width: 12px;
+  height: 28px;
+`;
+
+const CancleBtn = styled.button`
+  cursor: pointer;
+  color: #1882ff;
+  font-size: 14px;
+  margin-left: 25px;
+  background-color: white;
+  border: 0px;
+`;
+
 const FollowList = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 30px;
-  height: 30%;
+  height: 25%;
   width: 524px;
-  margin-bottom: 40px;
-  border-bottom: 1px solid black;
+  margin-bottom: 32px;
+  box-shadow: 0px 12px 15px rgba(0, 0, 0, 0.08);
+  @media ${(props) => props.theme.mobile} {
+    height: 20%;
+    margin-top: 20px;
+  }
 `;
 
 const FollowTotal = styled.div`
-  border-radius: 20px;
+  border-radius: 40px;
   background-color: #f8f8f8;
-  padding: 11px 20px;
-  width: 120px;
-  height: 70px;
+  width: 300px;
+  height: 68px;
   text-align: center;
   margin-bottom: 30px;
-  padding-bottom: 20px;
+  gap: 10px;
+  display: flex;
+  align-items: center;
 `;
 
-const FollowText = styled.div`
-  color: #5b5b5f;
-  padding-top: 10px;
+const UserNicknameFollow = styled.div`
+  display: flex;
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
 `;
 
-const FollowerCount = styled.div`
-  color: #212121;
-  font-size: 20px;
-  padding-top: 10px;
+const UserNickname = styled.div`
+  font-family: 'Noto Sans CJK KR';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+`;
+
+const ProfileImg = styled.img`
+  width: 52px;
+  height: 52px;
+  border-radius: 50px;
+  margin: 15px;
 `;
 
 const FollowProfile = styled.div`
@@ -200,7 +276,11 @@ const FollowProfile = styled.div`
   width: 400px;
   overflow-y: scroll;
   margin: auto;
-  padding-bottom: 20px;
+  border-bottom: 2px solid #f4f4f4;
+  padding: 10px 0px 10px 0px;
+  @media ${(props) => props.theme.mobile} {
+    width: 85vw;
+  }
 `;
 
 const FollowUser = styled.div`
@@ -209,22 +289,23 @@ const FollowUser = styled.div`
   align-items: center;
   cursor: pointer;
 `;
-
-const FollowUserName = styled.div`
-  margin-left: 10px;
-  font-size: 20px;
-`;
-
 const FollowBtn = styled.div`
   cursor: pointer;
   background-color: #4cb2f6;
   color: white;
   font-size: 12px;
-  width: 60px;
-  height: 30px;
+  width: 62px;
+  height: 28px;
   border-radius: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 20px;
+  @media ${(props) => props.theme.mobile} {
+    margin-right: 0px;
+  }
+`;
+const FollowUserName = styled.div`
+  margin-left: 10px;
+  font-size: 20px;
 `;
