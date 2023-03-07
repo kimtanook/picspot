@@ -42,8 +42,12 @@ const PostForm = () => {
   const nickname = authService?.currentUser?.displayName;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
-  // const [place, setPlace] = useState('');
+
   const [place, setPlace] = useRecoilState(placeAtom);
+  const [isOpenMap, setIsOpenMap] = useState(false);
+  const onClickOpen = () => {
+    setIsOpenMap(!isOpenMap);
+  };
   let postState: any = {
     title: title,
     content: content,
@@ -195,6 +199,7 @@ const PostForm = () => {
         <MapLandingPageWrap>
           <MapLandingPage />
         </MapLandingPageWrap>
+
         <PostFormContainer>
           <PostFormContentBox>
             <PostFormContenTitle>
@@ -305,7 +310,7 @@ const PostForm = () => {
             </PostFormInputWrap>
             <PostFormUploadButton>
               <CustomButton
-                width="373px"
+                width="100%"
                 height="48px"
                 borderRadius="0px"
                 color="white"
@@ -334,10 +339,9 @@ const PostFormWrap = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
-    /* background-color: green; */
+    justify-content: flex-end;
     width: 100vw;
-    /* margin-top: 85vh; */
-    /* height: 100vh; */
+    height: 100vh;
     z-index: 9999;
   }
 `;
@@ -345,6 +349,7 @@ const PostFormWrap = styled.div`
 const MapLandingPageWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
+    height: 100vh;
   }
 `;
 
@@ -353,11 +358,8 @@ const PostFormContainer = styled.div`
   background-color: white;
   @media ${(props) => props.theme.mobile} {
     padding: 0px;
-    /* width: 100%; */
-    /* background-color: Red; */
-    /* display: flex;
-    justify-content: center;
-    margin: 0 auto; */
+    height: 50vh;
+    z-index: 999;
   }
 `;
 
@@ -377,17 +379,13 @@ const PostFormContentBox = styled.div`
   padding: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 425px;
-    /* height: 1000px;
-    width: 100%; */
-    /* top: 30px; */
-    /* background-color: yellow; */
   }
 `;
 
 const PostFormContentWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
+
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
     padding: 0 10px;
@@ -395,7 +393,6 @@ const PostFormContentWrap = styled.div`
 `;
 
 const PostFormContentTop = styled.div`
-  /* background-color: red; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -500,7 +497,7 @@ const PostFormInputTitle = styled.p`
 const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    margin-left: 10px;
+    margin: 5px -10px;
   }
 `;
 
@@ -509,7 +506,6 @@ const Img = styled.label`
   width: 160px;
   background-image: url(/Light.png);
   background-position: center;
-  background-color: red;
   cursor: pointer;
   margin: 10px;
   @media ${(props) => props.theme.mobile} {
