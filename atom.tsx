@@ -47,6 +47,10 @@ export const editProfileModalAtom = atom({
   key: `editProfileModalAtom`,
   default: false,
 });
+export const mobileProfileModalAtom = atom({
+  key: `mobileProfileModalAtom`,
+  default: false,
+});
 export const townArray = atom({
   key: 'townArray',
   default: [] as string[],

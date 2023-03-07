@@ -18,8 +18,6 @@ import { logEvent } from '@/utils/amplitude';
 
 const Post = ({ id }: any) => {
   // console.log('id: ', id);
-  console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
-
   //* Map 관련
   //? category 클릭, 검색 시 map이동에 관한 통합 state
   const [searchCategory, setSearchCategory]: any = useState('');
@@ -102,7 +100,13 @@ const Post = ({ id }: any) => {
   return (
     <DetailContainer>
       <Seo title="Detail" />
-      <Header selectCity={undefined} onChangeSelectCity={undefined} />
+      <Header
+        selectCity={undefined}
+        onChangeSelectCity={undefined}
+        searchOptionRef={undefined}
+        searchValue={undefined}
+        onChangeSearchValue={undefined}
+      />
 
       {detail
         ?.filter((item: any) => {
