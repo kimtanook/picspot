@@ -65,7 +65,7 @@ const DetailList = ({
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const postDeleteModalButton = () => {
-    setEditProfileModal(!editProfileModal);
+    setForgotModal(!forgotModal);
   };
 
   const onClickDelete = (docId: any) => {
@@ -229,7 +229,7 @@ const DetailList = ({
                 {isOpen === true ? (
                   <Menu>
                     <MenuItem onClick={onClickEditToggle}>게시물 수정</MenuItem>
-                    <MenuItem onClick={() => onClickDelete(item.id)}>
+                    <MenuItem onClick={postDeleteModalButton}>
                       게시물 삭제
                     </MenuItem>
                   </Menu>
