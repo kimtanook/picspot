@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 const DetailList = ({
   item,
@@ -48,23 +49,37 @@ const DetailList = ({
   const onClickDelete = (docId: any) => {
     const imageRef = ref(storageService, `images/${item.imagePath}`);
 
-    deleteObject(imageRef)
-      .then(() => {
-        console.log('스토리지를 파일을 삭제를 성공했습니다');
-      })
-      .catch((error) => {
-        console.log('스토리지 파일 삭제를 실패했습니다');
-      });
+    Swal.fire({
+      icon: 'warning',
+      title: '정말로 삭제하시겠습니까?',
+      confirmButtonColor: '#08818c',
 
-    onDeleteData(docId, {
-      onSuccess: () => {
-        setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
-        logEvent('게시물 삭제 버튼', { from: 'detail page' });
-        customConfirm('삭제를 완료하였습니다!');
-        router.push('/main?city=제주전체');
-      },
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(imageRef)
+          .then(() => {
+            console.log('스토리지를 파일을 삭제를 성공했습니다');
+          })
+          .catch((error) => {
+            console.log('스토리지 파일 삭제를 실패했습니다');
+          });
+
+        onDeleteData(docId, {
+          onSuccess: () => {
+            setTimeout(
+              () => queryClient.invalidateQueries('infiniteData'),
+              500
+            );
+            logEvent('게시물 삭제 버튼', { from: 'detail page' });
+            router.push('/main?city=제주전체');
+          },
+        });
+        visibleReset();
+      }
     });
-    visibleReset();
   };
 
   //* useMutation 사용해서 데이터 수정하기
@@ -102,15 +117,30 @@ const DetailList = ({
       return;
     }
 
-    onUpdateData(data, {
-      onSuccess: () => {
-        setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-        logEvent('수정 완료 버튼', { from: 'detail page' });
-        customConfirm('수정을 완료하였습니다!');
+    Swal.fire({
+      icon: 'warning',
+      title: '정말로 수정하시겠습니까?',
+      confirmButtonColor: '#08818c',
+
+      showCancelButton: true,
+      confirmButtonText: '수정',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onUpdateData(data, {
+          onSuccess: () => {
+            setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
+            logEvent('수정 완료 버튼', { from: 'detail page' });
+            setSaveLatLng([]);
+            setSaveAddress('');
+            setEditBtnToggle(!editBtnToggle);
+          },
+        });
+      } else {
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
-      },
+      }
     });
   };
 

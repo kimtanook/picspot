@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil';
 import { editAtom } from '@/atom';
 import { logEvent } from '@/utils/amplitude';
 import imageCompression from 'browser-image-compression';
+import Swal from 'sweetalert2';
 
 const DetailImg = ({ item }: any) => {
   let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
@@ -89,20 +90,33 @@ const DetailImg = ({ item }: any) => {
           imgUrl: response,
         };
 
-        onUpdateData(
-          { ...data, imgUrl: response },
-          {
-            onSuccess: () => {
-              setTimeout(
-                () => queryClient.invalidateQueries('detailData'),
-                500
-              );
-              customConfirm('수정을 완료하였습니다!');
-              setImageUpload(null);
-              logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
-            },
+        Swal.fire({
+          icon: 'warning',
+          title: '정말로 수정하시겠습니까?',
+          confirmButtonColor: '#08818c',
+
+          showCancelButton: true,
+          confirmButtonText: '수정',
+          cancelButtonText: '취소',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            onUpdateData(
+              { ...data, imgUrl: response },
+              {
+                onSuccess: () => {
+                  setTimeout(
+                    () => queryClient.invalidateQueries('detailData'),
+                    500
+                  );
+                  setImageUpload(null);
+                  logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
+                },
+              }
+            );
+          } else {
+            setImageUpload(null);
           }
-        );
+        });
       });
     });
     queryClient.invalidateQueries('detailData');
