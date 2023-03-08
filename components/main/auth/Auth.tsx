@@ -243,7 +243,7 @@ const LoginContainer = styled.div`
     height: 700px;
   }
 `;
-const Heder = styled.header`
+const Heder = styled.div`
   z-index: 1000000;
   color: #1882ff;
   font-size: 15px;
@@ -316,7 +316,7 @@ const LoginInput = styled.input`
     width: 326px;
     height: 48px;
     top: 250.31px;
-    border: none;
+    /* border: none; */
     border-bottom: 2px solid #1882ff;
     background: #fbfbfb;
     position: absolute;
@@ -331,12 +331,15 @@ const AuthWarn = styled.p`
     transform: translate(10%, 2200%);
     font-size: 10px;
     border: none;
-    background: #fbfbfb;
+    background: transparent;
   }
 `;
 const EditInputBox = styled.div`
-  width: 100%;
   position: relative;
+  width: 10px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(0%, 0%);
+  }
 `;
 const EditclearBtn = styled.div`
   position: absolute;
@@ -348,7 +351,7 @@ const EditclearBtn = styled.div`
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(1300%, 920%);
+    transform: translate(-110%, 920%);
     position: inherit;
   }
 `;
@@ -362,7 +365,7 @@ const EditPwShowBtn = styled.div`
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(1300%, 930%);
+    transform: translate(-110%, 930%);
     position: inherit;
   }
 `;

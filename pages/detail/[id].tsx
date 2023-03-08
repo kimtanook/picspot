@@ -47,7 +47,7 @@ const Post = ({ id }: any) => {
   // const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
   // const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
 
-  const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
+  // const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
 
   //* 데이터 수정 시 보내주는 데이터
   let editData = {
@@ -61,11 +61,11 @@ const Post = ({ id }: any) => {
   };
 
   //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEditToggle = () => {
-    setEditBtnToggle(!editBtnToggle);
-  };
+  // const onClickEditToggle = () => {
+  //   setEditBtnToggle(!editBtnToggle);
+  // };
 
-  //! useQuery 사용해서 포스트 데이터 불러오기
+  //* useQuery 사용해서 포스트 데이터 불러오기
   const {
     data: detail,
     isLoading,
@@ -135,8 +135,8 @@ const Post = ({ id }: any) => {
             <ListAndMapAndComment>
               <DetailList
                 item={item}
-                editBtnToggle={editBtnToggle}
-                onClickEditToggle={onClickEditToggle}
+                // editBtnToggle={editBtnToggle}
+                // onClickEditToggle={onClickEditToggle}
                 editTitle={editTitle}
                 setEditTitle={setEditTitle}
                 editContent={editContent}
@@ -151,15 +151,15 @@ const Post = ({ id }: any) => {
                 setSaveLatLng={setSaveLatLng}
                 saveAddress={saveAddress}
                 setSaveAddress={setSaveAddress}
-                setEditBtnToggle={setEditBtnToggle}
+                // setEditBtnToggle={setEditBtnToggle}
                 setPlace={setPlace}
                 place={place}
               />
 
               <DetailMap
                 item={item}
-                editBtnToggle={editBtnToggle}
-                setEditBtnToggle={setEditBtnToggle}
+                // editBtnToggle={editBtnToggle}
+                // setEditBtnToggle={setEditBtnToggle}
                 setIsOpen={setIsOpen}
                 isOpen={isOpen}
                 inputToggle={inputToggle}
