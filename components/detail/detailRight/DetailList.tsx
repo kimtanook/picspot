@@ -1,9 +1,10 @@
 import { deleteData, updateData, visibleReset } from '@/api';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
-import { authService } from '@/firebase';
+import { authService, storageService } from '@/firebase';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
+import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -45,6 +46,16 @@ const DetailList = ({
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const onClickDelete = (docId: any) => {
+    const imageRef = ref(storageService, `images/${item.imagePath}`);
+
+    deleteObject(imageRef)
+      .then(() => {
+        console.log('스토리지를 파일을 삭제를 성공했습니다');
+      })
+      .catch((error) => {
+        console.log('스토리지 파일 삭제를 실패했습니다');
+      });
+
     onDeleteData(docId, {
       onSuccess: () => {
         setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);

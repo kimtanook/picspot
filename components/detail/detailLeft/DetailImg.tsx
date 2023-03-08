@@ -78,8 +78,9 @@ const DetailImg = ({ item }: any) => {
       customAlert('이미지를 추가해주세요.');
     }
 
-    // const imageRef = ref(storageService, `images/${uuidv4()}`);
-    const imageRef = ref(storageService, `image/${uuidv4()}`);
+    const imageRef = ref(storageService, `images/${item.imagePath}`);
+    // console.log('item.imagePath: ', item.imagePath);
+
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;

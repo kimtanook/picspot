@@ -136,16 +136,16 @@ export const getData = async () => {
   return response;
 };
 
-//* 스토어에 데이터 추가하기
+//* 포스트 추가하기
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
 };
-//* 스토어에 데이터 삭제하기
+//* 포스트 삭제하기
 export const deleteData: any = (docId: any) => {
   deleteDoc(doc(dbService, 'post', docId));
 };
 
-//* 스토어에 데이터 수정하기
+//* 포스트 수정하기
 export const updateData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
 };
