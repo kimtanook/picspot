@@ -15,7 +15,8 @@ import imageCompression from 'browser-image-compression';
 import Swal from 'sweetalert2';
 
 const DetailImg = ({ item }: any) => {
-  let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+  const [editState, setEditState] = useRecoilState(editAtom);
+  // console.log('editState: ', editState);
 
   const [imageUpload, setImageUpload]: any = useState(null);
 
@@ -79,17 +80,12 @@ const DetailImg = ({ item }: any) => {
       customAlert('이미지를 추가해주세요.');
     }
 
-    const imageRef = ref(storageService, `images/${item.imagePath}`);
-    // console.log('item.imagePath: ', item.imagePath);
+    const imageRef = ref(storageService, `images/${item.imgPath}`);
+    // console.log('item.imgPath: ', item.imgPath);
 
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
-        editImg = {
-          ...editImg,
-          imgUrl: response,
-        };
-
         Swal.fire({
           icon: 'warning',
           title: '정말로 수정하시겠습니까?',
@@ -100,6 +96,7 @@ const DetailImg = ({ item }: any) => {
           cancelButtonText: '취소',
         }).then((result) => {
           if (result.isConfirmed) {
+            setEditState({ imgUrl: response, imgPath: item.imgPath });
             onUpdateData(
               { ...data, imgUrl: response },
               {
@@ -173,7 +170,7 @@ const DetailImg = ({ item }: any) => {
           </DetailImgBox>
         )}
         {imageUpload ? (
-          <DetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
+          <DetailBtn onClick={() => onClickEdit({ id: item.id })}>
             게시물 사진 수정 〉
           </DetailBtn>
         ) : (

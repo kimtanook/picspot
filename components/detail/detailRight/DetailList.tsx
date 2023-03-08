@@ -1,4 +1,5 @@
 import { deleteData, updateData, visibleReset } from '@/api';
+import { editAtom, editBtnToggleAtom } from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
@@ -9,13 +10,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
 const DetailList = ({
   item,
-  editBtnToggle,
-  onClickEditToggle,
+  // editBtnToggle,
+  // onClickEditToggle,
   editTitle,
   setEditTitle,
   editContent,
@@ -30,10 +32,16 @@ const DetailList = ({
   setSaveLatLng,
   saveAddress,
   setSaveAddress,
-  setEditBtnToggle,
+  // setEditBtnToggle,
   setPlace,
   place,
 }: any) => {
+  //! global state
+  const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
+  const [editState, setEditState] = useRecoilState(editAtom);
+  //! title, content 상태관리 할 차례
+  console.log('editState: ', editState);
+
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
   const titleInput = useRef<HTMLInputElement>(null); //* DOM에 접근하기
@@ -42,12 +50,17 @@ const DetailList = ({
   const [editTitleInputCount, setEditTitleInputCount] = useState(0);
   const [editContentInputCount, setEditContentInputCount] = useState(0);
 
+  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
+
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const onClickDelete = (docId: any) => {
-    const imageRef = ref(storageService, `images/${item.imagePath}`);
+    const imageRef = ref(storageService, `images/${item.imgPath}`);
 
     Swal.fire({
       icon: 'warning',
@@ -116,6 +129,8 @@ const DetailList = ({
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
+
+    console.log('data: ', data);
 
     Swal.fire({
       icon: 'warning',
