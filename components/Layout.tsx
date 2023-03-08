@@ -24,6 +24,7 @@ import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
 import { CustomModalMap } from './common/CustomModalMap';
+import DetailList from './detail/detailRight/DetailList';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -97,15 +98,40 @@ function Layout() {
         )}
       </>
       <>
-        {forgotModal ? (
-          <CustomModal
-            modal={forgotModal}
-            setModal={setForgotModal}
-            width="524"
-            height="467"
-            element={<AuthForgot />}
-          />
-        ) : null}
+        {forgotModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={forgotModal}
+                  setModal={setForgotModal}
+                  width="1000"
+                  height="1000"
+                  element={
+                    <>
+                      <AuthForgot /> <DetailList />
+                    </>
+                  }
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={forgotModal}
+                  setModal={setForgotModal}
+                  width="524"
+                  height="467"
+                  element={
+                    <>
+                      <AuthForgot /> <DetailList />
+                    </>
+                  }
+                />
+              )}
+            </>
+          </>
+        )}
       </>
       <>
         {closeLoginModal && (

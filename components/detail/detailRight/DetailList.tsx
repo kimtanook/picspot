@@ -1,5 +1,5 @@
 import { deleteData, updateData, visibleReset } from '@/api';
-import { editAtom, editBtnToggleAtom } from '@/atom';
+import { editAtom, editBtnToggleAtom, forgotModalAtom } from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
@@ -13,6 +13,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import Link from 'next/link';
+import { useMediaQuery } from 'react-responsive';
 
 const DetailList = ({
   item,
@@ -41,6 +43,9 @@ const DetailList = ({
   const [editState, setEditState] = useRecoilState(editAtom);
   //! title, content 상태관리 할 차례
   console.log('editState: ', editState);
+  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const [isOpen, setIsOpen] = useState(false);
+  const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
 
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
@@ -59,6 +64,10 @@ const DetailList = ({
   const { mutate: onDeleteData } = useMutation(deleteData);
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
+  const postDeleteModalButton = () => {
+    setEditProfileModal(!editProfileModal);
+  };
+
   const onClickDelete = (docId: any) => {
     const imageRef = ref(storageService, `images/${item.imgPath}`);
 
@@ -130,7 +139,7 @@ const DetailList = ({
       return;
     }
 
-    console.log('data: ', data);
+    // console.log('data: ', data);
 
     Swal.fire({
       icon: 'warning',
@@ -183,6 +192,21 @@ const DetailList = ({
     return (
       <ListContainer>
         <TitleAndView>
+          <>
+            {isMobile && (
+              <Link href="/main?city=제주전체">
+                <Back
+                  onClick={() => {
+                    // sessionStorage.clear();
+                    localStorage.clear();
+                  }}
+                >
+                  <MobileBack src="/Back-point.png" alt="image" />
+                </Back>
+              </Link>
+            )}
+          </>
+
           <Title>{item.title} </Title>
           <View>
             <Image
@@ -197,8 +221,23 @@ const DetailList = ({
             </span>
           </View>
           {authService.currentUser?.uid === item.creator ? (
-            <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
-          ) : null}
+            <>
+              <div>
+                <div onClick={() => setIsOpen(!isOpen)}>
+                  <MenuPointImg src="/three-point.png" />
+                </div>
+                {isOpen === true ? (
+                  <Menu>
+                    <MenuItem onClick={onClickEditToggle}>게시물 수정</MenuItem>
+                    <MenuItem onClick={() => onClickDelete(item.id)}>
+                      게시물 삭제
+                    </MenuItem>
+                  </Menu>
+                ) : null}
+              </div>
+            </>
+          ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
+          null}
         </TitleAndView>
         <CityAndTownAndAddress>
           <City>{item.city}</City>
@@ -239,9 +278,9 @@ const DetailList = ({
 
           {editBtnToggle ? (
             <EditBtnCotainer>
-              <EditBtn onClick={() => onClickDelete(item.id)}>
+              {/* <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
-              </EditBtn>
+              </EditBtn> */}
               <EditBtn
                 onClick={() =>
                   onClickEdit({
@@ -273,7 +312,7 @@ const DetailList = ({
                 </span>
               </View>
 
-              <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
+              {/* <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn> */}
             </>
           )}
         </TitleAndView>
@@ -360,9 +399,62 @@ const ListContainer = styled.div`
     margin: auto;
   }
 `;
+const Back = styled.div`
+  position: absolute;
+  transform: translate(0%, 0%);
+`;
+const MobileBack = styled.img`
+  width: 12px;
+  height: 22px;
+`;
+const MenuPointImg = styled.img`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0%;
+  top: 0%;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
 
+const Menu = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  right: -15%;
+  top: 0;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.21);
+  width: 88px;
+  height: 90px;
+  place-content: center;
+  gap: 19px;
+  background-color: #f4f4f4;
+  transition: 0.3s;
+  cursor: pointer;
+`;
+const MenuItem = styled.div`
+  display: flex;
+  transition: 0.3s;
+  padding: 3px;
+  cursor: pointer;
+  :hover {
+    transition: 0.4s;
+    background-color: #4176ff;
+    color: white;
+    border-radius: 24px;
+  }
+`;
 const TitleAndView = styled.div`
   display: flex;
+  position: relative;
   flex-direction: row;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
@@ -381,6 +473,7 @@ const Title = styled.div`
   white-space: nowrap;
   @media ${(props) => props.theme.mobile} {
     font-size: 20px;
+    margin-left: 30px;
   }
 `;
 
