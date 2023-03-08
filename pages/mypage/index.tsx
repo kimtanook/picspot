@@ -12,6 +12,7 @@ import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
+import Link from 'next/link';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
@@ -109,6 +110,7 @@ const MyProfileContainer = styled.div`
   height: 200px;
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
+    height: 40vw;
   }
 `;
 

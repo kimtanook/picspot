@@ -37,9 +37,16 @@ export default function Main() {
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const [isModalActive, setIsModalActive] = useState(false);
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
+
   const isPc = useMediaQuery({ minWidth: 824 });
+
   const [isMobile, setIsMobile] = useState(false);
   const mobile = useMediaQuery({ maxWidth: 823 });
+
+  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
+  useEffect(() => {
+    setIsMobile(mobile);
+  }, [mobile]);
 
   const onClickToggleMapModal = () => {
     setIsModalActive(!isModalActive);
@@ -149,11 +156,6 @@ export default function Main() {
   useEffect(() => {
     logEvent('메인 페이지', { from: 'main page' });
   }, []);
-
-  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
-  useEffect(() => {
-    setIsMobile(mobile);
-  }, [mobile]);
 
   // 뒷 배경 스크롤 방지
   useEffect(() => {
@@ -437,7 +439,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
-    z-index: 999;
+    z-index: 1;
   }
 `;
 const PinImgBox = styled.div`

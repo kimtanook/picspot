@@ -241,14 +241,13 @@ const Heder = styled.header`
   display: flex;
   margin-bottom: 50px;
   margin-left: -50px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(55%, 200%);
+    width: 30%;
+  }
 `;
 
-const MobileCancle = styled.img`
-  transform: translate(500%, 260%);
-  width: 12px;
-  font-size: 0px;
-  position: relative;
-`;
+const MobileCancle = styled.img``;
 const SignUpTextDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -256,6 +255,12 @@ const SignUpTextDiv = styled.div`
   font-weight: 700;
   margin-top: 10px;
   margin-bottom: 60px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(50%, -95%);
+    width: 50%;
+    font-family: 'Noto Sans CJK KR';
+    font-size: 14px;
+  }
 `;
 
 const SignUpEmailPwContainer = styled.form`

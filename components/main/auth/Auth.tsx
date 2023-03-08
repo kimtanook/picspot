@@ -100,13 +100,15 @@ const Auth = (): JSX.Element => {
 
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
-      <Heder
-        onClick={() => {
-          setCloseLoginModal(!closeLoginModal);
-        }}
-      >
-        {isMobile && <MobileCancle src="/Back-point.png" alt="image" />}
-        {isPc && '〈 취소 '}
+      <Heder>
+        <div
+          onClick={() => {
+            setCloseLoginModal(!closeLoginModal);
+          }}
+        >
+          {isMobile && <MobileCancle src="/Back-point.png" alt="image" />}
+          {isPc && <div style={{ cursor: 'pointer' }}>〈 취소</div>}
+        </div>
       </Heder>
       <LogoImg src="/logo.png" alt="image" />
       <LoginTextDiv>
@@ -242,7 +244,6 @@ const LoginContainer = styled.div`
   }
 `;
 const Heder = styled.header`
-  cursor: pointer;
   z-index: 1000000;
   color: #1882ff;
   font-size: 15px;
@@ -250,17 +251,12 @@ const Heder = styled.header`
   margin-bottom: 40px;
   margin-left: -30px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(40%, 350%);
+    transform: translate(55%, 200%);
     width: 30%;
   }
 `;
 
-const MobileCancle = styled.img`
-  transform: translate(500%, 260%);
-  width: 12px;
-  font-size: 0px;
-  position: relative;
-`;
+const MobileCancle = styled.img``;
 
 const LogoImg = styled.img`
   display: none;
