@@ -97,15 +97,32 @@ function Layout() {
         )}
       </>
       <>
-        {forgotModal ? (
-          <CustomModal
-            modal={forgotModal}
-            setModal={setForgotModal}
-            width="524"
-            height="467"
-            element={<AuthForgot />}
-          />
-        ) : null}
+        {forgotModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={forgotModal}
+                  setModal={setForgotModal}
+                  width="1000"
+                  height="1000"
+                  element={<AuthForgot />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={forgotModal}
+                  setModal={setForgotModal}
+                  width="524"
+                  height="467"
+                  element={<AuthForgot />}
+                />
+              )}
+            </>
+          </>
+        )}
       </>
       <>
         {closeLoginModal && (
