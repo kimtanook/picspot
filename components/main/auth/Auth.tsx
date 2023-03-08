@@ -100,7 +100,7 @@ const Auth = (): JSX.Element => {
 
   return (
     <LoginContainer className="modalBody" onClick={(e) => e.stopPropagation()}>
-      <Heder>
+      <Header>
         <div
           onClick={() => {
             setCloseLoginModal(!closeLoginModal);
@@ -109,7 +109,7 @@ const Auth = (): JSX.Element => {
           {isMobile && <MobileCancle src="/Back-point.png" alt="image" />}
           {isPc && <div style={{ cursor: 'pointer' }}>〈 취소</div>}
         </div>
-      </Heder>
+      </Header>
       <LogoImg src="/logo.png" alt="image" />
       <LoginTextDiv>
         {isMobile ? <p>픽스팟에 로그인하고, 제주 인생샷 알아보세요!</p> : ''}
@@ -243,7 +243,7 @@ const LoginContainer = styled.div`
     height: 700px;
   }
 `;
-const Heder = styled.div`
+const Header = styled.div`
   z-index: 1000000;
   color: #1882ff;
   font-size: 15px;
