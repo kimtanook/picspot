@@ -12,7 +12,6 @@ import { getInfiniteData, visibleReset } from '@/api';
 import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { useRouter } from 'next/router';
-import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
 import PostForm from '@/components/main/PostForm';
