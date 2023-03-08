@@ -5,6 +5,7 @@ export const messageBoxToggle = atom({
   key: `messageToggle${uuidv4()}`,
   default: false,
 });
+
 export const messageSendToggle = atom({
   key: `messageToggle${uuidv4()}`,
   default: false,
@@ -18,11 +19,6 @@ export const followingToggleAtom = atom({
 export const followToggleAtom = atom({
   key: `followToggleAtom${uuidv4()}`,
   default: false,
-});
-
-export const editAtom = atom({
-  key: `editAtom${uuidv4()}`,
-  default: {},
 });
 
 export const loginModalAtom = atom({
@@ -75,4 +71,14 @@ export const placeAtom = atom<string>({
 export const infoDivAtom = atom<string>({
   key: 'infoDiv',
   default: '',
+});
+
+export const editAtom = atom({
+  key: `editAtom${uuidv4()}`,
+  default: {},
+});
+
+export const editBtnToggleAtom = atom({
+  key: `editBtnToggleAtom${uuidv4()}`,
+  default: false,
 });

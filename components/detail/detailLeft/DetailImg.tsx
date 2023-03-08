@@ -12,9 +12,11 @@ import { useRecoilState } from 'recoil';
 import { editAtom } from '@/atom';
 import { logEvent } from '@/utils/amplitude';
 import imageCompression from 'browser-image-compression';
+import Swal from 'sweetalert2';
 
 const DetailImg = ({ item }: any) => {
-  let editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
+  const [editState, setEditState] = useRecoilState(editAtom);
+  // console.log('editState: ', editState);
 
   const [imageUpload, setImageUpload]: any = useState(null);
 
@@ -78,30 +80,40 @@ const DetailImg = ({ item }: any) => {
       customAlert('이미지를 추가해주세요.');
     }
 
-    // const imageRef = ref(storageService, `images/${uuidv4()}`);
-    const imageRef = ref(storageService, `image/${uuidv4()}`);
+    const imageRef = ref(storageService, `images/${item.imgPath}`);
+    // console.log('item.imgPath: ', item.imgPath);
+
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
-        editImg = {
-          ...editImg,
-          imgUrl: response,
-        };
+        Swal.fire({
+          icon: 'warning',
+          title: '정말로 수정하시겠습니까?',
+          confirmButtonColor: '#08818c',
 
-        onUpdateData(
-          { ...data, imgUrl: response },
-          {
-            onSuccess: () => {
-              setTimeout(
-                () => queryClient.invalidateQueries('detailData'),
-                500
-              );
-              customConfirm('수정을 완료하였습니다!');
-              setImageUpload(null);
-              logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
-            },
+          showCancelButton: true,
+          confirmButtonText: '수정',
+          cancelButtonText: '취소',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setEditState({ imgUrl: response, imgPath: item.imgPath });
+            onUpdateData(
+              { ...data, imgUrl: response },
+              {
+                onSuccess: () => {
+                  setTimeout(
+                    () => queryClient.invalidateQueries('detailData'),
+                    500
+                  );
+                  setImageUpload(null);
+                  logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
+                },
+              }
+            );
+          } else {
+            setImageUpload(null);
           }
-        );
+        });
       });
     });
     queryClient.invalidateQueries('detailData');
@@ -158,7 +170,7 @@ const DetailImg = ({ item }: any) => {
           </DetailImgBox>
         )}
         {imageUpload ? (
-          <DetailBtn onClick={() => onClickEdit({ id: item.id, ...editImg })}>
+          <DetailBtn onClick={() => onClickEdit({ id: item.id })}>
             게시물 사진 수정 〉
           </DetailBtn>
         ) : (

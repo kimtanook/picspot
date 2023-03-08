@@ -21,7 +21,7 @@ import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
 import Image from 'next/image';

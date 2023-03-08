@@ -1,19 +1,23 @@
 import { deleteData, updateData, visibleReset } from '@/api';
+import { editAtom, editBtnToggleAtom } from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
-import { authService } from '@/firebase';
+import { authService, storageService } from '@/firebase';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
+import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 const DetailList = ({
   item,
-  editBtnToggle,
-  onClickEditToggle,
+  // editBtnToggle,
+  // onClickEditToggle,
   editTitle,
   setEditTitle,
   editContent,
@@ -28,10 +32,16 @@ const DetailList = ({
   setSaveLatLng,
   saveAddress,
   setSaveAddress,
-  setEditBtnToggle,
+  // setEditBtnToggle,
   setPlace,
   place,
 }: any) => {
+  //! global state
+  const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
+  const [editState, setEditState] = useRecoilState(editAtom);
+  //! title, content 상태관리 할 차례
+  console.log('editState: ', editState);
+
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
   const titleInput = useRef<HTMLInputElement>(null); //* DOM에 접근하기
@@ -40,20 +50,49 @@ const DetailList = ({
   const [editTitleInputCount, setEditTitleInputCount] = useState(0);
   const [editContentInputCount, setEditContentInputCount] = useState(0);
 
+  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
+
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const onClickDelete = (docId: any) => {
-    onDeleteData(docId, {
-      onSuccess: () => {
-        setTimeout(() => queryClient.invalidateQueries('infiniteData'), 500);
-        logEvent('게시물 삭제 버튼', { from: 'detail page' });
-        customConfirm('삭제를 완료하였습니다!');
-        router.push('/main?city=제주전체');
-      },
+    const imageRef = ref(storageService, `images/${item.imgPath}`);
+
+    Swal.fire({
+      icon: 'warning',
+      title: '정말로 삭제하시겠습니까?',
+      confirmButtonColor: '#08818c',
+
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(imageRef)
+          .then(() => {
+            console.log('스토리지를 파일을 삭제를 성공했습니다');
+          })
+          .catch((error) => {
+            console.log('스토리지 파일 삭제를 실패했습니다');
+          });
+
+        onDeleteData(docId, {
+          onSuccess: () => {
+            setTimeout(
+              () => queryClient.invalidateQueries('infiniteData'),
+              500
+            );
+            logEvent('게시물 삭제 버튼', { from: 'detail page' });
+            router.push('/main?city=제주전체');
+          },
+        });
+        visibleReset();
+      }
     });
-    visibleReset();
   };
 
   //* useMutation 사용해서 데이터 수정하기
@@ -91,15 +130,32 @@ const DetailList = ({
       return;
     }
 
-    onUpdateData(data, {
-      onSuccess: () => {
-        setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-        logEvent('수정 완료 버튼', { from: 'detail page' });
-        customConfirm('수정을 완료하였습니다!');
+    console.log('data: ', data);
+
+    Swal.fire({
+      icon: 'warning',
+      title: '정말로 수정하시겠습니까?',
+      confirmButtonColor: '#08818c',
+
+      showCancelButton: true,
+      confirmButtonText: '수정',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onUpdateData(data, {
+          onSuccess: () => {
+            setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
+            logEvent('수정 완료 버튼', { from: 'detail page' });
+            setSaveLatLng([]);
+            setSaveAddress('');
+            setEditBtnToggle(!editBtnToggle);
+          },
+        });
+      } else {
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
-      },
+      }
     });
   };
 
