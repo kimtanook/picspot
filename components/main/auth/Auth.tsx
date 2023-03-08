@@ -458,8 +458,8 @@ const LoginCheckContainer = styled.span`
     justify-content: space-around;
     flex-direction: row;
     align-items: center;
-    transform: translate(45%, -150%);
-    width: 300px;
+    transform: translate(130%, -145%);
+    width: 150px;
   }
 `;
 const LoginCheckSignDiv = styled.div`
