@@ -197,6 +197,26 @@ export const getCollection = async () => {
 
   return response;
 };
+// 특정 유저의 collection 데이터 불러오기
+export const getUserCollection = async ({
+  queryKey,
+}: {
+  queryKey: (string | undefined)[];
+}) => {
+  const [_, id] = queryKey;
+  const response: any = [];
+  const q = query(
+    collection(dbService, 'collection'),
+    orderBy('collector'),
+    where('collector', 'array-contains', id)
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    response.push({ uid: doc.id, ...doc.data() });
+  });
+
+  return response;
+};
 
 //* collection  데이터 추가하기
 export const addCollectionData: any = ({
