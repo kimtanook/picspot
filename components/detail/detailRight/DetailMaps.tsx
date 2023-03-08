@@ -1,19 +1,19 @@
+import { editSaveAddressAtom, editSaveLatLngAtom } from '@/atom';
 import React, { useEffect } from 'react';
-
+import { useRecoilState } from 'recoil';
 declare global {
   interface Window {
     kakao: any;
   }
 }
 
-const DetailMaps = ({
-  searchPlace,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  setInfoDiv,
-}: any) => {
+const DetailMaps = ({ searchPlace, setInfoDiv }: any) => {
+  //! global state
+  const [editSaveLatLng, setEditSaveLatLng] =
+    useRecoilState(editSaveLatLngAtom);
+  const [editSaveAddress, setEditSaveAddress] =
+    useRecoilState(editSaveAddressAtom);
+
   useEffect(() => {
     const { kakao } = window;
 
@@ -74,9 +74,9 @@ const DetailMaps = ({
           mouseEvent.latLng,
           function (result: any, status: any) {
             marker.setPosition(latlng);
-            setSaveLatLng(latlng);
+            setEditSaveLatLng(latlng);
             marker.setMap(map);
-            setSaveAddress(result[0]?.address.address_name);
+            setEditSaveAddress(result[0]?.address.address_name);
           }
         );
       });
@@ -102,7 +102,7 @@ const DetailMaps = ({
         }
       }
     });
-  }, [searchPlace, setSaveAddress, setInfoDiv, setSaveLatLng]);
+  }, [searchPlace, setEditSaveAddress, setInfoDiv, setEditSaveLatLng]);
 
   return <div id="map" style={{ width: '100%', height: '230px' }}></div>;
 };

@@ -1,5 +1,10 @@
 import { deleteData, updateData, visibleReset } from '@/api';
-import { editAtom, editBtnToggleAtom } from '@/atom';
+import {
+  editBtnToggleAtom,
+  editPlaceAtom,
+  editSaveAddressAtom,
+  editSaveLatLngAtom,
+} from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
@@ -14,33 +19,25 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-const DetailList = ({
-  item,
-  // editBtnToggle,
-  // onClickEditToggle,
-  editTitle,
-  setEditTitle,
-  editContent,
-  setEditContent,
-  editCity,
-  setEditCity,
-  editTown,
-  setEditTown,
-  onClickEditTown,
-  editData,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  // setEditBtnToggle,
-  setPlace,
-  place,
-}: any) => {
+const DetailList = ({ item }: any) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
-  const [editState, setEditState] = useRecoilState(editAtom);
-  //! title, content 상태관리 할 차례
-  console.log('editState: ', editState);
+  const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
+  const [editSaveLatLng, setEditSaveLatLng]: any =
+    useRecoilState(editSaveLatLngAtom);
+  const [editSaveAddress, setEditSaveAddress] =
+    useRecoilState(editSaveAddressAtom);
+
+  //! component state
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  const [editCity, setEditCity] = useState('');
+  const [editTown, setEditTown] = useState('');
+
+  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
 
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
@@ -49,11 +46,6 @@ const DetailList = ({
 
   const [editTitleInputCount, setEditTitleInputCount] = useState(0);
   const [editContentInputCount, setEditContentInputCount] = useState(0);
-
-  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEditToggle = () => {
-    setEditBtnToggle(!editBtnToggle);
-  };
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
@@ -66,7 +58,6 @@ const DetailList = ({
       icon: 'warning',
       title: '정말로 삭제하시겠습니까?',
       confirmButtonColor: '#08818c',
-
       showCancelButton: true,
       confirmButtonText: '삭제',
       cancelButtonText: '취소',
@@ -125,7 +116,7 @@ const DetailList = ({
       return;
     }
 
-    if (saveLatLng === '' || saveAddress === '') {
+    if (editSaveLatLng === '' || editSaveAddress === '') {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
@@ -136,7 +127,6 @@ const DetailList = ({
       icon: 'warning',
       title: '정말로 수정하시겠습니까?',
       confirmButtonColor: '#08818c',
-
       showCancelButton: true,
       confirmButtonText: '수정',
       cancelButtonText: '취소',
@@ -144,16 +134,17 @@ const DetailList = ({
       if (result.isConfirmed) {
         onUpdateData(data, {
           onSuccess: () => {
+            // setEditState(data);
             setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
             logEvent('수정 완료 버튼', { from: 'detail page' });
-            setSaveLatLng([]);
-            setSaveAddress('');
+            setEditSaveLatLng([]);
+            setEditSaveAddress('');
             setEditBtnToggle(!editBtnToggle);
           },
         });
       } else {
-        setSaveLatLng([]);
-        setSaveAddress('');
+        setEditSaveLatLng([]);
+        setEditSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
       }
     });
@@ -165,7 +156,7 @@ const DetailList = ({
 
   const onChangeTownInput = (e: any) => {
     setEditTown(e.target.value);
-    setPlace(e.target.value);
+    setEditPlace(e.target.value);
   };
 
   //* 페이지 처음 들어왔을 때 상태값 유지하기
@@ -174,7 +165,53 @@ const DetailList = ({
     setEditContent(item.content);
     setEditCity(item.city);
     setEditTown(item.town);
-  }, []);
+  }, [editBtnToggle]);
+
+  //* 지도 클릭 시 카테고리 변경하기
+  // console.log('saveAddress: ', saveAddress);
+  useEffect(() => {
+    if (!editSaveAddress) {
+      return;
+    }
+
+    const townSub = [
+      '한림읍',
+      '조천읍',
+      '한경면',
+      '추자면',
+      '우도면',
+      '구좌읍',
+      '애월읍',
+      '표선면',
+      '대정읍',
+      '성산읍',
+      '안덕면',
+      '남원읍',
+    ];
+
+    const cityMap = editSaveAddress.split(' ')[1];
+    const townMap = editSaveAddress.split(' ')[2];
+
+    console.log('cityMap: ', cityMap);
+    console.log('townMap: ', townMap);
+
+    if (
+      cityMap === '제주시' &&
+      editCity === '제주시' &&
+      townSub.indexOf(townMap) < 0
+    ) {
+      setEditTown('제주시 시내');
+    } else if (
+      cityMap === '서귀포시' &&
+      editCity === '서귀포시' &&
+      townSub.indexOf(townMap) < 0
+    ) {
+      setEditTown('서귀포시 시내');
+    } else {
+      setEditTown(townMap);
+      setEditCity(cityMap);
+    }
+  }, [editSaveAddress]);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -246,7 +283,14 @@ const DetailList = ({
                 onClick={() =>
                   onClickEdit({
                     id: item.id,
-                    ...editData,
+                    title: editTitle,
+                    content: editContent,
+                    city: editCity,
+                    town: editTown,
+                    lat: editSaveLatLng.Ma,
+                    long: editSaveLatLng.La,
+                    address: editSaveAddress,
+                    // ...editState,
                   })
                 }
               >
@@ -279,19 +323,22 @@ const DetailList = ({
         </TitleAndView>
         <CityAndTownAndAddress>
           <CityInput
-            defaultValue={item.city}
+            // defaultValue={item.city}
+            value={editCity}
+            // ref={cityInput}
             onChange={(e) => onChangeCityInput(e)}
           >
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
           <TownInput
-            defaultValue={item.town}
+            // defaultValue={item.town}
+            value={editTown}
+            // ref={townInput}
             onChange={(e) => onChangeTownInput(e)}
           >
             {editCity === '제주시' && (
               <>
-                <option value="">선택</option>
                 <option value="제주시 시내">제주시 시내</option>
                 <option value="한림읍">한림읍</option>
                 <option value="조천읍">조천읍</option>
@@ -305,7 +352,6 @@ const DetailList = ({
 
             {editCity === '서귀포시' && (
               <>
-                <option value="">선택</option>
                 <option value="서귀포시 시내">서귀포시 시내</option>
                 <option value="표선면">표선면</option>
                 <option value="대정읍">대정읍</option>

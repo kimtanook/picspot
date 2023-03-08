@@ -73,12 +73,22 @@ export const infoDivAtom = atom<string>({
   default: '',
 });
 
-export const editAtom = atom({
-  key: `editAtom${uuidv4()}`,
-  default: {},
-});
-
 export const editBtnToggleAtom = atom({
   key: `editBtnToggleAtom${uuidv4()}`,
   default: false,
+});
+
+export const editPlaceAtom = atom({
+  key: `editPlaceAtom${uuidv4()}`,
+  default: '',
+});
+
+export const editSaveLatLngAtom = atom({
+  key: `editSaveLatLngAtom${uuidv4()}`,
+  default: [],
+});
+
+export const editSaveAddressAtom = atom({
+  key: `editSaveAddress${uuidv4()}`,
+  default: '',
 });
