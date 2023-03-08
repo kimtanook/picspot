@@ -4,8 +4,11 @@ import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom } from '@/atom';
 import { customAlert, customConfirm } from '@/utils/alerts';
+import { useMediaQuery } from 'react-responsive';
 
 const AuthForgot = (): JSX.Element => {
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   const [sending, setSending] = useState<boolean>(false);
   const [sent, setSent] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
@@ -40,9 +43,18 @@ const AuthForgot = (): JSX.Element => {
           setForgotModal(!forgotModal);
         }}
       >
-        {' '}
-        〈 돌아가기{' '}
+        {isPc && <> 〈 돌아가기 </>}
+        {isMobile && (
+          <ProfileEditCancleBtn
+            onClick={() => {
+              setCloseLoginModal(!closeLoginModal);
+              setForgotModal(!forgotModal);
+            }}
+            src={'/Back-point.png'}
+          />
+        )}
       </Heder>
+      {isMobile && <HeaderTitle>비밀번호 찾기</HeaderTitle>}
 
       {sent ? (
         <div>이미 당신의 이메일로 보냈습니다</div>
@@ -99,6 +111,24 @@ const Heder = styled.header`
   display: flex;
   margin-bottom: 50px;
   margin-left: -50px;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    left: 39%;
+    top: 23%;
+  }
+`;
+
+const HeaderTitle = styled.div`
+  position: absolute;
+  left: 46%;
+  top: 23.5%;
+  font-size: 14px;
+  font-weight: 700;
+`;
+
+const ProfileEditCancleBtn = styled.img`
+  width: 12px;
+  height: 28px;
 `;
 
 const ForgotText = styled.div`
@@ -107,6 +137,17 @@ const ForgotText = styled.div`
   font-size: 20px;
   font-weight: 700;
   text-align: center;
+  @media ${(props) => props.theme.mobile} {
+    font-family: 'Noto Sans CJK KR';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 27px;
+    text-align: center;
+    letter-spacing: -0.05em;
+    margin-top: 0px;
+    margin-bottom: 60px;
+  }
 `;
 
 const ResetContainer = styled.div`
@@ -119,6 +160,12 @@ const ResetContainer = styled.div`
   border: 1px solid #8e8e93;
   margin: auto;
   margin-top: 40px;
+  @media ${(props) => props.theme.mobile} {
+    width: 87vw;
+    border: 0px;
+    border-bottom: 2px solid #1882ff;
+    background-color: #fbfbfb;
+  }
 `;
 
 const ResetPwForm = styled.form``;
@@ -131,6 +178,9 @@ const ResetPwInput = styled.input`
   font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 13px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 12px;
+  }
 `;
 
 const ResetPwBtn = styled.button`
@@ -144,6 +194,9 @@ const ResetPwBtn = styled.button`
   font-size: 10px;
   border-radius: 10px;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 72px;
+  }
 `;
 
 const LoginReturnButton = styled.button`
@@ -161,6 +214,9 @@ const LoginReturnButton = styled.button`
   margin-bottom: 50px;
   width: 394px;
   height: 48px;
+  @media ${(props) => props.theme.mobile} {
+    width: 87vw;
+  }
 `;
 
 export default AuthForgot;
