@@ -15,9 +15,7 @@ declare global {
   }
 }
 
-const Maps = () => {
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
+const MapsPost = () => {
   const container = useRef(null);
   const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
@@ -121,4 +119,4 @@ const Maps = () => {
   );
 };
 
-export default Maps;
+export default MapsPost;
