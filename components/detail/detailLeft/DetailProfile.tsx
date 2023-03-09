@@ -39,6 +39,7 @@ const DetailProfile = ({ item }: any) => {
                     alt="userImage"
                     layout="fill"
                     priority={true}
+                    style={{ borderRadius: '50%' }}
                   />
                 </ProfileImgBox>
                 <ProfileName>{obj.userName}</ProfileName>

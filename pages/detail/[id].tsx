@@ -14,8 +14,7 @@ import DetailList from '@/components/detail/detailRight/DetailList';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { logEvent } from '@/utils/amplitude';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { dbService } from '@/firebase';
+import { authService } from '@/firebase';
 import { useRecoilState } from 'recoil';
 import { deleteItem } from '@/atom';
 
@@ -35,8 +34,10 @@ const Post = ({ id }: any) => {
     return item.id === id;
   });
 
+  //* Amplitude 이벤트 생성
   useEffect(() => {
     mydata && setDeleteItem(mydata[0]);
+    logEvent('디테일 페이지', { from: 'detail page' });
   }, []);
 
   const queryClient = useQueryClient();
@@ -49,13 +50,12 @@ const Post = ({ id }: any) => {
   });
 
   //* 변화된 counting 값 인지
-  useEffect(() => {
-    countMutate(id);
-  }, []);
+  const creator = mydata?.find((item: any) => item.id === id);
 
-  //* Amplitude 이벤트 생성
   useEffect(() => {
-    logEvent('디테일 페이지', { from: 'detail page' });
+    if (creator?.creator !== authService.currentUser?.uid) {
+      countMutate(id);
+    }
   }, []);
 
   if (isLoading) return <DataLoading />;
