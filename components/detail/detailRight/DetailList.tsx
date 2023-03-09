@@ -96,6 +96,8 @@ const DetailList = ({
         setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
         logEvent('수정 완료 버튼', { from: 'detail page' });
         customConfirm('수정을 완료하였습니다!');
+        setEditCity('');
+        setEditTown('');
         setSaveLatLng([]);
         setSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
@@ -112,13 +114,55 @@ const DetailList = ({
     setPlace(e.target.value);
   };
 
+  useEffect(() => {
+    console.log('========saveAddress=========', saveAddress);
+    if (!saveAddress) {
+      return;
+    }
+    const cityMap = saveAddress.split(' ')[1];
+    const townMap = saveAddress.split(' ')[2];
+
+    const townSub = [
+      '한림읍',
+      '조천읍',
+      '한경면',
+      '추자면',
+      '우도면',
+      '구좌읍',
+      '애월읍',
+      '표선면',
+      '대정읍',
+      '성산읍',
+      '안덕면',
+      '남원읍',
+    ];
+
+    if (cityMap === '제주시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('제주시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
+    } else if (cityMap === '서귀포시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('서귀포시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
+    }
+  }, [saveAddress]);
+
   //* 페이지 처음 들어왔을 때 상태값 유지하기
   useEffect(() => {
     setEditTitle(item.title);
     setEditContent(item.content);
     setEditCity(item.city);
     setEditTown(item.town);
-  }, []);
+  }, [setEditBtnToggle]);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -222,20 +266,13 @@ const DetailList = ({
           )}
         </TitleAndView>
         <CityAndTownAndAddress>
-          <CityInput
-            defaultValue={item.city}
-            onChange={(e) => onChangeCityInput(e)}
-          >
+          <CityInput value={editCity} onChange={(e) => onChangeCityInput(e)}>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
-          <TownInput
-            defaultValue={item.town}
-            onChange={(e) => onChangeTownInput(e)}
-          >
+          <TownInput value={editTown} onChange={(e) => onChangeTownInput(e)}>
             {editCity === '제주시' && (
               <>
-                <option value="">선택</option>
                 <option value="제주시 시내">제주시 시내</option>
                 <option value="한림읍">한림읍</option>
                 <option value="조천읍">조천읍</option>
@@ -249,7 +286,6 @@ const DetailList = ({
 
             {editCity === '서귀포시' && (
               <>
-                <option value="">선택</option>
                 <option value="서귀포시 시내">서귀포시 시내</option>
                 <option value="표선면">표선면</option>
                 <option value="대정읍">대정읍</option>
