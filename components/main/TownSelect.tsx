@@ -40,52 +40,54 @@ function TownSelect({ selectCity, selectTown, onClickSelectTown }: any) {
   ];
   return (
     <SelectContainer>
-      <TownResetWrap onClick={() => setSelectArrTown([])}>
-        <TownReset src="/town-reset.png" />
-      </TownResetWrap>
-      {selectCity === '제주시' ? (
-        <SelectTownWrap>
-          {jejuTown.map((item: string) => (
-            <div key={uuidv4()}>
-              <TownBtn
-                town={selectTown}
-                value={item}
-                onClick={onClickSelectTown}
-              >
-                {item}
-              </TownBtn>
-            </div>
-          ))}
-        </SelectTownWrap>
-      ) : selectCity === '서귀포시' ? (
-        <SelectTownWrap>
-          {seogwipoTown.map((item: string) => (
-            <div key={uuidv4()}>
-              <TownBtn
-                town={selectTown}
-                value={item}
-                onClick={onClickSelectTown}
-              >
-                {item}
-              </TownBtn>
-            </div>
-          ))}
-        </SelectTownWrap>
-      ) : (
-        <SelectTownWrap>
-          {allTown.map((item: string) => (
-            <div key={uuidv4()}>
-              <TownBtn
-                town={selectTown}
-                value={item}
-                onClick={onClickSelectTown}
-              >
-                {item}
-              </TownBtn>
-            </div>
-          ))}
-        </SelectTownWrap>
-      )}
+      <SelectTownWrap>
+        <TownResetWrap onClick={() => setSelectArrTown([])}>
+          <TownReset src="/town-reset.png" />
+        </TownResetWrap>
+        {selectCity === '제주시' ? (
+          <SelectTownWrap>
+            {jejuTown.map((item: string) => (
+              <div key={uuidv4()}>
+                <TownBtn
+                  town={selectTown}
+                  value={item}
+                  onClick={onClickSelectTown}
+                >
+                  {item}
+                </TownBtn>
+              </div>
+            ))}
+          </SelectTownWrap>
+        ) : selectCity === '서귀포시' ? (
+          <SelectTownWrap>
+            {seogwipoTown.map((item: string) => (
+              <div key={uuidv4()}>
+                <TownBtn
+                  town={selectTown}
+                  value={item}
+                  onClick={onClickSelectTown}
+                >
+                  {item}
+                </TownBtn>
+              </div>
+            ))}
+          </SelectTownWrap>
+        ) : (
+          <SelectTownWrap>
+            {allTown.map((item: string) => (
+              <div key={uuidv4()}>
+                <TownBtn
+                  town={selectTown}
+                  value={item}
+                  onClick={onClickSelectTown}
+                >
+                  {item}
+                </TownBtn>
+              </div>
+            ))}
+          </SelectTownWrap>
+        )}
+      </SelectTownWrap>
     </SelectContainer>
   );
 }
@@ -100,16 +102,13 @@ const SelectContainer = styled.div`
   }
 `;
 const TownResetWrap = styled.div`
-  display: none;
-  @media ${(props) => props.theme.mobile} {
-    display: flex;
-    align-items: center;
-    width: 50px;
-    height: 40px;
-    margin-right: 10px;
-    margin-left: 10px;
-    cursor: pointer;
-  }
+  display: flex;
+  align-items: center;
+  width: 50px;
+  height: 40px;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer;
 `;
 const TownReset = styled.img`
   width: 28px;
@@ -123,7 +122,6 @@ const SelectTownWrap = styled.div`
   flex-direction: row;
   overflow-x: scroll;
   @media ${(props) => props.theme.mobile} {
-    height: 40px;
     overflow-x: scroll;
     justify-content: inherit;
     align-items: inherit;
