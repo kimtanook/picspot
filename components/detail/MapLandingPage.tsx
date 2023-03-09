@@ -7,15 +7,12 @@ import Maps from './Maps';
 
 const MapLandingPage = () => {
   const [place, setPlace] = useRecoilState(placeAtom);
-
   const [inputText, setInputText] = useState('');
-  // const [infoDiv, setInfoDiv] = useState('');
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
 
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.currentTarget.value);
   };
-
   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPlace(inputText);
@@ -69,7 +66,6 @@ const StyledInput = styled.input`
   box-shadow: 0 3px 2px 1px gray;
   @media ${(props) => props.theme.mobile} {
     margin-top: 5%;
-    /* width: 100%; */
   }
 `;
 
@@ -109,7 +105,6 @@ const SearchButton = styled.button`
 
 const MapWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
-    /* width: 375; */
     width: 100%;
     margin-top: 55%;
   }
