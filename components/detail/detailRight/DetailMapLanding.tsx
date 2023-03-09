@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CustomButton } from '@/components/common/CustomButton';
 import DetailMaps from './DetailMaps';
+import { useRecoilState } from 'recoil';
+import { editPlaceAtom } from '@/atom';
 
-const DetailMapLanding = ({
-  searchCategory,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  setPlace,
-  place,
-}: any) => {
+const DetailMapLanding = ({}: any) => {
+  //! global state
+  const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
+
+  //! component state
+  const [editSearchCategory, setEditSearchCategory]: any = useState('');
+
   const [inputText, setInputText] = useState('');
   const [infoDiv, setInfoDiv] = useState('');
   const onchange = (e: any) => {
@@ -20,7 +20,7 @@ const DetailMapLanding = ({
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    setPlace(inputText);
+    setEditPlace(inputText);
     setInputText('');
   };
 
@@ -39,11 +39,7 @@ const DetailMapLanding = ({
       </StyledForm>
 
       <DetailMaps
-        searchPlace={place ? place : searchCategory}
-        saveLatLng={saveLatLng}
-        setSaveLatLng={setSaveLatLng}
-        saveAddress={saveAddress}
-        setSaveAddress={setSaveAddress}
+        searchPlace={editPlace ? editPlace : editSearchCategory}
         setInfoDiv={setInfoDiv}
       />
     </StyleContainer>

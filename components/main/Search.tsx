@@ -1,4 +1,4 @@
-import { ChangeEventHandler, RefObject } from 'react';
+import { ChangeEventHandler, RefObject, useState } from 'react';
 import styled from 'styled-components';
 
 const Search = ({
@@ -10,15 +10,20 @@ const Search = ({
   searchValue: string | undefined;
   onChangeSearchValue: ChangeEventHandler<HTMLInputElement>;
 }) => {
+  const [toggle, setToggle] = useState(false);
   return (
-    <SearchWrap>
-      <SearchImage src="/search.svg" alt="search-Image" />
+    <SearchWrap toggle={toggle}>
+      <SearchImage
+        src="/search.svg"
+        alt="search-Image"
+        onClick={() => setToggle(!toggle)}
+      />
       <Select ref={searchOptionRef}>
         <option value="address">주소</option>
         <option value="title">제목</option>
       </Select>
       <SearchInput
-        value={searchValue}
+        // value={searchValue}
         onChange={onChangeSearchValue}
         placeholder="검색으로 사진을 둘러보세요!"
       />
@@ -27,7 +32,7 @@ const Search = ({
 };
 export default Search;
 
-const SearchWrap = styled.div`
+const SearchWrap = styled.div<{ toggle: boolean }>`
   display: flex;
   align-items: center;
   background-color: white;
@@ -37,12 +42,9 @@ const SearchWrap = styled.div`
   width: 24px;
   margin-right: 4px;
   transition: 1s;
+  width: ${({ toggle }) => (toggle ? 300 : 24)}px;
   @media ${(props) => props.theme.mobile} {
     display: none;
-  }
-  :hover {
-    width: 300px;
-    transition: 1s;
   }
 `;
 const Select = styled.select`
@@ -59,10 +61,6 @@ const SearchInput = styled.input`
   border-radius: 10px;
   margin-right: 5px;
   width: 200px;
-  :focus {
-    width: 300px;
-    transition: 1s;
-  }
 `;
 const SearchImage = styled.img`
   width: 15px;

@@ -1,23 +1,17 @@
 import { updateData } from '@/api';
 import { authService, storageService } from '@/firebase';
-import { customAlert, customConfirm } from '@/utils/alerts';
+import { customAlert } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
 import { CustomModal } from '@/components/common/CustomModal';
-import { useRecoilState } from 'recoil';
-import { editAtom } from '@/atom';
 import { logEvent } from '@/utils/amplitude';
 import imageCompression from 'browser-image-compression';
 import Swal from 'sweetalert2';
 
 const DetailImg = ({ item }: any) => {
-  const [editState, setEditState] = useRecoilState(editAtom);
-  // console.log('editState: ', editState);
-
   const [imageUpload, setImageUpload]: any = useState(null);
 
   const [isModalImgActive, setIsModalImgActive]: any = useState(false);
@@ -58,7 +52,6 @@ const DetailImg = ({ item }: any) => {
       // console.log('compressedFile: ', compressedFile);
 
       const reader = new FileReader();
-      // reader?.readAsDataURL(theFile);
       reader?.readAsDataURL(compressedFile);
       reader.onloadend = (finishedEvent) => {
         const {
@@ -96,7 +89,6 @@ const DetailImg = ({ item }: any) => {
           cancelButtonText: '취소',
         }).then((result) => {
           if (result.isConfirmed) {
-            setEditState({ imgUrl: response, imgPath: item.imgPath });
             onUpdateData(
               { ...data, imgUrl: response },
               {
