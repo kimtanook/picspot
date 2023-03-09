@@ -1,7 +1,6 @@
 import { getUser } from '@/api';
 import { authService } from '@/firebase';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -34,7 +33,6 @@ const DetailProfile = ({ item }: any) => {
           >
             {authService.currentUser?.uid === obj.uid ? (
               <>
-                {/* <ProfileImg src={obj.userImg} alt="image" /> */}
                 <ProfileImgBox>
                   <Image
                     src={obj.userImg}

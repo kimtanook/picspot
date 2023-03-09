@@ -1,37 +1,26 @@
-import Image from 'next/image';
+import { editBtnToggleAtom } from '@/atom';
+import { useState } from 'react';
 import {
   Map,
   MapMarker,
   MapTypeControl,
   ZoomControl,
 } from 'react-kakao-maps-sdk';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import DetailMapLanding from './DetailMapLanding';
 
-const DetailMap = ({
-  item,
-  editBtnToggle,
-  setIsOpen,
-  searchCategory,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  setPlace,
-  place,
-}: any) => {
+const DetailMap = ({ item }: any) => {
+  //! global state
+  const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
+
+  //! component state
+  const [isOpen, setIsOpen] = useState(false);
+
   if (editBtnToggle) {
     return (
       <div>
-        <DetailMapLanding
-          searchCategory={searchCategory}
-          saveLatLng={saveLatLng}
-          setSaveLatLng={setSaveLatLng}
-          saveAddress={saveAddress}
-          setSaveAddress={setSaveAddress}
-          setPlace={setPlace}
-          place={place}
-        />
+        <DetailMapLanding />
       </div>
     );
   }

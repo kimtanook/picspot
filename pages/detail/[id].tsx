@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import { getData, postCounter } from '@/api';
 import Seo from '@/components/Seo';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import CommentList from '@/components/detail/detailRight/CommentList';
@@ -13,59 +13,14 @@ import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
-import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { dbService } from '@/firebase';
+import { useRecoilState } from 'recoil';
+import { deleteItem } from '@/atom';
 
 const Post = ({ id }: any) => {
-  // console.log('id: ', id);
-  //* Map 관련
-  //? category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory]: any = useState('');
-  const [saveLatLng, setSaveLatLng]: any = useState([]);
-  const [saveAddress, setSaveAddress]: any = useState('');
-
-  //? 카테고리버튼 눌렀을 때 실행하는 함수
-  const [place, setPlace] = useState('');
-  const onClickEditTown = (e: any) => {
-    setPlace('');
-    setEditTown(e.target.value);
-    setSearchCategory(e.target.value);
-  };
-
-  //* Text 관련
-  const [editTitle, setEditTitle] = useState('');
-  const [editContent, setEditContent] = useState('');
-  const [editCity, setEditCity] = useState('');
-  const [editTown, setEditTown] = useState('');
-
-  //* input 토글
-  const [inputToggle, setInputToggle] = useState(false);
-
-  //* collection 저장 state
-  const [isOpen, setIsOpen] = useState(false);
-
-  // const [imageUpload, setImageUpload]: any = useState(null); //* 이미지 업로드 상태값
-  // const editImg = { imgUrl: '' }; //* 이미지 수정 시 보내주는 데이터
-
-  const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
-
-  //* 데이터 수정 시 보내주는 데이터
-  let editData = {
-    title: editTitle,
-    content: editContent,
-    city: editCity,
-    town: editTown,
-    lat: saveLatLng.Ma,
-    long: saveLatLng.La,
-    address: saveAddress,
-  };
-
-  //* 게시물 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEditToggle = () => {
-    setEditBtnToggle(!editBtnToggle);
-  };
-
-  //! useQuery 사용해서 포스트 데이터 불러오기
+  //* useQuery 사용해서 포스트 데이터 불러오기
   const {
     data: detail,
     isLoading,
@@ -74,6 +29,15 @@ const Post = ({ id }: any) => {
     staleTime: 60 * 1000, // 1분, default >> 0
     cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
   });
+  const [, setDeleteItem] = useRecoilState(deleteItem);
+  // 게시물 삭제하기 Recoil
+  const mydata = detail?.filter((item: any) => {
+    return item.id === id;
+  });
+
+  useEffect(() => {
+    mydata && setDeleteItem(mydata[0]);
+  }, []);
 
   const queryClient = useQueryClient();
 
@@ -115,12 +79,7 @@ const Post = ({ id }: any) => {
         .map((item: any) => (
           <DetailContents key={item.id}>
             <ImgAndProfileAndFollowingAndCollection>
-              <DetailImg
-                item={item}
-                // imageUpload={imageUpload}
-                // setImageUpload={setImageUpload}
-                // editImg={editImg}
-              />
+              <DetailImg item={item} />
 
               <ProfileAndFollowingAndCollection>
                 <ProfileAndFollwing>
@@ -133,44 +92,9 @@ const Post = ({ id }: any) => {
             </ImgAndProfileAndFollowingAndCollection>
 
             <ListAndMapAndComment>
-              <DetailList
-                item={item}
-                editBtnToggle={editBtnToggle}
-                onClickEditToggle={onClickEditToggle}
-                editTitle={editTitle}
-                setEditTitle={setEditTitle}
-                editContent={editContent}
-                setEditContent={setEditContent}
-                editCity={editCity}
-                setEditCity={setEditCity}
-                editTown={editTown}
-                setEditTown={setEditTown}
-                onClickEditTown={onClickEditTown}
-                editData={editData}
-                saveLatLng={saveLatLng}
-                setSaveLatLng={setSaveLatLng}
-                saveAddress={saveAddress}
-                setSaveAddress={setSaveAddress}
-                setEditBtnToggle={setEditBtnToggle}
-                setPlace={setPlace}
-                place={place}
-              />
+              <DetailList item={item} />
 
-              <DetailMap
-                item={item}
-                editBtnToggle={editBtnToggle}
-                setEditBtnToggle={setEditBtnToggle}
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                inputToggle={inputToggle}
-                searchCategory={searchCategory}
-                saveLatLng={saveLatLng}
-                setSaveLatLng={setSaveLatLng}
-                saveAddress={saveAddress}
-                setSaveAddress={setSaveAddress}
-                setPlace={setPlace}
-                place={place}
-              />
+              <DetailMap item={item} />
 
               <CommentList postId={id} />
             </ListAndMapAndComment>
@@ -233,7 +157,6 @@ const ProfileAndFollowingAndCollection = styled.div`
 
 const ProfileAndFollwing = styled.div`
   display: flex;
-  /* justify-content: space-between; */
 `;
 
 const ListAndMapAndComment = styled.div`

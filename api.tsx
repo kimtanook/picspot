@@ -136,16 +136,16 @@ export const getData = async () => {
   return response;
 };
 
-//* 스토어에 데이터 추가하기
+//* 포스트 추가하기
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
 };
-//* 스토어에 데이터 삭제하기
+//* 포스트 삭제하기
 export const deleteData: any = (docId: any) => {
   deleteDoc(doc(dbService, 'post', docId));
 };
 
-//* 스토어에 데이터 수정하기
+//* 포스트 수정하기
 export const updateData: any = (data: any) => {
   updateDoc(doc(dbService, 'post', data.id), data);
 };
@@ -191,6 +191,26 @@ export const getCollection = async () => {
   const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'collection'));
+  querySnapshot.forEach((doc) => {
+    response.push({ uid: doc.id, ...doc.data() });
+  });
+
+  return response;
+};
+// 특정 유저의 collection 데이터 불러오기
+export const getUserCollection = async ({
+  queryKey,
+}: {
+  queryKey: (string | undefined)[];
+}) => {
+  const [_, id] = queryKey;
+  const response: any = [];
+  const q = query(
+    collection(dbService, 'collection'),
+    orderBy('collector'),
+    where('collector', 'array-contains', id)
+  );
+  const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     response.push({ uid: doc.id, ...doc.data() });
   });

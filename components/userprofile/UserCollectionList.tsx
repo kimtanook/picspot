@@ -11,7 +11,7 @@ const UserCollectionList = ({ userId }: { userId: string }) => {
     'UserCollection',
     getCollection
   );
-
+  console.log('collectionData : ', collectionData);
   // filter로 거른다 (collectionData의 collector 중에서, userId가 true인 item을. )
   const userCollectPost = collectionData?.filter((item: userItem) => {
     return item.collector?.find((item: string) => userId.includes(item));

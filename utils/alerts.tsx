@@ -13,7 +13,6 @@ export const customConfirm = (title: string) => {
     confirmButtonColor: '#08818c',
   });
 };
-
 /**
  * @description 커스텀 alert 입니다.
  * @param {string} title 타이틀

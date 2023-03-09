@@ -116,6 +116,7 @@ const AuthSignUp = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpEmailPwContainer>
           <EditInputBox>
+            {isMobile && <EditInputText> 이메일 설정</EditInputText>}
             <SignUpInput
               {...register('email', {
                 required: '*올바른 이메일 형식을 입력해주세요',
@@ -140,6 +141,7 @@ const AuthSignUp = () => {
           </EditInputBox>
           <AuthWarn>{errors?.email?.message}</AuthWarn>
           <EditInputBox>
+            {isMobile && <EditInputText> 비밀번호 설정</EditInputText>}
             <SignUpInput
               {...register('password', {
                 required: '비밀번호를 입력해주세요.',
@@ -185,8 +187,10 @@ const AuthSignUp = () => {
             />
             <EditPwShowBtn onClick={toggleHidePassword}></EditPwShowBtn>
           </EditInputBox>
-          <AuthWarn>{errors?.confirm?.message}</AuthWarn>
+
+          <AuthConfirm>{errors?.confirm?.message}</AuthConfirm>
           <EditInputBox>
+            {isMobile && <EditInputText> 닉네임 설정</EditInputText>}
             <SignUpInput
               {...register('nickname', {
                 required: '닉네임를 입력해주세요.',
@@ -229,12 +233,10 @@ const AuthSignUp = () => {
 export default AuthSignUp;
 
 const SignUpContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  margin-bottom: 90px;
+  margin-bottom: 100px;
 `;
 
-const Heder = styled.header`
+const Heder = styled.div`
   cursor: pointer;
   color: #1882ff;
   font-size: 15px;
@@ -242,7 +244,7 @@ const Heder = styled.header`
   margin-bottom: 50px;
   margin-left: -50px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(55%, 200%);
+    transform: translate(55%, 150%);
     width: 30%;
   }
 `;
@@ -256,9 +258,10 @@ const SignUpTextDiv = styled.div`
   margin-top: 10px;
   margin-bottom: 60px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(50%, -95%);
+    transform: translate(55%, -170%);
     width: 50%;
     font-family: 'Noto Sans CJK KR';
+    font-weight: bold;
     font-size: 14px;
   }
 `;
@@ -267,7 +270,6 @@ const SignUpEmailPwContainer = styled.form`
   display: flex;
   flex-direction: column;
   width: 90%;
-  margin: 0 auto;
   margin-top: 40px;
 `;
 
@@ -277,50 +279,67 @@ const SignUpInput = styled.input`
   border: 1px solid #8e8e93;
   font-size: 15px;
   display: flex;
-  width: 394px;
+  width: 100%;
   height: 48px;
-  margin-left: -20px;
+  font-size: 14px;
   @media ${(props) => props.theme.mobile} {
-    /* transform: translate(11%, -90%); */
+    /* transform: translate(-5%, 0%); */
     font-size: 12px;
     width: 326px;
     height: 48px;
-    /* top: 250.31px; */
     border: none;
     border-bottom: 2px solid #1882ff;
     background: #fbfbfb;
-    /* position: absolute; */
   }
 `;
 const EditInputBox = styled.div`
-  width: 100%;
   position: relative;
+  width: 394px;
+  height: 48px;
+  @media ${(props) => props.theme.mobile} {
+    width: 90%;
+    height: 60px;
+    background: transparent;
+  }
 `;
+const EditInputText = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  font-family: Noto Sans CJK KR;
+  width: 80%;
+  height: 20px;
+  position: inherit;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(-0%, 0%);
+    position: inherit;
+  }
+`;
+
 const EditclearBtn = styled.div`
   position: absolute;
   top: 35%;
-  left: 340px;
+  left: 360px;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button.png);
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-200%, 0%);
+    transform: translate(-270%, -210%);
     position: inherit;
   }
 `;
 const EditPwShowBtn = styled.div`
   position: absolute;
   top: 35%;
-  left: 340px;
+  left: 360px;
   width: 24px;
   height: 24px;
   background-image: url(/pw-show.png);
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-200%, 0%);
+    transform: translate(-270%, -220%);
     position: inherit;
   }
 `;
@@ -328,26 +347,42 @@ const AuthWarn = styled.p`
   color: red;
   font-size: 10px;
   height: 10px;
-  margin-left: -20px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(0%, -10%);
+    font-size: 12px;
+    font-family: Noto Sans CJK KR;
+    border: none;
+    background: transparent;
+  }
+`;
+const AuthConfirm = styled.p`
+  color: red;
+  font-size: 10px;
+  height: 10px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(0%, -170%);
+    font-size: 12px;
+    border: none;
+    background: transparent;
+  }
 `;
 
 const SignUpBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   width: 90%;
   margin-top: 20px;
 `;
 
 const SignUpBtn = styled.button`
+  border: 1px solid;
   display: flex;
   width: 394px;
   height: 48px;
-  margin-left: -20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: transparent;
+  border: 0px;
   transition: 0.1s;
   background-color: #1882ff;
   color: white;
@@ -356,7 +391,6 @@ const SignUpBtn = styled.button`
     cursor: pointer;
   }
   @media ${(props) => props.theme.mobile} {
-    /* transform: translate(11%, 30%); */
     font-size: 14px;
     width: 326px;
     height: 48px;

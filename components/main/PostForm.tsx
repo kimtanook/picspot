@@ -41,6 +41,7 @@ const PostForm = () => {
 
   //* 이미지 업로드
   const [imageUpload, setImageUpload]: any = useState(null);
+  const imgPath: any = uuidv4();
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
@@ -65,6 +66,7 @@ const PostForm = () => {
     long: saveLatLng.La,
     address: saveAddress,
     nickname: nickname,
+    imgPath: imgPath,
   };
 
   //* useMutation 사용해서 포스트 추가하기
@@ -138,8 +140,10 @@ const PostForm = () => {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
-    // const imageRef = ref(storageService, `images/${uuidv4()}`);
-    const imageRef = ref(storageService, `image/${uuidv4()}`);
+
+    const imageRef: any = ref(storageService, `images/${imgPath}`);
+    // console.log('imgPath: ', imgPath);
+    // console.log('imageRef._location.path: ', imageRef._location.path);
 
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
