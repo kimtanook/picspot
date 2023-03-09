@@ -1,7 +1,4 @@
-import { deleteTakeMessage } from '@/api';
-import { authService } from '@/firebase';
 import React, { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import DetailMessage from './DetailMessage';
 

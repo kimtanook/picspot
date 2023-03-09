@@ -1,10 +1,9 @@
 import { authService } from '@/firebase';
-import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { addSendedMessage, addSendMessage } from '@/api';
 import { useRouter } from 'next/router';
-import { customAlert } from '@/utils/alerts';
 import { useMediaQuery } from 'react-responsive';
 
 interface Props {
@@ -16,7 +15,7 @@ function MessageSend({ setModal }: Props) {
   const profileImg = router.query.userImg as string;
   const userName = router.query.name;
   const userId = router.query.id;
-  const queryClient = useQueryClient();
+
   const { mutate: addMessage } = useMutation(addSendMessage);
   const { mutate: sendedMessage } = useMutation(addSendedMessage);
   const [messageValue, setMessageValue] = useState('');
