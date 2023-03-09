@@ -1,5 +1,5 @@
 import { deleteData, updateData, visibleReset } from '@/api';
-import { editAtom, editBtnToggleAtom, forgotModalAtom } from '@/atom';
+import { deleteModalAtom, editAtom, editBtnToggleAtom } from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
@@ -45,7 +45,7 @@ const DetailList = ({
   console.log('editState: ', editState);
   const isMobile = useMediaQuery({ maxWidth: 785 });
   const [isOpen, setIsOpen] = useState(false);
-  const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
+  const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
 
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
@@ -65,44 +65,45 @@ const DetailList = ({
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const postDeleteModalButton = () => {
-    setForgotModal(!forgotModal);
+    setDeleteModal(!deleteModal);
   };
 
-  const onClickDelete = (docId: any) => {
-    const imageRef = ref(storageService, `images/${item.imgPath}`);
+  // const onClickDelete = (docId: any) => {
+  //   const imageRef = ref(storageService, `images/${item?.imgPath}`);
 
-    Swal.fire({
-      icon: 'warning',
-      title: '정말로 삭제하시겠습니까?',
-      confirmButtonColor: '#08818c',
+  //   Swal.fire({
+  //     icon: 'warning',
+  //     title: '정말로 삭제하시겠습니까?',
+  //     confirmButtonColor: '#08818c',
 
-      showCancelButton: true,
-      confirmButtonText: '삭제',
-      cancelButtonText: '취소',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteObject(imageRef)
-          .then(() => {
-            console.log('스토리지를 파일을 삭제를 성공했습니다');
-          })
-          .catch((error) => {
-            console.log('스토리지 파일 삭제를 실패했습니다');
-          });
+  //     showCancelButton: true,
+  //     confirmButtonText: '삭제',
+  //     cancelButtonText: '취소',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       deleteObject(imageRef)
+  //         .then(() => {
+  //           console.log('스토리지를 파일을 삭제를 성공했습니다');
+  //           setDeleteModal(!deleteModal);
+  //         })
+  //         .catch((error) => {
+  //           console.log('스토리지 파일 삭제를 실패했습니다');
+  //         });
 
-        onDeleteData(docId, {
-          onSuccess: () => {
-            setTimeout(
-              () => queryClient.invalidateQueries('infiniteData'),
-              500
-            );
-            logEvent('게시물 삭제 버튼', { from: 'detail page' });
-            router.push('/main?city=제주전체');
-          },
-        });
-        visibleReset();
-      }
-    });
-  };
+  //       onDeleteData(docId, {
+  //         onSuccess: () => {
+  //           setTimeout(
+  //             () => queryClient.invalidateQueries('infiniteData'),
+  //             500
+  //           );
+  //           logEvent('게시물 삭제 버튼', { from: 'detail page' });
+  //           router.push('/main?city=제주전체');
+  //         },
+  //       });
+  //       visibleReset();
+  //     }
+  //   });
+  // };
 
   //* useMutation 사용해서 데이터 수정하기
   const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
@@ -179,10 +180,10 @@ const DetailList = ({
 
   //* 페이지 처음 들어왔을 때 상태값 유지하기
   useEffect(() => {
-    setEditTitle(item.title);
-    setEditContent(item.content);
-    setEditCity(item.city);
-    setEditTown(item.town);
+    setEditTitle(item?.title);
+    setEditContent(item?.content);
+    setEditCity(item?.city);
+    setEditTown(item?.town);
   }, []);
 
   if (isLoading) return <DataLoading />;
@@ -207,7 +208,7 @@ const DetailList = ({
             )}
           </>
 
-          <Title>{item.title} </Title>
+          <Title>{item?.title} </Title>
           <View>
             <Image
               src="/view_icon.svg"
@@ -217,10 +218,10 @@ const DetailList = ({
               style={{ marginRight: 5 }}
             />
             <span style={{ color: '#1882FF', width: 70 }}>
-              {item.clickCounter} view
+              {item?.clickCounter} view
             </span>
           </View>
-          {authService.currentUser?.uid === item.creator ? (
+          {authService.currentUser?.uid === item?.creator ? (
             <>
               <div>
                 <div onClick={() => setIsOpen(!isOpen)}>
@@ -239,17 +240,18 @@ const DetailList = ({
           ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
           null}
         </TitleAndView>
+
         <CityAndTownAndAddress>
-          <City>{item.city}</City>
-          <Town>{item.town}</Town>
+          <City>{item?.city}</City>
+          <Town>{item?.town}</Town>
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <AddressText>{item.address}</AddressText>
+            <AddressText>{item?.address}</AddressText>
           </Address>
         </CityAndTownAndAddress>
         <Content>
           <TipSpan>Tip |</TipSpan>
-          <ContentSpan>{item.content}</ContentSpan>
+          <ContentSpan>{item?.content}</ContentSpan>
         </Content>
       </ListContainer>
     );
@@ -258,7 +260,7 @@ const DetailList = ({
       <ListContainer>
         <TitleAndView>
           <TitleInput
-            defaultValue={item.title}
+            defaultValue={item?.title}
             onChange={(e) => {
               setEditTitle(e.target.value);
               setEditTitleInputCount(e.target.value.length);
@@ -308,7 +310,7 @@ const DetailList = ({
                     color: '#1882FF',
                   }}
                 >
-                  {item.clickCounter} view
+                  {item?.clickCounter} view
                 </span>
               </View>
 
@@ -318,14 +320,14 @@ const DetailList = ({
         </TitleAndView>
         <CityAndTownAndAddress>
           <CityInput
-            defaultValue={item.city}
+            defaultValue={item?.city}
             onChange={(e) => onChangeCityInput(e)}
           >
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
           <TownInput
-            defaultValue={item.town}
+            defaultValue={item?.town}
             onChange={(e) => onChangeTownInput(e)}
           >
             {editCity === '제주시' && (
@@ -356,14 +358,14 @@ const DetailList = ({
           </TownInput>
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <span>{item.address}</span>
+            <span>{item?.address}</span>
           </Address>
         </CityAndTownAndAddress>
         <Content>
           Tip
           <ContentInput
             // value={editContent}
-            defaultValue={item.content}
+            defaultValue={item?.content}
             onChange={(e) => {
               setEditContent(e.target.value);
               setEditContentInputCount(e.target.value.length);

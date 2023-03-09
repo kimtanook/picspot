@@ -82,3 +82,11 @@ export const editBtnToggleAtom = atom({
   key: `editBtnToggleAtom${uuidv4()}`,
   default: false,
 });
+export const deleteModalAtom = atom({
+  key: `deleteModalAtom`,
+  default: false,
+});
+export const myDataAtom = atom({
+  key: `myDataAtom`,
+  default: false,
+});

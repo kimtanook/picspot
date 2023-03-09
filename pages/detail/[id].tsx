@@ -13,8 +13,11 @@ import DetailProfile from '@/components/detail/detailLeft/DetailProfile';
 import DetailList from '@/components/detail/detailRight/DetailList';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
-import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { dbService } from '@/firebase';
+import { useRecoilState } from 'recoil';
+import { myDataAtom } from '@/atom';
 
 const Post = ({ id }: any) => {
   // console.log('id: ', id);
@@ -49,6 +52,9 @@ const Post = ({ id }: any) => {
 
   // const [editBtnToggle, setEditBtnToggle]: any = useState(false); //* 수정 토글 상태값
 
+  // 게시물 삭제 관련
+  const [myData, setmyData] = useRecoilState(myDataAtom);
+
   //* 데이터 수정 시 보내주는 데이터
   let editData = {
     title: editTitle,
@@ -74,6 +80,17 @@ const Post = ({ id }: any) => {
     staleTime: 60 * 1000, // 1분, default >> 0
     cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
   });
+  // 게시물 삭제하기
+  // const mydata = detail?.filter((item: any) => {
+  //   return item.id === id;
+  // });
+  // useEffect(() => {
+  //   const deletePost =  {
+  //     setMyData)
+  //   //여기에 세터함수 넣어서 마이 데이터 변할때 즉
+  //   //다른 디테일 페이지 들어갈때마다 실행 시켜주면 되겠지
+  // }, [myData]);
+  // console.log('mydata: ', mydata);
 
   const queryClient = useQueryClient();
 

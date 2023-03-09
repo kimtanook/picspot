@@ -1,11 +1,11 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { updatePassword, updateProfile } from 'firebase/auth';
 import { customConfirm } from '@/utils/alerts';
 import { useForm } from 'react-hook-form';
 import { authService, storageService } from '@/firebase';
-import { uploadString, getDownloadURL, ref } from 'firebase/storage';
+import { uploadString, ref, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { updateUser } from '@/api';
@@ -132,8 +132,6 @@ function ModalProfile() {
           : data.nickname,
       userImg: downloadUrl === undefined ? '/profileicon.svg' : downloadUrl,
     };
-
-    // console.log('editUser: ', editUser);
 
     onUpdateUser(editUser, {
       onSuccess: () => {
