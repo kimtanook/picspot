@@ -1,5 +1,6 @@
 import { deleteData, updateData, visibleReset } from '@/api';
 import {
+  deleteModalAtom,
   editBtnToggleAtom,
   editPlaceAtom,
   editSaveAddressAtom,
@@ -12,12 +13,15 @@ import { customAlert, customConfirm } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
 import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import DeletePost from './DeletePost';
 
 const DetailList = ({ item }: any) => {
   //! global state
@@ -27,6 +31,10 @@ const DetailList = ({ item }: any) => {
     useRecoilState(editSaveLatLngAtom);
   const [editSaveAddress, setEditSaveAddress] =
     useRecoilState(editSaveAddressAtom);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 785 });
 
   //! component state
   const [editTitle, setEditTitle] = useState('');
@@ -48,43 +56,46 @@ const DetailList = ({ item }: any) => {
   const [editContentInputCount, setEditContentInputCount] = useState(0);
 
   //* useMutation 사용해서 데이터 삭제하기
-  const { mutate: onDeleteData } = useMutation(deleteData);
+  // const { mutate: onDeleteData } = useMutation(deleteData);
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
-  const onClickDelete = (docId: any) => {
-    const imageRef = ref(storageService, `images/${item.imgPath}`);
-
-    Swal.fire({
-      icon: 'warning',
-      title: '정말로 삭제하시겠습니까?',
-      confirmButtonColor: '#08818c',
-      showCancelButton: true,
-      confirmButtonText: '삭제',
-      cancelButtonText: '취소',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteObject(imageRef)
-          .then(() => {
-            console.log('스토리지를 파일을 삭제를 성공했습니다');
-          })
-          .catch((error) => {
-            console.log('스토리지 파일 삭제를 실패했습니다');
-          });
-
-        onDeleteData(docId, {
-          onSuccess: () => {
-            setTimeout(
-              () => queryClient.invalidateQueries('infiniteData'),
-              500
-            );
-            logEvent('게시물 삭제 버튼', { from: 'detail page' });
-            router.push('/main?city=제주전체');
-          },
-        });
-        visibleReset();
-      }
-    });
+  const postDeleteModalButton = () => {
+    setDeleteModal(!deleteModal);
   };
+
+  // const imageRef = ref(storageService, `images/${item.imgPath}`);
+
+  //   Swal.fire({
+  //     icon: 'warning',
+  //     title: '정말로 삭제하시겠습니까?',
+  //     confirmButtonColor: '#08818c',
+  //     showCancelButton: true,
+  //     confirmButtonText: '삭제',
+  //     cancelButtonText: '취소',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       deleteObject(imageRef)
+  //         .then(() => {
+  //           console.log('스토리지를 파일을 삭제를 성공했습니다');
+  //         })
+  //         .catch((error) => {
+  //           console.log('스토리지 파일 삭제를 실패했습니다');
+  //         });
+
+  //       onDeleteData(docId, {
+  //         onSuccess: () => {
+  //           setTimeout(
+  //             () => queryClient.invalidateQueries('infiniteData'),
+  //             500
+  //           );
+  //           logEvent('게시물 삭제 버튼', { from: 'detail page' });
+  //           router.push('/main?city=제주전체');
+  //         },
+  //       });
+  //       visibleReset();
+  //     }
+  //   });
+  // };
 
   //* useMutation 사용해서 데이터 수정하기
   const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
@@ -149,7 +160,6 @@ const DetailList = ({ item }: any) => {
       }
     });
   };
-
   const onChangeCityInput = (e: any) => {
     setEditCity(e.target.value);
   };
@@ -159,20 +169,14 @@ const DetailList = ({ item }: any) => {
     setEditPlace(e.target.value);
   };
 
-  //* 페이지 처음 들어왔을 때 상태값 유지하기
-  useEffect(() => {
-    setEditTitle(item.title);
-    setEditContent(item.content);
-    setEditCity(item.city);
-    setEditTown(item.town);
-  }, [editBtnToggle]);
-
   //* 지도 클릭 시 카테고리 변경하기
-  // console.log('saveAddress: ', saveAddress);
   useEffect(() => {
+    console.log('========saveAddress=========', editSaveAddress);
     if (!editSaveAddress) {
       return;
     }
+    const cityMap = editSaveAddress.split(' ')[1];
+    const townMap = editSaveAddress.split(' ')[2];
 
     const townSub = [
       '한림읍',
@@ -189,29 +193,32 @@ const DetailList = ({ item }: any) => {
       '남원읍',
     ];
 
-    const cityMap = editSaveAddress.split(' ')[1];
-    const townMap = editSaveAddress.split(' ')[2];
-
-    console.log('cityMap: ', cityMap);
-    console.log('townMap: ', townMap);
-
-    if (
-      cityMap === '제주시' &&
-      editCity === '제주시' &&
-      townSub.indexOf(townMap) < 0
-    ) {
-      setEditTown('제주시 시내');
-    } else if (
-      cityMap === '서귀포시' &&
-      editCity === '서귀포시' &&
-      townSub.indexOf(townMap) < 0
-    ) {
-      setEditTown('서귀포시 시내');
-    } else {
-      setEditTown(townMap);
-      setEditCity(cityMap);
+    if (cityMap === '제주시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('제주시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
+    } else if (cityMap === '서귀포시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('서귀포시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
     }
   }, [editSaveAddress]);
+
+  //* 페이지 처음 들어왔을 때 상태값 유지하기
+  useEffect(() => {
+    setEditTitle(item.title);
+    setEditContent(item.content);
+    setEditCity(item.city);
+    setEditTown(item.town);
+  }, [editBtnToggle]);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -219,6 +226,27 @@ const DetailList = ({ item }: any) => {
   if (!editBtnToggle) {
     return (
       <ListContainer>
+        {deleteModal === true ? (
+          <DeletePost
+            iten={item}
+            deleteModal={deleteModal}
+            setDeleteModal={setDeleteModal}
+          />
+        ) : null}
+        <>
+          {isMobile && (
+            <Link href="/main?city=제주전체">
+              <Back
+                onClick={() => {
+                  // sessionStorage.clear();
+                  localStorage.clear();
+                }}
+              >
+                <MobileBack src="/Back-point.png" alt="image" />
+              </Back>
+            </Link>
+          )}
+        </>
         <TitleAndView>
           <Title>{item.title} </Title>
           <View>
@@ -234,8 +262,23 @@ const DetailList = ({ item }: any) => {
             </span>
           </View>
           {authService.currentUser?.uid === item.creator ? (
-            <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
-          ) : null}
+            <>
+              <div>
+                <div onClick={() => setIsOpen(!isOpen)}>
+                  <MenuPointImg src="/three-point.png" />
+                </div>
+                {isOpen === true ? (
+                  <Menu>
+                    <MenuItem onClick={onClickEditToggle}>게시물 수정</MenuItem>
+                    <MenuItem onClick={postDeleteModalButton}>
+                      게시물 삭제
+                    </MenuItem>
+                  </Menu>
+                ) : null}
+              </div>
+            </>
+          ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
+          null}
         </TitleAndView>
         <CityAndTownAndAddress>
           <City>{item.city}</City>
@@ -273,12 +316,11 @@ const DetailList = ({ item }: any) => {
           >
             {editTitleInputCount} /20
           </span>
-
           {editBtnToggle ? (
             <EditBtnCotainer>
-              <EditBtn onClick={() => onClickDelete(item.id)}>
+              {/* <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
-              </EditBtn>
+              </EditBtn> */}
               <EditBtn
                 onClick={() =>
                   onClickEdit({
@@ -322,21 +364,11 @@ const DetailList = ({ item }: any) => {
           )}
         </TitleAndView>
         <CityAndTownAndAddress>
-          <CityInput
-            // defaultValue={item.city}
-            value={editCity}
-            // ref={cityInput}
-            onChange={(e) => onChangeCityInput(e)}
-          >
+          <CityInput value={editCity} onChange={(e) => onChangeCityInput(e)}>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
-          <TownInput
-            // defaultValue={item.town}
-            value={editTown}
-            // ref={townInput}
-            onChange={(e) => onChangeTownInput(e)}
-          >
+          <TownInput value={editTown} onChange={(e) => onChangeTownInput(e)}>
             {editCity === '제주시' && (
               <>
                 <option value="제주시 시내">제주시 시내</option>
@@ -406,9 +438,62 @@ const ListContainer = styled.div`
     margin: auto;
   }
 `;
+const Back = styled.div`
+  position: absolute;
+  transform: translate(0%, 0%);
+`;
+const MobileBack = styled.img`
+  width: 12px;
+  height: 22px;
+`;
+const MenuPointImg = styled.img`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0%;
+  top: 0%;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
 
+const Menu = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  right: -15%;
+  top: 0;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.21);
+  width: 88px;
+  height: 90px;
+  place-content: center;
+  gap: 19px;
+  background-color: #f4f4f4;
+  transition: 0.3s;
+  cursor: pointer;
+`;
+const MenuItem = styled.div`
+  display: flex;
+  transition: 0.3s;
+  padding: 3px;
+  cursor: pointer;
+  :hover {
+    transition: 0.4s;
+    background-color: #4176ff;
+    color: white;
+    border-radius: 24px;
+  }
+`;
 const TitleAndView = styled.div`
   display: flex;
+  position: relative;
   flex-direction: row;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
@@ -429,7 +514,6 @@ const Title = styled.div`
     font-size: 20px;
   }
 `;
-
 const TitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;
