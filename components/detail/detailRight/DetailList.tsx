@@ -34,7 +34,8 @@ const DetailList = ({ item }: any) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
 
   //! component state
   const [editTitle, setEditTitle] = useState('');
@@ -132,20 +133,14 @@ const DetailList = ({ item }: any) => {
     setEditPlace(e.target.value);
   };
 
-  //* 페이지 처음 들어왔을 때 상태값 유지하기
-  useEffect(() => {
-    setEditTitle(item.title);
-    setEditContent(item.content);
-    setEditCity(item.city);
-    setEditTown(item.town);
-  }, [editBtnToggle]);
-
   //* 지도 클릭 시 카테고리 변경하기
-  // console.log('saveAddress: ', saveAddress);
   useEffect(() => {
+    console.log('========saveAddress=========', editSaveAddress);
     if (!editSaveAddress) {
       return;
     }
+    const cityMap = editSaveAddress.split(' ')[1];
+    const townMap = editSaveAddress.split(' ')[2];
 
     const townSub = [
       '한림읍',
@@ -162,29 +157,32 @@ const DetailList = ({ item }: any) => {
       '남원읍',
     ];
 
-    const cityMap = editSaveAddress.split(' ')[1];
-    const townMap = editSaveAddress.split(' ')[2];
-
-    console.log('cityMap: ', cityMap);
-    console.log('townMap: ', townMap);
-
-    if (
-      cityMap === '제주시' &&
-      editCity === '제주시' &&
-      townSub.indexOf(townMap) < 0
-    ) {
-      setEditTown('제주시 시내');
-    } else if (
-      cityMap === '서귀포시' &&
-      editCity === '서귀포시' &&
-      townSub.indexOf(townMap) < 0
-    ) {
-      setEditTown('서귀포시 시내');
-    } else {
-      setEditTown(townMap);
-      setEditCity(cityMap);
+    if (cityMap === '제주시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('제주시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
+    } else if (cityMap === '서귀포시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('서귀포시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
     }
   }, [editSaveAddress]);
+
+  //* 페이지 처음 들어왔을 때 상태값 유지하기
+  useEffect(() => {
+    setEditTitle(item.title);
+    setEditContent(item.content);
+    setEditCity(item.city);
+    setEditTown(item.town);
+  }, [editBtnToggle]);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -215,18 +213,21 @@ const DetailList = ({ item }: any) => {
         </>
         <TitleAndView>
           <Title>{item.title} </Title>
-          <View>
-            <Image
-              src="/view_icon.svg"
-              alt="image"
-              width={24}
-              height={16}
-              style={{ marginRight: 5 }}
-            />
-            <span style={{ color: '#1882FF', width: 70 }}>
-              {item.clickCounter} view
-            </span>
-          </View>
+          {isPc && (
+            <View>
+              <Image
+                src="/view_icon.svg"
+                alt="image"
+                width={24}
+                height={16}
+                style={{ marginRight: 5 }}
+              />
+              <span style={{ color: '#1882FF', width: 70 }}>
+                {item.clickCounter} view
+              </span>
+            </View>
+          )}
+
           {authService.currentUser?.uid === item.creator ? (
             <>
               <div>
@@ -243,17 +244,52 @@ const DetailList = ({ item }: any) => {
                 ) : null}
               </div>
             </>
-          ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
-          null}
+          ) : null}
         </TitleAndView>
         <CityAndTownAndAddress>
           <City>{item.city}</City>
           <Town>{item.town}</Town>
+          <HowManyView>
+            {isMobile && (
+              <View>
+                <Image
+                  src="/view_icon.svg"
+                  alt="image"
+                  width={24}
+                  height={16}
+                  style={{ marginRight: 5 }}
+                />
+                <span style={{ color: '#1882FF', width: 70 }}>
+                  {item.clickCounter} view
+                </span>
+              </View>
+            )}
+          </HowManyView>
+
           <Address>
-            <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <AddressText>{item.address}</AddressText>
+            {isPc && (
+              <>
+                <Image
+                  src="/spot_icon.svg"
+                  alt="image"
+                  width={24}
+                  height={24}
+                />{' '}
+                <AddressText>{item.address}</AddressText>
+              </>
+            )}
+
+            <AddressCopy>copy</AddressCopy>
           </Address>
         </CityAndTownAndAddress>
+        <>
+          {isMobile && (
+            <AddressWrap>
+              <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
+              <AddressText>{item.address}</AddressText>
+            </AddressWrap>
+          )}
+        </>
         <Content>
           <TipSpan>Tip</TipSpan>
           <TipBar src="/bar.png" alt="image" />
@@ -309,43 +345,36 @@ const DetailList = ({ item }: any) => {
             </EditBtnCotainer>
           ) : (
             <>
-              <View>
-                <Image
-                  src="/view_icon.svg"
-                  alt="image"
-                  width={20}
-                  height={20}
-                  style={{ marginRight: 5 }}
-                />
-                <span
-                  style={{
-                    color: '#1882FF',
-                  }}
-                >
-                  {item.clickCounter} view
-                </span>
-              </View>
-
               <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
             </>
           )}
+          {isPc ? (
+            <View>
+              <Image
+                src="/view_icon.svg"
+                alt="image"
+                width={20}
+                height={20}
+                style={{ marginRight: 5 }}
+              />
+              <span
+                style={{
+                  color: '#1882FF',
+                }}
+              >
+                {item.clickCounter} view
+              </span>
+            </View>
+          ) : (
+            ''
+          )}
         </TitleAndView>
         <CityAndTownAndAddress>
-          <CityInput
-            // defaultValue={item.city}
-            value={editCity}
-            // ref={cityInput}
-            onChange={(e) => onChangeCityInput(e)}
-          >
+          <CityInput value={editCity} onChange={(e) => onChangeCityInput(e)}>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
-          <TownInput
-            // defaultValue={item.town}
-            value={editTown}
-            // ref={townInput}
-            onChange={(e) => onChangeTownInput(e)}
-          >
+          <TownInput value={editTown} onChange={(e) => onChangeTownInput(e)}>
             {editCity === '제주시' && (
               <>
                 <option value="제주시 시내">제주시 시내</option>
@@ -374,7 +403,6 @@ const DetailList = ({ item }: any) => {
             <Image src="/spot_icon.svg" alt="image" width={24} height={24} />{' '}
             <span>{item.address}</span>
           </Address>
-          <AddressCopy>copy</AddressCopy>
         </CityAndTownAndAddress>
         <Content>
           Tip
@@ -411,14 +439,17 @@ const ListContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
+    margin-top: -20px;
+    margin-left: 15px;
     width: 350px;
     height: 120px;
-    margin: auto;
   }
 `;
 const Back = styled.div`
+  z-index: 100;
   position: absolute;
-  transform: translate(0%, 0%);
+  top: 68px;
+  left: 19px;
 `;
 const MobileBack = styled.img`
   width: 12px;
@@ -436,6 +467,8 @@ const MenuPointImg = styled.img`
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 4px;
+    height: 16px;
   }
 `;
 
@@ -496,7 +529,10 @@ const Title = styled.div`
   font-weight: bold;
   color: #212121;
   @media ${(props) => props.theme.mobile} {
-    font-size: 20px;
+    display: flex;
+    /* justify-content:  */
+    font-size: 16px;
+    margin-left: 30px;
   }
 `;
 const TitleInput = styled.input`
@@ -508,6 +544,13 @@ const TitleInput = styled.input`
   white-space: nowrap;
 `;
 
+const HowManyView = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    padding-left: 100px;
+    width: 40%;
+  }
+`;
+
 const View = styled.div`
   position: relative;
   display: flex;
@@ -516,7 +559,8 @@ const View = styled.div`
   font-size: 14px;
   font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
-    width: 80px;
+    width: 75px;
+    margin-left: 0px;
   }
 `;
 
@@ -546,7 +590,7 @@ const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
-    width: 350px;
+    /* width: 350px; */
     margin-top: 10px;
   }
 `;
@@ -565,7 +609,8 @@ const City = styled.div`
   font-family: 'Noto Sans CJK KR';
   color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
-    width: 75px;
+    width: 80px;
+    height: 25px;
     font-size: 12px;
   }
 `;
@@ -593,7 +638,8 @@ const Town = styled.div`
   font-family: 'Noto Sans CJK KR';
   color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
-    width: 75px;
+    width: 66px;
+    height: 25px;
     font-size: 12px;
   }
 `;
@@ -607,6 +653,14 @@ const TownInput = styled.select`
   border: none;
 `;
 
+const AddressWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+  }
+`;
 const Address = styled.div`
   display: flex;
   /* justify-content: flex-end; */
@@ -615,12 +669,13 @@ const Address = styled.div`
   gap: 10px;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
-    width: 200px;
+    width: 0px;
+    font-size: 16px;
   }
 `;
 const AddressCopy = styled.div`
-  /* display: flex;
-  align-items: center; */
+  display: flex;
+  align-items: center;
   text-decoration: underline;
   color: #8e8e93;
   font-size: 14px;
@@ -628,7 +683,8 @@ const AddressCopy = styled.div`
   width: 31px;
   height: 21px;
   @media ${(props) => props.theme.mobile} {
-    width: 200px;
+    transform: translate(0%, 190%);
+    width: 10px;
   }
 `;
 
@@ -651,7 +707,7 @@ const Content = styled.div`
   padding-left: 20px;
   color: #8e8e93;
   border-radius: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
   }
@@ -683,7 +739,8 @@ const TipBar = styled.img`
   justify-content: flex-end;
   margin-left: 30px;
   @media ${(props) => props.theme.mobile} {
-    width: 30px;
+    width: 3px;
+    margin-left: 6px;
   }
 `;
 const ContentSpan = styled.span`
@@ -694,16 +751,4 @@ const ContentSpan = styled.span`
   margin-right: 20px;
   font-size: 14px;
   font-family: 'Noto Sans CJK KR';
-`;
-
-const EditContentClearBtn = styled.div`
-  position: absolute;
-  top: 33.8%;
-  right: 19%;
-  width: 24px;
-  height: 24px;
-  background-image: url(/cancle-button.png);
-  background-repeat: no-repeat;
-
-  cursor: pointer;
 `;

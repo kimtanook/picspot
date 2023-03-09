@@ -21,11 +21,8 @@ const Maps = () => {
   const container = useRef(null);
   const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
-
   const [place, setPlace] = useRecoilState(placeAtom);
-
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
-
   const searchPlace = place;
 
   useEffect(() => {
@@ -38,12 +35,6 @@ const Maps = () => {
       };
       const map = new kakao.maps.Map(container.current, options); // useRef를 쓰기 위해 container.current를 넣어줌
       const geocoder = new kakao.maps.services.Geocoder();
-
-      //----------------------------줌 레벨 및 스카이뷰/----------------------------
-      // const mapTypeControl = new kakao.maps.MapTypeControl();
-      // map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-      // const zoomControl = new kakao.maps.ZoomControl();
-      // map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       //----------------------------장소 검색/----------------------------
 
@@ -108,7 +99,6 @@ const Maps = () => {
       }
 
       function displayCenterInfo(result: any, status: string) {
-        console.log('result', result);
         if (status === kakao.maps.services.Status.OK) {
           for (var i = 0; i < result.length; i++) {
             // 행정동의 region_type 값은 'H' 이므로
@@ -129,24 +119,6 @@ const Maps = () => {
       style={{ width: '620px', height: '630px' }}
     ></div>
   );
-  // return (
-  //   <>
-  //     {isMobile && (
-  //       <div
-  //         id="map"
-  //         ref={container}
-  //         style={{ width: '100%', height: '40vh' }}
-  //       ></div>
-  //     )}
-  //     {isPc && (
-  //       <div
-  //         id="map"
-  //         ref={container}
-  //         style={{ width: '620px', height: '630px' }}
-  //       ></div>
-  //     )}
-  //   </>
-  // );
 };
 
 export default Maps;

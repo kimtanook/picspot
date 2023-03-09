@@ -47,7 +47,9 @@ function DetailMessage({
       <MessageContainer>
         <ItemTitleText>쪽지 보기</ItemTitleText>
         <MessageInfoContainer>
-          <ItemNickname>{item.takeUserName}</ItemNickname>
+          <ItemNickname>
+            {box === '받은메세지' ? item.sendUserName : item.takeUserName}
+          </ItemNickname>
           <ItemDay>{day}</ItemDay>
         </MessageInfoContainer>
         <MessageContent>{item.message}</MessageContent>
@@ -110,9 +112,7 @@ const MessageInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-
   text-align: center;
-  aling-self: center;
   @media ${(props) => props.theme.mobile} {
     width: 100%;
   }
