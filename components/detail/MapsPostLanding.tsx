@@ -1,11 +1,10 @@
-import { infoDivAtom, placeAtom, searchCategoryAtom } from '@/atom';
+import { infoDivAtom, placeAtom } from '@/atom';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { CustomButton } from '../common/CustomButton';
-import Maps from './Maps';
+import MapsPost from './MapsPost';
 
-const MapLandingPage = () => {
+const MapsPostLanding = () => {
   const [place, setPlace] = useRecoilState(placeAtom);
   const [inputText, setInputText] = useState('');
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
@@ -34,13 +33,13 @@ const MapLandingPage = () => {
           </SearchButton>
         </StyledForm>
 
-        <Maps />
+        <MapsPost />
       </StyleContainer>
     </MapWrap>
   );
 };
 
-export default MapLandingPage;
+export default MapsPostLanding;
 
 const StyleContainer = styled.div`
   position: relative;
