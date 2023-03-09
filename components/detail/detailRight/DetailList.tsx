@@ -1,5 +1,11 @@
 import { deleteData, updateData, visibleReset } from '@/api';
-import { deleteModalAtom, editAtom, editBtnToggleAtom } from '@/atom';
+import {
+  deleteModalAtom,
+  editBtnToggleAtom,
+  editPlaceAtom,
+  editSaveAddressAtom,
+  editSaveLatLngAtom,
+} from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
@@ -7,45 +13,39 @@ import { customAlert, customConfirm } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
 import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import Link from 'next/link';
-import { useMediaQuery } from 'react-responsive';
+import DeletePost from './DeletePost';
 
-const DetailList = ({
-  item,
-  // editBtnToggle,
-  // onClickEditToggle,
-  editTitle,
-  setEditTitle,
-  editContent,
-  setEditContent,
-  editCity,
-  setEditCity,
-  editTown,
-  setEditTown,
-  onClickEditTown,
-  editData,
-  saveLatLng,
-  setSaveLatLng,
-  saveAddress,
-  setSaveAddress,
-  // setEditBtnToggle,
-  setPlace,
-  place,
-}: any) => {
+const DetailList = ({ item }: any) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
-  const [editState, setEditState] = useRecoilState(editAtom);
-  //! title, content 상태관리 할 차례
-  console.log('editState: ', editState);
-  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
+  const [editSaveLatLng, setEditSaveLatLng]: any =
+    useRecoilState(editSaveLatLngAtom);
+  const [editSaveAddress, setEditSaveAddress] =
+    useRecoilState(editSaveAddressAtom);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 785 });
+
+  //! component state
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  const [editCity, setEditCity] = useState('');
+  const [editTown, setEditTown] = useState('');
+
+  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
+  const onClickEditToggle = () => {
+    setEditBtnToggle(!editBtnToggle);
+  };
 
   const router = useRouter(); //* 라우팅하기
   const queryClient = useQueryClient(); // * 쿼리 최신화하기
@@ -55,27 +55,20 @@ const DetailList = ({
   const [editTitleInputCount, setEditTitleInputCount] = useState(0);
   const [editContentInputCount, setEditContentInputCount] = useState(0);
 
-  //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEditToggle = () => {
-    setEditBtnToggle(!editBtnToggle);
-  };
-
   //* useMutation 사용해서 데이터 삭제하기
-  const { mutate: onDeleteData } = useMutation(deleteData);
+  // const { mutate: onDeleteData } = useMutation(deleteData);
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const postDeleteModalButton = () => {
     setDeleteModal(!deleteModal);
   };
 
-  // const onClickDelete = (docId: any) => {
-  //   const imageRef = ref(storageService, `images/${item?.imgPath}`);
+  // const imageRef = ref(storageService, `images/${item.imgPath}`);
 
   //   Swal.fire({
   //     icon: 'warning',
   //     title: '정말로 삭제하시겠습니까?',
   //     confirmButtonColor: '#08818c',
-
   //     showCancelButton: true,
   //     confirmButtonText: '삭제',
   //     cancelButtonText: '취소',
@@ -84,7 +77,6 @@ const DetailList = ({
   //       deleteObject(imageRef)
   //         .then(() => {
   //           console.log('스토리지를 파일을 삭제를 성공했습니다');
-  //           setDeleteModal(!deleteModal);
   //         })
   //         .catch((error) => {
   //           console.log('스토리지 파일 삭제를 실패했습니다');
@@ -135,18 +127,17 @@ const DetailList = ({
       return;
     }
 
-    if (saveLatLng === '' || saveAddress === '') {
+    if (editSaveLatLng === '' || editSaveAddress === '') {
       customAlert('지도에 마커를 찍어주세요');
       return;
     }
 
-    // console.log('data: ', data);
+    console.log('data: ', data);
 
     Swal.fire({
       icon: 'warning',
       title: '정말로 수정하시겠습니까?',
       confirmButtonColor: '#08818c',
-
       showCancelButton: true,
       confirmButtonText: '수정',
       cancelButtonText: '취소',
@@ -154,37 +145,83 @@ const DetailList = ({
       if (result.isConfirmed) {
         onUpdateData(data, {
           onSuccess: () => {
+            // setEditState(data);
             setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
             logEvent('수정 완료 버튼', { from: 'detail page' });
-            setSaveLatLng([]);
-            setSaveAddress('');
+            setEditSaveLatLng([]);
+            setEditSaveAddress('');
             setEditBtnToggle(!editBtnToggle);
           },
         });
       } else {
-        setSaveLatLng([]);
-        setSaveAddress('');
+        setEditSaveLatLng([]);
+        setEditSaveAddress('');
         setEditBtnToggle(!editBtnToggle);
       }
     });
   };
-
   const onChangeCityInput = (e: any) => {
     setEditCity(e.target.value);
   };
 
   const onChangeTownInput = (e: any) => {
     setEditTown(e.target.value);
-    setPlace(e.target.value);
+    setEditPlace(e.target.value);
   };
 
   //* 페이지 처음 들어왔을 때 상태값 유지하기
   useEffect(() => {
-    setEditTitle(item?.title);
-    setEditContent(item?.content);
-    setEditCity(item?.city);
-    setEditTown(item?.town);
-  }, []);
+    setEditTitle(item.title);
+    setEditContent(item.content);
+    setEditCity(item.city);
+    setEditTown(item.town);
+  }, [editBtnToggle]);
+
+  //* 지도 클릭 시 카테고리 변경하기
+  // console.log('saveAddress: ', saveAddress);
+  useEffect(() => {
+    if (!editSaveAddress) {
+      return;
+    }
+
+    const townSub = [
+      '한림읍',
+      '조천읍',
+      '한경면',
+      '추자면',
+      '우도면',
+      '구좌읍',
+      '애월읍',
+      '표선면',
+      '대정읍',
+      '성산읍',
+      '안덕면',
+      '남원읍',
+    ];
+
+    const cityMap = editSaveAddress.split(' ')[1];
+    const townMap = editSaveAddress.split(' ')[2];
+
+    console.log('cityMap: ', cityMap);
+    console.log('townMap: ', townMap);
+
+    if (
+      cityMap === '제주시' &&
+      editCity === '제주시' &&
+      townSub.indexOf(townMap) < 0
+    ) {
+      setEditTown('제주시 시내');
+    } else if (
+      cityMap === '서귀포시' &&
+      editCity === '서귀포시' &&
+      townSub.indexOf(townMap) < 0
+    ) {
+      setEditTown('서귀포시 시내');
+    } else {
+      setEditTown(townMap);
+      setEditCity(cityMap);
+    }
+  }, [editSaveAddress]);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -192,23 +229,29 @@ const DetailList = ({
   if (!editBtnToggle) {
     return (
       <ListContainer>
+        {deleteModal === true ? (
+          <DeletePost
+            iten={item}
+            deleteModal={deleteModal}
+            setDeleteModal={setDeleteModal}
+          />
+        ) : null}
+        <>
+          {isMobile && (
+            <Link href="/main?city=제주전체">
+              <Back
+                onClick={() => {
+                  // sessionStorage.clear();
+                  localStorage.clear();
+                }}
+              >
+                <MobileBack src="/Back-point.png" alt="image" />
+              </Back>
+            </Link>
+          )}
+        </>
         <TitleAndView>
-          <>
-            {isMobile && (
-              <Link href="/main?city=제주전체">
-                <Back
-                  onClick={() => {
-                    // sessionStorage.clear();
-                    localStorage.clear();
-                  }}
-                >
-                  <MobileBack src="/Back-point.png" alt="image" />
-                </Back>
-              </Link>
-            )}
-          </>
-
-          <Title>{item?.title} </Title>
+          <Title>{item.title} </Title>
           <View>
             <Image
               src="/view_icon.svg"
@@ -218,10 +261,10 @@ const DetailList = ({
               style={{ marginRight: 5 }}
             />
             <span style={{ color: '#1882FF', width: 70 }}>
-              {item?.clickCounter} view
+              {item.clickCounter} view
             </span>
           </View>
-          {authService.currentUser?.uid === item?.creator ? (
+          {authService.currentUser?.uid === item.creator ? (
             <>
               <div>
                 <div onClick={() => setIsOpen(!isOpen)}>
@@ -240,18 +283,17 @@ const DetailList = ({
           ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
           null}
         </TitleAndView>
-
         <CityAndTownAndAddress>
-          <City>{item?.city}</City>
-          <Town>{item?.town}</Town>
+          <City>{item.city}</City>
+          <Town>{item.town}</Town>
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <AddressText>{item?.address}</AddressText>
+            <AddressText>{item.address}</AddressText>
           </Address>
         </CityAndTownAndAddress>
         <Content>
           <TipSpan>Tip |</TipSpan>
-          <ContentSpan>{item?.content}</ContentSpan>
+          <ContentSpan>{item.content}</ContentSpan>
         </Content>
       </ListContainer>
     );
@@ -260,7 +302,7 @@ const DetailList = ({
       <ListContainer>
         <TitleAndView>
           <TitleInput
-            defaultValue={item?.title}
+            defaultValue={item.title}
             onChange={(e) => {
               setEditTitle(e.target.value);
               setEditTitleInputCount(e.target.value.length);
@@ -277,7 +319,6 @@ const DetailList = ({
           >
             {editTitleInputCount} /20
           </span>
-
           {editBtnToggle ? (
             <EditBtnCotainer>
               {/* <EditBtn onClick={() => onClickDelete(item.id)}>
@@ -287,7 +328,14 @@ const DetailList = ({
                 onClick={() =>
                   onClickEdit({
                     id: item.id,
-                    ...editData,
+                    title: editTitle,
+                    content: editContent,
+                    city: editCity,
+                    town: editTown,
+                    lat: editSaveLatLng.Ma,
+                    long: editSaveLatLng.La,
+                    address: editSaveAddress,
+                    // ...editState,
                   })
                 }
               >
@@ -310,29 +358,32 @@ const DetailList = ({
                     color: '#1882FF',
                   }}
                 >
-                  {item?.clickCounter} view
+                  {item.clickCounter} view
                 </span>
               </View>
 
-              {/* <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn> */}
+              <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
             </>
           )}
         </TitleAndView>
         <CityAndTownAndAddress>
           <CityInput
-            defaultValue={item?.city}
+            // defaultValue={item.city}
+            value={editCity}
+            // ref={cityInput}
             onChange={(e) => onChangeCityInput(e)}
           >
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
           <TownInput
-            defaultValue={item?.town}
+            // defaultValue={item.town}
+            value={editTown}
+            // ref={townInput}
             onChange={(e) => onChangeTownInput(e)}
           >
             {editCity === '제주시' && (
               <>
-                <option value="">선택</option>
                 <option value="제주시 시내">제주시 시내</option>
                 <option value="한림읍">한림읍</option>
                 <option value="조천읍">조천읍</option>
@@ -346,7 +397,6 @@ const DetailList = ({
 
             {editCity === '서귀포시' && (
               <>
-                <option value="">선택</option>
                 <option value="서귀포시 시내">서귀포시 시내</option>
                 <option value="표선면">표선면</option>
                 <option value="대정읍">대정읍</option>
@@ -358,14 +408,14 @@ const DetailList = ({
           </TownInput>
           <Address>
             <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <span>{item?.address}</span>
+            <span>{item.address}</span>
           </Address>
         </CityAndTownAndAddress>
         <Content>
           Tip
           <ContentInput
             // value={editContent}
-            defaultValue={item?.content}
+            defaultValue={item.content}
             onChange={(e) => {
               setEditContent(e.target.value);
               setEditContentInputCount(e.target.value.length);
@@ -475,10 +525,8 @@ const Title = styled.div`
   white-space: nowrap;
   @media ${(props) => props.theme.mobile} {
     font-size: 20px;
-    margin-left: 30px;
   }
 `;
-
 const TitleInput = styled.input`
   font-size: 30px;
   margin-right: 20px;

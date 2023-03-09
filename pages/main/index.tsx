@@ -16,12 +16,10 @@ import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData, visibleReset } from '@/api';
-import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { useRouter } from 'next/router';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
-import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
@@ -32,6 +30,7 @@ import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
 import { debounce } from 'lodash';
 import Image from 'next/image';
+import ContentBox from '@/components/main/ContentBox';
 
 export default function Main() {
   const router = useRouter();
@@ -248,9 +247,11 @@ export default function Main() {
                 <Masonry columnsCount={4}>
                   {data?.pages.map((data) =>
                     data?.map((item: { [key: string]: string }) => (
-                      <ItemBox key={uuidv4()} onClick={saveScroll}>
-                        <Content item={item} />
-                      </ItemBox>
+                      <ContentBox
+                        key={uuidv4()}
+                        onClick={saveScroll}
+                        item={item}
+                      />
                     ))
                   )}
                 </Masonry>
@@ -404,9 +405,7 @@ const GridBox = styled.div`
     width: 375px;
   }
 `;
-const ItemBox = styled.div`
-  margin: 0px 5px 20px 5px;
-`;
+
 const ChatWrap = styled.div`
   position: fixed;
   left: 3%;

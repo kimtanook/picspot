@@ -1,20 +1,23 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { deleteModalAtom } from '@/atom';
+import { deleteModalAtom, deleteItem } from '@/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import { storageService } from '@/firebase';
 import { deleteObject, ref } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { deleteData, visibleReset } from '@/api';
-
-type Post = {
-  item: string;
-  id: string;
-  imgPath: string;
-};
-const DeletePost = (item: Post) => {
-  const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
+import Swal from 'sweetalert2';
+// type Post = {
+//   id: string|undefined;
+//   imgPath: string|undefined;
+// };
+const DeletePost = ({
+  item,
+  setDeleteModal,
+  deleteModal,
+}: any): JSX.Element => {
+  // const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
   const router = useRouter();
 
   // 모달 창 뒤에 누르면 닫힘
@@ -35,23 +38,35 @@ const DeletePost = (item: Post) => {
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
-
-  const onClickDelete = async (docId: any) => {
-    const imageRef = ref(storageService, `images/${item?.imgPath}`);
-
-    await deleteObject(imageRef)
-      .then(() => {
-        console.log('스토리지를 파일을 삭제를 성공했습니다');
-        setDeleteModal(!deleteModal);
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log('스토리지 파일 삭제를 실패했습니다');
-      });
-
+  const [delteItemData] = useRecoilState<any>(deleteItem);
+  console.log(delteItemData);
+  const onClickDelete = async () => {
+    // event.stopPropagation();
+    // DeletePost(item);
+    // deleteModal(fa
+    // lse);
+    const imageRef = ref(storageService, `images/${delteItemData?.imgPath}`);
+    // console.log(delteItemData?.imgPath);
+    // console.log(delteItemData);
+    const docId: any = delteItemData?.id;
+    // await deleteObject(imageRef)
+    //   .then(() => {
+    //     Swal.fire({
+    //       title: '게시물을 삭제했습니다',
+    //     });
+    //     console.log('스토리지를 파일을 삭제를 성공했습니다');
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     console.log('스토리지 파일 삭제를 실패했습니다');
+    //   });
     onDeleteData(docId, {
       onSuccess: () => {
+        setDeleteModal(!deleteModal);
         router.push('/main?city=제주전체');
+      },
+      onError(error, variables, context) {
+        console.log(error);
       },
     });
     visibleReset();
@@ -74,7 +89,7 @@ const DeletePost = (item: Post) => {
           >
             취소
           </DeleteCancleButton>
-          <PostDeleteButton onClick={() => onClickDelete(item?.id)}>
+          <PostDeleteButton onClick={() => onClickDelete()}>
             게시물 삭제하기
           </PostDeleteButton>
         </DeleteContainer>

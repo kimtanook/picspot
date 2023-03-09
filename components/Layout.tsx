@@ -109,11 +109,7 @@ function Layout() {
                   setModal={setForgotModal}
                   width="1000"
                   height="1000"
-                  element={
-                    <>
-                      <AuthForgot /> <DetailList />
-                    </>
-                  }
+                  element={<AuthForgot />}
                 />
               )}
             </>
@@ -124,11 +120,7 @@ function Layout() {
                   setModal={setForgotModal}
                   width="524"
                   height="467"
-                  element={
-                    <>
-                      <AuthForgot /> <DetailList />
-                    </>
-                  }
+                  element={<AuthForgot />}
                 />
               )}
             </>
