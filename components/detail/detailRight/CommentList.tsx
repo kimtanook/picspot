@@ -96,9 +96,11 @@ const CommentBox = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  background-color: transparent;
 `;
 
 const Form = styled.form`
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   background-color: #f8f8f8;
@@ -110,9 +112,12 @@ const Form = styled.form`
 const Input = styled.input`
   background-color: #f8f8f8;
   border: transparent;
-  height: 20px;
+  height: 40px;
   width: 70%;
   margin-left: 20px;
+  :focus-visible {
+    outline: none;
+  }
 `;
 
 const InputBtnContainer = styled.div`
@@ -121,7 +126,7 @@ const InputBtnContainer = styled.div`
 
 const InputBtn = styled.button`
   cursor: pointer;
-  background-color: #1882ff;
+  background-color: #4cb2f6;
   color: white;
   border-radius: 5px;
   width: 80px;

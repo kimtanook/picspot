@@ -116,13 +116,16 @@ const MobileWrap = styled.div`
     height: 90px;
     margin-bottom: 12px;
     border-radius: 12px;
-    padding: 16px;
+    padding: 14px;
   }
 `;
 const MobileItemTop = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @media ${(props) => props.theme.mobile} {
+    align-self: center;
+  }
 `;
 const MobileTopContainer = styled.div`
   display: flex;
@@ -143,7 +146,14 @@ const MessageSelect = styled.input`
   }
 `;
 const MessageUser = styled.div`
-  width: 60px;
+  width: 150px;
+  @media ${(props) => props.theme.mobile} {
+    align-self: center;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+    padding-left: 10px;
+  }
 `;
 const MessageBody = styled.div`
   width: 200px;
@@ -154,14 +164,24 @@ const MessageBody = styled.div`
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     width: 300px;
+    padding: 5px 0px 0px 29px;
   }
 `;
 const MessageDay = styled.div`
   width: 70px;
   font-size: 12px;
+  @media ${(props) => props.theme.mobile} {
+    align-self: center;
+    font-size: 14px;
+    font-weight: 400;
+  }
 `;
 const MessageStatus = styled.div`
   width: 70px;
+  @media ${(props) => props.theme.mobile} {
+    align-self: center;
+    width: 50px;
+  }
 `;
 
 const CheckWrap = styled.div`
@@ -169,6 +189,10 @@ const CheckWrap = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  @media ${(props) => props.theme.mobile} {
+    align-self: center;
+    justify-content: right;
+  }
 `;
 const Checked = styled.div<{ check: boolean | undefined }>`
   background-color: ${(props) =>

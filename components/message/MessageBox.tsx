@@ -9,6 +9,7 @@ import { authService } from '@/firebase';
 import { uuidv4 } from '@firebase/util';
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import DetailMessage from './DetailMessage';
@@ -16,6 +17,8 @@ import SendMessageItem from './SendMessageItem';
 import TakeMessageItem from './TakeMessageItem';
 
 function MessageBox() {
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   const queryClient = useQueryClient();
   const user = authService.currentUser?.uid;
   const [msgToggle, setMsgToggle] = useRecoilState(messageBoxToggle);
@@ -80,7 +83,19 @@ function MessageBox() {
   return (
     <Wrap>
       <MessageBoxWrap>
-        <CloseButton onClick={() => setMsgToggle(false)}> 〈 닫기</CloseButton>
+        {isPc && (
+          <CloseButton onClick={() => setMsgToggle(false)}>
+            {' '}
+            〈 닫기
+          </CloseButton>
+        )}
+        {isMobile && (
+          <ProfileEditCancleBtn
+            onClick={() => setMsgToggle(false)}
+            src={'/Back-point.png'}
+          />
+        )}
+
         <MessageBoxTitle>쪽지함</MessageBoxTitle>
         <MessageToggleBox>
           <TakeSendButtonBox>
@@ -185,6 +200,8 @@ const MessageBoxWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     max-width: 400px;
+    height: 100vh;
+    justify-content: normal;
   }
 `;
 const CloseButton = styled.button`
@@ -194,13 +211,33 @@ const CloseButton = styled.button`
   background-color: white;
   color: #1882ff;
 `;
+
+const ProfileEditCancleBtn = styled.img`
+  width: 12px;
+  height: 28px;
+  position: absolute;
+  top: 6.6%;
+  left: 7%;
+  border: none;
+`;
+
 const MessageBoxTitle = styled.div`
   margin: 30px;
+  @media ${(props) => props.theme.mobile} {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 0px;
+  }
 `;
 const MessageToggleBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @media ${(props) => props.theme.mobile} {
+    width: 90vw;
+    height: 30px;
+    margin: 40px 0px 20px 0px;
+  }
 `;
 const TakeSendButtonBox = styled.div`
   display: flex;
@@ -242,6 +279,9 @@ const MessageSelect = styled.div`
 `;
 const MessageUser = styled.div`
   width: 60px;
+  @media ${(props) => props.theme.mobile} {
+    align-self: center;
+  }
 `;
 const MessageBody = styled.div`
   width: 200px;

@@ -45,15 +45,18 @@ function DetailMessage({
   return (
     <Wrap>
       <MessageContainer>
-        <ItemTitleText>내용</ItemTitleText>
-        <ItemDay>{day}</ItemDay>
+        <ItemTitleText>쪽지 보기</ItemTitleText>
+        <MessageInfoContainer>
+          <ItemNickname>{item.takeUserName}</ItemNickname>
+          <ItemDay>{day}</ItemDay>
+        </MessageInfoContainer>
         <MessageContent>{item.message}</MessageContent>
         <CloseButton
           onClick={() => {
             checkedMessage();
           }}
         >
-          닫기
+          확인
         </CloseButton>
       </MessageContainer>
     </Wrap>
@@ -84,17 +87,53 @@ const MessageContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 20px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100vw;
+    height: 100vh;
+    justify-content: flex-start;
+  }
 `;
 const ItemTitleText = styled.div`
   font-size: 20px;
   width: 320px;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 5vh;
+    font-size: 20px;
+    font-weight: 700;
+  }
 `;
-const ItemDay = styled.div``;
+const MessageInfoContainer = styled.div`
+  margin: 20px 0px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  text-align: center;
+  aling-self: center;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+  }
+`;
+const ItemNickname = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+`;
+
+const ItemDay = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+`;
 const MessageContent = styled.div`
   padding: 12px;
   width: 320px;
   height: 260px;
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
+  text-align: left;
+  color: #5b5b5f;
+  margin-bottom: 20px;
 `;
 const CloseButton = styled.button`
   width: 320px;
