@@ -146,7 +146,7 @@ const MessageSelect = styled.input`
   }
 `;
 const MessageUser = styled.div`
-  width: 60px;
+  width: 150px;
   @media ${(props) => props.theme.mobile} {
     align-self: center;
     font-size: 15px;

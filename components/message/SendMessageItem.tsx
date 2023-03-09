@@ -127,7 +127,7 @@ const MessageSelect = styled.input`
   }
 `;
 const MessageUser = styled.div`
-  width: 60px;
+  width: 150px;
   overflow: hidden;
   @media ${(props) => props.theme.mobile} {
     align-self: center;
