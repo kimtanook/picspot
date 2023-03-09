@@ -55,47 +55,10 @@ const DetailList = ({ item }: any) => {
   const [editTitleInputCount, setEditTitleInputCount] = useState(0);
   const [editContentInputCount, setEditContentInputCount] = useState(0);
 
-  //* useMutation 사용해서 데이터 삭제하기
-  // const { mutate: onDeleteData } = useMutation(deleteData);
-
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
   const postDeleteModalButton = () => {
     setDeleteModal(!deleteModal);
   };
-
-  // const imageRef = ref(storageService, `images/${item.imgPath}`);
-
-  //   Swal.fire({
-  //     icon: 'warning',
-  //     title: '정말로 삭제하시겠습니까?',
-  //     confirmButtonColor: '#08818c',
-  //     showCancelButton: true,
-  //     confirmButtonText: '삭제',
-  //     cancelButtonText: '취소',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       deleteObject(imageRef)
-  //         .then(() => {
-  //           console.log('스토리지를 파일을 삭제를 성공했습니다');
-  //         })
-  //         .catch((error) => {
-  //           console.log('스토리지 파일 삭제를 실패했습니다');
-  //         });
-
-  //       onDeleteData(docId, {
-  //         onSuccess: () => {
-  //           setTimeout(
-  //             () => queryClient.invalidateQueries('infiniteData'),
-  //             500
-  //           );
-  //           logEvent('게시물 삭제 버튼', { from: 'detail page' });
-  //           router.push('/main?city=제주전체');
-  //         },
-  //       });
-  //       visibleReset();
-  //     }
-  //   });
-  // };
 
   //* useMutation 사용해서 데이터 수정하기
   const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
@@ -253,8 +216,8 @@ const DetailList = ({ item }: any) => {
             <Image
               src="/view_icon.svg"
               alt="image"
-              width={20}
-              height={20}
+              width={24}
+              height={16}
               style={{ marginRight: 5 }}
             />
             <span style={{ color: '#1882FF', width: 70 }}>
@@ -289,7 +252,8 @@ const DetailList = ({ item }: any) => {
           </Address>
         </CityAndTownAndAddress>
         <Content>
-          <TipSpan>Tip |</TipSpan>
+          <TipSpan>Tip</TipSpan>
+          <TipBar src="/bar.png" alt="image" />
           <ContentSpan>{item.content}</ContentSpan>
         </Content>
       </ListContainer>
@@ -394,9 +358,10 @@ const DetailList = ({ item }: any) => {
             )}
           </TownInput>
           <Address>
-            <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
+            <Image src="/spot_icon.svg" alt="image" width={24} height={24} />{' '}
             <span>{item.address}</span>
           </Address>
+          <AddressCopy>copy</AddressCopy>
         </CityAndTownAndAddress>
         <Content>
           Tip
@@ -452,7 +417,7 @@ const MenuPointImg = styled.img`
   justify-content: center;
   align-items: center;
   right: 0%;
-  top: 0%;
+  top: 30%;
   @media ${(props) => props.theme.mobile} {
     position: absolute;
     display: flex;
@@ -493,6 +458,7 @@ const MenuItem = styled.div`
 `;
 const TitleAndView = styled.div`
   display: flex;
+  justify-content: flex-start;
   position: relative;
   flex-direction: row;
   width: 100%;
@@ -504,12 +470,18 @@ const TitleAndView = styled.div`
 `;
 
 const Title = styled.div`
+  position: relative;
   font-size: 30px;
   margin-right: 20px;
+  margin-bottom: 5px;
   width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 28px;
+  font-family: 'Noto Sans CJK KR';
+  font-weight: bold;
+  color: #212121;
   @media ${(props) => props.theme.mobile} {
     font-size: 20px;
   }
@@ -524,9 +496,12 @@ const TitleInput = styled.input`
 `;
 
 const View = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-  width: 90px;
+  width: 100px;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
     width: 80px;
   }
@@ -569,10 +544,13 @@ const City = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 200px;
-  height: 40px;
+  width: 99px;
+  height: 30px;
   text-align: center;
   padding-top: 4px;
+  font-size: 12px;
+  font-family: 'Noto Sans CJK KR';
+  color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
     width: 75px;
     font-size: 12px;
@@ -594,10 +572,13 @@ const Town = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 200px;
-  height: 40px;
+  width: 88px;
+  height: 30px;
   text-align: center;
   padding-top: 4px;
+  font-size: 12px;
+  font-family: 'Noto Sans CJK KR';
+  color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
     width: 75px;
     font-size: 12px;
@@ -615,10 +596,24 @@ const TownInput = styled.select`
 
 const Address = styled.div`
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
+  font-size: 16px;
   align-items: center;
   gap: 10px;
   width: 100%;
+  @media ${(props) => props.theme.mobile} {
+    width: 200px;
+  }
+`;
+const AddressCopy = styled.div`
+  /* display: flex;
+  align-items: center; */
+  text-decoration: underline;
+  color: #8e8e93;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
+  width: 31px;
+  height: 21px;
   @media ${(props) => props.theme.mobile} {
     width: 200px;
   }
@@ -637,11 +632,12 @@ const AddressText = styled.span`
 const Content = styled.div`
   display: flex;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #f4f4f4;
   width: 100%;
   min-height: 50px;
   padding-left: 20px;
   color: #8e8e93;
+  border-radius: 10px;
   margin-bottom: 5px;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
@@ -660,30 +656,31 @@ const ContentInput = styled.input`
 `;
 
 const TipSpan = styled.span`
-  width: 50px;
+  width: 10px;
+  font-size: 16px;
+  font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
     width: 30px;
   }
 `;
-
+const TipBar = styled.img`
+  width: 3px;
+  height: 24px;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 30px;
+  @media ${(props) => props.theme.mobile} {
+    width: 30px;
+  }
+`;
 const ContentSpan = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: 20px;
   margin-right: 20px;
-`;
-
-const EditTitleClearBtn = styled.div`
-  position: absolute;
-  top: 18.5%;
-  right: 42%;
-  width: 24px;
-  height: 24px;
-  background-image: url(/cancle-button.png);
-  background-repeat: no-repeat;
-
-  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
 `;
 
 const EditContentClearBtn = styled.div`
