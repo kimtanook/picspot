@@ -169,20 +169,14 @@ const DetailList = ({ item }: any) => {
     setEditPlace(e.target.value);
   };
 
-  //* 페이지 처음 들어왔을 때 상태값 유지하기
-  useEffect(() => {
-    setEditTitle(item.title);
-    setEditContent(item.content);
-    setEditCity(item.city);
-    setEditTown(item.town);
-  }, [editBtnToggle]);
-
   //* 지도 클릭 시 카테고리 변경하기
-  // console.log('saveAddress: ', saveAddress);
   useEffect(() => {
+    console.log('========saveAddress=========', editSaveAddress);
     if (!editSaveAddress) {
       return;
     }
+    const cityMap = editSaveAddress.split(' ')[1];
+    const townMap = editSaveAddress.split(' ')[2];
 
     const townSub = [
       '한림읍',
@@ -199,29 +193,32 @@ const DetailList = ({ item }: any) => {
       '남원읍',
     ];
 
-    const cityMap = editSaveAddress.split(' ')[1];
-    const townMap = editSaveAddress.split(' ')[2];
-
-    console.log('cityMap: ', cityMap);
-    console.log('townMap: ', townMap);
-
-    if (
-      cityMap === '제주시' &&
-      editCity === '제주시' &&
-      townSub.indexOf(townMap) < 0
-    ) {
-      setEditTown('제주시 시내');
-    } else if (
-      cityMap === '서귀포시' &&
-      editCity === '서귀포시' &&
-      townSub.indexOf(townMap) < 0
-    ) {
-      setEditTown('서귀포시 시내');
-    } else {
-      setEditTown(townMap);
-      setEditCity(cityMap);
+    if (cityMap === '제주시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('제주시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
+    } else if (cityMap === '서귀포시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setEditCity(cityMap);
+        setEditTown('서귀포시 시내');
+      } else {
+        setEditTown(townMap);
+        setEditCity(cityMap);
+      }
     }
   }, [editSaveAddress]);
+
+  //* 페이지 처음 들어왔을 때 상태값 유지하기
+  useEffect(() => {
+    setEditTitle(item.title);
+    setEditContent(item.content);
+    setEditCity(item.city);
+    setEditTown(item.town);
+  }, [editBtnToggle]);
 
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
@@ -367,21 +364,11 @@ const DetailList = ({ item }: any) => {
           )}
         </TitleAndView>
         <CityAndTownAndAddress>
-          <CityInput
-            // defaultValue={item.city}
-            value={editCity}
-            // ref={cityInput}
-            onChange={(e) => onChangeCityInput(e)}
-          >
+          <CityInput value={editCity} onChange={(e) => onChangeCityInput(e)}>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
-          <TownInput
-            // defaultValue={item.town}
-            value={editTown}
-            // ref={townInput}
-            onChange={(e) => onChangeTownInput(e)}
-          >
+          <TownInput value={editTown} onChange={(e) => onChangeTownInput(e)}>
             {editCity === '제주시' && (
               <>
                 <option value="제주시 시내">제주시 시내</option>
