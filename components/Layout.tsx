@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import {
   messageBoxToggle,
   messageSendToggle,
@@ -9,6 +8,7 @@ import {
   loginModalAtom,
   postModalAtom,
   editProfileModalAtom,
+  deleteModalAtom,
 } from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -24,6 +24,8 @@ import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
 import { CustomModalMap } from './common/CustomModalMap';
+import DetailList from './detail/detailRight/DetailList';
+import DeletePost from './detail/detailRight/DeletePost';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -37,6 +39,7 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
+  const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
 
   const isMobile = useMediaQuery({ maxWidth: 823 });
   const isPc = useMediaQuery({ minWidth: 824 });
@@ -97,15 +100,32 @@ function Layout() {
         )}
       </>
       <>
-        {forgotModal ? (
-          <CustomModal
-            modal={forgotModal}
-            setModal={setForgotModal}
-            width="524"
-            height="467"
-            element={<AuthForgot />}
-          />
-        ) : null}
+        {forgotModal && (
+          <>
+            <>
+              {isMobile && (
+                <CustomModal
+                  modal={forgotModal}
+                  setModal={setForgotModal}
+                  width="1000"
+                  height="1000"
+                  element={<AuthForgot />}
+                />
+              )}
+            </>
+            <>
+              {isPc && (
+                <CustomModal
+                  modal={forgotModal}
+                  setModal={setForgotModal}
+                  width="524"
+                  height="467"
+                  element={<AuthForgot />}
+                />
+              )}
+            </>
+          </>
+        )}
       </>
       <>
         {closeLoginModal && (
@@ -162,6 +182,34 @@ function Layout() {
             </>
           </>
         )}
+        <>
+          {deleteModal && (
+            <>
+              <>
+                {isMobile && (
+                  <CustomModal
+                    modal={deleteModal}
+                    setModal={setDeleteModal}
+                    width="1000"
+                    height="1000"
+                    element={<DeletePost />}
+                  />
+                )}
+              </>
+              <>
+                {isPc && (
+                  <CustomModal
+                    modal={deleteModal}
+                    setModal={setDeleteModal}
+                    width="524"
+                    height="467"
+                    element={<DeletePost />}
+                  />
+                )}
+              </>
+            </>
+          )}
+        </>
 
         {editProfileModal ? (
           <CustomModal

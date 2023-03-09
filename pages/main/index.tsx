@@ -2,29 +2,35 @@ import Header from '@/components/Header';
 import Modal from '@/components/main/Modal';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  MouseEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import Seo from '@/components/Seo';
 import Chat from '@/components/chat/Chat';
 import { useInfiniteQuery } from 'react-query';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData, visibleReset } from '@/api';
-import Content from '@/components/main/Content';
 import { authService } from '@/firebase';
 import { useRouter } from 'next/router';
-import Search from '@/components/main/Search';
 import { CustomModal } from '@/components/common/CustomModal';
 import ModalMaps from '@/components/detail/ModalMaps';
-import PostForm from '@/components/main/PostForm';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import { loginModalAtom, postModalAtom, townArray } from '../../atom';
 import TownSelect from '@/components/main/TownSelect';
 import { customAlert } from '@/utils/alerts';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
+import { debounce } from 'lodash';
 import Image from 'next/image';
+import ContentBox from '@/components/main/ContentBox';
 
 export default function Main() {
   const router = useRouter();
@@ -79,12 +85,18 @@ export default function Main() {
 
   const searchOptionRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
 
+  // [검색] onChange debounce
+  const debounceOnChange = useMemo(
+    () => debounce((e) => setSearchValue(e), 500),
+    []
+  );
+
   // [검색] 유저가 고르는 옵션(카테고리)과, 옵션을 고른 후 입력하는 input
   const onChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectTown([]);
     visibleReset();
     setSearchOption(searchOptionRef.current?.value);
-    setSearchValue(event.target.value);
+    debounceOnChange(event.target.value);
     router.push({
       pathname: '/main',
       query: { city: '제주전체' },
@@ -235,9 +247,11 @@ export default function Main() {
                 <Masonry columnsCount={4}>
                   {data?.pages.map((data) =>
                     data?.map((item: { [key: string]: string }) => (
-                      <ItemBox key={uuidv4()} onClick={saveScroll}>
-                        <Content item={item} />
-                      </ItemBox>
+                      <ContentBox
+                        key={uuidv4()}
+                        onClick={saveScroll}
+                        item={item}
+                      />
                     ))
                   )}
                 </Masonry>
@@ -391,9 +405,7 @@ const GridBox = styled.div`
     width: 375px;
   }
 `;
-const ItemBox = styled.div`
-  margin: 0px 5px 20px 5px;
-`;
+
 const ChatWrap = styled.div`
   position: fixed;
   left: 3%;

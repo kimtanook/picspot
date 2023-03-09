@@ -20,6 +20,7 @@ import { messageSendToggle } from '@/atom';
 import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
 import { useMediaQuery } from 'react-responsive';
+import Link from 'next/link';
 
 function Profile() {
   const queryClient = useQueryClient();
@@ -123,6 +124,21 @@ function Profile() {
       )}
 
       <UserContainer>
+        <>
+          {isMobile && (
+            <Link href="/main?city=제주전체">
+              <Back
+                onClick={() => {
+                  // sessionStorage.clear();
+                  localStorage.clear();
+                }}
+              >
+                <MobileBack src="/Back-point.png" alt="image" />
+              </Back>
+            </Link>
+          )}
+        </>
+        {isMobile && <HeaderText>유저페이지</HeaderText>}
         <UserProfileContainer>
           <ProfileContainer>
             <ProfileImage img={userData?.userImg}></ProfileImage>
@@ -241,7 +257,24 @@ const UserContainer = styled.div`
   flex-direction: column;
   margin-top: 64px;
 `;
-
+const Back = styled.div`
+  position: absolute;
+  transform: translate(-1350%, -150%);
+`;
+const MobileBack = styled.img`
+  width: 12px;
+  height: 22px;
+`;
+const HeaderText = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  font-family: Noto Sans CJK KR;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(10%, -420%);
+`;
 const UserProfileContainer = styled.div`
   width: 600px;
   height: 200px;

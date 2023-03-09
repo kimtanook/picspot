@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { addSendedMessage, addSendMessage } from '@/api';
 import { useRouter } from 'next/router';
 import { customAlert } from '@/utils/alerts';
+import { useMediaQuery } from 'react-responsive';
 
 interface Props {
   setModal: (value: boolean) => void;
@@ -52,10 +53,24 @@ function MessageSend({ setModal }: Props) {
     alert('전송완료!');
     setModal(false);
   };
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   return (
     <Wrap>
       <SendWrap>
-        <CancelButton onClick={() => setModal(false)}>〈 취소</CancelButton>
+        <div>
+          {isPc && (
+            <CancelButton onClick={() => setModal(false)}>〈 취소</CancelButton>
+          )}
+          {isMobile && (
+            <CancleBtn
+              onClick={() => setModal(false)}
+              src={'/Back-point.png'}
+            />
+          )}
+
+          {isMobile && <SendTitle>쪽지 보내기</SendTitle>}
+        </div>
         <SendUserName>
           <UserProfileImg src={profileImg} alt="userImg" />
           {userName} 님께 쪽지 보내기
@@ -98,6 +113,22 @@ const CancelButton = styled.button`
   top: 5%;
   left: 5%;
 `;
+const CancleBtn = styled.img`
+  width: 12px;
+  height: 28px;
+  position: absolute;
+  top: 5%;
+  left: 7%;
+  border: none;
+`;
+
+const SendTitle = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  position: absolute;
+  top: 5%;
+  left: 40vw;
+`;
 
 const SendWrap = styled.div`
   background-color: white;
@@ -112,7 +143,9 @@ const SendWrap = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   @media ${(props) => props.theme.mobile} {
-    width: 300px;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
   }
 `;
 const SendUserName = styled.div`
@@ -129,14 +162,18 @@ const SendUserName = styled.div`
   border-radius: 999px;
   font-weight: 700;
   @media ${(props) => props.theme.mobile} {
-    width: 230px;
+    width: 70vw;
   }
 `;
 const UserProfileImg = styled.img`
   width: 52px;
-  width: 52px;
+  height: 52px;
   border-radius: 50%;
   margin-right: 16px;
+  @media ${(props) => props.theme.mobile} {
+    width: 50px;
+    height: 50px;
+  }
 `;
 const SendContainer = styled.div`
   height: 161px;
@@ -146,7 +183,11 @@ const SendContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   @media ${(props) => props.theme.mobile} {
-    width: 240px;
+    width: 85vw;
+    margin-bottom: 0px;
+    height: 161px;
+    justify-content: end;
+    margin-top: 20px;
   }
 `;
 const BodyText = styled.div`
@@ -155,6 +196,7 @@ const BodyText = styled.div`
   margin-bottom: 10px;
   @media ${(props) => props.theme.mobile} {
     display: none;
+    margin-bottom: 0px;
   }
 `;
 const SendTextArea = styled.textarea`
@@ -170,7 +212,8 @@ const TextCount = styled.div`
   justify-content: flex-end;
   width: 420px;
   @media ${(props) => props.theme.mobile} {
-    width: 240px;
+    width: 85vw;
+    margin-top: 5px;
   }
 `;
 const Count = styled.div`
@@ -185,6 +228,6 @@ const SendButton = styled.button`
   height: 48px;
   margin-top: 30px;
   @media ${(props) => props.theme.mobile} {
-    width: 240px;
+    width: 85vw;
   }
 `;
