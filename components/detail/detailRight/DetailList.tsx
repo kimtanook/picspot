@@ -171,7 +171,7 @@ const DetailList = ({ item }: any) => {
 
   //* 지도 클릭 시 카테고리 변경하기
   useEffect(() => {
-    console.log('========saveAddress=========', editSaveAddress);
+    // console.log('========saveAddress=========', editSaveAddress);
     if (!editSaveAddress) {
       return;
     }
