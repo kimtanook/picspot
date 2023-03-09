@@ -14,6 +14,10 @@ import DetailList from '@/components/detail/detailRight/DetailList';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { logEvent } from '@/utils/amplitude';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { dbService } from '@/firebase';
+import { useRecoilState } from 'recoil';
+import { deleteItem } from '@/atom';
 
 const Post = ({ id }: any) => {
   //* useQuery 사용해서 포스트 데이터 불러오기
@@ -25,6 +29,15 @@ const Post = ({ id }: any) => {
     staleTime: 60 * 1000, // 1분, default >> 0
     cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
   });
+  const [, setDeleteItem] = useRecoilState(deleteItem);
+  // 게시물 삭제하기 Recoil
+  const mydata = detail?.filter((item: any) => {
+    return item.id === id;
+  });
+
+  useEffect(() => {
+    mydata && setDeleteItem(mydata[0]);
+  }, []);
 
   const queryClient = useQueryClient();
 

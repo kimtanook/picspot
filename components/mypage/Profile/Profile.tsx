@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { authService } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { customConfirm } from '@/utils/alerts';
-import { useQuery } from 'react-query';
-import { getTakeMessage, updateUser } from '@/api';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import {
@@ -14,6 +13,7 @@ import {
 } from '@/atom';
 import { resetAmplitude } from '@/utils/amplitude';
 import { useMediaQuery } from 'react-responsive';
+import { getRouteRegex } from 'next/dist/shared/lib/router/utils/route-regex';
 
 const imgFile = '/profileicon.svg';
 
@@ -33,6 +33,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
   const nowUser = authService.currentUser;
+  const router = useRouter();
   const isMobile = useMediaQuery({ maxWidth: 785 });
 
   // 프로필 수정 모달 창 버튼
@@ -55,6 +56,8 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
       resetAmplitude();
+      getRouteRegex;
+      router.push('/main?city=제주전체');
     });
   };
 
@@ -74,6 +77,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
           </Link>
         )}
       </>
+      {isMobile && <HeaderText>마이페이지</HeaderText>}
       <div>
         <div onClick={() => setIsOpen(!isOpen)}>
           <MenuPointImg src="/three-point.png" />
@@ -89,7 +93,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       <ProfileImageDiv>
         <ProfileImage img={profileimg}></ProfileImage>
       </ProfileImageDiv>
-
       <ProfileText>
         <ProfileTextdiv>
           <ProfileNickname>
@@ -144,15 +147,24 @@ const ProfileContainer = styled.div`
   }
 `;
 const Back = styled.div`
-  @media ${(props) => props.theme.mobile} {
-    position: absolute;
-    transform: translate(10%, -350%);
-  }
+  position: absolute;
+  transform: translate(10%, -350%);
 `;
 const MobileBack = styled.img`
   width: 12px;
   height: 22px;
 `;
+const HeaderText = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  font-family: Noto Sans CJK KR;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(0%, -320%);
+`;
+
 const MenuPointImg = styled.img`
   display: none;
   @media ${(props) => props.theme.mobile} {
@@ -170,7 +182,6 @@ const Menu = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* transform: translate(110%, -60%); */
     left: 63vw;
     top: 3vh;
     font-size: 13px;
