@@ -24,10 +24,9 @@ function ContentBox({ item }: any) {
           <Image
             src="/main/hover.png"
             alt="hover-collect"
-            layout="responsive"
+            className="image-wrap"
             width={50}
             height={50}
-            style={{ position: 'absolute' }}
           />
         ) : null}
         <Content
@@ -50,4 +49,12 @@ const ImageWrap = styled.div`
   display: block;
   width: 100%;
   height: 100%;
+  & > .image-wrap {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    @media ${(props) => props.theme.mobile} {
+      display: none;
+    }
+  }
 `;

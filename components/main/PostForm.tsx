@@ -156,6 +156,7 @@ const PostForm = () => {
           onSuccess: () => {
             queryClient.invalidateQueries('infiniteData');
             setIsPostMapModal(false);
+            customConfirm('등록을 완료하였습니다!');
           },
         });
       });
@@ -184,7 +185,6 @@ const PostForm = () => {
     const cityMap = saveAddress.split(' ')[1];
     const townMap = saveAddress.split(' ')[2];
 
-    // console.log('townMap', townMap);
     const townSub = [
       '한림읍',
       '조천읍',
@@ -200,18 +200,22 @@ const PostForm = () => {
       '남원읍',
     ];
 
-    if (city === '제주시' && townSub.indexOf(townMap) < 0) {
-      setTown('제주시 시내');
-    } else {
-      setTown(townMap);
-      setCity(cityMap);
-    }
-
-    if (city === '서귀포시' && townSub.indexOf(townMap) < 0) {
-      setTown('서귀포시 시내');
-    } else {
-      setTown(townMap);
-      setCity(cityMap);
+    if (cityMap === '제주시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setCity(cityMap);
+        setTown('제주시 시내');
+      } else {
+        setTown(townMap);
+        setCity(cityMap);
+      }
+    } else if (cityMap === '서귀포시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setCity(cityMap);
+        setTown('서귀포시 시내');
+      } else {
+        setTown(townMap);
+        setCity(cityMap);
+      }
     }
   }, [saveAddress]);
 
@@ -235,7 +239,6 @@ const PostForm = () => {
                 }}
               >
                 {isMobile && <MobileCancle src="/Back-point.png" />}
-                {/* {isPc && ''} */}
               </ModalMapsBackButton>
               내 스팟 추가하기
             </PostFormContenTitle>
@@ -359,9 +362,7 @@ export default PostForm;
 
 const PostFormWrap = styled.div`
   display: flex;
-  /* width: 1200px; */
   @media ${(props) => props.theme.mobile} {
-    /* overflow-y: scroll; */
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
@@ -425,7 +426,6 @@ const PostFormContentTop = styled.div`
   align-items: center;
   margin-top: -30px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: coral; */
     margin-right: 10px;
     margin-top: 0px;
   }
@@ -437,8 +437,6 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    /* margin-top: 20px; */
-    /* padding: 10px; */
     font-size: 18px;
   }
 `;
@@ -449,9 +447,6 @@ const PostFormCategoryWrap = styled.div`
   display: flex;
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: red; */
-    /* display: flex;
-    flex-direction: column; */
   }
 `;
 
@@ -466,7 +461,6 @@ const PostFormSelect = styled.select`
   border: none;
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
-    /* margin-top: 10px; */
   }
 `;
 

@@ -98,6 +98,9 @@ const AddBtn = styled.img`
   left: 86%;
   z-index: 10;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const DeleteBtn = styled.img`
   position: absolute;
@@ -105,4 +108,7 @@ const DeleteBtn = styled.img`
   left: 86%;
   z-index: 10;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
