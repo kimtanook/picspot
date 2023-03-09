@@ -213,20 +213,6 @@ const DetailList = ({ item }: any) => {
     }
   }, [editSaveAddress]);
 
-  // //* mutation 사용해서 counting값 보내기
-  // const { mutate: countMutate } = useMutation(postCounter, {
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries('detailData');
-  //   },
-  // });
-
-  // //* 변화된 counting 값 인지
-  // useEffect(() => {
-  //   if (item.creator !== authService.currentUser?.uid) {
-  //     countMutate(item.id);
-  //   }
-  // }, []);
-
   if (isLoading) return <DataLoading />;
   if (isError) return <DataError />;
 
