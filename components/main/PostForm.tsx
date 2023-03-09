@@ -4,7 +4,7 @@ import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, visibleReset } from '@/api';
 import styled from 'styled-components';
-import MapLandingPage from '../detail/MapLandingPage';
+import MapsPostLanding from '../detail/MapsPostLanding';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
@@ -26,8 +26,6 @@ const PostForm = () => {
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory] =
-    useRecoilState(searchCategoryAtom);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
@@ -226,9 +224,9 @@ const PostForm = () => {
   return (
     <>
       <PostFormWrap>
-        <MapLandingPageWrap>
-          <MapLandingPage />
-        </MapLandingPageWrap>
+        <MapsPostLandingWrap>
+          <MapsPostLanding />
+        </MapsPostLandingWrap>
 
         <PostFormContainer>
           <PostFormContentBox>
@@ -238,7 +236,7 @@ const PostForm = () => {
                   setIsPostMapModal(!postMapModal);
                 }}
               >
-                {isMobile && <MobileCancle src="/Back-point.png" />}
+                {isMobile && <img src="/Back-point.png" />}
               </ModalMapsBackButton>
               내 스팟 추가하기
             </PostFormContenTitle>
@@ -311,7 +309,7 @@ const PostForm = () => {
               <PostFormInputTitle>제목</PostFormInputTitle>
               <PostFormInput
                 placeholder="사진을 소개하는 제목을 적어주세요!"
-                maxLength={15}
+                maxLength={13}
                 onChange={(e) => {
                   setTitle(e.target.value);
                   setInputCount(e.target.value.length);
@@ -319,7 +317,7 @@ const PostForm = () => {
               />
               <PostFormInputCount>
                 <span>{inputCount}</span>
-                <span>/15 자</span>
+                <span>/13 자</span>
               </PostFormInputCount>
               <PostFormInputTitle>내용</PostFormInputTitle>
               <PostFormContentTextWrap>
@@ -373,7 +371,7 @@ const PostFormWrap = styled.div`
   }
 `;
 
-const MapLandingPageWrap = styled.div`
+const MapsPostLandingWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 100vh;
@@ -548,4 +546,3 @@ const ModalMapsBackButton = styled.div`
     left: 5%;
   }
 `;
-const MobileCancle = styled.img``;

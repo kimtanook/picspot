@@ -4,12 +4,6 @@ import React from 'react';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import MapPanTo from './MapPanTo';
-// 타입해결하기
-interface IModalMapsMarkerProps {
-  item: IMarkerData;
-  isOpen: any;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 const ModalMapsMarker = ({
   item,
@@ -70,7 +64,7 @@ const ModalMapsMarker = ({
 
 const OverLayWrap = styled.div`
   width: 185px;
-  margin-top: -300px;
+  margin-top: -160%;
   background-color: white;
   box-shadow: 2.5px 5px 5px gray;
   border-radius: 3px;
@@ -84,10 +78,10 @@ const OverLayWrap = styled.div`
 `;
 
 const OverLayTitle = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   padding: 13px;
-  white-space: normal;
+  /* white-space: normal; */
 `;
 
 const OverLayImg = styled.div`

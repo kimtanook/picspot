@@ -1,21 +1,17 @@
-import { infoDivAtom, placeAtom, searchCategoryAtom } from '@/atom';
+import { infoDivAtom, placeAtom } from '@/atom';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { CustomButton } from '../common/CustomButton';
-import Maps from './Maps';
+import MapsPost from './MapsPost';
 
-const MapLandingPage = () => {
+const MapsPostLanding = () => {
   const [place, setPlace] = useRecoilState(placeAtom);
-
   const [inputText, setInputText] = useState('');
-  // const [infoDiv, setInfoDiv] = useState('');
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
 
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.currentTarget.value);
   };
-
   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPlace(inputText);
@@ -37,13 +33,13 @@ const MapLandingPage = () => {
           </SearchButton>
         </StyledForm>
 
-        <Maps />
+        <MapsPost />
       </StyleContainer>
     </MapWrap>
   );
 };
 
-export default MapLandingPage;
+export default MapsPostLanding;
 
 const StyleContainer = styled.div`
   position: relative;
@@ -69,7 +65,6 @@ const StyledInput = styled.input`
   box-shadow: 0 3px 2px 1px gray;
   @media ${(props) => props.theme.mobile} {
     margin-top: 5%;
-    /* width: 100%; */
   }
 `;
 
@@ -109,7 +104,6 @@ const SearchButton = styled.button`
 
 const MapWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
-    /* width: 375; */
     width: 100%;
     margin-top: 55%;
   }
