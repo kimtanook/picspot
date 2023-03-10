@@ -228,7 +228,7 @@ export const addCollectionData = async ({
   collector,
   town,
   imgUrl,
-}: CollectData) => {
+}: any) => {
   setDoc(
     doc(dbService, 'collection', uid),
     {
@@ -242,7 +242,7 @@ export const addCollectionData = async ({
 };
 
 //* collection  데이터 삭제하기
-export const deleteCollectionData = async ({ uid, collector }: CollectData) => {
+export const deleteCollectionData = async ({ uid, collector }: any) => {
   updateDoc(doc(dbService, 'collection', uid), {
     collector: arrayRemove(collector),
   });
