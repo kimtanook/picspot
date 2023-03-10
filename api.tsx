@@ -126,7 +126,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
 
 //* 스토어에서 데이터 불러오기
 export const getData = async () => {
-  const response: { id: string }[] = [];
+  const response: any = [];
 
   const querySnapshot = await getDocs(collection(dbService, 'post'));
   querySnapshot.forEach((doc) => {
