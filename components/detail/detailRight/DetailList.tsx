@@ -1,4 +1,4 @@
-import { deleteData, updateData, visibleReset } from '@/api';
+import { deleteData, postCounter, updateData, visibleReset } from '@/api';
 import {
   editBtnToggleAtom,
   editPlaceAtom,
@@ -8,16 +8,19 @@ import {
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
-import { customAlert, customConfirm } from '@/utils/alerts';
+import { customAlert } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
 import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+// import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const DetailList = ({ item }: any) => {
   //! global state
@@ -27,6 +30,11 @@ const DetailList = ({ item }: any) => {
     useRecoilState(editSaveLatLngAtom);
   const [editSaveAddress, setEditSaveAddress] =
     useRecoilState(editSaveAddressAtom);
+  // 반응형 이용하기
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 785 });
+  const isPc = useMediaQuery({ minWidth: 786 });
 
   //! component state
   const [editTitle, setEditTitle] = useState('');
@@ -96,8 +104,8 @@ const DetailList = ({ item }: any) => {
       return;
     }
 
-    if (editTitleInputCount > 20) {
-      customAlert('제목이 20자를 초과했어요.');
+    if (editTitleInputCount > 16) {
+      customAlert('제목이 15자를 초과했어요.');
       return;
     }
 
@@ -111,8 +119,8 @@ const DetailList = ({ item }: any) => {
       return;
     }
 
-    if (editContentInputCount > 35) {
-      customAlert('내용이 35자를 초과했어요.');
+    if (editContentInputCount > 101) {
+      customAlert('내용이 100자를 초과했어요.');
       return;
     }
 
@@ -220,33 +228,107 @@ const DetailList = ({ item }: any) => {
     return (
       <ListContainer>
         <TitleAndView>
+          <>
+            {isMobile && (
+              <Link href="/main?city=제주전체">
+                <Back
+                  onClick={() => {
+                    // sessionStorage.clear();
+                    localStorage.clear();
+                  }}
+                >
+                  <MobileBack src="/Back-point.png" alt="image" />
+                </Back>
+              </Link>
+            )}
+          </>
           <Title>{item.title} </Title>
-          <View>
-            <Image
-              src="/view_icon.svg"
-              alt="image"
-              width={20}
-              height={20}
-              style={{ marginRight: 5 }}
-            />
-            <span style={{ color: '#1882FF', width: 70 }}>
-              {item.clickCounter} view
-            </span>
-          </View>
+          {isPc && (
+            <View>
+              <Image
+                src="/view_icon.svg"
+                alt="image"
+                width={24}
+                height={16}
+                style={{ marginRight: 5 }}
+              />
+              <span style={{ color: '#1882FF', width: 70 }}>
+                {item.clickCounter} view
+              </span>
+            </View>
+          )}
+
           {authService.currentUser?.uid === item.creator ? (
-            <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
-          ) : null}
+            <>
+              <div>
+                <div onClick={() => setIsOpen(!isOpen)}>
+                  <MenuPointImg src="/three-point.png" />
+                </div>
+                {isOpen === true ? (
+                  <Menu>
+                    <MenuItem onClick={onClickEditToggle}>게시물 수정</MenuItem>
+                    {/* <MenuItem onClick={postDeleteModalButton}>
+                      게시물 삭제
+                    </MenuItem> */}
+                  </Menu>
+                ) : null}
+              </div>
+            </>
+          ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
+          null}
         </TitleAndView>
         <CityAndTownAndAddress>
           <City>{item.city}</City>
           <Town>{item.town}</Town>
+          <HowManyView>
+            {isMobile && (
+              <View>
+                <Image
+                  src="/view_icon.svg"
+                  alt="image"
+                  width={24}
+                  height={16}
+                  style={{ marginRight: 5 }}
+                />
+                <span style={{ color: '#1882FF', width: 70 }}>
+                  {item.clickCounter} view
+                </span>
+              </View>
+            )}
+          </HowManyView>
+
           <Address>
-            <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-            <AddressText>{item.address}</AddressText>
+            {isPc && (
+              <>
+                <Image
+                  src="/spot_icon.svg"
+                  alt="image"
+                  width={24}
+                  height={24}
+                />{' '}
+                <AddressText>{item.address}</AddressText>
+              </>
+            )}
+
+            <AddressCopy>copy</AddressCopy>
           </Address>
         </CityAndTownAndAddress>
+        <>
+          {isMobile && (
+            <AddressWrap>
+              <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
+              {/* <CopyToClipboard
+                text={item.address}
+                onCopy={() => alert('클립보드에 복사되었습니다.')}
+              > */}
+              <AddressText>{item.address}</AddressText>
+              {/* </CopyToClipboard> */}
+            </AddressWrap>
+          )}
+        </>
         <Content>
-          <TipSpan>Tip |</TipSpan>
+          <TipSpan>Tip</TipSpan>
+          <TipBar src="/bar.png" alt="image" />
           <ContentSpan>{item.content}</ContentSpan>
         </Content>
       </ListContainer>
@@ -256,6 +338,7 @@ const DetailList = ({ item }: any) => {
       <ListContainer>
         <TitleAndView>
           <TitleInput
+            maxLength={15}
             defaultValue={item.title}
             onChange={(e) => {
               setEditTitle(e.target.value);
@@ -271,7 +354,7 @@ const DetailList = ({ item }: any) => {
               marginBottom: 'auto',
             }}
           >
-            {editTitleInputCount} /20
+            {editTitleInputCount} /15
           </span>
 
           {editBtnToggle ? (
@@ -300,25 +383,28 @@ const DetailList = ({ item }: any) => {
             </EditBtnCotainer>
           ) : (
             <>
-              <View>
-                <Image
-                  src="/view_icon.svg"
-                  alt="image"
-                  width={20}
-                  height={20}
-                  style={{ marginRight: 5 }}
-                />
-                <span
-                  style={{
-                    color: '#1882FF',
-                  }}
-                >
-                  {item.clickCounter} view
-                </span>
-              </View>
-
               <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
             </>
+          )}
+          {isPc ? (
+            <View>
+              <Image
+                src="/view_icon.svg"
+                alt="image"
+                width={20}
+                height={20}
+                style={{ marginRight: 5 }}
+              />
+              <span
+                style={{
+                  color: '#1882FF',
+                }}
+              >
+                {item.clickCounter} view
+              </span>
+            </View>
+          ) : (
+            ''
           )}
         </TitleAndView>
         <CityAndTownAndAddress>
@@ -362,7 +448,7 @@ const DetailList = ({ item }: any) => {
             )}
           </TownInput>
           <Address>
-            <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
+            <Image src="/spot_icon.svg" alt="image" width={24} height={24} />{' '}
             <span>{item.address}</span>
           </Address>
         </CityAndTownAndAddress>
@@ -370,6 +456,7 @@ const DetailList = ({ item }: any) => {
           Tip
           <ContentInput
             // value={editContent}
+            maxLength={100}
             defaultValue={item.content}
             onChange={(e) => {
               setEditContent(e.target.value);
@@ -386,7 +473,7 @@ const DetailList = ({ item }: any) => {
               marginLeft: 20,
             }}
           >
-            {editContentInputCount} /35
+            {editContentInputCount} /100
           </span>
         </Content>
       </ListContainer>
@@ -401,30 +488,111 @@ const ListContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
+    margin-top: -20px;
+    margin-left: 15px;
     width: 350px;
     height: 120px;
     margin: auto;
   }
 `;
+const Back = styled.div`
+  z-index: 100;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+`;
+const MobileBack = styled.img`
+  width: 12px;
+  height: 22px;
+`;
+const MenuPointImg = styled.img`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0%;
+  top: 30%;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4px;
+    height: 16px;
+  }
+`;
+// const MenuPointImg = styled.img`
+//   position: absolute;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   right: 0%;
+//   top: 0%;
+//   @media ${(props) => props.theme.mobile} {
+//     position: absolute;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//   }
+// `;
 
+const Menu = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  right: -15%;
+  top: 0;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.21);
+  width: 88px;
+  height: 90px;
+  place-content: center;
+  gap: 19px;
+  background-color: #f4f4f4;
+  transition: 0.3s;
+  cursor: pointer;
+`;
+const MenuItem = styled.div`
+  display: flex;
+  transition: 0.3s;
+  padding: 3px;
+  cursor: pointer;
+  :hover {
+    transition: 0.4s;
+    background-color: #4176ff;
+    color: white;
+    border-radius: 24px;
+  }
+`;
 const TitleAndView = styled.div`
   display: flex;
+  justify-content: flex-start;
+  position: relative;
   flex-direction: row;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
     position: absolute;
     top: 70px;
+    padding-left: 30px;
   }
 `;
 
 const Title = styled.div`
+  position: relative;
   font-size: 30px;
   margin-right: 20px;
+  margin-bottom: 5px;
   width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 28px;
+  font-family: 'Noto Sans CJK KR';
+  font-weight: bold;
+  color: #212121;
   @media ${(props) => props.theme.mobile} {
     font-size: 20px;
   }
@@ -439,12 +607,23 @@ const TitleInput = styled.input`
   white-space: nowrap;
 `;
 
+const HowManyView = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    padding-left: 100px;
+    width: 40%;
+  }
+`;
+
 const View = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-  width: 90px;
+  width: 100px;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
-    width: 80px;
+    width: 75px;
+    margin-left: 0px;
   }
 `;
 
@@ -474,7 +653,7 @@ const CityAndTownAndAddress = styled.div`
   display: flex;
   gap: 10px;
   @media ${(props) => props.theme.mobile} {
-    width: 350px;
+    /* width: 350px; */
     margin-top: 10px;
   }
 `;
@@ -485,12 +664,16 @@ const City = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 200px;
-  height: 40px;
+  width: 99px;
+  height: 30px;
   text-align: center;
   padding-top: 4px;
+  font-size: 12px;
+  font-family: 'Noto Sans CJK KR';
+  color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
-    width: 75px;
+    width: 80px;
+    height: 25px;
     font-size: 12px;
   }
 `;
@@ -510,12 +693,16 @@ const Town = styled.div`
   align-items: center;
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 200px;
-  height: 40px;
+  width: 88px;
+  height: 30px;
   text-align: center;
   padding-top: 4px;
+  font-size: 12px;
+  font-family: 'Noto Sans CJK KR';
+  color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
-    width: 75px;
+    width: 66px;
+    height: 25px;
     font-size: 12px;
   }
 `;
@@ -529,14 +716,38 @@ const TownInput = styled.select`
   border: none;
 `;
 
+const AddressWrap = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+  }
+`;
 const Address = styled.div`
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
+  font-size: 16px;
   align-items: center;
   gap: 10px;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
-    width: 200px;
+    width: 0px;
+    font-size: 16px;
+  }
+`;
+const AddressCopy = styled.div`
+  display: flex;
+  align-items: center;
+  text-decoration: underline;
+  color: #8e8e93;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
+  width: 31px;
+  height: 21px;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(0%, 190%);
+    width: 10px;
   }
 `;
 
@@ -553,14 +764,19 @@ const AddressText = styled.span`
 const Content = styled.div`
   display: flex;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #f4f4f4;
   width: 100%;
-  min-height: 50px;
+  /* height: 50px; */
+  max-height: 100px;
   padding-left: 20px;
   color: #8e8e93;
-  margin-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
+    max-height: 200px;
   }
 `;
 
@@ -576,40 +792,30 @@ const ContentInput = styled.input`
 `;
 
 const TipSpan = styled.span`
-  width: 50px;
+  width: 10px;
+  font-size: 16px;
+  font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
     width: 30px;
   }
 `;
-
+const TipBar = styled.img`
+  width: 3px;
+  height: 24px;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 30px;
+  @media ${(props) => props.theme.mobile} {
+    width: 3px;
+    margin-left: 10px;
+  }
+`;
 const ContentSpan = styled.span`
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* text-overflow: ellipsis; */
+  /* white-space: nowrap; */
   margin-left: 20px;
   margin-right: 20px;
-`;
-
-const EditTitleClearBtn = styled.div`
-  position: absolute;
-  top: 18.5%;
-  right: 42%;
-  width: 24px;
-  height: 24px;
-  background-image: url(/cancle-button.png);
-  background-repeat: no-repeat;
-
-  cursor: pointer;
-`;
-
-const EditContentClearBtn = styled.div`
-  position: absolute;
-  top: 33.8%;
-  right: 19%;
-  width: 24px;
-  height: 24px;
-  background-image: url(/cancle-button.png);
-  background-repeat: no-repeat;
-
-  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
 `;

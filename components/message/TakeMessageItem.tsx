@@ -148,6 +148,7 @@ const MessageSelect = styled.input`
 const MessageUser = styled.div`
   width: 60px;
   overflow: hidden;
+
   @media ${(props) => props.theme.mobile} {
     align-self: center;
     font-size: 15px;

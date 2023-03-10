@@ -4,7 +4,7 @@ import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, visibleReset } from '@/api';
 import styled from 'styled-components';
-import MapLandingPage from '../detail/MapLandingPage';
+import MapsPostLanding from '../detail/MapsPostLanding';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
@@ -26,8 +26,6 @@ const PostForm = () => {
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory] =
-    useRecoilState(searchCategoryAtom);
   const fileInput: any = useRef();
 
   const [inputCount, setInputCount] = useState(0);
@@ -156,6 +154,7 @@ const PostForm = () => {
           onSuccess: () => {
             queryClient.invalidateQueries('infiniteData');
             setIsPostMapModal(false);
+            customConfirm('등록을 완료하였습니다!');
           },
         });
       });
@@ -184,7 +183,6 @@ const PostForm = () => {
     const cityMap = saveAddress.split(' ')[1];
     const townMap = saveAddress.split(' ')[2];
 
-    // console.log('townMap', townMap);
     const townSub = [
       '한림읍',
       '조천읍',
@@ -200,18 +198,22 @@ const PostForm = () => {
       '남원읍',
     ];
 
-    if (city === '제주시' && townSub.indexOf(townMap) < 0) {
-      setTown('제주시 시내');
-    } else {
-      setTown(townMap);
-      setCity(cityMap);
-    }
-
-    if (city === '서귀포시' && townSub.indexOf(townMap) < 0) {
-      setTown('서귀포시 시내');
-    } else {
-      setTown(townMap);
-      setCity(cityMap);
+    if (cityMap === '제주시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setCity(cityMap);
+        setTown('제주시 시내');
+      } else {
+        setTown(townMap);
+        setCity(cityMap);
+      }
+    } else if (cityMap === '서귀포시') {
+      if (townSub.indexOf(townMap) < 0) {
+        setCity(cityMap);
+        setTown('서귀포시 시내');
+      } else {
+        setTown(townMap);
+        setCity(cityMap);
+      }
     }
   }, [saveAddress]);
 
@@ -222,9 +224,9 @@ const PostForm = () => {
   return (
     <>
       <PostFormWrap>
-        <MapLandingPageWrap>
-          <MapLandingPage />
-        </MapLandingPageWrap>
+        <MapsPostLandingWrap>
+          <MapsPostLanding />
+        </MapsPostLandingWrap>
 
         <PostFormContainer>
           <PostFormContentBox>
@@ -234,8 +236,7 @@ const PostForm = () => {
                   setIsPostMapModal(!postMapModal);
                 }}
               >
-                {isMobile && <MobileCancle src="/Back-point.png" />}
-                {/* {isPc && ''} */}
+                {isMobile && <img src="/Back-point.png" />}
               </ModalMapsBackButton>
               내 스팟 추가하기
             </PostFormContenTitle>
@@ -308,7 +309,7 @@ const PostForm = () => {
               <PostFormInputTitle>제목</PostFormInputTitle>
               <PostFormInput
                 placeholder="사진을 소개하는 제목을 적어주세요!"
-                maxLength={15}
+                maxLength={13}
                 onChange={(e) => {
                   setTitle(e.target.value);
                   setInputCount(e.target.value.length);
@@ -316,7 +317,7 @@ const PostForm = () => {
               />
               <PostFormInputCount>
                 <span>{inputCount}</span>
-                <span>/15 자</span>
+                <span>/13 자</span>
               </PostFormInputCount>
               <PostFormInputTitle>내용</PostFormInputTitle>
               <PostFormContentTextWrap>
@@ -359,9 +360,7 @@ export default PostForm;
 
 const PostFormWrap = styled.div`
   display: flex;
-  /* width: 1200px; */
   @media ${(props) => props.theme.mobile} {
-    /* overflow-y: scroll; */
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
@@ -372,7 +371,7 @@ const PostFormWrap = styled.div`
   }
 `;
 
-const MapLandingPageWrap = styled.div`
+const MapsPostLandingWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 100vh;
@@ -425,7 +424,6 @@ const PostFormContentTop = styled.div`
   align-items: center;
   margin-top: -30px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: coral; */
     margin-right: 10px;
     margin-top: 0px;
   }
@@ -437,8 +435,6 @@ const PostFormContentName = styled.span`
   padding: 10px;
   font-size: 20px;
   @media ${(props) => props.theme.mobile} {
-    /* margin-top: 20px; */
-    /* padding: 10px; */
     font-size: 18px;
   }
 `;
@@ -449,9 +445,6 @@ const PostFormCategoryWrap = styled.div`
   display: flex;
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
-    /* background-color: red; */
-    /* display: flex;
-    flex-direction: column; */
   }
 `;
 
@@ -466,7 +459,6 @@ const PostFormSelect = styled.select`
   border: none;
   background-color: #e7e7e7;
   @media ${(props) => props.theme.mobile} {
-    /* margin-top: 10px; */
   }
 `;
 
@@ -554,4 +546,3 @@ const ModalMapsBackButton = styled.div`
     left: 5%;
   }
 `;
-const MobileCancle = styled.img``;

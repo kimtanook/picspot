@@ -187,7 +187,7 @@ const AuthSignUp = () => {
             />
             <EditPwShowBtn onClick={toggleHidePassword}></EditPwShowBtn>
           </EditInputBox>
-          {/* <AuthWarn>{errors?.confirm?.message}</AuthWarn> */}
+
           <AuthConfirm>{errors?.confirm?.message}</AuthConfirm>
           <EditInputBox>
             {isMobile && <EditInputText> 닉네임 설정</EditInputText>}
@@ -270,7 +270,6 @@ const SignUpEmailPwContainer = styled.form`
   display: flex;
   flex-direction: column;
   width: 90%;
-  margin: 0 auto;
   margin-top: 40px;
 `;
 
@@ -284,7 +283,7 @@ const SignUpInput = styled.input`
   height: 48px;
   font-size: 14px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-5%, 0%);
+    /* transform: translate(-5%, 0%); */
     font-size: 12px;
     width: 326px;
     height: 48px;
@@ -305,12 +304,13 @@ const EditInputBox = styled.div`
 `;
 const EditInputText = styled.div`
   font-size: 12px;
+  font-weight: bold;
   font-family: Noto Sans CJK KR;
   width: 80%;
   height: 20px;
   position: inherit;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-8%, 0%);
+    transform: translate(-0%, 0%);
     position: inherit;
   }
 `;
@@ -325,7 +325,7 @@ const EditclearBtn = styled.div`
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-340%, -210%);
+    transform: translate(-270%, -210%);
     position: inherit;
   }
 `;
@@ -339,7 +339,7 @@ const EditPwShowBtn = styled.div`
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-340%, -220%);
+    transform: translate(-270%, -220%);
     position: inherit;
   }
 `;
@@ -348,8 +348,9 @@ const AuthWarn = styled.p`
   font-size: 10px;
   height: 10px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-4%, -10%);
+    transform: translate(0%, -10%);
     font-size: 12px;
+    font-family: Noto Sans CJK KR;
     border: none;
     background: transparent;
   }
@@ -359,7 +360,7 @@ const AuthConfirm = styled.p`
   font-size: 10px;
   height: 10px;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-4%, -170%);
+    transform: translate(0%, -170%);
     font-size: 12px;
     border: none;
     background: transparent;

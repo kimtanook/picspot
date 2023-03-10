@@ -39,6 +39,7 @@ const DetailProfile = ({ item }: any) => {
                     alt="userImage"
                     layout="fill"
                     priority={true}
+                    style={{ borderRadius: '50%' }}
                   />
                 </ProfileImgBox>
                 <ProfileName>{obj.userName}</ProfileName>
@@ -71,8 +72,8 @@ const ProfileContainer = styled.div`
 const ProfileImgBox = styled.div`
   position: relative;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   margin-right: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 30px;

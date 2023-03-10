@@ -1,4 +1,4 @@
-import { updateData } from '@/api';
+import { postCounter, updateData } from '@/api';
 import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';

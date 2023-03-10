@@ -1,8 +1,8 @@
 import {
-  addFollow,
-  addFollowing,
-  deleteFollow,
-  deleteFollowing,
+  addFollow2,
+  addFollowing2,
+  deleteFollow2,
+  deleteFollowing2,
   getFollow,
   getFollowing,
   getUser,
@@ -20,6 +20,7 @@ import { messageSendToggle } from '@/atom';
 import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
 import { useMediaQuery } from 'react-responsive';
+import Link from 'next/link';
 
 function Profile() {
   const queryClient = useQueryClient();
@@ -55,6 +56,7 @@ function Profile() {
   const userData = getUserData?.filter(
     (item: { [key: string]: string }) => item.uid === userId
   )[0];
+  // console.log('userData: ', userData);
 
   //* 내가 팔로잉한 사람 uid가 담긴 배열
   const { data: getMyFollowing } = useQuery('getMyFollowing', getFollowing, {
@@ -67,8 +69,14 @@ function Profile() {
   // console.log('getMyFollowing: ', getMyFollowing);
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
-  const { mutate: followingMutate } = useMutation(addFollowing);
-  const { mutate: followMutate } = useMutation(addFollow, {
+  const { mutate: followingMutate } = useMutation(addFollowing2, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
+      setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
+    },
+    onError: () => {},
+  });
+  const { mutate: followMutate } = useMutation(addFollow2, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
       setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
@@ -79,14 +87,20 @@ function Profile() {
   //* 팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
     // console.log('item: ', item);
-    followingMutate({ ...item, uid: authService?.currentUser?.uid });
-    followMutate({ ...item, uid: authService?.currentUser?.uid });
+    followingMutate({ ...item, id: authService?.currentUser?.uid });
+    followMutate({ ...item, id: authService?.currentUser?.uid });
     logEvent('팔로잉 버튼', { from: 'userprofile page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
-  const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing);
-  const { mutate: deleteFollowMutate } = useMutation(deleteFollow, {
+  const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing2, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
+      setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
+    },
+    onError: () => {},
+  });
+  const { mutate: deleteFollowMutate } = useMutation(deleteFollow2, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
       setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
@@ -97,8 +111,8 @@ function Profile() {
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowingBtn = (item: any) => {
     // console.log('item: ', item);
-    deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
-    deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
+    deleteFollowingMutate({ ...item, id: authService?.currentUser?.uid });
+    deleteFollowMutate({ ...item, id: authService?.currentUser?.uid });
     logEvent('언팔로잉 버튼', { from: 'userprofile page' });
   };
 
@@ -108,6 +122,13 @@ function Profile() {
   useEffect(() => {
     logEvent('유저 프로필 페이지', { from: 'userprofile page' });
   }, []);
+
+  console.log(
+    'getMyFollowing?.indexOf(userId): ',
+    getMyFollowing?.indexOf(userId)
+  );
+
+  console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
 
   return (
     <>
@@ -123,34 +144,56 @@ function Profile() {
       )}
 
       <UserContainer>
+        <>
+          {isMobile && (
+            <Link href="/main?city=제주전체">
+              <Back
+                onClick={() => {
+                  // sessionStorage.clear();
+                  localStorage.clear();
+                }}
+              >
+                <MobileBack src="/Back-point.png" alt="image" />
+              </Back>
+            </Link>
+          )}
+        </>
+        {isMobile && <HeaderText>유저페이지</HeaderText>}
         <UserProfileContainer>
           <ProfileContainer>
             <ProfileImage img={userData?.userImg}></ProfileImage>
             <ProfileText>
               <ProfileTextWrap>
                 <ProfileNickname>{userData?.userName}님</ProfileNickname>
-                {getMyFollowing?.indexOf(userId) === -1 ? (
-                  <FollowingBtn onClick={() => onClickFollowingBtn(userData)}>
+
+                {authService.currentUser ? (
+                  getMyFollowing?.indexOf(userId) === undefined ||
+                  getMyFollowing?.indexOf(userId) === -1 ? (
+                    <FollowingBtn onClick={() => onClickFollowingBtn(userData)}>
+                      <FollowingCheckAirplane
+                        src="/following-checked.png"
+                        alt="image"
+                      />
+                      팔로잉
+                    </FollowingBtn>
+                  ) : (
+                    <FollowingBtn
+                      onClick={() => onClickDeleteFollowingBtn(userData)}
+                    >
+                      언팔로잉
+                    </FollowingBtn>
+                  )
+                ) : null}
+
+                {authService.currentUser ? (
+                  <SendMsg onClick={() => setSendMsgToggle(true)}>
                     <FollowingCheckAirplane
-                      src="/following-checked.png"
+                      src="/airplane-white.png"
                       alt="image"
-                    />
-                    팔로잉
-                  </FollowingBtn>
-                ) : (
-                  <FollowingBtn
-                    onClick={() => onClickDeleteFollowingBtn(userData)}
-                  >
-                    언팔로잉
-                  </FollowingBtn>
-                )}
-                <SendMsg onClick={() => setSendMsgToggle(true)}>
-                  <FollowingCheckAirplane
-                    src="/airplane-white.png"
-                    alt="image"
-                  />{' '}
-                  쪽지보내기
-                </SendMsg>
+                    />{' '}
+                    쪽지보내기
+                  </SendMsg>
+                ) : null}
               </ProfileTextWrap>
 
               <Follow>
@@ -241,7 +284,24 @@ const UserContainer = styled.div`
   flex-direction: column;
   margin-top: 64px;
 `;
-
+const Back = styled.div`
+  position: absolute;
+  transform: translate(-1350%, -150%);
+`;
+const MobileBack = styled.img`
+  width: 12px;
+  height: 22px;
+`;
+const HeaderText = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  font-family: Noto Sans CJK KR;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(10%, -420%);
+`;
 const UserProfileContainer = styled.div`
   width: 600px;
   height: 200px;

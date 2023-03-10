@@ -81,17 +81,19 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
           )}
         </>
       ) : null}
-
       <Link href={`/detail/${item.id}`}>
-        <Image
-          src={item?.imgUrl}
-          alt="postImg"
-          layout="responsive"
-          width={50}
-          height={50}
-          priority={true}
-          onClick={saveScroll}
-        />
+        <ImageBox>
+          <Image
+            src={item?.imgUrl}
+            alt="postImg"
+            width={252}
+            height={300}
+            priority={true}
+            className="image-box"
+            quality={75}
+            onClick={saveScroll}
+          />
+        </ImageBox>
       </Link>
     </>
   );
@@ -116,5 +118,11 @@ const DeleteBtn = styled.img`
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     display: none;
+  }
+`;
+const ImageBox = styled.div`
+  & > .image-box {
+    width: 100%;
+    height: 100%;
   }
 `;
