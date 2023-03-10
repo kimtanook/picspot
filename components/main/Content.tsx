@@ -92,7 +92,6 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
             onClick={saveScroll}
             className="image-box"
             quality={75}
-            onClick={saveScroll}
           />
         </ImageBox>
       </Link>
