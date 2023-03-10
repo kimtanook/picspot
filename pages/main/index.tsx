@@ -236,17 +236,30 @@ export default function Main() {
             <DataError />
           ) : (
             <GridBox>
-              <ResponsiveMasonry
-                columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
-              >
-                <Masonry columnsCount={4}>
-                  {data?.pages.map((data) =>
-                    data?.map((item: { [key: string]: string }) => (
-                      <ContentBox key={uuidv4()} item={item} />
-                    ))
-                  )}
-                </Masonry>
-              </ResponsiveMasonry>
+              {data?.pages[0]?.length === 0 ? (
+                <EmptyPostBox>
+                  <Image
+                    src="/main/empty-icon.png"
+                    alt="empty-icon"
+                    className="empty-image"
+                    width={100}
+                    height={100}
+                  />
+                  <div>게시글이 없습니다.</div>
+                </EmptyPostBox>
+              ) : (
+                <ResponsiveMasonry
+                  columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
+                >
+                  <Masonry columnsCount={4}>
+                    {data?.pages.map((data) =>
+                      data?.map((item: { [key: string]: string }) => (
+                        <ContentBox key={uuidv4()} item={item} />
+                      ))
+                    )}
+                  </Masonry>
+                </ResponsiveMasonry>
+              )}
             </GridBox>
           )}
 
@@ -394,6 +407,21 @@ const GridBox = styled.div`
   width: 80%;
   @media ${(props) => props.theme.mobile} {
     width: 375px;
+  }
+`;
+
+const EmptyPostBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  & > .empty-image {
+    width: 100%;
+    height: 100%;
   }
 `;
 
