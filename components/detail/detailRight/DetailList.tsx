@@ -20,6 +20,7 @@ import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+// import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const DetailList = ({ item }: any) => {
   //! global state
@@ -316,7 +317,12 @@ const DetailList = ({ item }: any) => {
           {isMobile && (
             <AddressWrap>
               <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
+              {/* <CopyToClipboard
+                text={item.address}
+                onCopy={() => alert('클립보드에 복사되었습니다.')}
+              > */}
               <AddressText>{item.address}</AddressText>
+              {/* </CopyToClipboard> */}
             </AddressWrap>
           )}
         </>
