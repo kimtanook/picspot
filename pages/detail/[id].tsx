@@ -36,8 +36,8 @@ const Post = ({ id }: any) => {
 
   //* Amplitude 이벤트 생성
   useEffect(() => {
+    // console.log('디테일 페이지가 렌더링 되었습니다.');
     mydata && setDeleteItem(mydata[0]);
-    logEvent('디테일 페이지', { from: 'detail page' });
   }, []);
 
   const queryClient = useQueryClient();
@@ -56,6 +56,7 @@ const Post = ({ id }: any) => {
     if (creator?.creator !== authService.currentUser?.uid) {
       countMutate(id);
     }
+    logEvent('디테일 페이지', { from: 'detail page' });
   }, []);
 
   if (isLoading) return <DataLoading />;
