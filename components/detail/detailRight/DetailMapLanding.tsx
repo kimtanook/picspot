@@ -5,7 +5,7 @@ import DetailMaps from './DetailMaps';
 import { useRecoilState } from 'recoil';
 import { editPlaceAtom } from '@/atom';
 
-const DetailMapLanding = ({}: any) => {
+const DetailMapLanding = () => {
   //! global state
   const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
 

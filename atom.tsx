@@ -93,7 +93,7 @@ export const editPlaceAtom = atom({
 
 export const editSaveLatLngAtom = atom({
   key: `editSaveLatLngAtom${uuidv4()}`,
-  default: [],
+  default: [] as any,
 });
 
 export const editSaveAddressAtom = atom({

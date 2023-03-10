@@ -19,15 +19,14 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-const DetailList = ({ item }: any) => {
+const DetailList = ({ item }: ItemProps) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
   const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
-  const [editSaveLatLng, setEditSaveLatLng]: any =
+  const [editSaveLatLng, setEditSaveLatLng] =
     useRecoilState(editSaveLatLngAtom);
   const [editSaveAddress, setEditSaveAddress] =
     useRecoilState(editSaveAddressAtom);
-
   //! component state
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
@@ -48,10 +47,13 @@ const DetailList = ({ item }: any) => {
   const [editContentInputCount, setEditContentInputCount] = useState(0);
 
   //* useMutation 사용해서 데이터 삭제하기
-  const { mutate: onDeleteData } = useMutation(deleteData);
+  const { mutate: onDeleteData } = useMutation<undefined, undefined, string>(
+    deleteData
+  );
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
-  const onClickDelete = (docId: any) => {
+  const onClickDelete = (docId: string) => {
+    // console.log('docId: ', docId);
     const imageRef = ref(storageService, `images/${item.imgPath}`);
 
     Swal.fire({
@@ -87,10 +89,15 @@ const DetailList = ({ item }: any) => {
   };
 
   //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdateData, isLoading, isError } = useMutation(updateData);
+  const {
+    mutate: onUpdateData,
+    isLoading,
+    isError,
+  } = useMutation<undefined, undefined, DeatailListItemType>(updateData);
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
-  const onClickEdit = (data: any) => {
+  const onClickEdit = (data: DeatailListItemType) => {
+    // console.log('data: ', data);
     if (titleInput.current?.value === '' || data.title === '') {
       customAlert('제목을 입력해주세요');
       return;
@@ -150,11 +157,11 @@ const DetailList = ({ item }: any) => {
     });
   };
 
-  const onChangeCityInput = (e: any) => {
+  const onChangeCityInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEditCity(e.target.value);
   };
 
-  const onChangeTownInput = (e: any) => {
+  const onChangeTownInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEditTown(e.target.value);
     setEditPlace(e.target.value);
   };
@@ -292,7 +299,6 @@ const DetailList = ({ item }: any) => {
                     lat: editSaveLatLng.Ma,
                     long: editSaveLatLng.La,
                     address: editSaveAddress,
-                    // ...editState,
                   })
                 }
               >

@@ -18,7 +18,7 @@ import { authService } from '@/firebase';
 import { useRecoilState } from 'recoil';
 import { deleteItem } from '@/atom';
 
-const Post = ({ id }: any) => {
+const Post = ({ id }: ParamsType) => {
   //* useQuery 사용해서 포스트 데이터 불러오기
   const {
     data: detail,
@@ -29,14 +29,14 @@ const Post = ({ id }: any) => {
     cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
   });
   const [, setDeleteItem] = useRecoilState(deleteItem);
+
   // 게시물 삭제하기 Recoil
-  const mydata = detail?.filter((item: any) => {
+  const mydata = detail?.filter((item: ItemType) => {
     return item.id === id;
   });
 
   //* Amplitude 이벤트 생성
   useEffect(() => {
-    // console.log('디테일 페이지가 렌더링 되었습니다.');
     mydata && setDeleteItem(mydata[0]);
   }, []);
 
@@ -50,7 +50,7 @@ const Post = ({ id }: any) => {
   });
 
   //* 변화된 counting 값 인지
-  const creator = mydata?.find((item: any) => item.id === id);
+  const creator = mydata?.find((item: ItemType) => item.id === id);
 
   useEffect(() => {
     if (creator?.creator !== authService.currentUser?.uid) {
@@ -74,10 +74,10 @@ const Post = ({ id }: any) => {
       />
 
       {detail
-        ?.filter((item: any) => {
+        ?.filter((item: ItemType) => {
           return item.id === id;
         })
-        .map((item: any) => (
+        .map((item: ItemType) => (
           <DetailContents key={item.id}>
             <ImgAndProfileAndFollowingAndCollection>
               <DetailImg item={item} />
@@ -169,9 +169,9 @@ const ListAndMapAndComment = styled.div`
 `;
 
 //* SSR방식으로 server에서 id 값 보내기
-export async function getServerSideProps(context: { params: any }) {
+export async function getServerSideProps(context: { params: ParamsType }) {
   const { params } = context;
-  const { id }: any = params;
+  const { id }: ParamsType = params;
   return {
     props: {
       id: id,
