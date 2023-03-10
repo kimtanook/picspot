@@ -147,7 +147,7 @@ export const deleteData: any = (docId: any) => {
 
 //* 포스트 수정하기
 export const updateData: any = (data: any) => {
-  updateDoc(doc(dbService, 'post', data.id), data);
+  return updateDoc(doc(dbService, 'post', data.id), data);
 };
 
 //* 댓글 가져오기
@@ -201,7 +201,7 @@ export const getCollection = async () => {
 
   return response;
 };
-// 특정 유저의 collection 데이터 불러오기
+//* 특정 유저의 collection 데이터 불러오기
 export const getUserCollection = async ({
   queryKey,
 }: {
@@ -250,7 +250,7 @@ export const deleteCollectionData = async ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {

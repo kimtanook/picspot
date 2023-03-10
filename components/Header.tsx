@@ -183,8 +183,6 @@ const Header = ({
               <Image
                 src="/profileicon.svg"
                 alt="profileImg"
-                width={30}
-                height={30}
                 style={{ borderRadius: '50%', cursor: 'pointer' }}
                 priority={true}
               />

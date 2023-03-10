@@ -12,7 +12,6 @@ import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
 import { useMediaQuery } from 'react-responsive';
 import { logEvent } from '@/utils/amplitude';
-import Link from 'next/link';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
@@ -95,14 +94,20 @@ export default function Mypage() {
 }
 
 const MyContainer = styled.div`
+  box-shadow: inset 0px 20px 15px rgba(0, 0, 0, 0.05);
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 64px;
+  padding-top: 64px;
   overflow: hidden;
+  margin-bottom: 10px;
+  background-color: #fbfbfb;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+  }
 `;
 const MyProfileContainer = styled.div`
   width: 600px;

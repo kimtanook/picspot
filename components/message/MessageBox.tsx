@@ -12,7 +12,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import DetailMessage from './DetailMessage';
 import SendMessageItem from './SendMessageItem';
 import TakeMessageItem from './TakeMessageItem';
 
