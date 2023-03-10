@@ -15,6 +15,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
@@ -22,7 +23,14 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 // import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+interface EditForm {
+  title: string;
+  content: string;
+}
+
 const DetailList = ({ item }: any) => {
+  const { register, setValue } = useForm<EditForm>({ mode: 'onBlur' });
+
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
   const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
@@ -32,7 +40,7 @@ const DetailList = ({ item }: any) => {
     useRecoilState(editSaveAddressAtom);
   // 반응형 이용하기
   const [isOpen, setIsOpen] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
+  const [deletePostModal, setDeletePostModal] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 785 });
   const isPc = useMediaQuery({ minWidth: 786 });
 
@@ -41,7 +49,10 @@ const DetailList = ({ item }: any) => {
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
-
+  // 게시물 삭제 눌렀을 때 모달 창 실행하는 함수
+  const postDeleteModalButton = () => {
+    setDeletePostModal(!deletePostModal);
+  };
   //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
@@ -267,9 +278,9 @@ const DetailList = ({ item }: any) => {
                 {isOpen === true ? (
                   <Menu>
                     <MenuItem onClick={onClickEditToggle}>게시물 수정</MenuItem>
-                    {/* <MenuItem onClick={postDeleteModalButton}>
+                    <MenuItem onClick={postDeleteModalButton}>
                       게시물 삭제
-                    </MenuItem> */}
+                    </MenuItem>
                   </Menu>
                 ) : null}
               </div>
@@ -337,56 +348,71 @@ const DetailList = ({ item }: any) => {
     return (
       <ListContainer>
         <TitleAndView>
-          <TitleInput
-            maxLength={15}
-            defaultValue={item.title}
-            onChange={(e) => {
-              setEditTitle(e.target.value);
-              setEditTitleInputCount(e.target.value.length);
-            }}
-            ref={titleInput}
-          />
-          <span
-            style={{
-              color: '#8E8E93',
-              width: 100,
-              marginTop: 'auto',
-              marginBottom: 'auto',
-            }}
-          >
-            {editTitleInputCount} /15
-          </span>
+          <TitleInputWrap>
+            <TitleInput
+              maxLength={15}
+              defaultValue={item.title}
+              onChange={(e) => {
+                setEditTitle(e.target.value);
+                setEditTitleInputCount(e.target.value.length);
+              }}
+              ref={titleInput}
+            />
 
+            <TitleInputSpan>
+              <span
+                style={{
+                  color: ' #F4F4F4;',
+                  width: 65,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+              >
+                {editTitleInputCount} /15
+              </span>
+            </TitleInputSpan>
+          </TitleInputWrap>
+          <EditclearBtn
+            onClick={() => {
+              setValue('title', '');
+            }}
+          ></EditclearBtn>
           {editBtnToggle ? (
             <EditBtnCotainer>
-              <EditBtn onClick={() => onClickDelete(item.id)}>
+              {/* <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
-              </EditBtn>
-              <EditBtn
-                onClick={() =>
-                  onClickEdit({
-                    id: item.id,
-                    title: editTitle,
-                    content: editContent,
-                    city: editCity,
-                    town: editTown,
-                    lat: editSaveLatLng.Ma,
-                    long: editSaveLatLng.La,
-                    address: editSaveAddress,
-                    // ...editState,
-                  })
-                }
-              >
-                수정 완료 〉
-              </EditBtn>
-              <EditBtn onClick={onClickEditToggle}>취소 〉</EditBtn>
+              </EditBtn> */}
+              <EditBtnWrap>
+                <EditBtn
+                  onClick={() =>
+                    onClickEdit({
+                      id: item.id,
+                      title: editTitle,
+                      content: editContent,
+                      city: editCity,
+                      town: editTown,
+                      lat: editSaveLatLng.Ma,
+                      long: editSaveLatLng.La,
+                      address: editSaveAddress,
+                      // ...editState,
+                    })
+                  }
+                >
+                  수정사항 저장
+                </EditBtn>
+                <EditBtnArrow src="/arrow-right-white.png" alt="image" />
+              </EditBtnWrap>
+              <EditBtnWrap>
+                <EditBtn onClick={onClickEditToggle}>수정하기 취소</EditBtn>
+                <EditBtnArrow src="/arrow-right-white.png" alt="image" />
+              </EditBtnWrap>
             </EditBtnCotainer>
           ) : (
             <>
-              <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
+              <EditBtn onClick={onClickEditToggle}>게시물 수정</EditBtn>
             </>
           )}
-          {isPc ? (
+          {/* {isPc ? (
             <View>
               <Image
                 src="/view_icon.svg"
@@ -405,7 +431,7 @@ const DetailList = ({ item }: any) => {
             </View>
           ) : (
             ''
-          )}
+          )} */}
         </TitleAndView>
         <CityAndTownAndAddress>
           <CityInput
@@ -447,35 +473,44 @@ const DetailList = ({ item }: any) => {
               </>
             )}
           </TownInput>
-          <Address>
+          {/* <Address>
             <Image src="/spot_icon.svg" alt="image" width={24} height={24} />{' '}
             <span>{item.address}</span>
-          </Address>
+          </Address> */}
         </CityAndTownAndAddress>
-        <Content>
-          Tip
-          <ContentInput
-            // value={editContent}
-            maxLength={100}
-            defaultValue={item.content}
-            onChange={(e) => {
-              setEditContent(e.target.value);
-              setEditContentInputCount(e.target.value.length);
+        <ContentInputContainer>
+          <ContentInputWrap>
+            <ContentInput
+              // value={editContent}
+              maxLength={100}
+              defaultValue={item.content}
+              onChange={(e) => {
+                setEditContent(e.target.value);
+                setEditContentInputCount(e.target.value.length);
+              }}
+              ref={contentInput}
+            />
+            <ContentInputSpan>
+              <span
+                style={{
+                  color: ' #F4F4F4;',
+                  width: 100,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                  marginLeft: 20,
+                }}
+              >
+                {' '}
+                {editContentInputCount} /100
+              </span>
+            </ContentInputSpan>
+          </ContentInputWrap>
+          <ClearBtn
+            onClick={() => {
+              setValue('content', '');
             }}
-            ref={contentInput}
-          />
-          <span
-            style={{
-              color: '#8E8E93',
-              width: 100,
-              marginTop: 'auto',
-              marginBottom: 'auto',
-              marginLeft: 20,
-            }}
-          >
-            {editContentInputCount} /100
-          </span>
-        </Content>
+          ></ClearBtn>
+        </ContentInputContainer>
       </ListContainer>
     );
   }
@@ -597,16 +632,50 @@ const Title = styled.div`
     font-size: 20px;
   }
 `;
+const EditclearBtn = styled.div`
+  position: absolute;
+  top: 25%;
+  left: 460px;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button-black.png);
+  background-repeat: no-repeat;
+  cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(-110%, 920%);
+    position: inherit;
+  }
+`;
 
+const TitleInputWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+`;
 const TitleInput = styled.input`
-  font-size: 30px;
-  margin-right: 20px;
-  width: 90%;
+  margin-right: 30px;
+  font-size: 28px;
+  color: #212121;
+  padding-left: 15px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  border: none;
+  border-bottom: 2px solid #1882ff;
+  background: #fbfbfb;
+  width: 490px;
+  height: 53px;
+  :focus-visible {
+    outline: none;
+  }
 `;
 
+const TitleInputSpan = styled.div`
+  display: flex;
+  margin-top: 5px;
+  color: #8e8e93;
+  font-size: 14px;
+`;
 const HowManyView = styled.div`
   @media ${(props) => props.theme.mobile} {
     padding-left: 100px;
@@ -629,24 +698,45 @@ const View = styled.div`
 
 const EditBtnCotainer = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  height: 76px;
+  place-content: center;
   gap: 10px;
-  width: 300px;
-  margin-left: 20px;
+  background-color: #feb819;
+  border-radius: 10px;
+  left: 1221px;
+  top: 104px;
+`;
+const EditBtnWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const EditBtn = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 97px;
+  height: 22px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'Noto Sans CJK KR';
+  color: white;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+  }
 `;
 
-const EditBtn = styled.div`
-  background-color: #feb819;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 12px;
-  width: 120px;
+const EditBtnArrow = styled.img`
+  display: relative;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
   cursor: pointer;
-  height: 50px;
-  @media ${(props) => props.theme.mobile} {
-    display: none;
-  }
 `;
 
 const CityAndTownAndAddress = styled.div`
@@ -681,8 +771,8 @@ const City = styled.div`
 const CityInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 200px;
-  height: 40px;
+  width: 88px;
+  height: 30px;
   text-align: center;
   border: none;
 `;
@@ -710,8 +800,8 @@ const Town = styled.div`
 const TownInput = styled.select`
   background-color: #e7e7e7;
   border-radius: 20px;
-  width: 200px;
-  height: 40px;
+  width: 77px;
+  height: 30px;
   text-align: center;
   border: none;
 `;
@@ -774,23 +864,57 @@ const Content = styled.div`
   padding-bottom: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
+  position: relative;
   @media ${(props) => props.theme.mobile} {
     width: 350px;
     max-height: 200px;
   }
 `;
 
-const ContentInput = styled.input`
-  width: 80%;
-  min-height: 30px;
-  padding-left: 10px;
-  margin-left: 20px;
-  border: transparent;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+const ContentInputContainer = styled.div`
+  position: relative;
 `;
 
+const ContentInputWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+`;
+const ContentInput = styled.input`
+  font-family: 'Noto Sans CJK KR';
+  font-size: 14px;
+  min-height: 30px;
+  padding-left: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: none;
+  border-bottom: 2px solid #1882ff;
+  background: #fbfbfb;
+  width: 650px;
+  height: 49px;
+  :focus-visible {
+    outline: none;
+  }
+`;
+const ContentInputSpan = styled.div`
+  margin-top: 5px;
+  color: #8e8e93;
+  font-size: 14px;
+`;
+const ClearBtn = styled.div`
+  position: absolute;
+  top: 25%;
+  left: 620px;
+  width: 24px;
+  height: 24px;
+  background-image: url(/cancle-button-black.png);
+  background-repeat: no-repeat;
+  cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    transform: translate(-110%, 920%);
+    position: inherit;
+  }
+`;
 const TipSpan = styled.span`
   width: 10px;
   font-size: 16px;

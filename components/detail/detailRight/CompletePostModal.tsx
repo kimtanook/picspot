@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { deleteModalAtom, deleteItem } from '@/atom';
+import { deletePostModalAtom, deleteItem } from '@/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import { storageService } from '@/firebase';
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 //   id: string|undefined;
 //   imgPath: string|undefined;
 // };
-const DeletePost = ({
+const CompletePostModal = ({
   item,
   setDeleteModal,
   deleteModal,
@@ -183,4 +183,4 @@ const PostDeleteButton = styled.button`
   @media ${(props) => props.theme.mobile} {
   }
 `;
-export default DeletePost;
+export default CompletePostModal;
