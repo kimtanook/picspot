@@ -105,7 +105,7 @@ const Header = ({
             onClickTogglePostModal();
           }}
         >
-          + 나의 스팟 추가
+          + 게시물 추가
         </PostFormButton>
         <SearchWrap>
           <Search

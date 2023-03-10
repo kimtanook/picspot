@@ -4,6 +4,7 @@ import DataLoading from '@/components/common/DataLoading';
 import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 
 function CommentItem({
@@ -22,6 +23,8 @@ function CommentItem({
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation(deleteComment);
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
 
   const onClickDelete = () => {
     if (confirm('정말 삭제하시겠습니까?')) {
@@ -54,7 +57,10 @@ function CommentItem({
         <DeleteMyComment>
           <TipBar src="/bar.png" alt="image" />
           {authService.currentUser?.uid === item.creatorUid ? (
-            <Button onClick={onClickDelete}>삭제하기</Button>
+            <>
+              {isPc && <Button onClick={onClickDelete}>삭제하기</Button>}
+              {isMobile && <Button onClick={onClickDelete}>삭제</Button>}
+            </>
           ) : null}
         </DeleteMyComment>
       </Comment>
@@ -125,7 +131,9 @@ const TipBar = styled.img`
   margin-left: 10px;
   margin-right: 10px;
   @media ${(props) => props.theme.mobile} {
-    width: 30px;
+    width: 2px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
 `;
 const Button = styled.div`
