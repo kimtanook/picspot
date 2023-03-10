@@ -95,7 +95,6 @@ const Post = ({ id }: any) => {
               <DetailList item={item} />
 
               <DetailMap item={item} />
-
               <CommentList postId={id} />
             </ListAndMapAndComment>
           </DetailContents>
@@ -162,8 +161,10 @@ const ProfileAndFollwing = styled.div`
 const ListAndMapAndComment = styled.div`
   width: 650px;
   @media ${(props) => props.theme.mobile} {
+    display: flex;
     flex-direction: column;
     width: 100%;
+    gap: 20px;
   }
 `;
 

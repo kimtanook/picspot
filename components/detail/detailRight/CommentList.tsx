@@ -101,6 +101,8 @@ const CommentContainer = styled.div`
     width: 350px;
     height: 120px;
     margin: auto;
+    display: flex;
+    flex-direction: column-reverse;
   }
 `;
 
@@ -120,6 +122,12 @@ const Form = styled.form`
   height: 50px;
   align-items: center;
   margin-top: 10px;
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    width: 350px;
+    height: 50px;
+    top: 60%;
+  }
 `;
 
 const Input = styled.input`

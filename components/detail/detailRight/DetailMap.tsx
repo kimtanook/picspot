@@ -61,5 +61,6 @@ const MapContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 350px;
     margin: auto;
+    margin-top: 95px;
   }
 `;
