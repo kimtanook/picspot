@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { logEvent } from '@/utils/amplitude';
 import Image from 'next/image';
+import Seo from '@/components/Seo';
 
 function Landing() {
   const [imageTopHover, setImageTopHover] = useState(false);
@@ -16,6 +17,7 @@ function Landing() {
 
   return (
     <LandingWrap>
+      <Seo title="Landing" />
       <LandContainer>
         <LogoTitleWrap>
           <LogoImg src="/landing/logo.webp" />
