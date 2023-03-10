@@ -10,6 +10,7 @@ import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import {
+  isOpenMapAtom,
   placeAtom,
   postModalAtom,
   saveAddressAtom,
@@ -47,10 +48,12 @@ const PostForm = () => {
   const isPc = useMediaQuery({ minWidth: 767 });
 
   const [place, setPlace] = useRecoilState(placeAtom);
-  const [isOpenMap, setIsOpenMap] = useState(false);
+  const [isOpenMap, setIsOpenMap] = useRecoilState(isOpenMapAtom);
   const onClickOpen = () => {
     setIsOpenMap(!isOpenMap);
   };
+
+  console.log('onClickOpen', onClickOpen);
   let postState: any = {
     title: title,
     content: content,
@@ -233,13 +236,23 @@ const PostForm = () => {
         {isMobile && isOpenMap && (
           <MapsPostLandingWrap>
             <MapsPostLanding />
-            <PostFormMapsBackButton
-              onClick={() => {
-                setIsOpenMap(!isOpenMap);
-              }}
-            >
-              <img src="/drag_handle.svg" />
-            </PostFormMapsBackButton>
+
+            {isMobile && (
+              <PostFormMobileUploadButton>
+                <CustomButton
+                  width="200%"
+                  height="48px"
+                  borderRadius="0px"
+                  margin="0px 5px"
+                  padding="0px"
+                  backgroundColor="#1882FF"
+                  color="white"
+                  onClick={onClickAddData}
+                >
+                  업로드하기
+                </CustomButton>
+              </PostFormMobileUploadButton>
+            )}
           </MapsPostLandingWrap>
         )}
 
@@ -350,22 +363,31 @@ const PostForm = () => {
                 </PostFormContentTextCount>
               </PostFormContentTextWrap>
             </PostFormInputWrap>
-            <PostFormUploadButton>
-              <CustomButton
-                width="100%"
-                height="48px"
-                borderRadius="0px"
-                color="white"
-                margin="0px 5px"
-                padding="0px"
-                backgroundColor="#1882FF"
-                onClick={onClickAddData}
-              >
-                업로드하기
-              </CustomButton>
-            </PostFormUploadButton>
+            {isPc && (
+              <PostFormUploadButton>
+                <CustomButton
+                  width="100%"
+                  height="48px"
+                  borderRadius="0px"
+                  color="white"
+                  margin="0px 5px"
+                  padding="0px"
+                  backgroundColor="#1882FF"
+                  onClick={onClickAddData}
+                >
+                  업로드하기
+                </CustomButton>
+              </PostFormUploadButton>
+            )}
             {isMobile && (
               <PostFormUploadButton>
+                <PostFormMapsPinIcon
+                  onClick={() => {
+                    setIsOpenMap(!isOpenMap);
+                  }}
+                >
+                  <img src="/icon-pin.svg" />
+                </PostFormMapsPinIcon>
                 <CustomButton
                   width="100%"
                   height="48px"
@@ -376,7 +398,7 @@ const PostForm = () => {
                   color="#1882FF"
                   onClick={onClickOpen}
                 >
-                  지도에서 핀 찍기
+                  위치 추가하고 업로드하기
                 </CustomButton>
               </PostFormUploadButton>
             )}
@@ -409,8 +431,6 @@ const MapsPostLandingWrap = styled.div`
     height: 50vh;
     position: absolute;
     z-index: 9999;
-    transform: translateX(350deg);
-    transition: all 1s ease-in-out;
   }
 `;
 
@@ -555,6 +575,8 @@ const PostFormUploadButton = styled.div`
   @media ${(props) => props.theme.mobile} {
     margin: 5px -10px;
     margin-top: 5%;
+    position: relative;
+    cursor: pointer;
   }
 `;
 
@@ -592,6 +614,28 @@ const PostFormMapsBackButton = styled.div`
     z-index: 9999;
     left: 45%;
     top: 97%;
+    padding: 5px;
+    cursor: pointer;
+  }
+`;
+const PostFormMobileUploadButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 9999;
+    width: 50%;
+    top: 175%;
+    padding: 5px;
+    cursor: pointer;
+  }
+`;
+
+const PostFormMapsPinIcon = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+
+    z-index: 9999;
+    left: 25%;
+    top: 10%;
     padding: 5px;
     cursor: pointer;
   }
