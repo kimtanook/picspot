@@ -27,6 +27,7 @@ import { CustomModalMap } from './common/CustomModalMap';
 import DetailList from './detail/detailRight/DetailList';
 import DeletePostModal from './detail/detailRight/DeletePostModal';
 
+
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
   const [msgSendToggle, setMsgSendToggle] = useRecoilState(messageSendToggle);
