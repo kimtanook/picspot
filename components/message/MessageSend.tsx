@@ -154,7 +154,7 @@ const SendUserName = styled.div`
   font-size: 16px;
   background-color: #f4f4f4;
   text-align: center;
-  width: 258px;
+  width: 60%;
   height: 68px;
   line-height: 68px;
   margin: 0 auto 0 auto;
@@ -162,6 +162,7 @@ const SendUserName = styled.div`
   font-weight: 700;
   @media ${(props) => props.theme.mobile} {
     width: 70vw;
+    background-color: white;
   }
 `;
 const UserProfileImg = styled.img`

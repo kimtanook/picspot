@@ -113,6 +113,9 @@ const Input = styled.input`
   height: 20px;
   width: 70%;
   margin-left: 20px;
+  :focus-visible {
+    outline: none;
+  }
 `;
 
 const InputBtnContainer = styled.div`

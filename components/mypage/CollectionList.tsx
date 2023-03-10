@@ -11,14 +11,16 @@ const CollectionList = () => {
   const { data: collectionData } = useQuery('collectiondata2', getCollection);
 
   //* collector에서 내 id를 가진 값 찾기
-  const collectorList = collectionData?.filter((item: any) => {
-    return item.collector.find((item: any) =>
-      authService.currentUser?.uid.includes(item)
-    );
-  });
+  const collectorList = collectionData?.filter(
+    (item: { collector: string[] }) => {
+      return item.collector.find((item: string) =>
+        authService.currentUser?.uid.includes(item)
+      );
+    }
+  );
 
   //* 내가 collect한 포스터 들의 town
-  const myCollectionTown = collectorList?.map((item: any) => {
+  const myCollectionTown = collectorList?.map((item: { town: string }) => {
     return item.town;
   });
 

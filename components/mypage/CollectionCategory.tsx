@@ -1,7 +1,4 @@
-import { dbService } from '@/firebase';
-import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import MyCollectPost from './MyCollectPost';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { useState } from 'react';
@@ -10,31 +7,9 @@ import Link from 'next/link';
 
 const CollectionCategory = ({ value, collectorList }: any) => {
   const [more, setMore] = useState(true);
-  //* post CollectionCategory 기준 데이터 가져오기
-  const getTownDatas = async ({ queryKey }: { queryKey: string[] }) => {
-    const [_, town] = queryKey;
-    const response: { id: string }[] = [];
-    let q = query(
-      collection(dbService, 'collection'),
-      where('town', '==', town)
-    );
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      response.push({ id: doc.id, ...doc.data() });
-    });
-
-    return response;
-  };
-
-  //* useQuery 사용해서 내가 컬렉션한 포스터의 town별 데이터들
-  const { data } = useQuery(['data', value], getTownDatas);
-
-  //* 내가 담은 collection의 uid값
-  const myCollectionUid = collectorList?.map((item: { uid: any }) => item.uid);
-  //* 모든 collection 포스터들 중 내가 담은 collection의 uid와 비교허여 일치하는 값
-  const MyCollectionTownItem = data?.filter((item: { id: string }) =>
-    myCollectionUid?.includes(item.id)
+  const townSameValueData = collectorList?.filter(
+    (item: { town: string }) => item.town === value
   );
 
   const onClickMoreBtn = () => {
@@ -50,7 +25,7 @@ const CollectionCategory = ({ value, collectorList }: any) => {
           </PostTownTitle>
           <MySpotImg>
             <Masonry columnsCount={2} style={{ gap: '10px' }}>
-              {MyCollectionTownItem?.map((item: { [key: string]: string }) => (
+              {townSameValueData?.map((item: { [key: string]: string }) => (
                 <MyCollectPost item={item} key={uuidv4()} />
               ))}
             </Masonry>
@@ -73,11 +48,13 @@ const CollectionCategory = ({ value, collectorList }: any) => {
                 columnsCountBreakPoints={{ 425: 1, 750: 2, 900: 3, 1200: 4 }}
               >
                 <Masonry columnsCount={4}>
-                  {MyCollectionTownItem?.map((item: any) => (
-                    <Link key={uuidv4()} href={`/detail/${item.id}`}>
-                      <MyPostImg src={item.imgUrl} />
-                    </Link>
-                  ))}
+                  {townSameValueData?.map(
+                    (item: { id: string; imgUrl: string | undefined }) => (
+                      <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                        <MyPostImg src={item.imgUrl} />
+                      </Link>
+                    )
+                  )}
                 </Masonry>
               </ResponsiveMasonry>
             </GridBox>
