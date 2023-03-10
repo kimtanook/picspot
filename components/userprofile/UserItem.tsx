@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 export default function UserItem({ item }: { item: userItem }) {
-  console.log('item : ', item);
   return (
     <Link href={`/detail/${item.uid}`}>
       <UserPostImg src={item.imgUrl} />
