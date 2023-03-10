@@ -69,3 +69,8 @@ declare interface IResult {
   x: number;
   y: number;
 }
+interface IModalMapsMarkerProps {
+  item: IMarkerData;
+  isOpen: any;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}

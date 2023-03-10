@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapMarker, useMap } from 'react-kakao-maps-sdk';
 
-const MapPanTo = ({ item, setIsOpen }) => {
+const MapPanTo = ({ item, setIsOpen }: any) => {
   const map = useMap();
   return (
     <>

@@ -8,6 +8,7 @@ import {
   CustomOverlayMap,
   Map,
   MapTypeControl,
+  MarkerClusterer,
   ZoomControl,
 } from 'react-kakao-maps-sdk';
 import { useQuery } from 'react-query';
@@ -19,14 +20,11 @@ import ModalMapsMarker from './ModalMapsMarker';
 const ModalMaps = () => {
   const { data, isLoading, isError } = useQuery('bringData', getData) as any;
   const [isOpen, setIsOpen]: any = useState(false);
-  // const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
   const [selectTown, setSelectTown] = useRecoilState(townArray);
   const router = useRouter();
   const selectCity = router.query.city;
-  // const [isMobile, setIsMobile] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 766 });
-
   if (isLoading) return <h1>로딩 중입니다.</h1>;
   if (isError) return <h1>연결이 원활하지 않습니다.</h1>;
 
@@ -48,29 +46,33 @@ const ModalMaps = () => {
           }}
           level={10} // 지도의 확대 레벨
         >
-          {/* <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
-          <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} /> */}
+          <MarkerClusterer
+            averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+            minLevel={10} // 클러스터 할 최소 지도 레벨
+            gridSize={70}
+            minClusterSize={1}
+          >
+            {data
 
-          {data
+              .filter((item: IMarkerData) =>
+                selectTown.length === 0 && selectCity === '제주전체'
+                  ? true
+                  : selectTown.length === 0 && item.city === selectCity
+                  ? true
+                  : selectTown.includes(item.town)
+              )
 
-            .filter((item: IMarkerData) =>
-              selectTown.length === 0 && selectCity === '제주전체'
-                ? true
-                : selectTown.length === 0 && item.city === selectCity
-                ? true
-                : selectTown.includes(item.town)
-            )
-
-            .map((item: IMarkerData) => {
-              return (
-                <ModalMapsMarker
-                  item={item}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                  key={item.id}
-                />
-              );
-            })}
+              .map((item: IMarkerData) => {
+                return (
+                  <ModalMapsMarker
+                    item={item}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    key={item.id}
+                  />
+                );
+              })}
+          </MarkerClusterer>
         </Map>
       )}
 
@@ -88,29 +90,36 @@ const ModalMaps = () => {
           }}
           level={10} // 지도의 확대 레벨
         >
-          <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
-          <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
+          <MarkerClusterer
+            averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+            minLevel={10} // 클러스터 할 최소 지도 레벨
+            gridSize={70}
+            minClusterSize={1}
+          >
+            <ZoomControl position={kakao.maps.ControlPosition?.RIGHT} />
+            <MapTypeControl position={kakao.maps.ControlPosition?.TOPRIGHT} />
 
-          {data
+            {data
 
-            .filter((item: IMarkerData) =>
-              selectTown.length === 0 && selectCity === '제주전체'
-                ? true
-                : selectTown.length === 0 && item.city === selectCity
-                ? true
-                : selectTown.includes(item.town)
-            )
+              .filter((item: IMarkerData) =>
+                selectTown.length === 0 && selectCity === '제주전체'
+                  ? true
+                  : selectTown.length === 0 && item.city === selectCity
+                  ? true
+                  : selectTown.includes(item.town)
+              )
 
-            .map((item: IMarkerData) => {
-              return (
-                <ModalMapsMarker
-                  item={item}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                  key={item.id}
-                />
-              );
-            })}
+              .map((item: IMarkerData) => {
+                return (
+                  <ModalMapsMarker
+                    item={item}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    key={item.id}
+                  />
+                );
+              })}
+          </MarkerClusterer>
         </Map>
       )}
     </MapModalMainWrap>

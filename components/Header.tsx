@@ -84,8 +84,10 @@ const Header = ({
             <Image
               src="/logo.png"
               alt="logoImg"
-              layout="fill"
               priority={true}
+              width={107}
+              height={29}
+              className="logo-image"
             />
           </LogoImgBox>
         </Title>
@@ -125,8 +127,10 @@ const Header = ({
                 <Image
                   src="/menu.png"
                   alt="meunImg"
-                  layout="fill"
                   priority={true}
+                  height={24}
+                  width={24}
+                  className="menu-image"
                   onClick={() => setMenuToggle(!menuToggle)}
                 />
               </MenuImgBox>
@@ -169,7 +173,6 @@ const Header = ({
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
               // <ProfileImg src={userImg} alt="profile" />
-
               <Image
                 src={userImg}
                 alt="profileImg"
@@ -230,23 +233,15 @@ const Title = styled.div`
 `;
 
 const LogoImgBox = styled.div`
-  width: 107px;
-  height: 29px;
-  position: relative;
-  @media ${(props) => props.theme.mobile} {
-    width: 92px;
-    height: 25px;
+  & > .logo-image {
+    width: 100%;
+    height: 100%;
+    @media ${(props) => props.theme.mobile} {
+      width: 92px;
+      height: 25px;
+    }
   }
 `;
-
-// const LogoImg = styled.img`
-//   width: 107px;
-//   height: 29px;
-//   @media ${(props) => props.theme.mobile} {
-//     width: 92px;
-//     height: 25px;
-//   }
-// `;
 
 const CityCategory = styled.select`
   position: absolute;
@@ -302,13 +297,12 @@ const HeaderRight = styled.div`
 `;
 
 const MenuImgBox = styled.div`
-  position: relative;
-  display: none;
-  @media ${(props) => props.theme.mobile} {
-    display: inherit;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+  & > .menu-image {
+    display: none;
+    @media ${(props) => props.theme.mobile} {
+      display: inherit;
+      margin-right: 8px;
+    }
   }
 `;
 
