@@ -61,7 +61,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
         limit(20)
       );
     } else {
-      if (town.length !== 0 && town[0] !== '' && lastVisible) {
+      if (town.length !== 0 && lastVisible) {
         q = query(
           collection(dbService, 'post'),
           where('town', 'in', town),
@@ -69,7 +69,7 @@ export const getInfiniteData = async ({ queryKey }: any) => {
           limit(8),
           startAfter(lastVisible)
         );
-      } else if (town.length !== 0 && town[0] !== '') {
+      } else if (town.length !== 0) {
         q = query(
           collection(dbService, 'post'),
           where('town', 'in', town),
@@ -151,7 +151,11 @@ export const updateData: any = (data: any) => {
 };
 
 //* 댓글 가져오기
-export const getComment = async ({ queryKey }: any) => {
+export const getComment = async ({
+  queryKey,
+}: {
+  queryKey: (string[] | string | undefined)[];
+}) => {
   const [, postId] = queryKey;
   const response: any = [];
   const q = query(
@@ -219,12 +223,12 @@ export const getUserCollection = async ({
 };
 
 //* collection  데이터 추가하기
-export const addCollectionData: any = ({
+export const addCollectionData = async ({
   uid,
   collector,
   town,
   imgUrl,
-}: any) => {
+}: CollectData) => {
   setDoc(
     doc(dbService, 'collection', uid),
     {
@@ -238,7 +242,7 @@ export const addCollectionData: any = ({
 };
 
 //* collection  데이터 삭제하기
-export const deleteCollectionData: any = ({ uid, collector }: any) => {
+export const deleteCollectionData = async ({ uid, collector }: CollectData) => {
   updateDoc(doc(dbService, 'collection', uid), {
     collector: arrayRemove(collector),
   });
@@ -445,7 +449,10 @@ export const getMyPost = async ({ queryKey }: any) => {
 };
 
 // 메세지 확인
-export const checkedMessageData = async (data: any) => {
+export const checkedMessageData = async (data: {
+  user: string | string[] | undefined;
+  id: string;
+}) => {
   await updateDoc(doc(dbService, `message/take/${data.user}/${data.id}`), {
     checked: true,
   });

@@ -188,7 +188,6 @@ export default function Main() {
         selectCity={selectCity}
         onChangeSelectCity={onChangeSelectCity}
         searchOptionRef={searchOptionRef}
-        searchValue={searchValue}
         onChangeSearchValue={onChangeSearchValue}
       />
 

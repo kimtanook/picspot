@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import Content from './Content';
 
-function ContentBox({ item }: any) {
+function ContentBox({ item }: { item: { [key: string]: string } }) {
   const [collectHover, setCollectHover] = useState(false);
   // 특정 유저의 컬렉션 데이터 가져오기
   const { data: userCollectData } = useQuery(

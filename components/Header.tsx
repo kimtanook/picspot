@@ -15,14 +15,12 @@ const Header = ({
   selectCity,
   onChangeSelectCity,
   searchOptionRef,
-  searchValue,
   onChangeSearchValue,
 }: {
   selectCity: string | string[] | undefined;
   onChangeSelectCity: ChangeEventHandler<HTMLSelectElement> | undefined;
-  searchValue: string | undefined;
   searchOptionRef: RefObject<HTMLSelectElement> | undefined;
-  onChangeSearchValue: any;
+  onChangeSearchValue: undefined | ChangeEventHandler<HTMLInputElement>;
 }) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [closeLoginModal, setCloseLoginModal] = useRecoilState(loginModalAtom);
@@ -110,7 +108,6 @@ const Header = ({
         <SearchWrap>
           <Search
             searchOptionRef={searchOptionRef}
-            searchValue={searchValue}
             onChangeSearchValue={onChangeSearchValue}
           />
         </SearchWrap>

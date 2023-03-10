@@ -60,7 +60,6 @@ export default function Mypage() {
           selectCity={undefined}
           onChangeSelectCity={undefined}
           searchOptionRef={undefined}
-          searchValue={undefined}
           onChangeSearchValue={undefined}
         />
       )}

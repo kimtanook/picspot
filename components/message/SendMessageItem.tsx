@@ -18,7 +18,7 @@ function SendMessageItem({
 }: {
   item: SendTakeMessage;
   deleteId: string[];
-  onClickDeleteMsg: any;
+  onClickDeleteMsg: (id: string) => void;
   box: string;
 }) {
   const [toggle, setToggle] = useState(false);
@@ -136,7 +136,6 @@ const MessageUser = styled.div`
     text-align: left;
     padding-left: 10px;
     overflow: hidden;
-
   }
 `;
 const MessageBody = styled.div`

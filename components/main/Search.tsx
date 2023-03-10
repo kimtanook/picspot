@@ -3,12 +3,10 @@ import styled from 'styled-components';
 
 const Search = ({
   searchOptionRef,
-  searchValue,
   onChangeSearchValue,
 }: {
   searchOptionRef: RefObject<HTMLSelectElement> | undefined;
-  searchValue: string | undefined;
-  onChangeSearchValue: ChangeEventHandler<HTMLInputElement>;
+  onChangeSearchValue: undefined | ChangeEventHandler<HTMLInputElement>;
 }) => {
   const [toggle, setToggle] = useState(false);
   return (
@@ -23,7 +21,6 @@ const Search = ({
         <option value="title">제목</option>
       </Select>
       <SearchInput
-        // value={searchValue}
         onChange={onChangeSearchValue}
         placeholder="검색으로 사진을 둘러보세요!"
       />

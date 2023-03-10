@@ -13,7 +13,7 @@ function TakeMessageItem({
 }: {
   item: SendTakeMessage;
   deleteId: string[];
-  onClickDeleteMsg: any;
+  onClickDeleteMsg: (id: string) => void;
   box: string;
 }) {
   const [toggle, setToggle] = useState(false);

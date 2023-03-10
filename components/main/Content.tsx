@@ -6,14 +6,13 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 
-interface CollectData {
-  collector: string[];
-  imgUrl: string;
-  town: string;
-  uid: string;
+interface ContentItem {
+  item: { [key: string]: string };
+  userCollectData: CollectData[];
+  collectHover: boolean;
 }
 
-const Content = ({ item, userCollectData, collectHover }: any) => {
+const Content = ({ item, userCollectData, collectHover }: ContentItem) => {
   const queryClient = useQueryClient();
 
   const userCollectId = userCollectData?.map(
@@ -45,7 +44,6 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
     }
     setCollectButton(!collectButton);
     onAddCollection({
-      ...item,
       uid: item.id,
       collector: authService.currentUser?.uid,
       imgUrl: item.imgUrl,
@@ -57,7 +55,6 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
   const deleteCollection = () => {
     setCollectButton(!collectButton);
     onDeleteCollection({
-      ...item,
       uid: item.id,
       collector: authService.currentUser?.uid,
     });
