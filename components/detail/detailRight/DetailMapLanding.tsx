@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { CustomButton } from '@/components/common/CustomButton';
+// import { CustomButton } from '@/components/common/CustomButton';
 import DetailMaps from './DetailMaps';
 import { useRecoilState } from 'recoil';
 import { editPlaceAtom } from '@/atom';
 
-const DetailMapLanding = ({}: any) => {
+const DetailMapLanding = () => {
   //! global state
   const [editPlace, setEditPlace] = useRecoilState(editPlaceAtom);
 
@@ -26,19 +26,18 @@ const DetailMapLanding = ({}: any) => {
 
   return (
     <StyleContainer>
-      
       <StyledForm onSubmit={handleSubmit}>
         <>
-        <StyledInput
-          placeholder="제주도 지역명을 검색해주세요!"
-          color="#D9D9D9"
-          onChange={onchange}
-          value={inputText}
-        />
- <Find src="/find-blue.png" alt="image" />
-</>
-        <CustomButton width="30px" height="30px" borderRadius="50px" border="2px solid #1882ff" background-color="#D9D9D9">
-        <Reset src="/reset-blue.png" alt="image" />
+          <StyledInput
+            placeholder="제주도 지역명을 검색해주세요!"
+            color="#D9D9D9"
+            onChange={onchange}
+            value={inputText}
+          />
+          <Find src="/find-blue.png" alt="image" />
+        </>
+        <CustomButton>
+          <Reset src="/reset-blue.png" alt="image" />
         </CustomButton>
       </StyledForm>
 
@@ -61,11 +60,22 @@ const StyleContainer = styled.div`
 `;
 
 const Find = styled.img`
-width: 20px;
-height: 20px;
-position:absolute;
-top: 30%;
-left: 220px;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 30%;
+  left: 220px;
+  background-color: #f4f4f4;
+`;
+
+const CustomButton = styled.button`
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border: 2px solid #1882ff;
+  background-color: #f4f4f4;
+
+  margin-left: 10px;
 `;
 const Reset = styled.img`
   width: 16px;
@@ -73,7 +83,6 @@ const Reset = styled.img`
   display: flex;
   flex-direction: center;
   align-items: center;
-
 `;
 const StyledForm = styled.form`
   position: absolute;
@@ -84,11 +93,11 @@ const StyledForm = styled.form`
 const StyledInput = styled.input`
   padding: 10px;
   width: 250px;
-  height:30px;
+  height: 30px;
   border-radius: 20px;
   border: 2px solid #1882ff;
-  background-color: #F4F4F4;
-  color:black;
+  background-color: #f4f4f4;
+  color: black;
   font-size: 14px;
   font-family: 'Noto Sans CJK KR';
   :focus-visible {
