@@ -49,8 +49,8 @@ const CollectionCategory = ({ value, collectorList }: any) => {
               >
                 <Masonry columnsCount={4}>
                   {townSameValueData?.map(
-                    (item: { id: string; imgUrl: string | undefined }) => (
-                      <Link key={uuidv4()} href={`/detail/${item.id}`}>
+                    (item: { uid: string; imgUrl: string | undefined }) => (
+                      <Link key={uuidv4()} href={`/detail/${item.uid}`}>
                         <MyPostImg src={item.imgUrl} />
                       </Link>
                     )

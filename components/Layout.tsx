@@ -24,7 +24,6 @@ import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
 import { CustomModalMap } from './common/CustomModalMap';
-import DetailList from './detail/detailRight/DetailList';
 import DeletePost from './detail/detailRight/DeletePost';
 
 function Layout() {

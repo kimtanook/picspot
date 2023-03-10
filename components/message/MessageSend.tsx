@@ -102,6 +102,13 @@ const Wrap = styled.div`
   background-color: #00000061;
   width: 100vw;
   height: 100vh;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: absolute;
+  }
 `;
 const CancelButton = styled.button`
   background-color: white;
@@ -142,8 +149,8 @@ const SendWrap = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   @media ${(props) => props.theme.mobile} {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     justify-content: center;
   }
 `;

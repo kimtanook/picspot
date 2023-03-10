@@ -8,7 +8,10 @@ import styled from 'styled-components';
 
 const CollectionList = () => {
   //* useQuery 사용해서 collection의 모든 데이터 불러오기
-  const { data: collectionData } = useQuery('collectiondata2', getCollection);
+  const { data: collectionData } = useQuery('myCollectiondata', getCollection, {
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+  });
 
   //* collector에서 내 id를 가진 값 찾기
   const collectorList = collectionData?.filter(
