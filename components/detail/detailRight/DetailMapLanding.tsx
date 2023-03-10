@@ -26,15 +26,19 @@ const DetailMapLanding = ({}: any) => {
 
   return (
     <StyleContainer>
+      
       <StyledForm onSubmit={handleSubmit}>
+        <>
         <StyledInput
-          placeholder="제주도 지역명을 검색해주세요."
+          placeholder="제주도 지역명을 검색해주세요!"
+          color="#D9D9D9"
           onChange={onchange}
           value={inputText}
         />
-
-        <CustomButton width="60px" borderRadius="30px" height="35px">
-          검색
+ <Find src="/find-blue.png" alt="image" />
+</>
+        <CustomButton width="30px" height="30px" borderRadius="50px" border="2px solid #1882ff" background-color="#D9D9D9">
+        <Reset src="/reset-blue.png" alt="image" />
         </CustomButton>
       </StyledForm>
 
@@ -56,6 +60,21 @@ const StyleContainer = styled.div`
   height: 230px;
 `;
 
+const Find = styled.img`
+width: 20px;
+height: 20px;
+position:absolute;
+top: 30%;
+left: 220px;
+`;
+const Reset = styled.img`
+  width: 16px;
+  height: 16px;
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+
+`;
 const StyledForm = styled.form`
   position: absolute;
   bottom: 10px;
@@ -64,7 +83,15 @@ const StyledForm = styled.form`
 
 const StyledInput = styled.input`
   padding: 10px;
-  width: 400px;
-  border-radius: 16px;
-  border: 0.5px solid black;
+  width: 250px;
+  height:30px;
+  border-radius: 20px;
+  border: 2px solid #1882ff;
+  background-color: #F4F4F4;
+  color:black;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
+  :focus-visible {
+    outline: none;
+  }
 `;

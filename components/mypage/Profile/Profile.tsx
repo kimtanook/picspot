@@ -80,7 +80,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       {isMobile && <HeaderText>마이페이지</HeaderText>}
       <div>
         <div onClick={() => setIsOpen(!isOpen)}>
-          <MenuPointImg src="/three-point.png" />
+          <MenuPointImg src="/three-point.png" alt="image" />
         </div>
         {isOpen === true ? (
           <Menu>
@@ -273,6 +273,7 @@ const FollowingOpenModal = styled.img`
   padding-left: 7px;
   width: 17px;
   height: 16px;
+
   cursor: pointer;
 `;
 
