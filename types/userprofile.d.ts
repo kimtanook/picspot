@@ -3,4 +3,5 @@ declare interface userItem {
   imgUrl?: string;
   town?: string;
   id?: string;
+  uid?: string;
 }
