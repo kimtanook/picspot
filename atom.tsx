@@ -105,3 +105,8 @@ export const deleteItem = atom({
   key: `deleteItem`,
   default: {},
 });
+
+export const isOpenMapAtom = atom({
+  key: `isOpenMap`,
+  default: false,
+});
