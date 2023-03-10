@@ -8,7 +8,7 @@ import {
   loginModalAtom,
   postModalAtom,
   editProfileModalAtom,
-  deleteModalAtom,
+  deletePostModalAtom,
 } from '@/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -24,7 +24,9 @@ import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
 import { useMediaQuery } from 'react-responsive';
 import { CustomModalMap } from './common/CustomModalMap';
-import DeletePost from './detail/detailRight/DeletePost';
+import DetailList from './detail/detailRight/DetailList';
+import DeletePostModal from './detail/detailRight/DeletePostModal';
+
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -38,7 +40,7 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
-  const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
+  const [deletePostModal, setDeletePostModal] = useRecoilState(deletePostModalAtom);
 
   const isMobile = useMediaQuery({ maxWidth: 823 });
   const isPc = useMediaQuery({ minWidth: 824 });
@@ -182,27 +184,27 @@ function Layout() {
           </>
         )}
         <>
-          {deleteModal && (
+          {deletePostModal && (
             <>
               <>
                 {isMobile && (
                   <CustomModal
-                    modal={deleteModal}
-                    setModal={setDeleteModal}
+                    modal={deletePostModal}
+                    setModal={setDeletePostModal}
                     width="1000"
                     height="1000"
-                    element={<DeletePost />}
+                    element={<DeletePostModal />}
                   />
                 )}
               </>
               <>
                 {isPc && (
                   <CustomModal
-                    modal={deleteModal}
-                    setModal={setDeleteModal}
+                    modal={deletePostModal}
+                    setModal={setDeletePostModal}
                     width="524"
                     height="467"
-                    element={<DeletePost />}
+                    element={<DeletePostModal />}
                   />
                 )}
               </>
