@@ -443,6 +443,8 @@ const MapModalBtn = styled.button`
   height: 36px;
   left: calc(50% - 121px / 2 - 0.5px);
   bottom: 42px;
+  z-index: 999;
+
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 60px;
@@ -451,7 +453,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
-    z-index: 1;
+    z-index: 999;
   }
 `;
 const PinImgBox = styled.div`

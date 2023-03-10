@@ -224,20 +224,35 @@ const PostForm = () => {
   return (
     <>
       <PostFormWrap>
-        <MapsPostLandingWrap>
-          <MapsPostLanding />
-        </MapsPostLandingWrap>
+        {isPc && (
+          <MapsPostLandingWrap>
+            <MapsPostLanding />
+          </MapsPostLandingWrap>
+        )}
+
+        {isMobile && isOpenMap && (
+          <MapsPostLandingWrap>
+            <MapsPostLanding />
+            <PostFormMapsBackButton
+              onClick={() => {
+                setIsOpenMap(!isOpenMap);
+              }}
+            >
+              <img src="/drag_handle.svg" />
+            </PostFormMapsBackButton>
+          </MapsPostLandingWrap>
+        )}
 
         <PostFormContainer>
           <PostFormContentBox>
             <PostFormContenTitle>
-              <ModalMapsBackButton
+              <PostFormBackButton
                 onClick={() => {
                   setIsPostMapModal(!postMapModal);
                 }}
               >
                 {isMobile && <img src="/Back-point.png" />}
-              </ModalMapsBackButton>
+              </PostFormBackButton>
               내 스팟 추가하기
             </PostFormContenTitle>
             <PostFormContentWrap>
@@ -349,6 +364,22 @@ const PostForm = () => {
                 업로드하기
               </CustomButton>
             </PostFormUploadButton>
+            {isMobile && (
+              <PostFormUploadButton>
+                <CustomButton
+                  width="100%"
+                  height="48px"
+                  borderRadius="0px"
+                  margin="0px 5px"
+                  padding="0px"
+                  backgroundColor="white"
+                  color="#1882FF"
+                  onClick={onClickOpen}
+                >
+                  지도에서 핀 찍기
+                </CustomButton>
+              </PostFormUploadButton>
+            )}
           </PostFormContentBox>
         </PostFormContainer>
       </PostFormWrap>
@@ -368,13 +399,18 @@ const PostFormWrap = styled.div`
     width: 100vw;
     height: 100vh;
     z-index: 9999;
+    position: relative;
   }
 `;
 
 const MapsPostLandingWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
-    height: 100vh;
+    height: 50vh;
+    position: absolute;
+    z-index: 9999;
+    transform: translateX(350deg);
+    transition: all 1s ease-in-out;
   }
 `;
 
@@ -414,6 +450,7 @@ const PostFormContentWrap = styled.div`
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
     padding: 0 10px;
+    margin-top: 10%;
   }
 `;
 
@@ -468,6 +505,7 @@ const PostFormInputWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 80%;
     margin: 0 auto;
+    margin-top: 13%;
   }
 `;
 const PostFormInput = styled.input`
@@ -516,6 +554,7 @@ const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     margin: 5px -10px;
+    margin-top: 5%;
   }
 `;
 
@@ -540,9 +579,20 @@ const SpotImg = styled.img`
 `;
 
 // 모바일 시 뒤로가기 버튼
-const ModalMapsBackButton = styled.div`
+const PostFormBackButton = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: absolute;
     left: 5%;
+  }
+`;
+
+const PostFormMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 9999;
+    left: 45%;
+    top: 97%;
+    padding: 5px;
+    cursor: pointer;
   }
 `;

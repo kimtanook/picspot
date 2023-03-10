@@ -105,6 +105,6 @@ const SearchButton = styled.button`
 const MapWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100%;
-    margin-top: 55%;
+    margin-top: 89%;
   }
 `;
