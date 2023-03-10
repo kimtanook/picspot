@@ -127,6 +127,8 @@ const MessageUser = styled.div`
     font-weight: 600;
     text-align: left;
     padding-left: 10px;
+    overflow: hidden;
+
   }
 `;
 const MessageBody = styled.div`

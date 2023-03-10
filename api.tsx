@@ -246,7 +246,7 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  // console.log('data: ', data);
+  console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
@@ -256,10 +256,29 @@ export const addFollowing: any = (data: any) => {
   );
 };
 
+//? 팔로잉 추가하기2
+export const addFollowing2: any = (data: any) => {
+  // console.log('data: ', data);
+  setDoc(
+    doc(dbService, 'following', data.id),
+    {
+      following: arrayUnion(data.uid),
+    },
+    { merge: true }
+  );
+};
+
 //* 팔로잉 삭제하기
 export const deleteFollowing: any = (data: any) => {
   updateDoc(doc(dbService, 'following', data.uid), {
     following: arrayRemove(data.creator),
+  });
+};
+
+//? 팔로잉 삭제하기2
+export const deleteFollowing2: any = (data: any) => {
+  updateDoc(doc(dbService, 'following', data.id), {
+    following: arrayRemove(data.uid),
   });
 };
 
@@ -286,10 +305,28 @@ export const addFollow: any = (data: any) => {
   );
 };
 
+//? 팔로우 추가하기2
+export const addFollow2: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'follow', data.uid),
+    {
+      follow: arrayUnion(data.id),
+    },
+    { merge: true }
+  );
+};
+
 //* 팔로우 삭제하기
 export const deleteFollow: any = (data: any) => {
   updateDoc(doc(dbService, 'follow', data.creator), {
     follow: arrayRemove(data.uid),
+  });
+};
+
+//? 팔로우 삭제하기2
+export const deleteFollow2: any = (data: any) => {
+  updateDoc(doc(dbService, 'follow', data.uid), {
+    follow: arrayRemove(data.id),
   });
 };
 

@@ -76,16 +76,18 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
           )}
         </>
       ) : null}
-
       <Link href={`/detail/${item.id}`}>
-        <Image
-          src={item?.imgUrl}
-          alt="postImg"
-          layout="responsive"
-          width={50}
-          height={50}
-          priority={true}
-        />
+        <ImageBox>
+          <Image
+            src={item?.imgUrl}
+            alt="postImg"
+            width={252}
+            height={300}
+            priority={true}
+            className="image-box"
+            quality={75}
+          />
+        </ImageBox>
       </Link>
     </>
   );
@@ -98,6 +100,9 @@ const AddBtn = styled.img`
   left: 86%;
   z-index: 10;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
 `;
 const DeleteBtn = styled.img`
   position: absolute;
@@ -105,4 +110,13 @@ const DeleteBtn = styled.img`
   left: 86%;
   z-index: 10;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
+`;
+const ImageBox = styled.div`
+  & > .image-box {
+    width: 100%;
+    height: 100%;
+  }
 `;

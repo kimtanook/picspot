@@ -84,8 +84,10 @@ const Header = ({
             <Image
               src="/logo.png"
               alt="logoImg"
-              layout="fill"
               priority={true}
+              width={107}
+              height={29}
+              className="logo-image"
             />
           </LogoImgBox>
         </Title>
@@ -103,7 +105,7 @@ const Header = ({
             onClickTogglePostModal();
           }}
         >
-          + 나의 스팟 추가
+          + 게시물 추가
         </PostFormButton>
         <SearchWrap>
           <Search
@@ -125,8 +127,10 @@ const Header = ({
                 <Image
                   src="/menu.png"
                   alt="meunImg"
-                  layout="fill"
                   priority={true}
+                  height={24}
+                  width={24}
+                  className="menu-image"
                   onClick={() => setMenuToggle(!menuToggle)}
                 />
               </MenuImgBox>
@@ -147,15 +151,17 @@ const Header = ({
                 onClick={() => setMsgToggle(true)}
                 src="/message/message-icon.png"
               /> */}
-              {/* <MessageImgBox> */}
-              <Image
-                src="/message/message-icon.png"
-                alt="messageImg"
-                layout="fill"
-                priority={true}
-                onClick={() => setMsgToggle(true)}
-              />
-              {/* </MessageImgBox> */}
+              <MessageImgBox>
+                <Image
+                  src="/message/message-icon.png"
+                  alt="messageImg"
+                  className="message-icon"
+                  width={24}
+                  height={24}
+                  priority={true}
+                  onClick={() => setMsgToggle(true)}
+                />
+              </MessageImgBox>
               {checked?.length === 0 ? null : (
                 <CheckedCount>{checked?.length}</CheckedCount>
               )}
@@ -167,7 +173,6 @@ const Header = ({
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
               // <ProfileImg src={userImg} alt="profile" />
-
               <Image
                 src={userImg}
                 alt="profileImg"
@@ -226,23 +231,15 @@ const Title = styled.div`
 `;
 
 const LogoImgBox = styled.div`
-  width: 107px;
-  height: 29px;
-  position: relative;
-  @media ${(props) => props.theme.mobile} {
-    width: 92px;
-    height: 25px;
+  & > .logo-image {
+    width: 100%;
+    height: 100%;
+    @media ${(props) => props.theme.mobile} {
+      width: 92px;
+      height: 25px;
+    }
   }
 `;
-
-// const LogoImg = styled.img`
-//   width: 107px;
-//   height: 29px;
-//   @media ${(props) => props.theme.mobile} {
-//     width: 92px;
-//     height: 25px;
-//   }
-// `;
 
 const CityCategory = styled.select`
   position: absolute;
@@ -298,35 +295,25 @@ const HeaderRight = styled.div`
 `;
 
 const MenuImgBox = styled.div`
-  position: relative;
-  display: none;
-  @media ${(props) => props.theme.mobile} {
-    display: inherit;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+  & > .menu-image {
+    display: none;
+    @media ${(props) => props.theme.mobile} {
+      display: inherit;
+      margin-right: 8px;
+    }
   }
 `;
 
-// const Menu = styled.img`
-//   display: none;
-//   @media ${(props) => props.theme.mobile} {
-//     display: inherit;
-//     width: 24px;
-//     height: 24px;
-//     margin-right: 8px;
-//   }
-// `;
-
 const DropMenu = styled.div`
-  background-color: #ffffff;
   width: 100px;
-  height: 60px;
-  border: 1px solid #1882ff;
-  border-radius: 12px;
+  height: 40px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.21);
+  gap: 19px;
+  background-color: #f4f4f4;
   position: absolute;
   left: 80%;
-  top: 12%;
+  top: 10%;
   transform: translate(-50%, -50%);
   padding: 4px;
   z-index: 3;
@@ -335,24 +322,17 @@ const PostFormButtonMobile = styled.button`
   display: none;
   @media ${(props) => props.theme.mobile} {
     display: inherit;
-    border-radius: 20px;
-    color: #1882ff;
-    border: 1px solid cornflowerblue;
-    background-color: white;
+    border: none;
     cursor: pointer;
     width: 92px;
     height: 28px;
   }
 `;
 
-// const MessageImgBox = styled.div`
-//   position: relative;
-//   cursor: pointer;
-// `;
-
 const MessageWrap = styled.div`
-  width: 25px;
-  height: 25px;
+  margin-left: 4px;
+  width: 40px;
+  height: 28px;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -362,11 +342,12 @@ const MessageWrap = styled.div`
 
 const MessageImgWrap = styled.div`
   display: flex;
-  margin: 0 8px 0 0;
 `;
-// const MessageImg = styled.img`
-//   cursor: pointer;
-// `;
+const MessageImgBox = styled.div`
+  position: relative;
+  cursor: pointer;
+`;
+
 const CheckedCount = styled.div`
   background-color: red;
   color: white;

@@ -7,6 +7,7 @@ import { authService } from '@/firebase';
 import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
 import { logEvent } from '@amplitude/analytics-browser';
+import { useMediaQuery } from 'react-responsive';
 
 const CommentList = ({ postId }: postId) => {
   const [inputCount, setInputCount] = useState(0);
@@ -16,7 +17,8 @@ const CommentList = ({ postId }: postId) => {
   const { data, isLoading } = useQuery(['comments', postId], getComment);
   const { isLoading: commentLoading, mutate: commentMutate } =
     useMutation(addComment);
-
+  const isMobile = useMediaQuery({ maxWidth: 823 });
+  const isPc = useMediaQuery({ minWidth: 824 });
   const submitCommentData = {
     creatorUid: authService.currentUser?.uid,
     contents: comment,
@@ -70,12 +72,24 @@ const CommentList = ({ postId }: postId) => {
           }
           disabled={authService.currentUser ? false : true}
         />
-        <InputBtnContainer>
-          <span style={{ color: '#8E8E93', paddingTop: 6, width: 50 }}>
-            {inputCount} /30
-          </span>
-          <InputBtn>댓글 등록</InputBtn>
-        </InputBtnContainer>
+        {isPc && (
+          <InputBtnContainer>
+            <span style={{ color: '#8E8E93', paddingTop: 6, width: 50 }}>
+              {inputCount} /30
+            </span>
+            <InputBtn>댓글 등록</InputBtn>
+          </InputBtnContainer>
+        )}
+        {isMobile && (
+          <InputBtnContainer>
+            <span style={{ color: '#8E8E93', paddingTop: 6, width: 40 }}>
+              {inputCount} /30
+            </span>
+            <InputBtn>
+              <InputBtnImg src="/comment-check.png" alt="comment-check" />
+            </InputBtn>
+          </InputBtnContainer>
+        )}
       </Form>
     </CommentContainer>
   );
@@ -87,7 +101,6 @@ const CommentContainer = styled.div`
     width: 350px;
     height: 120px;
     margin: auto;
-    margin-top: 10px;
   }
 `;
 
@@ -96,9 +109,11 @@ const CommentBox = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  background-color: transparent;
 `;
 
 const Form = styled.form`
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   background-color: #f8f8f8;
@@ -110,7 +125,7 @@ const Form = styled.form`
 const Input = styled.input`
   background-color: #f8f8f8;
   border: transparent;
-  height: 20px;
+  height: 40px;
   width: 70%;
   margin-left: 20px;
   :focus-visible {
@@ -120,17 +135,34 @@ const Input = styled.input`
 
 const InputBtnContainer = styled.div`
   display: flex;
+  @media ${(props) => props.theme.mobile} {
+    padding: 0px;
+  }
 `;
 
 const InputBtn = styled.button`
   cursor: pointer;
-  background-color: #1882ff;
+  background-color: #4cb2f6;
   color: white;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 80px;
   height: 30px;
   text-align: center;
   margin-left: 10px;
   border: transparent;
   margin-right: 10px;
+  @media ${(props) => props.theme.mobile} {
+    width: 39px;
+    height: 29px;
+    margin-left: 0px;
+  }
+`;
+const InputBtnImg = styled.img`
+  width: 40px;
+  height: 30px;
+  text-align: center;
+  border: transparent;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
 `;

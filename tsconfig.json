@@ -29,7 +29,8 @@
     "components/main/Modal.jsx",
     "components/main/PostForm.tsx",
     "components/ModalWide.jsx",
-    "pages/mypage/index.jsx"
+    "pages/mypage/index.jsx",
+    "components/detail/MapsHomeLanding"
   ],
   "exclude": ["node_modules"]
 }
