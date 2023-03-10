@@ -8,7 +8,7 @@ export default function MyCollectPost({
   item: { [key: string]: string };
 }) {
   return (
-    <Link href={`/detail/${item.id}`}>
+    <Link href={`/detail/${item.uid}`}>
       <CollectionImg src={item.imgUrl} />
     </Link>
   );

@@ -8,17 +8,22 @@ import styled from 'styled-components';
 
 const CollectionList = () => {
   //* useQuery 사용해서 collection의 모든 데이터 불러오기
-  const { data: collectionData } = useQuery('collectiondata2', getCollection);
-
-  //* collector에서 내 id를 가진 값 찾기
-  const collectorList = collectionData?.filter((item: any) => {
-    return item.collector.find((item: any) =>
-      authService.currentUser?.uid.includes(item)
-    );
+  const { data: collectionData } = useQuery('myCollectiondata', getCollection, {
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
   });
 
+  //* collector에서 내 id를 가진 값 찾기
+  const collectorList = collectionData?.filter(
+    (item: { collector: string[] }) => {
+      return item.collector.find((item: string) =>
+        authService.currentUser?.uid.includes(item)
+      );
+    }
+  );
+
   //* 내가 collect한 포스터 들의 town
-  const myCollectionTown = collectorList?.map((item: any) => {
+  const myCollectionTown = collectorList?.map((item: { town: string }) => {
     return item.town;
   });
 

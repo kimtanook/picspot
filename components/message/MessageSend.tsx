@@ -1,10 +1,9 @@
 import { authService } from '@/firebase';
-import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { addSendedMessage, addSendMessage } from '@/api';
 import { useRouter } from 'next/router';
-import { customAlert } from '@/utils/alerts';
 import { useMediaQuery } from 'react-responsive';
 
 interface Props {
@@ -16,7 +15,7 @@ function MessageSend({ setModal }: Props) {
   const profileImg = router.query.userImg as string;
   const userName = router.query.name;
   const userId = router.query.id;
-  const queryClient = useQueryClient();
+
   const { mutate: addMessage } = useMutation(addSendMessage);
   const { mutate: sendedMessage } = useMutation(addSendedMessage);
   const [messageValue, setMessageValue] = useState('');
@@ -103,6 +102,13 @@ const Wrap = styled.div`
   background-color: #00000061;
   width: 100vw;
   height: 100vh;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: absolute;
+  }
 `;
 const CancelButton = styled.button`
   background-color: white;
@@ -143,8 +149,8 @@ const SendWrap = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   @media ${(props) => props.theme.mobile} {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     justify-content: center;
   }
 `;
@@ -155,7 +161,7 @@ const SendUserName = styled.div`
   font-size: 16px;
   background-color: #f4f4f4;
   text-align: center;
-  width: 258px;
+  width: 60%;
   height: 68px;
   line-height: 68px;
   margin: 0 auto 0 auto;
@@ -163,6 +169,7 @@ const SendUserName = styled.div`
   font-weight: 700;
   @media ${(props) => props.theme.mobile} {
     width: 70vw;
+    background-color: white;
   }
 `;
 const UserProfileImg = styled.img`

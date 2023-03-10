@@ -283,13 +283,19 @@ function Profile() {
 export default Profile;
 
 const UserContainer = styled.div`
+  box-shadow: inset 0px 20px 15px rgba(0, 0, 0, 0.05);
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 64px;
+  padding-top: 64px;
+  margin-bottom: 10px;
+  background-color: #fbfbfb;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+  }
 `;
 const Back = styled.div`
   position: absolute;
@@ -326,7 +332,6 @@ const UserPostTownList = styled.div`
   }
 `;
 const CategoryBtn = styled.div`
-  margin: 40px 0px 10px 0px;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
     margin: 0px;
