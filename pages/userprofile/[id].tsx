@@ -26,9 +26,11 @@ function Profile() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const userId = router.query.id as string;
-  const isMobile = useMediaQuery({ maxWidth: 785 });
-  const isPc = useMediaQuery({ minWidth: 786 });
   const [onSpot, setOnSpot] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isPc, setIsPc] = useState(false);
+  const mobile = useMediaQuery({ maxWidth: 785 });
+  const pc = useMediaQuery({ minWidth: 786 });
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
   //* 현재 페이지 유저가 팔로잉한 사람 uid가 담긴 배열
@@ -117,6 +119,12 @@ function Profile() {
   };
 
   // console.log('getFollowingData?.length: ', getFollowingData?.length);
+
+  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
+  useEffect(() => {
+    setIsMobile(mobile);
+    setIsPc(pc);
+  }, [mobile, pc]);
 
   //* Amplitude 이벤트 생성
   useEffect(() => {
@@ -261,7 +269,6 @@ function Profile() {
             </>
           )}
         </CategoryBtn>
-
         <GridBox>
           {onSpot ? (
             <UserPostList userId={userId} />

@@ -7,7 +7,10 @@ import styled from 'styled-components';
 
 const UserPostList = ({ userId }: { userId: string }) => {
   //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery(['getUserData', userId], getMyPost);
+  const { data } = useQuery(['getUserData', userId], getMyPost, {
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+  });
 
   //* 현재 프로필 유저가 작성한 포스트들의 town 값 배열
   const townArray = data?.map((item: { town: string }) => item.town);
