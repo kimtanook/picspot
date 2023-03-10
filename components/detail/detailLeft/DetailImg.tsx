@@ -1,4 +1,4 @@
-import { postCounter, updateData } from '@/api';
+import { updateData } from '@/api';
 import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
@@ -11,12 +11,16 @@ import { logEvent } from '@/utils/amplitude';
 import imageCompression from 'browser-image-compression';
 import Swal from 'sweetalert2';
 
-const DetailImg = ({ item }: any) => {
-  const [imageUpload, setImageUpload]: any = useState(null);
+type ItemProps = {
+  item: ItemType;
+};
 
-  const [isModalImgActive, setIsModalImgActive]: any = useState(false);
+const DetailImg = ({ item }: ItemProps) => {
+  const [imageUpload, setImageUpload] = useState<string | null>(null);
+  const [isModalImgActive, setIsModalImgActive] = useState(false);
+
   const queryClient = useQueryClient(); // *쿼리 최신화하기
-  const editFileInput: any = useRef(); //* Input Dom 접근하기
+  const editFileInput = useRef<HTMLInputElement>(null); //* Input Dom 접근하기
 
   useEffect(() => {
     const html = document.documentElement;
@@ -38,37 +42,40 @@ const DetailImg = ({ item }: any) => {
   };
 
   //* 파일 선택 버튼을 눌렀을때 실행하는 함수
-  const onChangeEditImgUrl = async (e: any) => {
+  const onChangeEditImgUrl = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const options = {
       maxSizeMB: 1, //* 허용하는 최대 사이즈 지정
       maxWidthOrHeight: 500, //* 허용하는 최대 width, height 값 지정
       useWebWorker: true, //* webworker 사용 여부
     };
 
-    const theFile = e.target.files[0];
+    if (e.target.files !== null) {
+      const theFile = e.target.files[0];
 
-    try {
-      const compressedFile = await imageCompression(theFile, options);
-      // console.log('compressedFile: ', compressedFile);
+      try {
+        const compressedFile = await imageCompression(theFile, options);
 
-      const reader = new FileReader();
-      reader?.readAsDataURL(compressedFile);
-      reader.onloadend = (finishedEvent) => {
-        const {
-          currentTarget: { result },
-        }: any = finishedEvent;
-        setImageUpload(result);
-      };
-    } catch (error) {
-      console.log(error);
+        const reader = new FileReader();
+        reader?.readAsDataURL(compressedFile);
+        reader.onloadend = (finishedEvent) => {
+          const result = reader.result;
+          setImageUpload(result as string);
+        };
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
+  //! mutate(onUpdateData) 리턴값 에러
   //* useMutation 사용해서 데이터 수정하기
-  const { mutate: onUpdateData } = useMutation(updateData);
+  const { mutate: onUpdateData } = useMutation<undefined, undefined, IdType>(
+    updateData
+  );
 
   //* 게시물 사진 수정 버튼을 눌렀을때 실행하는 함수
-  const onClickEdit = (data: any) => {
+  const onClickEdit = (data: IdType) => {
+    // console.log('data: ', data);
     if (imageUpload === null) {
       customAlert('이미지를 추가해주세요.');
     }
@@ -76,38 +83,40 @@ const DetailImg = ({ item }: any) => {
     const imageRef = ref(storageService, `images/${item.imgPath}`);
     // console.log('item.imgPath: ', item.imgPath);
 
-    uploadString(imageRef, imageUpload, 'data_url').then((response) => {
-      getDownloadURL(response.ref).then((url) => {
-        const response = url;
-        Swal.fire({
-          icon: 'warning',
-          title: '정말로 수정하시겠습니까?',
-          confirmButtonColor: '#08818c',
+    if (imageUpload !== null) {
+      uploadString(imageRef, imageUpload, 'data_url').then((response) => {
+        getDownloadURL(response.ref).then((url) => {
+          const response = url;
+          Swal.fire({
+            icon: 'warning',
+            title: '정말로 수정하시겠습니까?',
+            confirmButtonColor: '#08818c',
 
-          showCancelButton: true,
-          confirmButtonText: '수정',
-          cancelButtonText: '취소',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            onUpdateData(
-              { ...data, imgUrl: response },
-              {
-                onSuccess: () => {
-                  setTimeout(
-                    () => queryClient.invalidateQueries('detailData'),
-                    500
-                  );
-                  setImageUpload(null);
-                  logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
-                },
-              }
-            );
-          } else {
-            setImageUpload(null);
-          }
+            showCancelButton: true,
+            confirmButtonText: '수정',
+            cancelButtonText: '취소',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              onUpdateData(
+                { ...data, imgUrl: response },
+                {
+                  onSuccess: () => {
+                    setTimeout(
+                      () => queryClient.invalidateQueries('detailData'),
+                      500
+                    );
+                    setImageUpload(null);
+                    logEvent('게시물 사진 수정 버튼', { from: 'detail page' });
+                  },
+                }
+              );
+            } else {
+              setImageUpload(null);
+            }
+          });
         });
       });
-    });
+    }
     queryClient.invalidateQueries('detailData');
   };
 
@@ -162,7 +171,7 @@ const DetailImg = ({ item }: any) => {
           </DetailImgBox>
         )}
         {imageUpload ? (
-          <DetailBtn onClick={() => onClickEdit({ id: item.id })}>
+          <DetailBtn onClick={() => onClickEdit({ id: item.id, imgUrl: '' })}>
             게시물 사진 수정 〉
           </DetailBtn>
         ) : (
@@ -172,7 +181,7 @@ const DetailImg = ({ item }: any) => {
               type="file"
               accept="image/png, image/jpeg, image/jpg, image/webp"
               onChange={onChangeEditImgUrl}
-              src={imageUpload}
+              src={imageUpload !== null ? imageUpload : undefined}
               ref={editFileInput}
               alt="image"
               id="file"

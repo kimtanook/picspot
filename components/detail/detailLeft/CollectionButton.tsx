@@ -1,9 +1,4 @@
-import {
-  addCollectionData,
-  deleteCollectionData,
-  getCollection,
-  visibleReset,
-} from '@/api';
+import { addCollectionData, deleteCollectionData, getCollection } from '@/api';
 
 import { useEffect, useState } from 'react';
 
@@ -12,7 +7,7 @@ import { authService } from '@/firebase';
 import styled from 'styled-components';
 import Image from 'next/image';
 
-const CollectionButton = ({ item }: any) => {
+const CollectionButton = ({ item }: ItemProps) => {
   //* 현재 나의 uid
   const collector = authService.currentUser?.uid;
   let postId = item.id;
@@ -31,7 +26,11 @@ const CollectionButton = ({ item }: any) => {
   } = useQuery('collectiondata', getCollection);
 
   //* mutation 사용해서 collector값 보내기
-  const { mutate: onAddCollection } = useMutation(addCollectionData, {
+  const { mutate: onAddCollection } = useMutation<
+    undefined,
+    undefined,
+    ItemType
+  >(addCollectionData, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
@@ -39,7 +38,11 @@ const CollectionButton = ({ item }: any) => {
   });
 
   //* mutation 사용해서 collector값 삭제하기
-  const { mutate: onDeleteCollection } = useMutation(deleteCollectionData, {
+  const { mutate: onDeleteCollection } = useMutation<
+    undefined,
+    undefined,
+    ItemType
+  >(deleteCollectionData, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
@@ -71,10 +74,10 @@ const CollectionButton = ({ item }: any) => {
 
   //* collector필드의 배열값
   const collectorUid = collectionData
-    ?.filter((item: any) => {
+    ?.filter((item: CollecionDataType) => {
       return item.uid === postId;
     })
-    .find((item: any) => {
+    .find((item: CollectorUidType) => {
       return item.collector;
     })?.collector;
 
@@ -134,5 +137,4 @@ const CollectionText = styled.div`
 const CollectionBtn = styled.div`
   cursor: pointer;
   margin-left: 10px;
-  
 `;

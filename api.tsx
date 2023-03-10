@@ -147,7 +147,7 @@ export const deleteData: any = (docId: any) => {
 
 //* 포스트 수정하기
 export const updateData: any = (data: any) => {
-  updateDoc(doc(dbService, 'post', data.id), data);
+  return updateDoc(doc(dbService, 'post', data.id), data);
 };
 
 //* 댓글 가져오기
@@ -246,7 +246,7 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  console.log('data: ', data);
+  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
