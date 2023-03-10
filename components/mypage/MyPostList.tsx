@@ -10,7 +10,10 @@ const MyPostList = () => {
   const userUid = authService.currentUser?.uid;
 
   //* useQuery 사용해서 데이터 불러오기
-  const { data } = useQuery(['data', userUid], getMyPost);
+  const { data } = useQuery(['data', userUid], getMyPost, {
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+  });
 
   //* 만든 것 중 town 값만 고르기
   const myCollectPost = data?.filter((item: { town: string }) => {

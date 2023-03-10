@@ -197,7 +197,7 @@ export const getCollection = async () => {
 
   return response;
 };
-// 특정 유저의 collection 데이터 불러오기
+//* 특정 유저의 collection 데이터 불러오기
 export const getUserCollection = async ({
   queryKey,
 }: {

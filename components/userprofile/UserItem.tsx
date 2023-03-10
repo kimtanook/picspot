@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export default function UserItem({ item }: { item: userItem }) {
   return (
-    <Link href={`/detail/${item.id}`}>
+    <Link href={`/detail/${item.uid}`}>
       <UserPostImg src={item.imgUrl} />
     </Link>
   );

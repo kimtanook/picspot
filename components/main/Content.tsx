@@ -62,6 +62,11 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
       collector: authService.currentUser?.uid,
     });
   };
+
+  // 아이템 클릭 시 스크롤 위치 저장
+  const saveScroll = () => {
+    sessionStorage.setItem('scrollY', String(window.scrollY));
+  };
   return (
     <>
       {collectHover ? (
@@ -84,6 +89,7 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
             width={252}
             height={300}
             priority={true}
+            onClick={saveScroll}
             className="image-box"
             quality={75}
           />

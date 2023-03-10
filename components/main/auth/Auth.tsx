@@ -71,6 +71,7 @@ const Auth = (): JSX.Element => {
     setIsRemember(!isRemember);
   };
 
+// 아이디 저장
   useEffect(() => {
     let idFlag = localStorage.getItem(LS_KEY_ID);
 
