@@ -368,7 +368,7 @@ const DetailList = ({ item }: ItemProps) => {
 
               <EditclearBtn
                 onClick={() => {
-                  setValue('title', '');
+                  // setValue('title', '');
                 }}
               ></EditclearBtn>
             </TitleInputContainer>
