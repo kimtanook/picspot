@@ -10,7 +10,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import DetailMapLanding from './DetailMapLanding';
 
-const DetailMap = ({ item }: any) => {
+const DetailMap = ({ item }: ItemProps) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
 

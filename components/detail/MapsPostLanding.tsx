@@ -1,5 +1,6 @@
-import { infoDivAtom, placeAtom } from '@/atom';
+import { infoDivAtom, isOpenMapAtom, placeAtom } from '@/atom';
 import React, { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import MapsPost from './MapsPost';
@@ -8,7 +9,11 @@ const MapsPostLanding = () => {
   const [place, setPlace] = useRecoilState(placeAtom);
   const [inputText, setInputText] = useState('');
   const [infoDiv, setInfoDiv] = useRecoilState(infoDivAtom);
-
+  const [isOpenMap, setIsOpenMap] = useRecoilState(isOpenMapAtom);
+  const isMobile = useMediaQuery({ maxWidth: 766 });
+  const onClickOpen = () => {
+    setIsOpenMap(!isOpenMap);
+  };
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.currentTarget.value);
   };
@@ -20,6 +25,15 @@ const MapsPostLanding = () => {
 
   return (
     <MapWrap>
+      {isMobile && (
+        <PostFormMapsBackButton
+          onClick={() => {
+            setIsOpenMap(!isOpenMap);
+          }}
+        >
+          <img src="/drag_handle.svg" />
+        </PostFormMapsBackButton>
+      )}
       <StyleContainer>
         <StyledForm onSubmit={handleSubmit}>
           <StyledInfo>{infoDiv}</StyledInfo>
@@ -105,6 +119,18 @@ const SearchButton = styled.button`
 const MapWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100%;
-    margin-top: 55%;
+    margin-top: 89%;
+    position: relative;
+  }
+`;
+
+const PostFormMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 9999;
+    left: 45%;
+    top: -2%;
+    padding: 5px;
+    cursor: pointer;
   }
 `;
