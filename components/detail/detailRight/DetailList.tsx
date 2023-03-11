@@ -355,63 +355,70 @@ const DetailList = ({ item }: ItemProps) => {
       <ListContainer>
         <TitleAndView>
           <TitleInputWrap>
-            <TitleInput
-              maxLength={15}
-              defaultValue={item.title}
-              onChange={(e) => {
-                setEditTitle(e.target.value);
-                setEditTitleInputCount(e.target.value.length);
-              }}
-              ref={titleInput}
-            />
-
-            <TitleInputSpan>
-              <span
-                style={{
-                  color: ' #F4F4F4;',
-                  width: 65,
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
+            <TitleInputContainer>
+              <TitleInput
+                maxLength={15}
+                defaultValue={item.title}
+                onChange={(e) => {
+                  setEditTitle(e.target.value);
+                  setEditTitleInputCount(e.target.value.length);
                 }}
-              >
-                {editTitleInputCount} /15
-              </span>
+                ref={titleInput}
+              />
+
+              <EditclearBtn
+                onClick={() => {
+                  // setValue('title', '');
+                }}
+              ></EditclearBtn>
+            </TitleInputContainer>
+            <TitleInputSpan>
+              {isPc && (
+                <span
+                  style={{
+                    color: ' #F4F4F4;',
+                    width: 65,
+                    marginTop: 'auto',
+                    marginBottom: 'auto',
+                    marginLeft: '10%',
+                  }}
+                >
+                  {editTitleInputCount} /15
+                </span>
+              )}
             </TitleInputSpan>
           </TitleInputWrap>
-          <EditclearBtn
-            onClick={() => {
-              // setValue('title', '');
-            }}
-          ></EditclearBtn>
           {editBtnToggle ? (
             <EditBtnCotainer>
-              {/* <EditBtn onClick={() => onClickDelete(item.id)}>
+              <div>
+                {/* <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
               </EditBtn> */}
-              <EditBtnWrap>
-                <EditBtn
-                  onClick={() =>
-                    onClickEdit({
-                      id: item.id,
-                      title: editTitle,
-                      content: editContent,
-                      city: editCity,
-                      town: editTown,
-                      lat: editSaveLatLng.Ma,
-                      long: editSaveLatLng.La,
-                      address: editSaveAddress,
-                      // ...editState,
-                    })
-                  }
-                >
-                  수정사항 저장
-                </EditBtn>
-                <EditBtnArrow src="/arrow-right-white.png" alt="image" />
-              </EditBtnWrap>
-              <EditBtnWrap>
-                <EditBtn onClick={onClickEditToggle}>수정하기 취소</EditBtn>
-                <EditBtnArrow src="/arrow-right-white.png" alt="image" />
-              </EditBtnWrap>
+                <EditBtnWrap>
+                  <EditBtn
+                    onClick={() =>
+                      onClickEdit({
+                        id: item.id,
+                        title: editTitle,
+                        content: editContent,
+                        city: editCity,
+                        town: editTown,
+                        lat: editSaveLatLng.Ma,
+                        long: editSaveLatLng.La,
+                        address: editSaveAddress,
+                        // ...editState,
+                      })
+                    }
+                  >
+                    수정사항 저장
+                  </EditBtn>
+                  <EditBtnArrow src="/arrow-right-white.png" alt="image" />
+                </EditBtnWrap>
+                <EditBtnWrap>
+                  <EditBtn onClick={onClickEditToggle}>수정하기 취소</EditBtn>
+                  <EditBtnArrow src="/arrow-right-white.png" alt="image" />
+                </EditBtnWrap>
+              </div>
             </EditBtnCotainer>
           ) : (
             <>
@@ -479,11 +486,36 @@ const DetailList = ({ item }: ItemProps) => {
               </>
             )}
           </TownInput>
+          <HowManyView>
+            {isMobile && (
+              <View>
+                <Image
+                  src="/view_icon.svg"
+                  alt="image"
+                  width={24}
+                  height={16}
+                  style={{ marginRight: 5 }}
+                />
+                <span style={{ color: '#1882FF', width: 70 }}>
+                  {item.clickCounter} view
+                </span>
+              </View>
+            )}
+          </HowManyView>
           {/* <Address>
             <Image src="/spot_icon.svg" alt="image" width={24} height={24} />{' '}
             <span>{item.address}</span>
           </Address> */}
         </CityAndTownAndAddress>
+        <AddressWrap>
+          <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
+          {/* <CopyToClipboard
+                text={item.address}
+                onCopy={() => alert('클립보드에 복사되었습니다.')}
+              > */}
+          <AddressText>{item.address}</AddressText>
+          {/* </CopyToClipboard> */}
+        </AddressWrap>
         <ContentInputContainer>
           <ContentInputWrap>
             <ContentInput
@@ -594,6 +626,9 @@ const Menu = styled.div`
   background-color: #f4f4f4;
   transition: 0.3s;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    right: 5%;
+  }
 `;
 const MenuItem = styled.div`
   display: flex;
@@ -614,10 +649,10 @@ const TitleAndView = styled.div`
   flex-direction: row;
   width: 100%;
   @media ${(props) => props.theme.mobile} {
-    width: 350px;
+    width: 96.5vw;
     position: absolute;
     top: 70px;
-    padding-left: 30px;
+    padding-left: 12px;
   }
 `;
 
@@ -639,17 +674,19 @@ const Title = styled.div`
   }
 `;
 const EditclearBtn = styled.div`
-  position: absolute;
-  top: 25%;
-  left: 460px;
+  /* position: absolute; */
+  /* top: 25%; */
+  /* left: 460px; */
+  vertical-align: middle;
+  align-self: center;
   width: 24px;
   height: 24px;
   background-image: url(/cancle-button-black.png);
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-110%, 920%);
-    position: inherit;
+    /* transform: translate(-110%, 920%); */
+    position: relative;
   }
 `;
 
@@ -657,9 +694,27 @@ const TitleInputWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: end;
+  @media ${(props) => props.theme.mobile} {
+    width: 70%;
+    align-items: center;
+    /* margin-right: 17%; */
+  }
 `;
-const TitleInput = styled.input`
+
+const TitleInputContainer = styled.div`
+  border-bottom: 2px solid #1882ff;
+  background: #fbfbfb;
+  width: 490px;
+  height: 53px;
+  display: flex;
   margin-right: 30px;
+  @media ${(props) => props.theme.mobile} {
+    width: 100%;
+    align-items: center;
+  }
+`;
+
+const TitleInput = styled.input`
   font-size: 28px;
   color: #212121;
   padding-left: 15px;
@@ -669,10 +724,14 @@ const TitleInput = styled.input`
   border: none;
   border-bottom: 2px solid #1882ff;
   background: #fbfbfb;
-  width: 490px;
+  width: 460px;
   height: 53px;
   :focus-visible {
     outline: none;
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 80%;
+    border-bottom: 1px solid #1882ff;
   }
 `;
 
@@ -714,6 +773,11 @@ const EditBtnCotainer = styled.div`
   border-radius: 10px;
   left: 1221px;
   top: 104px;
+  @media ${(props) => props.theme.mobile} {
+    width: 90px;
+    place-content: right;
+    height: 60px;
+  }
 `;
 const EditBtnWrap = styled.div`
   display: flex;
@@ -733,6 +797,8 @@ const EditBtn = styled.div`
   color: white;
   @media ${(props) => props.theme.mobile} {
     display: flex;
+    font-size: 11px;
+    width: 65px;
   }
 `;
 
@@ -743,6 +809,10 @@ const EditBtnArrow = styled.img`
   height: 16px;
   margin-top: 3px;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 12px;
+    height: 12px;
+  }
 `;
 
 const CityAndTownAndAddress = styled.div`
@@ -879,12 +949,19 @@ const Content = styled.div`
 
 const ContentInputContainer = styled.div`
   position: relative;
+  @media ${(props) => props.theme.mobile} {
+    width: 90vw;
+  }
 `;
 
 const ContentInputWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: end;
+  @media ${(props) => props.theme.mobile} {
+    width: 90vw;
+    align-items: flex-start;
+  }
 `;
 const ContentInput = styled.input`
   font-family: 'Noto Sans CJK KR';
@@ -900,6 +977,9 @@ const ContentInput = styled.input`
   height: 49px;
   :focus-visible {
     outline: none;
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 90vw;
   }
 `;
 const ContentInputSpan = styled.div`
@@ -917,8 +997,8 @@ const ClearBtn = styled.div`
   background-repeat: no-repeat;
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    transform: translate(-110%, 920%);
-    position: inherit;
+    display: flex;
+    left: 90%;
   }
 `;
 const TipSpan = styled.span`
