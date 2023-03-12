@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
@@ -97,6 +97,21 @@ const AuthSignUp = () => {
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
   };
+  // 모달 창 뒤에 누르면 닫힘
+  useEffect(() => {
+    const html = document.documentElement;
+    if (closeLoginModal || signUpModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [closeLoginModal || signUpModal]);
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
       <Heder
