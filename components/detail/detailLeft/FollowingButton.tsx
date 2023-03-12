@@ -12,30 +12,40 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
 
-const FollowingButton = ({ item }: any) => {
+const FollowingButton = ({ item }: ItemProps) => {
   //* 팔로잉 버튼 토글
   const [follwingUserAndCreatorUidState, setFollwingUserAndCreatorUidState] =
     useState(false);
 
   //* mutation 사용해서 팔로잉, 팔로우 데이터 보내기, user 데이터 보내기
-  const { mutate: followingMutate } = useMutation(addFollowing);
-  const { mutate: followMutate } = useMutation(addFollow);
-  const { mutate: userMutate } = useMutation(updateUser);
+  const { mutate: followingMutate } = useMutation<
+    undefined,
+    undefined,
+    ItemType
+  >(addFollowing);
+  const { mutate: followMutate } = useMutation<undefined, undefined, ItemType>(
+    addFollow
+  );
+  const { mutate: userMutate } = useMutation<
+    undefined,
+    undefined,
+    CreatorUserType | AuthUserType
+  >(updateUser);
 
   //* creator user 데이터
-  const creatorUserData: any = {
+  const creatorUserData: CreatorUserType = {
     uid: item.creator,
     creator: item.creator,
   };
 
   //* auth user 데이터
-  const authUserData: any = {
+  const authUserData: AuthUserType = {
     uid: authService.currentUser?.uid,
     creator: authService.currentUser?.uid,
   };
 
   //* 팔로잉버튼을 눌렀을때 실행하는 함수
-  const onClickFollowingBtn = (item: any) => {
+  const onClickFollowingBtn = (item: ItemType) => {
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
     followMutate({ ...item, uid: authService?.currentUser?.uid });
     userMutate(creatorUserData);
@@ -45,11 +55,19 @@ const FollowingButton = ({ item }: any) => {
   };
 
   //* mutation 사용해서 팔로잉, 팔로우 삭제 데이터 보내기
-  const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing);
-  const { mutate: deleteFollowMutate } = useMutation(deleteFollow);
+  const { mutate: deleteFollowingMutate } = useMutation<
+    undefined,
+    undefined,
+    ItemType
+  >(deleteFollowing);
+  const { mutate: deleteFollowMutate } = useMutation<
+    undefined,
+    undefined,
+    ItemType
+  >(deleteFollow);
 
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
-  const onClickDeleteFollowing = (item: any) => {
+  const onClickDeleteFollowing = (item: ItemType) => {
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
     setFollwingUserAndCreatorUidState(!follwingUserAndCreatorUidState);
@@ -65,13 +83,12 @@ const FollowingButton = ({ item }: any) => {
 
   //? 팔로잉한 사람 uid를 배열에 담았습니다.
   const authFollowingUid = followingData
-    ?.filter((item: any) => {
+    ?.filter((item: FollowingDataItemType) => {
       return item.docId === authService.currentUser?.uid;
     })
-    .find((item: any) => {
+    .find((item: AuthFollowingUidType) => {
       return item.following;
     })?.following;
-  // console.log('authFollowingUid: ', authFollowingUid);
 
   //* 팔로잉을 한 유저가 페이지에 들어왔을때 팔로잉 취소버튼이,
   //* 팔로잉을 하지 않은 유저가 페이지에 들어왔을때 팔로잉 버튼이 보이도록 하기

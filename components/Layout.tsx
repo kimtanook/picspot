@@ -39,7 +39,8 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
-  const [deletePostModal, setDeletePostModal] = useRecoilState(deletePostModalAtom);
+  const [deletePostModal, setDeletePostModal] =
+    useRecoilState(deletePostModalAtom);
 
   const isMobile = useMediaQuery({ maxWidth: 823 });
   const isPc = useMediaQuery({ minWidth: 824 });

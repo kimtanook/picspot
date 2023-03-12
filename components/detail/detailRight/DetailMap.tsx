@@ -10,7 +10,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import DetailMapLanding from './DetailMapLanding';
 
-const DetailMap = ({ item }: any) => {
+const DetailMap = ({ item }: ItemProps) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
 
@@ -61,5 +61,6 @@ const MapContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 350px;
     margin: auto;
+    margin-top: 95px;
   }
 `;

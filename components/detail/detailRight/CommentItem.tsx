@@ -124,7 +124,7 @@ const DeleteMyComment = styled.div`
 `;
 
 const TipBar = styled.img`
-  width: 3px;
+  width: 2px;
   height: 24px;
   display: flex;
   justify-content: flex-end;

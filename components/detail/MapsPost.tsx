@@ -114,7 +114,10 @@ const MapsPost = () => {
     <div
       id="map"
       ref={container}
-      style={{ width: '620px', height: '630px' }}
+      style={{
+        width: '620px',
+        height: '630px',
+      }}
     ></div>
   );
 };

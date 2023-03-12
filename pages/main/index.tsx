@@ -236,17 +236,30 @@ export default function Main() {
             <DataError />
           ) : (
             <GridBox>
-              <ResponsiveMasonry
-                columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
-              >
-                <Masonry columnsCount={4}>
-                  {data?.pages.map((data) =>
-                    data?.map((item: { [key: string]: string }) => (
-                      <ContentBox key={uuidv4()} item={item} />
-                    ))
-                  )}
-                </Masonry>
-              </ResponsiveMasonry>
+              {data?.pages[0]?.length === 0 ? (
+                <EmptyPostBox>
+                  <Image
+                    src="/main/empty-icon.png"
+                    alt="empty-icon"
+                    className="empty-image"
+                    width={100}
+                    height={100}
+                  />
+                  <div>게시글이 없습니다.</div>
+                </EmptyPostBox>
+              ) : (
+                <ResponsiveMasonry
+                  columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
+                >
+                  <Masonry columnsCount={4}>
+                    {data?.pages.map((data) =>
+                      data?.map((item: { [key: string]: string }) => (
+                        <ContentBox key={uuidv4()} item={item} />
+                      ))
+                    )}
+                  </Masonry>
+                </ResponsiveMasonry>
+              )}
             </GridBox>
           )}
 
@@ -397,6 +410,21 @@ const GridBox = styled.div`
   }
 `;
 
+const EmptyPostBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  & > .empty-image {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 const ChatWrap = styled.div`
   position: fixed;
   left: 3%;
@@ -434,6 +462,8 @@ const MapModalBtn = styled.button`
   height: 36px;
   left: calc(50% - 121px / 2 - 0.5px);
   bottom: 42px;
+  z-index: 999;
+
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 60px;
@@ -442,7 +472,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
-    z-index: 1;
+    z-index: 999;
   }
 `;
 const PinImgBox = styled.div`
@@ -498,6 +528,7 @@ const ModalMapsWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: relative;
     display: flex;
+    background-color: none;
   }
 `;
 const ModalMapsBackButton = styled.div`
