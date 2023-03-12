@@ -1036,4 +1036,7 @@ const EditBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  @media ${(props) => props.theme.mobile} {
+    gap: 3px;
+  }
 `;
