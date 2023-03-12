@@ -36,7 +36,7 @@ const DetailMap = ({ item }: ItemProps) => {
         style={{
           // 지도의 크기
           width: '100%',
-          height: '230px',
+          height: '250px',
         }}
         level={11} // 지도의 확대 레벨
       >
