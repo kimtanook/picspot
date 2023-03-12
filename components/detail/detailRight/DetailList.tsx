@@ -164,7 +164,7 @@ const DetailList = ({ item }: ItemProps) => {
       return;
     }
 
-    console.log('data: ', data);
+    // console.log('data: ', data);
 
     const imageRef = ref(storageService, `images/${item.imgPath}`);
 

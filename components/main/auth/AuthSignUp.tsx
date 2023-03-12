@@ -7,7 +7,12 @@ import { customConfirm } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
 import { useRecoilState } from 'recoil';
-import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
+import {
+  AuthCurrentUser,
+  forgotModalAtom,
+  loginModalAtom,
+  signUpModalAtom,
+} from '@/atom';
 import { setAmplitudeUserId } from '@/utils/amplitude';
 import { useMediaQuery } from 'react-responsive';
 
@@ -29,6 +34,7 @@ const AuthSignUp = () => {
   //* useMutation 사용해서 유저 추가하기
   const { mutate: onAddUser } = useMutation(addUser);
   const [registering, setRegistering] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useRecoilState(AuthCurrentUser);
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [hidePassword, setHidePassword] = useState<boolean>(false);
@@ -69,6 +75,7 @@ const AuthSignUp = () => {
         setSignUpModal(false);
         setForgotModal(false);
         setAmplitudeUserId(authService.currentUser?.uid);
+        setCurrentUser(true);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
