@@ -94,7 +94,6 @@ const ModalStyled = styled.div`
   @media ${(props) => props.theme.mobile} {
     background-color: white;
   }
-
   .modalBody {
     position: relative;
     color: black;
@@ -104,13 +103,10 @@ const ModalStyled = styled.div`
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
     overflow-y: auto;
-    @media ${(props) => props.theme.mobile} {
-      width: 100%;
-      height: 30000px;
-    }
   }
 `;
 const DeleteContainer = styled.div``;
+
 const Text = styled.div`
   display: 1px solid;
   font-size: 24px;
@@ -120,7 +116,11 @@ const Text = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 90px;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 20px;
+  }
 `;
+
 const DeleteCancleButton = styled.button`
   display: 1px solid blue;
   font-size: 14px;
@@ -140,6 +140,9 @@ const DeleteCancleButton = styled.button`
   font-size: 15px;
   &:hover {
     cursor: pointer;
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 300px;
   }
 `;
 const PostDeleteButton = styled.button`
@@ -163,6 +166,7 @@ const PostDeleteButton = styled.button`
     cursor: pointer;
   }
   @media ${(props) => props.theme.mobile} {
+    width: 300px;
   }
 `;
 export default DeletePostModal;
