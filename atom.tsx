@@ -110,3 +110,8 @@ export const isOpenMapAtom = atom({
   key: `isOpenMap`,
   default: false,
 });
+
+export const imageUploadAtom = atom<string | null>({
+  key: `imageUpload`,
+  default: null,
+});

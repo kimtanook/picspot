@@ -4,13 +4,19 @@ import {
   editPlaceAtom,
   editSaveAddressAtom,
   editSaveLatLngAtom,
+  imageUploadAtom,
 } from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
-import { deleteObject, ref } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from 'firebase/storage';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -37,6 +43,8 @@ const DetailList = ({ item }: ItemProps) => {
     useRecoilState(editSaveLatLngAtom);
   const [editSaveAddress, setEditSaveAddress] =
     useRecoilState(editSaveAddressAtom);
+  const [imageUpload, setImageUpload] = useRecoilState(imageUploadAtom);
+
   // 반응형 이용하기
   const [isOpen, setIsOpen] = useState(false);
   const [deletePostModal, setDeletePostModal] = useState(false);
@@ -55,6 +63,7 @@ const DetailList = ({ item }: ItemProps) => {
   //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
+    setImageUpload(null);
   };
 
   const router = useRouter(); //* 라우팅하기
@@ -149,31 +158,99 @@ const DetailList = ({ item }: ItemProps) => {
 
     console.log('data: ', data);
 
-    Swal.fire({
-      icon: 'warning',
-      title: '정말로 수정하시겠습니까?',
-      confirmButtonColor: '#08818c',
-      showCancelButton: true,
-      confirmButtonText: '수정',
-      cancelButtonText: '취소',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        onUpdateData(data, {
-          onSuccess: () => {
-            // setEditState(data);
-            setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-            logEvent('수정 완료 버튼', { from: 'detail page' });
-            setEditSaveLatLng([]);
-            setEditSaveAddress('');
-            setEditBtnToggle(!editBtnToggle);
-          },
+    const imageRef = ref(storageService, `images/${item.imgPath}`);
+
+    if (imageUpload === null) {
+      customAlert('이미지를 추가해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '정말로 수정하시겠습니까?',
+        confirmButtonColor: '#08818c',
+        showCancelButton: true,
+        confirmButtonText: '수정',
+        cancelButtonText: '취소',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          onUpdateData(
+            { ...data, imgUrl: item.imgUrl },
+            {
+              onSuccess: () => {
+                // setEditState(data);
+                setTimeout(
+                  () => queryClient.invalidateQueries('detailData'),
+                  500
+                );
+                logEvent('수정 완료 버튼', { from: 'detail page' });
+                setEditSaveLatLng([]);
+                setEditSaveAddress('');
+                setEditBtnToggle(!editBtnToggle);
+
+                setTimeout(
+                  () => queryClient.invalidateQueries('detailData'),
+                  500
+                );
+                setImageUpload(null);
+              },
+            }
+          );
+        } else {
+          setEditSaveLatLng([]);
+          setEditSaveAddress('');
+          setEditBtnToggle(!editBtnToggle);
+          setImageUpload(null);
+        }
+      });
+      return;
+    }
+
+    if (imageUpload !== null) {
+      uploadString(imageRef, imageUpload, 'data_url').then((response) => {
+        getDownloadURL(response.ref).then((url) => {
+          const response = url;
+
+          Swal.fire({
+            icon: 'warning',
+            title: '정말로 수정하시겠습니까?',
+            confirmButtonColor: '#08818c',
+            showCancelButton: true,
+            confirmButtonText: '수정',
+            cancelButtonText: '취소',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              onUpdateData(
+                { ...data, imgUrl: response },
+                {
+                  onSuccess: () => {
+                    // setEditState(data);
+                    setTimeout(
+                      () => queryClient.invalidateQueries('detailData'),
+                      500
+                    );
+                    logEvent('수정 완료 버튼', { from: 'detail page' });
+                    setEditSaveLatLng([]);
+                    setEditSaveAddress('');
+                    setEditBtnToggle(!editBtnToggle);
+
+                    setTimeout(
+                      () => queryClient.invalidateQueries('detailData'),
+                      500
+                    );
+                    setImageUpload(null);
+                  },
+                }
+              );
+            } else {
+              setEditSaveLatLng([]);
+              setEditSaveAddress('');
+              setEditBtnToggle(!editBtnToggle);
+              setImageUpload(null);
+            }
+          });
         });
-      } else {
-        setEditSaveLatLng([]);
-        setEditSaveAddress('');
-        setEditBtnToggle(!editBtnToggle);
-      }
-    });
+      });
+    }
+
+    queryClient.invalidateQueries('detailData');
   };
 
   const onChangeCityInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -408,7 +485,7 @@ const DetailList = ({ item }: ItemProps) => {
                         lat: editSaveLatLng.Ma,
                         long: editSaveLatLng.La,
                         address: editSaveAddress,
-                        // ...editState,
+                        imgUrl: '',
                       })
                     }
                   >
@@ -1035,4 +1112,22 @@ const ContentSpan = styled.span`
   margin-right: 20px;
   font-size: 14px;
   font-family: 'Noto Sans CJK KR';
+`;
+
+const DetailBtn = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background-color: #feb819;
+  color: white;
+  cursor: pointer;
+  width: 150px;
+  height: 40px;
+  bottom: 120px;
+  font-size: 13px;
+  @media ${(props) => props.theme.mobile} {
+    top: 400px;
+    bottom: 0px;
+  }
 `;

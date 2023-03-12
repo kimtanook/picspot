@@ -92,4 +92,5 @@ declare interface DeatailListItemType {
   long: number | undefined | null;
   title: string | undefined;
   town: string | undefined;
+  imgUrl: string | undefined;
 }
