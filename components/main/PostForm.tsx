@@ -27,7 +27,7 @@ const PostForm = () => {
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const fileInput: any = useRef();
+  const fileInput: IFileInput = useRef();
 
   const [inputCount, setInputCount] = useState(0);
   const [textareaCount, setTextareaCount] = useState(0);
@@ -40,7 +40,7 @@ const PostForm = () => {
 
   //* 이미지 업로드
   const [imageUpload, setImageUpload]: any = useState(null);
-  const imgPath: any = uuidv4();
+  const imgPath: string = uuidv4();
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
@@ -53,7 +53,6 @@ const PostForm = () => {
     setIsOpenMap(!isOpenMap);
   };
 
-  // console.log('onClickOpen', onClickOpen);
   let postState: any = {
     title: title,
     content: content,
@@ -69,15 +68,17 @@ const PostForm = () => {
     nickname: nickname,
     imgPath: imgPath,
   };
+  // console.log('postState', postState);
 
   //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData, isLoading } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
-  // 수정코드
   const handleImageChange = async (e: any) => {
-    let file: any = e.target.files;
+    console.log('handleImageChange', handleImageChange);
 
+    let file = e.target.files;
+    // console.log('e.target', e.target);
     if (file.length === 0) {
       return;
     } else {
@@ -142,10 +143,8 @@ const PostForm = () => {
       return;
     }
 
-    const imageRef: any = ref(storageService, `images/${imgPath}`);
-    // console.log('imgPath: ', imgPath);
-    // console.log('imageRef._location.path: ', imageRef._location.path);
-
+    const imageRef = ref(storageService, `images/${imgPath}`);
+    // console.log('imageRef', imageRef);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
@@ -169,13 +168,13 @@ const PostForm = () => {
   //* 카테고리버튼 눌렀을 때 실행하는 함수
 
   //select에서 value값 받아오기
-  const onChangeFormSelect = (e: any) => {
-    setCity(e.target.value);
+  const onChangeFormSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCity(e.currentTarget.value);
   };
 
-  const onChangeFormSelectSub = (e: any) => {
-    setPlace(e.target.value);
-    setTown(e.target.value);
+  const onChangeFormSelectSub = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPlace(e.currentTarget.value);
+    setTown(e.currentTarget.value);
   };
 
   // 지도에 마커 변경시 카테고리 변경
@@ -337,7 +336,7 @@ const PostForm = () => {
               <PostFormInputTitle>제목</PostFormInputTitle>
               <PostFormInput
                 placeholder="사진을 소개하는 제목을 적어주세요!"
-                maxLength={13}
+                maxLength={15}
                 onChange={(e) => {
                   setTitle(e.target.value);
                   setInputCount(e.target.value.length);
@@ -345,7 +344,7 @@ const PostForm = () => {
               />
               <PostFormInputCount>
                 <span>{inputCount}</span>
-                <span>/13 자</span>
+                <span>/15 자</span>
               </PostFormInputCount>
               <PostFormInputTitle>내용</PostFormInputTitle>
               <PostFormContentTextWrap>
@@ -372,7 +371,7 @@ const PostForm = () => {
                   color="white"
                   margin="0px 5px"
                   padding="0px"
-                  backgroundColor="#1882FF"
+                  backgroundColor="gray"
                   onClick={onClickAddData}
                 >
                   업로드하기
@@ -574,7 +573,7 @@ const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     margin: 5px -10px;
-    margin-top: 5%;
+    margin-top: 15%;
     position: relative;
     cursor: pointer;
   }
