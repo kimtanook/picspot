@@ -57,13 +57,16 @@ const StyleContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 230px;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 30px;
+  }
 `;
 
 const Find = styled.img`
   width: 20px;
   height: 20px;
   position: absolute;
-  top: 30%;
+  top: 20%;
   left: 220px;
   background-color: #f4f4f4;
 `;
@@ -88,6 +91,7 @@ const StyledForm = styled.form`
   position: absolute;
   bottom: 10px;
   z-index: 999;
+  display: inline-flex;
 `;
 
 const StyledInput = styled.input`

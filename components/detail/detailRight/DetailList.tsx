@@ -1,19 +1,27 @@
 import { deleteData, postCounter, updateData, visibleReset } from '@/api';
 import {
+  deletePostModalAtom,
   editBtnToggleAtom,
   editPlaceAtom,
   editSaveAddressAtom,
   editSaveLatLngAtom,
+  imageUploadAtom,
 } from '@/atom';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
-import { deleteObject, ref } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from 'firebase/storage';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { title } from 'process';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
@@ -23,11 +31,6 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 // import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-interface EditForm {
-  title: string;
-  content: string;
-}
-
 const DetailList = ({ item }: ItemProps) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
@@ -36,14 +39,17 @@ const DetailList = ({ item }: ItemProps) => {
     useRecoilState(editSaveLatLngAtom);
   const [editSaveAddress, setEditSaveAddress] =
     useRecoilState(editSaveAddressAtom);
+  const [imageUpload, setImageUpload] = useRecoilState(imageUploadAtom);
+
   // 반응형 이용하기
   const [isOpen, setIsOpen] = useState(false);
-  const [deletePostModal, setDeletePostModal] = useState(false);
+  const [deletePostModal, setDeletePostModal] =
+    useRecoilState(deletePostModalAtom);
   const isMobile = useMediaQuery({ maxWidth: 785 });
   const isPc = useMediaQuery({ minWidth: 786 });
 
   //! component state
-  const [editTitle, setEditTitle] = useState('');
+  const [editTitle, setEditTitle]: any = useState('');
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
@@ -54,6 +60,7 @@ const DetailList = ({ item }: ItemProps) => {
   //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
+    setImageUpload(null);
   };
 
   const router = useRouter(); //* 라우팅하기
@@ -148,31 +155,98 @@ const DetailList = ({ item }: ItemProps) => {
 
     console.log('data: ', data);
 
-    Swal.fire({
-      icon: 'warning',
-      title: '정말로 수정하시겠습니까?',
-      confirmButtonColor: '#08818c',
-      showCancelButton: true,
-      confirmButtonText: '수정',
-      cancelButtonText: '취소',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        onUpdateData(data, {
-          onSuccess: () => {
-            // setEditState(data);
-            setTimeout(() => queryClient.invalidateQueries('detailData'), 500);
-            logEvent('수정 완료 버튼', { from: 'detail page' });
-            setEditSaveLatLng([]);
-            setEditSaveAddress('');
-            setEditBtnToggle(!editBtnToggle);
-          },
+    const imageRef = ref(storageService, `images/${item.imgPath}`);
+
+    if (imageUpload === null) {
+      customAlert('이미지를 추가해주세요.');
+      Swal.fire({
+        icon: 'success',
+        title: '수정사항이 저장 완료되었습니다!',
+        confirmButtonColor: '#1882FF',
+        // showCancelButton: false,
+        confirmButtonText: ' 내 게시글 보러 가기',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          onUpdateData(
+            { ...data, imgUrl: item.imgUrl },
+            {
+              onSuccess: () => {
+                // setEditState(data);
+                setTimeout(
+                  () => queryClient.invalidateQueries('detailData'),
+                  500
+                );
+                logEvent('수정 완료 버튼', { from: 'detail page' });
+                setEditSaveLatLng([]);
+                setEditSaveAddress('');
+                setEditBtnToggle(!editBtnToggle);
+
+                setTimeout(
+                  () => queryClient.invalidateQueries('detailData'),
+                  500
+                );
+                setImageUpload(null);
+              },
+            }
+          );
+        } else {
+          setEditSaveLatLng([]);
+          setEditSaveAddress('');
+          setEditBtnToggle(!editBtnToggle);
+          setImageUpload(null);
+        }
+      });
+      return;
+    }
+
+    if (imageUpload !== null) {
+      uploadString(imageRef, imageUpload, 'data_url').then((response) => {
+        getDownloadURL(response.ref).then((url) => {
+          const response = url;
+
+          Swal.fire({
+            icon: 'warning',
+            title: '정말로 수정하시겠습니까?',
+            confirmButtonColor: '#08818c',
+            showCancelButton: true,
+            confirmButtonText: '수정',
+            cancelButtonText: '취소',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              onUpdateData(
+                { ...data, imgUrl: response },
+                {
+                  onSuccess: () => {
+                    // setEditState(data);
+                    setTimeout(
+                      () => queryClient.invalidateQueries('detailData'),
+                      500
+                    );
+                    logEvent('수정 완료 버튼', { from: 'detail page' });
+                    setEditSaveLatLng([]);
+                    setEditSaveAddress('');
+                    setEditBtnToggle(!editBtnToggle);
+
+                    setTimeout(
+                      () => queryClient.invalidateQueries('detailData'),
+                      500
+                    );
+                    setImageUpload(null);
+                  },
+                }
+              );
+            } else {
+              setEditSaveLatLng([]);
+              setEditSaveAddress('');
+              setEditBtnToggle(!editBtnToggle);
+              setImageUpload(null);
+            }
+          });
         });
-      } else {
-        setEditSaveLatLng([]);
-        setEditSaveAddress('');
-        setEditBtnToggle(!editBtnToggle);
-      }
-    });
+      });
+    }
+
+    queryClient.invalidateQueries('detailData');
   };
 
   const onChangeCityInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -191,6 +265,10 @@ const DetailList = ({ item }: ItemProps) => {
     setEditCity(item.city);
     setEditTown(item.town);
   }, [editBtnToggle]);
+
+  const onReset = () => {
+    setEditTitle('');
+  };
 
   //* 지도 클릭 시 카테고리 변경하기
   // console.log('saveAddress: ', saveAddress);
@@ -364,13 +442,10 @@ const DetailList = ({ item }: ItemProps) => {
                   setEditTitleInputCount(e.target.value.length);
                 }}
                 ref={titleInput}
+                value={editTitle}
               />
 
-              <EditclearBtn
-                onClick={() => {
-                  // setValue('title', '');
-                }}
-              ></EditclearBtn>
+              <EditclearBtn onClick={onReset} />
             </TitleInputContainer>
             <TitleInputSpan>
               {isPc && (
@@ -406,7 +481,7 @@ const DetailList = ({ item }: ItemProps) => {
                         lat: editSaveLatLng.Ma,
                         long: editSaveLatLng.La,
                         address: editSaveAddress,
-                        // ...editState,
+                        imgUrl: '',
                       })
                     }
                   >
@@ -522,6 +597,7 @@ const DetailList = ({ item }: ItemProps) => {
               // value={editContent}
               maxLength={100}
               defaultValue={item.content}
+              value={editContent}
               onChange={(e) => {
                 setEditContent(e.target.value);
                 setEditContentInputCount(e.target.value.length);
@@ -543,9 +619,10 @@ const DetailList = ({ item }: ItemProps) => {
               </span>
             </ContentInputSpan>
           </ContentInputWrap>
+
           <ClearBtn
             onClick={() => {
-              // setValue('content', '');
+              setEditContent('');
             }}
           ></ClearBtn>
         </ContentInputContainer>
@@ -671,6 +748,7 @@ const Title = styled.div`
   color: #212121;
   @media ${(props) => props.theme.mobile} {
     font-size: 20px;
+    padding-left: 10px;
   }
 `;
 const EditclearBtn = styled.div`
@@ -687,6 +765,8 @@ const EditclearBtn = styled.div`
   @media ${(props) => props.theme.mobile} {
     /* transform: translate(-110%, 920%); */
     position: relative;
+    margin-left: 23px;
+    margin-top: 8px;
   }
 `;
 
@@ -1028,4 +1108,22 @@ const ContentSpan = styled.span`
   margin-right: 20px;
   font-size: 14px;
   font-family: 'Noto Sans CJK KR';
+`;
+
+const DetailBtn = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background-color: #feb819;
+  color: white;
+  cursor: pointer;
+  width: 150px;
+  height: 40px;
+  bottom: 120px;
+  font-size: 13px;
+  @media ${(props) => props.theme.mobile} {
+    top: 400px;
+    bottom: 0px;
+  }
 `;

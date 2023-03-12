@@ -4,20 +4,13 @@ import { deletePostModalAtom, deleteItem } from '@/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import { storageService } from '@/firebase';
-import { deleteObject, ref } from 'firebase/storage';
 import { useMutation } from 'react-query';
 import { deleteData, visibleReset } from '@/api';
-import Swal from 'sweetalert2';
-// type Post = {
-//   id: string|undefined;
-//   imgPath: string|undefined;
-// };
-const DeletePostModal = ({
-  item,
-  setDeletePostModal,
-  deletePostModal,
-}: any): JSX.Element => {
-  // const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
+import { ref } from 'firebase/storage';
+
+const DeletePostModal = () => {
+  const [deletePostModal, setDeletePostModal] =
+    useRecoilState(deletePostModalAtom);
   const router = useRouter();
 
   // 모달 창 뒤에 누르면 닫힘
@@ -41,25 +34,10 @@ const DeletePostModal = ({
   const [delteItemData] = useRecoilState<any>(deleteItem);
   console.log(delteItemData);
   const onClickDelete = async () => {
-    // event.stopPropagation();
-    // DeletePost(item);
-    // deleteModal(fa
-    // lse);
     const imageRef = ref(storageService, `images/${delteItemData?.imgPath}`);
-    // console.log(delteItemData?.imgPath);
-    // console.log(delteItemData);
+
     const docId: any = delteItemData?.id;
-    // await deleteObject(imageRef)
-    //   .then(() => {
-    //     Swal.fire({
-    //       title: '게시물을 삭제했습니다',
-    //     });
-    //     console.log('스토리지를 파일을 삭제를 성공했습니다');
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     console.log('스토리지 파일 삭제를 실패했습니다');
-    //   });
+
     onDeleteData(docId, {
       onSuccess: () => {
         setDeletePostModal(!deletePostModal);

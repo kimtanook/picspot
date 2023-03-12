@@ -27,7 +27,6 @@ import { CustomModalMap } from './common/CustomModalMap';
 import DetailList from './detail/detailRight/DetailList';
 import DeletePostModal from './detail/detailRight/DeletePostModal';
 
-
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
   const [msgSendToggle, setMsgSendToggle] = useRecoilState(messageSendToggle);
@@ -40,7 +39,8 @@ function Layout() {
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const [editProfileModal, setEditProfileModal] =
     useRecoilState(editProfileModalAtom);
-  const [deletePostModal, setDeletePostModal] = useRecoilState(deletePostModalAtom);
+  const [deletePostModal, setDeletePostModal] =
+    useRecoilState(deletePostModalAtom);
 
   const isMobile = useMediaQuery({ maxWidth: 823 });
   const isPc = useMediaQuery({ minWidth: 824 });
