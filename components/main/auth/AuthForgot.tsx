@@ -152,7 +152,6 @@ const ForgotText = styled.div`
   font-weight: 700;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
-    font-family: 'Noto Sans CJK KR';
     font-style: normal;
     font-weight: 700;
     font-size: 18px;
@@ -189,7 +188,6 @@ const ResetPwInput = styled.input`
   height: 30px;
   border: 1px solid white;
   margin-left: 10px;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 13px;
   @media ${(props) => props.theme.mobile} {

@@ -281,7 +281,6 @@ const LogoImg = styled.img`
 const LoginTextDiv = styled.div`
   margin-top: 0px;
   margin-bottom: 10px;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 20px;
   line-height: 138.5%;
@@ -382,7 +381,6 @@ const RememberID = styled.label`
   display: flex;
   align-items: center;
   font-size: 15px;
-  font-family: Noto Sans CJK KR;
   @media ${(props) => props.theme.mobile} {
     transform: translate(9%, 1150%);
     font-size: 12px;

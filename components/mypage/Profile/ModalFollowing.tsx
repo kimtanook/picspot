@@ -192,7 +192,6 @@ const ProfileImg = styled.img`
 
 const UserNicknameFollow = styled.div`
   display: flex;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -201,7 +200,6 @@ const UserNicknameFollow = styled.div`
 `;
 
 const UserNickname = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-weight: 700;
   font-size: 17px;

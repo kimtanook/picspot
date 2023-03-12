@@ -294,7 +294,6 @@ const MobileBack = styled.img`
 const HeaderText = styled.div`
   font-size: 20px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -420,7 +419,6 @@ const ProfileTextWrap = styled.div`
   margin-top: 5px;
 `;
 const ProfileNickname = styled.div`
-  font-family: Noto Sans CJK KR;
   color: #212121;
   font-style: normal;
   font-weight: 700;
@@ -518,7 +516,6 @@ const SendMessage = styled.button`
 `;
 const Follow = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   display: flex;
   text-align: left;
@@ -531,7 +528,6 @@ const Follow = styled.div`
 `;
 const FollowerCount = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   padding-top: 10px;
   @media ${(props) => props.theme.mobile} {
@@ -540,7 +536,6 @@ const FollowerCount = styled.div`
 `;
 const FollowBtween = styled.div`
   font-size: 25px;
-  font-family: Noto Sans CJK KR;
   color: #d9d9d9;
   padding-top: 10px;
   @media ${(props) => props.theme.mobile} {

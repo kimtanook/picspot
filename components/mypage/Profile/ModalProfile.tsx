@@ -431,7 +431,6 @@ const ProfileContainerForm = styled.form`
 const ProfileTextDiv = styled.div`
   margin-top: 15px;
   margin-bottom: 16px;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
@@ -538,7 +537,6 @@ const NicknameToggleContainer = styled.div`
   }
 `;
 const NicknameToggleText = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 16px;
   font-weight: 700;
@@ -618,7 +616,6 @@ const PwToggleContainer = styled.div`
   }
 `;
 const PwToggleText = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 16px;
   font-weight: 700;

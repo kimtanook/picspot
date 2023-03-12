@@ -108,7 +108,6 @@ const PostTownTitle = styled.div`
 `;
 
 const UserPostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-size: 16px;
   line-height: 38px;
   text-align: left;
@@ -180,7 +179,6 @@ const MorePostTownTitle = styled.div`
 `;
 
 const MoreMyPostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-size: 16px;
   line-height: 38px;
   text-align: left;

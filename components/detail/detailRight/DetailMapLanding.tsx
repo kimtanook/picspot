@@ -102,7 +102,6 @@ const StyledInput = styled.input`
   background-color: #f4f4f4;
   color: black;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
   :focus-visible {
     outline: none;
   }
