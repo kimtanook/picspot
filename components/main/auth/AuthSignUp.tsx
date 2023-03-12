@@ -282,7 +282,6 @@ const SignUpTextDiv = styled.div`
   @media ${(props) => props.theme.mobile} {
     transform: translate(55%, -170%);
     width: 50%;
-    font-family: 'Noto Sans CJK KR';
     font-weight: bold;
     font-size: 14px;
   }
@@ -327,7 +326,6 @@ const EditInputBox = styled.div`
 const EditInputText = styled.div`
   font-size: 12px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   width: 80%;
   height: 20px;
   position: inherit;
@@ -372,7 +370,6 @@ const AuthWarn = styled.p`
   @media ${(props) => props.theme.mobile} {
     transform: translate(0%, -10%);
     font-size: 12px;
-    font-family: Noto Sans CJK KR;
     border: none;
     background: transparent;
   }

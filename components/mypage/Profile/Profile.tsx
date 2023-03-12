@@ -155,7 +155,6 @@ const MobileBack = styled.img`
 const HeaderText = styled.div`
   font-size: 20px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -232,7 +231,6 @@ const ProfileTextdiv = styled.div`
 `;
 
 const ProfileNickname = styled.span`
-  font-family: Noto Sans CJK KR;
   color: #212121;
   font-style: normal;
   font-weight: 700;
@@ -243,7 +241,6 @@ const ProfileNickname = styled.span`
   }
 `;
 const LogoutProfileButton = styled.button`
-  font-family: Noto Sans CJK KR;
   border: none;
   background-color: transparent;
   color: #5b5b5f;
@@ -277,7 +274,6 @@ const FollowingOpenModal = styled.img`
 
 const Follow = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   display: flex;
   text-align: left;
@@ -290,7 +286,6 @@ const Follow = styled.div`
 
 const FollowerCount = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   padding-top: 10px;
   cursor: pointer;
@@ -301,7 +296,6 @@ const FollowerCount = styled.div`
 
 const FollowBtween = styled.div`
   font-size: 25px;
-  font-family: Noto Sans CJK KR;
   color: #d9d9d9;
   padding-top: 10px;
   @media ${(props) => props.theme.mobile} {

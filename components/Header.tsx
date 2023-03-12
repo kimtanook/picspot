@@ -374,7 +374,6 @@ const BeforeLogin = styled.div`
   background-color: #1882ff;
   color: white;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
   display: flex;
   flex-direction: row;
   justify-content: center;

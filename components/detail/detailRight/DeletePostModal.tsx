@@ -110,7 +110,6 @@ const Text = styled.div`
   display: 1px solid;
   font-size: 24px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -124,7 +123,6 @@ const DeleteCancleButton = styled.button`
   display: 1px solid blue;
   font-size: 14px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   width: 395px;
   height: 48px;
   display: flex;
@@ -148,7 +146,6 @@ const PostDeleteButton = styled.button`
   display: 1px solidpink;
   font-size: 14px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   width: 395px;
   height: 48px;
   display: flex;

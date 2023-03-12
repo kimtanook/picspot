@@ -111,7 +111,6 @@ const PostTownTitle = styled.div`
   margin-right: 3%;
 `;
 const CollectorTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-size: 20px;
   line-height: 30px;
   text-align: left;
@@ -205,7 +204,6 @@ const MorePostTownTitle = styled.div`
 `;
 
 const MoreMyPostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-size: 20px;
   line-height: 30px;
   text-align: left;

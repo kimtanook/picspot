@@ -6,7 +6,7 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';
 import Image from 'next/image';
-
+import { useRouter } from 'next/router';
 const CollectionList = () => {
   //* useQuery 사용해서 collection의 모든 데이터 불러오기
   const { data: collectionData } = useQuery('myCollectiondata', getCollection, {
@@ -34,7 +34,7 @@ const CollectionList = () => {
       return myCollectionTown?.indexOf(element) === index;
     }
   );
-
+  const router = useRouter();
   return (
     <GridBox>
       {myCollectionTown?.length === 0 ? (
@@ -43,10 +43,16 @@ const CollectionList = () => {
             src="/main/empty-icon.png"
             alt="empty-icon"
             className="empty-image"
-            width={100}
-            height={100}
+            width={200}
+            height={200}
           />
-          <div>게시글이 없습니다.</div>
+          <EmptyTitle>아직 저장된 사진이 없어요.</EmptyTitle>
+          <EmptyContetnts>
+            가보고 싶은 여행지 사진을 찾으러 가볼까요?
+          </EmptyContetnts>
+          <EmptyBtn onClick={() => router.push('/main?city=제주전체')}>
+            제주도 전체 사진 둘러보기
+          </EmptyBtn>
         </EmptyPostBox>
       ) : (
         <ResponsiveMasonry
@@ -81,11 +87,32 @@ const EmptyPostBox = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 75%;
+  padding-top: 10px;
+  top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   & > .empty-image {
     width: 100%;
     height: 100%;
   }
+`;
+
+const EmptyTitle = styled.div`
+  margin: 24px 0px 15px 0px;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const EmptyContetnts = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  width: 260px;
+  text-align: center;
+`;
+const EmptyBtn = styled.button`
+  color: #1882ff;
+  border: none;
+  border-bottom: 1px solid #1882ff;
+  background: none;
+  cursor: pointer;
 `;

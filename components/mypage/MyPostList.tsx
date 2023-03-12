@@ -1,15 +1,20 @@
 import { getMyPost } from '@/api';
+import { postModalAtom } from '@/atom';
 import { authService } from '@/firebase';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import Town from './Town';
 
 const MyPostList = () => {
   const userUid = authService.currentUser?.uid;
-
+  const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
+  const onClickTogglePostModal = () => {
+    setIsPostMapModal(true);
+  };
   //* useQuery 사용해서 데이터 불러오기
   const { data } = useQuery(['data', userUid], getMyPost, {
     staleTime: 1000 * 60 * 5,
@@ -39,10 +44,18 @@ const MyPostList = () => {
             src="/main/empty-icon.png"
             alt="empty-icon"
             className="empty-image"
-            width={100}
-            height={100}
+            width={200}
+            height={200}
           />
-          <div>게시글이 없습니다.</div>
+          <EmptyTitle>아직 게시한 사진이 없어요.</EmptyTitle>
+          <EmptyContetnts>멋진 제주여행 사진을 게시해볼까요?</EmptyContetnts>
+          <EmptyBtn
+            onClick={() => {
+              onClickTogglePostModal();
+            }}
+          >
+            게시물 업로드 바로가기
+          </EmptyBtn>
         </EmptyPostBox>
       ) : (
         <ResponsiveMasonry
@@ -77,11 +90,32 @@ const EmptyPostBox = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 75%;
+  top: 70%;
   left: 50%;
+  padding-top: 10px;
   transform: translate(-50%, -50%);
   & > .empty-image {
     width: 100%;
     height: 100%;
   }
+`;
+
+const EmptyTitle = styled.div`
+  margin: 24px 0px 15px 0px;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const EmptyContetnts = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  width: 260px;
+  text-align: center;
+`;
+const EmptyBtn = styled.button`
+  color: #1882ff;
+  border: none;
+  border-bottom: 1px solid #1882ff;
+  background: none;
+  cursor: pointer;
 `;
