@@ -1,5 +1,6 @@
 import { deleteData, postCounter, updateData, visibleReset } from '@/api';
 import {
+  deleteAtom,
   deletePostModalAtom,
   editBtnToggleAtom,
   editPlaceAtom,
@@ -40,6 +41,7 @@ const DetailList = ({ item }: ItemProps) => {
   const [editSaveAddress, setEditSaveAddress] =
     useRecoilState(editSaveAddressAtom);
   const [imageUpload, setImageUpload] = useRecoilState(imageUploadAtom);
+  const [deletePostData, setDeletePostData] = useRecoilState(deleteAtom);
 
   // 반응형 이용하기
   const [isOpen, setIsOpen] = useState(false);
@@ -53,10 +55,19 @@ const DetailList = ({ item }: ItemProps) => {
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
-  // 게시물 삭제 눌렀을 때 모달 창 실행하는 함수
+
+  //! 게시물 삭제 눌렀을 때 모달 창 실행하는 함수
   const postDeleteModalButton = () => {
     setDeletePostModal(!deletePostModal);
+    setDeletePostData({
+      ...deletePostData,
+      id: item.id,
+      imgPath: item.imgPath,
+    });
   };
+
+  // console.log('deletePostData: ', deletePostData);
+
   //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
@@ -77,41 +88,41 @@ const DetailList = ({ item }: ItemProps) => {
   );
 
   //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
-  const onClickDelete = (docId: string) => {
-    // console.log('docId: ', docId);
-    const imageRef = ref(storageService, `images/${item.imgPath}`);
+  // const onClickDelete = (docId: string) => {
+  //   // console.log('docId: ', docId);
+  //   const imageRef = ref(storageService, `images/${item.imgPath}`);
 
-    Swal.fire({
-      icon: 'warning',
-      title: '정말로 삭제하시겠습니까?',
-      confirmButtonColor: '#08818c',
-      showCancelButton: true,
-      confirmButtonText: '삭제',
-      cancelButtonText: '취소',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteObject(imageRef)
-          .then(() => {
-            console.log('스토리지를 파일을 삭제를 성공했습니다');
-          })
-          .catch((error) => {
-            console.log('스토리지 파일 삭제를 실패했습니다');
-          });
+  //   Swal.fire({
+  //     icon: 'warning',
+  //     title: '정말로 삭제하시겠습니까?',
+  //     confirmButtonColor: '#08818c',
+  //     showCancelButton: true,
+  //     confirmButtonText: '삭제',
+  //     cancelButtonText: '취소',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       deleteObject(imageRef)
+  //         .then(() => {
+  //           console.log('스토리지를 파일을 삭제를 성공했습니다');
+  //         })
+  //         .catch((error) => {
+  //           console.log('스토리지 파일 삭제를 실패했습니다');
+  //         });
 
-        onDeleteData(docId, {
-          onSuccess: () => {
-            setTimeout(
-              () => queryClient.invalidateQueries('infiniteData'),
-              500
-            );
-            logEvent('게시물 삭제 버튼', { from: 'detail page' });
-            router.push('/main?city=제주전체');
-          },
-        });
-        visibleReset();
-      }
-    });
-  };
+  //       onDeleteData(docId, {
+  //         onSuccess: () => {
+  //           setTimeout(
+  //             () => queryClient.invalidateQueries('infiniteData'),
+  //             500
+  //           );
+  //           logEvent('게시물 삭제 버튼', { from: 'detail page' });
+  //           router.push('/main?city=제주전체');
+  //         },
+  //       });
+  //       visibleReset();
+  //     }
+  //   });
+  // };
 
   //* useMutation 사용해서 데이터 수정하기
   const {

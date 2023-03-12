@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { deletePostModalAtom, deleteItem } from '@/atom';
+import { deletePostModalAtom, deleteAtom } from '@/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import { storageService } from '@/firebase';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { deleteData, visibleReset } from '@/api';
-import { ref } from 'firebase/storage';
+import { deleteObject, ref } from 'firebase/storage';
 
 const DeletePostModal = () => {
+  const queryClient = useQueryClient(); // * 쿼리 최신화하기
+
+  const [deletePostData, setDeletePostData] = useRecoilState(deleteAtom);
   const [deletePostModal, setDeletePostModal] =
     useRecoilState(deletePostModalAtom);
   const router = useRouter();
@@ -31,19 +34,20 @@ const DeletePostModal = () => {
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
-  const [delteItemData] = useRecoilState<any>(deleteItem);
-  console.log(delteItemData);
-  const onClickDelete = async () => {
-    const imageRef = ref(storageService, `images/${delteItemData?.imgPath}`);
 
-    const docId: any = delteItemData?.id;
+  const onClickDelete = async (data: any) => {
+    console.log('data: ', data);
+    const imageRef = ref(storageService, `images/${data?.imgPath}`);
+    const docId: any = data?.id;
 
     onDeleteData(docId, {
       onSuccess: () => {
+        deleteObject(imageRef);
         setDeletePostModal(!deletePostModal);
         router.push('/main?city=제주전체');
+        queryClient.invalidateQueries('infiniteData');
       },
-      onError(error, variables, context) {
+      onError(error) {
         console.log(error);
       },
     });
@@ -67,7 +71,7 @@ const DeletePostModal = () => {
           >
             취소
           </DeleteCancleButton>
-          <PostDeleteButton onClick={() => onClickDelete()}>
+          <PostDeleteButton onClick={() => onClickDelete(deletePostData)}>
             게시물 삭제하기
           </PostDeleteButton>
         </DeleteContainer>
