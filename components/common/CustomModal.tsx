@@ -50,6 +50,7 @@ const Container = styled.div<{ width: string; height: string }>`
 
   @media ${(props) => props.theme.mobile} {
     padding: 0px;
+    background: none;
   }
 `;
 

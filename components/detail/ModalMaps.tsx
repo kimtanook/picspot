@@ -34,7 +34,7 @@ const ModalMaps = () => {
         <Map // 지도를 표시할 Container
           center={{
             // 지도의 중심좌표
-            lat: 33.357055559128746,
+            lat: 32.991005559128746,
             lng: 126.52969312230688,
           }}
           style={{
@@ -44,7 +44,7 @@ const ModalMaps = () => {
             borderRadius: '25px 25px 0px 0px',
             // top: '90px',
           }}
-          level={10} // 지도의 확대 레벨
+          level={11} // 지도의 확대 레벨
         >
           <MarkerClusterer
             averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
@@ -87,12 +87,14 @@ const ModalMaps = () => {
             // 지도의 크기
             width: '1200px',
             height: '700px',
+            borderRadius: '15px',
+            border: '2px solid skyBlue',
           }}
           level={10} // 지도의 확대 레벨
         >
           <MarkerClusterer
             averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-            minLevel={10} // 클러스터 할 최소 지도 레벨
+            minLevel={8} // 클러스터 할 최소 지도 레벨
             gridSize={70}
             minClusterSize={1}
           >
