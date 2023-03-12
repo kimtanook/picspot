@@ -140,6 +140,7 @@ export const getData = async () => {
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
 };
+
 //* 포스트 삭제하기
 export const deleteData: any = (docId: any) => {
   deleteDoc(doc(dbService, 'post', docId));
