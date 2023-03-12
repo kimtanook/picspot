@@ -99,6 +99,7 @@ const Header = ({
           <option value="서귀포시">서귀포시</option>
         </CityCategory>
       ) : null}
+
       <SearchAndForm>
         <PostFormButton
           onClick={() => {
