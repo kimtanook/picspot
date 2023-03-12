@@ -163,12 +163,11 @@ const DetailList = ({ item }: ItemProps) => {
     if (imageUpload === null) {
       customAlert('이미지를 추가해주세요.');
       Swal.fire({
-        icon: 'warning',
-        title: '정말로 수정하시겠습니까?',
-        confirmButtonColor: '#08818c',
-        showCancelButton: true,
-        confirmButtonText: '수정',
-        cancelButtonText: '취소',
+        icon: 'success',
+        title: '수정사항이 저장 완료되었습니다!',
+        confirmButtonColor: '#1882FF',
+        // showCancelButton: false,
+        confirmButtonText: ' 내 게시글 보러 가기',
       }).then((result) => {
         if (result.isConfirmed) {
           onUpdateData(
