@@ -1,5 +1,6 @@
 import { deleteData, postCounter, updateData, visibleReset } from '@/api';
 import {
+  deletePostModalAtom,
   editBtnToggleAtom,
   editPlaceAtom,
   editSaveAddressAtom,
@@ -30,11 +31,6 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 // import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-interface EditForm {
-  title: string;
-  content: string;
-}
-
 const DetailList = ({ item }: ItemProps) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
@@ -47,7 +43,8 @@ const DetailList = ({ item }: ItemProps) => {
 
   // 반응형 이용하기
   const [isOpen, setIsOpen] = useState(false);
-  const [deletePostModal, setDeletePostModal] = useState(false);
+  const [deletePostModal, setDeletePostModal] =
+    useRecoilState(deletePostModalAtom);
   const isMobile = useMediaQuery({ maxWidth: 785 });
   const isPc = useMediaQuery({ minWidth: 786 });
 
