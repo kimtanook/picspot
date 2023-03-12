@@ -68,17 +68,13 @@ const PostForm = () => {
     nickname: nickname,
     imgPath: imgPath,
   };
-  // console.log('postState', postState);
 
   //* useMutation 사용해서 포스트 추가하기
   const { mutate: onAddData, isLoading } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
   const handleImageChange = async (e: any) => {
-    console.log('handleImageChange', handleImageChange);
-
     let file = e.target.files;
-    // console.log('e.target', e.target);
     if (file.length === 0) {
       return;
     } else {
@@ -93,14 +89,11 @@ const PostForm = () => {
       };
 
       let theFile = files[0];
-      // console.log('theFile; ', theFile);
 
       try {
         const compressedFile = await imageCompression(theFile, options);
-        // console.log('compressedFile: ', compressedFile);
 
         const reader = new FileReader();
-        // reader?.readAsDataURL(theFile);
         reader?.readAsDataURL(compressedFile);
         reader.onloadend = (finishedEvent) => {
           const {
@@ -144,7 +137,6 @@ const PostForm = () => {
     }
 
     const imageRef = ref(storageService, `images/${imgPath}`);
-    // console.log('imageRef', imageRef);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;

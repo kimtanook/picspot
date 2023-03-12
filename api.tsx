@@ -168,7 +168,6 @@ export const getComment = async ({ queryKey }: any) => {
 
 //* 댓글 추가
 export const addComment = async (item: AddComment) => {
-  // console.log('item: ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -247,7 +246,6 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
@@ -259,7 +257,6 @@ export const addFollowing: any = (data: any) => {
 
 //? 팔로잉 추가하기2
 export const addFollowing2: any = (data: any) => {
-  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.id),
     {
@@ -366,18 +363,16 @@ export const getUser = async () => {
 
 //* 댓글 작성한 유저만 가져오기
 export const getCommentUser = async ({ queryKey }: any) => {
-  // console.log('queryKey: ', queryKey);
   const [, creatorId] = queryKey;
-  // console.log('creatorId: ', creatorId);
+
   const q = query(collection(dbService, 'user'), where('uid', '==', creatorId));
 
   const response: any = [];
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    // console.log('doc.data(): ', doc.data());
     response.push(doc.data());
   });
-  // console.log('response[0]: ', response[0]);
+
   return response[0];
 };
 

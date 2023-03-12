@@ -59,7 +59,6 @@ const CollectionButton = ({ item }: ItemProps) => {
       town: town,
     });
     setIsCollect(!isCollect);
-    console.log('first', postId);
   };
 
   //* collection 삭제 기능입니다.

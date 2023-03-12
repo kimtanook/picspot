@@ -23,7 +23,6 @@ const Search = ({
         <option value="title">제목</option>
       </Select>
       <SearchInput
-        // value={searchValue}
         onChange={onChangeSearchValue}
         placeholder="ex) 제주시 우도"
       />

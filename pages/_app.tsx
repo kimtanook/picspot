@@ -7,7 +7,6 @@ import GlobalStyle from './global';
 import { ThemeProvider } from 'styled-components';
 import { useEffect } from 'react';
 import { init } from '@amplitude/analytics-browser';
-// import { ReactQueryDevtools } from 'react-query/devtools';
 
 const client = new QueryClient({
   defaultOptions: {
@@ -17,7 +16,6 @@ const client = new QueryClient({
   },
 });
 const theme = {
-  // mobile: `(max-width: 425px)`,
   mobile: `(max-width: 820px)`,
 };
 
@@ -35,7 +33,6 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </ThemeProvider>
       </RecoilRoot>
-      {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
     </QueryClientProvider>
   );
 }
