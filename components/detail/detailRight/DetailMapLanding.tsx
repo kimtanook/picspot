@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-// import { CustomButton } from '@/components/common/CustomButton';
 import DetailMaps from './DetailMaps';
 import { useRecoilState } from 'recoil';
 import { editPlaceAtom } from '@/atom';

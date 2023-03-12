@@ -68,18 +68,15 @@ const Header = ({
   }, [nowUser]);
   return (
     <HeaderContainer>
-      {/* picspot */}
       <Link
         href="/main?city=제주전체"
         style={{ color: 'black', textDecorationLine: 'none' }}
       >
         <Title
           onClick={() => {
-            // sessionStorage.clear();
             localStorage.clear();
           }}
         >
-          {/* <LogoImg src="/logo.png" alt="logo" /> */}
           <LogoImgBox>
             <Image
               src="/logo.png"
@@ -99,6 +96,7 @@ const Header = ({
           <option value="서귀포시">서귀포시</option>
         </CityCategory>
       ) : null}
+
       <SearchAndForm>
         <PostFormButton
           onClick={() => {
@@ -142,7 +140,7 @@ const Header = ({
                     onClickTogglePostModal();
                   }}
                 >
-                  나의 스팟 추가
+                  게시물 추가
                 </PostFormButtonMobile>
               </DropMenu>
             ) : null}
@@ -172,7 +170,6 @@ const Header = ({
         {currentUser ? (
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
-              // <ProfileImg src={userImg} alt="profile" />
               <Image
                 src={userImg}
                 alt="profileImg"
@@ -182,7 +179,6 @@ const Header = ({
                 style={{ borderRadius: '50%', cursor: 'pointer' }}
               />
             ) : (
-              // <ProfileImg src="/profileicon.svg" alt="profile" />
               <Image
                 src="/profileicon.svg"
                 alt="profileImg"
@@ -192,9 +188,9 @@ const Header = ({
             )}
           </div>
         ) : (
-          <div onClick={closeLoginModalButton}>
-            <ProfileImg src="/profileicon.svg" alt="profile" />
-          </div>
+          <BeforeLogin onClick={closeLoginModalButton}>
+            <ProfileImg src="/profileicon-white.png" alt="profile" /> 로그인하기
+          </BeforeLogin>
         )}
       </HeaderRight>
     </HeaderContainer>
@@ -261,12 +257,14 @@ const SearchAndForm = styled.div`
   flex-direction: row-reverse;
   align-items: center;
   margin-top: 3px;
-  margin-left: 53%;
+  margin-left: 59%;
+  /* margin-left: 53%; */
   width: 440px;
   @media ${(props) => props.theme.mobile} {
     display: none;
   }
 `;
+
 const PostFormButton = styled.button`
   border-radius: 20px;
   color: #1882ff;
@@ -362,8 +360,30 @@ const CheckedCount = styled.div`
 `;
 
 const ProfileImg = styled.img`
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 16px;
+  height: 16px;
+  @media ${(props) => props.theme.mobile} {
+    width: 12px;
+    height: 12px;
+  }
+`;
+const BeforeLogin = styled.div`
+  border-radius: 20px;
+  width: 125px;
+  height: 31px;
+  background-color: #1882ff;
+  color: white;
+  font-size: 14px;
+  font-family: 'Noto Sans CJK KR';
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 100px;
+    height: 26px;
+    size: 12px;
+  }
 `;

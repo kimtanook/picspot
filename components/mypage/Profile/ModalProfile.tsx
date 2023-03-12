@@ -112,8 +112,6 @@ function ModalProfile() {
       return;
     }
 
-    // console.log('data: ', data);
-
     const imgRef = ref(
       storageService,
       `${authService.currentUser?.uid}${uuidv4()}`

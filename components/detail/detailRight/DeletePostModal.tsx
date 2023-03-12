@@ -36,7 +36,6 @@ const DeletePostModal = () => {
   const { mutate: onDeleteData } = useMutation(deleteData);
 
   const onClickDelete = async (data: any) => {
-    console.log('data: ', data);
     const imageRef = ref(storageService, `images/${data?.imgPath}`);
     const docId: any = data?.id;
 

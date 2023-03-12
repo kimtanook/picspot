@@ -31,19 +31,4 @@ export const CustomButton = styled.button<ButtonProps>`
   &:disabled {
     opacity: 0.5;
   }
-  &:hover {
-    cursor: pointer;
-    background-color: #1882ff;
-    color: white;
-    border: 1px solid white;
-    transition: 0.5s all ease-in-out;
-  }
-  &:active {
-    cursor: pointer;
-    background-color: #1882ff;
-    color: white;
-    border: 1px solid white;
-    transition: 0.5s all ease-in-out;
-    scale: 1.05;
-  }
 `;

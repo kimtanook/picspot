@@ -58,7 +58,6 @@ function Profile() {
   const userData = getUserData?.filter(
     (item: { [key: string]: string }) => item.uid === userId
   )[0];
-  // console.log('userData: ', userData);
 
   //* 내가 팔로잉한 사람 uid가 담긴 배열
   const { data: getMyFollowing } = useQuery('getMyFollowing', getFollowing, {
@@ -68,7 +67,6 @@ function Profile() {
           item.docId === authService.currentUser?.uid
       )[0]?.following,
   });
-  // console.log('getMyFollowing: ', getMyFollowing);
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
   const { mutate: followingMutate } = useMutation(addFollowing2, {
@@ -88,7 +86,6 @@ function Profile() {
 
   //* 팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
-    // console.log('item: ', item);
     followingMutate({ ...item, id: authService?.currentUser?.uid });
     followMutate({ ...item, id: authService?.currentUser?.uid });
     logEvent('팔로잉 버튼', { from: 'userprofile page' });
@@ -112,13 +109,10 @@ function Profile() {
 
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowingBtn = (item: any) => {
-    // console.log('item: ', item);
     deleteFollowingMutate({ ...item, id: authService?.currentUser?.uid });
     deleteFollowMutate({ ...item, id: authService?.currentUser?.uid });
     logEvent('언팔로잉 버튼', { from: 'userprofile page' });
   };
-
-  // console.log('getFollowingData?.length: ', getFollowingData?.length);
 
   // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
   useEffect(() => {
@@ -130,13 +124,6 @@ function Profile() {
   useEffect(() => {
     logEvent('유저 프로필 페이지', { from: 'userprofile page' });
   }, []);
-
-  console.log(
-    'getMyFollowing?.indexOf(userId): ',
-    getMyFollowing?.indexOf(userId)
-  );
-
-  console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
 
   return (
     <>
@@ -157,7 +144,6 @@ function Profile() {
             <Link href="/main?city=제주전체">
               <Back
                 onClick={() => {
-                  // sessionStorage.clear();
                   localStorage.clear();
                 }}
               >

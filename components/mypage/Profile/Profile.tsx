@@ -51,7 +51,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
   // 로그아웃
   const logOut = () => {
     signOut(authService).then(() => {
-      // Sign-out successful.
       setCurrentUser(false);
       customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
@@ -68,7 +67,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
           <Link href="/main?city=제주전체">
             <Back
               onClick={() => {
-                // sessionStorage.clear();
                 localStorage.clear();
               }}
             >

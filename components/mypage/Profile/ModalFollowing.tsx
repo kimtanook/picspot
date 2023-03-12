@@ -20,7 +20,6 @@ const ModalFollowing = () => {
   const profileImage = authService.currentUser?.photoURL as string;
   const isMobile = useMediaQuery({ maxWidth: 766 });
   const isPc = useMediaQuery({ minWidth: 767 });
-  // console.log('authService.currentUser?.uid: ', authService.currentUser?.uid);
   const [followingToggle, setfollowingToggle] =
     useRecoilState(followingToggleAtom);
   const queryClient = useQueryClient();
@@ -35,15 +34,12 @@ const ModalFollowing = () => {
       data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
-  // console.log('followingData: ', followingData);
-  const followingCount = followingData?.length; //* 내가 팔로잉 하는 사람 숫자
 
   //* user에서 내가 팔로우한 사람 데이터 뽑기
   const { data: userData } = useQuery('UserData', getUser, {
     select: (data) =>
       data?.filter((item: any) => followingData?.includes(item.uid)),
   });
-  // console.log('userData: ', userData);
 
   //* mutation 사용해서 팔로잉, 팔로우 삭제 데이터 보내기
   const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing, {
