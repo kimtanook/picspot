@@ -1,5 +1,6 @@
 import { getMyPost } from '@/api';
 import { authService } from '@/firebase';
+import Image from 'next/image';
 import { useQuery } from 'react-query';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import styled from 'styled-components';
@@ -32,15 +33,30 @@ const MyPostList = () => {
 
   return (
     <GridBox>
-      <ResponsiveMasonry columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}>
-        <Masonry columnsCount={3}>
-          {myCollectTownArr?.map((item: string) => (
-            <div key={uuidv4()}>
-              <Town value={item} myPostData={data} />
-            </div>
-          ))}
-        </Masonry>
-      </ResponsiveMasonry>
+      {myCollectTownArr?.length === 0 ? (
+        <EmptyPostBox>
+          <Image
+            src="/main/empty-icon.png"
+            alt="empty-icon"
+            className="empty-image"
+            width={100}
+            height={100}
+          />
+          <div>게시글이 없습니다.</div>
+        </EmptyPostBox>
+      ) : (
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}
+        >
+          <Masonry columnsCount={3}>
+            {myCollectTownArr?.map((item: string) => (
+              <div key={uuidv4()}>
+                <Town value={item} myPostData={data} />
+              </div>
+            ))}
+          </Masonry>
+        </ResponsiveMasonry>
+      )}
     </GridBox>
   );
 };
@@ -52,5 +68,20 @@ const GridBox = styled.div`
   width: 100%;
   @media ${(props) => props.theme.mobile} {
     width: 100%;
+  }
+`;
+
+const EmptyPostBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  & > .empty-image {
+    width: 100%;
+    height: 100%;
   }
 `;
