@@ -336,7 +336,7 @@ const PostForm = () => {
               <PostFormInputTitle>제목</PostFormInputTitle>
               <PostFormInput
                 placeholder="사진을 소개하는 제목을 적어주세요!"
-                maxLength={13}
+                maxLength={15}
                 onChange={(e) => {
                   setTitle(e.target.value);
                   setInputCount(e.target.value.length);
@@ -344,7 +344,7 @@ const PostForm = () => {
               />
               <PostFormInputCount>
                 <span>{inputCount}</span>
-                <span>/13 자</span>
+                <span>/15 자</span>
               </PostFormInputCount>
               <PostFormInputTitle>내용</PostFormInputTitle>
               <PostFormContentTextWrap>
@@ -371,7 +371,7 @@ const PostForm = () => {
                   color="white"
                   margin="0px 5px"
                   padding="0px"
-                  backgroundColor="#1882FF"
+                  backgroundColor="gray"
                   onClick={onClickAddData}
                 >
                   업로드하기
@@ -573,7 +573,7 @@ const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     margin: 5px -10px;
-    margin-top: 5%;
+    margin-top: 15%;
     position: relative;
     cursor: pointer;
   }

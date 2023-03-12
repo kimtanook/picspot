@@ -42,7 +42,6 @@ const ModalMaps = () => {
             width: '100vw',
             height: '100vh',
             borderRadius: '25px 25px 0px 0px',
-            // top: '90px',
           }}
           level={11} // 지도의 확대 레벨
         >
@@ -88,7 +87,7 @@ const ModalMaps = () => {
             width: '1200px',
             height: '700px',
             borderRadius: '15px',
-            border: '2px solid skyBlue',
+            border: '2px solid cornflowerBlue',
           }}
           level={10} // 지도의 확대 레벨
         >

@@ -275,6 +275,10 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
+  &:hover {
+    background-color: #1882ff;
+    color: white;
+  }
   @media ${(props) => props.theme.mobile} {
     display: none;
   }
