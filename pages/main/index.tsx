@@ -528,6 +528,7 @@ const ModalMapsWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: relative;
     display: flex;
+    background-color: none;
   }
 `;
 const ModalMapsBackButton = styled.div`

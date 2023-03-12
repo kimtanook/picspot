@@ -138,4 +138,10 @@ const TownBtn = styled.button<{ town: string[]; value: string }>`
   cursor: pointer;
   border: ${({ value, town }) =>
     town.includes(value) ? '2px solid #FEB819' : 'none'};
+  background-color: ${({ value, town }) =>
+    town.includes(value) ? '#FEB819' : 'none'};
+  color: ${({ value, town }) => (town.includes(value) ? 'white' : 'none')};
+  :hover  {
+    border: 2px solid #feb819;
+  }
 `;

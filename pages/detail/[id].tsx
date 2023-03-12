@@ -16,7 +16,7 @@ import DataLoading from '@/components/common/DataLoading';
 import { logEvent } from '@/utils/amplitude';
 import { authService } from '@/firebase';
 import { useRecoilState } from 'recoil';
-import { deleteItem } from '@/atom';
+import { deleteItem, editBtnToggleAtom } from '@/atom';
 
 const Post = ({ id }: ParamsType) => {
   //* useQuery 사용해서 포스트 데이터 불러오기
@@ -34,6 +34,8 @@ const Post = ({ id }: ParamsType) => {
   const mydata = detail?.filter((item: ItemType) => {
     return item.id === id;
   });
+
+  const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
 
   //* Amplitude 이벤트 생성
   useEffect(() => {
@@ -79,18 +81,34 @@ const Post = ({ id }: ParamsType) => {
         })
         .map((item: ItemType) => (
           <DetailContents key={item.id}>
-            <ImgAndProfileAndFollowingAndCollection>
-              <DetailImg item={item} />
+            {editBtnToggle && (
+              <EditImgAndProfileAndFollowingAndCollection>
+                <DetailImg item={item} />
 
-              <ProfileAndFollowingAndCollection>
-                <ProfileAndFollwing>
-                  <DetailProfile item={item} />
-                </ProfileAndFollwing>
+                <ProfileAndFollowingAndCollection>
+                  <ProfileAndFollwing>
+                    <DetailProfile item={item} />
+                  </ProfileAndFollwing>
 
-                <FollowingButton item={item} />
-                <CollectionButton item={item} />
-              </ProfileAndFollowingAndCollection>
-            </ImgAndProfileAndFollowingAndCollection>
+                  <FollowingButton item={item} />
+                  <CollectionButton item={item} />
+                </ProfileAndFollowingAndCollection>
+              </EditImgAndProfileAndFollowingAndCollection>
+            )}
+            {!editBtnToggle && (
+              <ImgAndProfileAndFollowingAndCollection>
+                <DetailImg item={item} />
+
+                <ProfileAndFollowingAndCollection>
+                  <ProfileAndFollwing>
+                    <DetailProfile item={item} />
+                  </ProfileAndFollwing>
+
+                  <FollowingButton item={item} />
+                  <CollectionButton item={item} />
+                </ProfileAndFollowingAndCollection>
+              </ImgAndProfileAndFollowingAndCollection>
+            )}
 
             <ListAndMapAndComment>
               <DetailList item={item} />
@@ -127,6 +145,19 @@ const DetailContents = styled.div`
     width: 100%;
     height: auto;
     margin-top: 40px;
+  }
+`;
+
+const EditImgAndProfileAndFollowingAndCollection = styled.div`
+  width: 400px;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 400px;
+    margin-top: 30px;
   }
 `;
 
