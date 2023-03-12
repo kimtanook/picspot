@@ -99,7 +99,6 @@ const Name = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   font-size: 16px;
-  font-family: 'Noto Sans CJK KR';
 `;
 
 const Comment = styled.div`
@@ -114,7 +113,6 @@ const Comment = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
 `;
 
 const DeleteMyComment = styled.div`
@@ -149,7 +147,6 @@ const Button = styled.div`
   border-radius: 10px;
   background-color: transparent;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
   :hover {
     transition: 0.3s;
     background-color: #4cb2f6;

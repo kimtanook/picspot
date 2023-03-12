@@ -628,7 +628,6 @@ const Title = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 28px;
-  font-family: 'Noto Sans CJK KR';
   font-weight: bold;
   color: #212121;
   @media ${(props) => props.theme.mobile} {
@@ -719,7 +718,6 @@ const View = styled.div`
   align-items: center;
   width: 100px;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
     width: 75px;
     margin-left: 0px;
@@ -758,7 +756,6 @@ const EditBtn = styled.div`
   height: 22px;
   font-size: 14px;
   font-weight: bold;
-  font-family: 'Noto Sans CJK KR';
   color: white;
   @media ${(props) => props.theme.mobile} {
     display: flex;
@@ -800,7 +797,6 @@ const City = styled.div`
   text-align: center;
   padding-top: 4px;
   font-size: 12px;
-  font-family: 'Noto Sans CJK KR';
   color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
     width: 80px;
@@ -829,7 +825,6 @@ const Town = styled.div`
   text-align: center;
   padding-top: 4px;
   font-size: 12px;
-  font-family: 'Noto Sans CJK KR';
   color: #1c1c1e;
   @media ${(props) => props.theme.mobile} {
     width: 66px;
@@ -873,7 +868,6 @@ const AddressCopy = styled.div`
   text-decoration: underline;
   color: #8e8e93;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
   width: 31px;
   height: 21px;
   @media ${(props) => props.theme.mobile} {
@@ -929,7 +923,6 @@ const ContentInputWrap = styled.div`
   }
 `;
 const ContentInput = styled.input`
-  font-family: 'Noto Sans CJK KR';
   font-size: 14px;
   min-height: 30px;
   padding-left: 15px;
@@ -969,7 +962,6 @@ const ClearBtn = styled.div`
 const TipSpan = styled.span`
   width: 10px;
   font-size: 16px;
-  font-family: 'Noto Sans CJK KR';
   @media ${(props) => props.theme.mobile} {
     width: 30px;
   }
@@ -992,7 +984,6 @@ const ContentSpan = styled.span`
   margin-left: 20px;
   margin-right: 20px;
   font-size: 14px;
-  font-family: 'Noto Sans CJK KR';
 `;
 
 const DetailBtn = styled.label`
