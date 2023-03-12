@@ -14,6 +14,7 @@ import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { title } from 'process';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
@@ -43,7 +44,7 @@ const DetailList = ({ item }: ItemProps) => {
   const isPc = useMediaQuery({ minWidth: 786 });
 
   //! component state
-  const [editTitle, setEditTitle] = useState('');
+  const [editTitle, setEditTitle]: any = useState('');
   const [editContent, setEditContent] = useState('');
   const [editCity, setEditCity] = useState('');
   const [editTown, setEditTown] = useState('');
@@ -191,6 +192,10 @@ const DetailList = ({ item }: ItemProps) => {
     setEditCity(item.city);
     setEditTown(item.town);
   }, [editBtnToggle]);
+
+  const onReset = () => {
+    setEditTitle('');
+  };
 
   //* 지도 클릭 시 카테고리 변경하기
   // console.log('saveAddress: ', saveAddress);
@@ -364,13 +369,10 @@ const DetailList = ({ item }: ItemProps) => {
                   setEditTitleInputCount(e.target.value.length);
                 }}
                 ref={titleInput}
+                value={editTitle}
               />
 
-              <EditclearBtn
-                onClick={() => {
-                  // setValue('title', '');
-                }}
-              ></EditclearBtn>
+              <EditclearBtn onClick={onReset} />
             </TitleInputContainer>
             <TitleInputSpan>
               {isPc && (
@@ -522,6 +524,7 @@ const DetailList = ({ item }: ItemProps) => {
               // value={editContent}
               maxLength={100}
               defaultValue={item.content}
+              value={editContent}
               onChange={(e) => {
                 setEditContent(e.target.value);
                 setEditContentInputCount(e.target.value.length);
@@ -543,9 +546,10 @@ const DetailList = ({ item }: ItemProps) => {
               </span>
             </ContentInputSpan>
           </ContentInputWrap>
+
           <ClearBtn
             onClick={() => {
-              // setValue('content', '');
+              setEditContent('');
             }}
           ></ClearBtn>
         </ContentInputContainer>
@@ -671,6 +675,7 @@ const Title = styled.div`
   color: #212121;
   @media ${(props) => props.theme.mobile} {
     font-size: 20px;
+    padding-left: 10px;
   }
 `;
 const EditclearBtn = styled.div`
@@ -687,6 +692,8 @@ const EditclearBtn = styled.div`
   @media ${(props) => props.theme.mobile} {
     /* transform: translate(-110%, 920%); */
     position: relative;
+    margin-left: 23px;
+    margin-top: 8px;
   }
 `;
 
