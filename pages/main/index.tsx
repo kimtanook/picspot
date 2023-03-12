@@ -242,8 +242,8 @@ export default function Main() {
                     src="/main/empty-icon.png"
                     alt="empty-icon"
                     className="empty-image"
-                    width={100}
-                    height={100}
+                    width={300}
+                    height={300}
                   />
                   <div>게시글이 없습니다.</div>
                 </EmptyPostBox>
@@ -348,7 +348,7 @@ export default function Main() {
         <TopBtn
           onClick={() => scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
         >
-          TOP
+          <TopImg src="/TopImg.png" />
         </TopBtn>
       </MainContainer>
     </Wrap>
@@ -503,11 +503,11 @@ const TopBtn = styled.button`
   height: 56px;
   border: none;
   border-radius: 50%;
-  background-color: #feb819;
+  background-color: transparent;
   color: white;
   position: fixed;
   top: 90%;
-  left: 85%;
+  left: 93%;
   cursor: pointer;
   transition: 0.3s;
   :hover {
@@ -516,6 +516,11 @@ const TopBtn = styled.button`
   @media ${(props) => props.theme.mobile} {
     display: none;
   }
+`;
+
+const TopImg = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const PostFormWrap = styled.div`

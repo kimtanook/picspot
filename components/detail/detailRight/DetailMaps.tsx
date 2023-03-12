@@ -1,5 +1,5 @@
 import { editSaveAddressAtom, editSaveLatLngAtom } from '@/atom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 declare global {
   interface Window {
@@ -8,6 +8,7 @@ declare global {
 }
 
 const DetailMaps = ({ searchPlace, setInfoDiv }: any) => {
+  const container = useRef(null);
   //! global state
   const [editSaveLatLng, setEditSaveLatLng] =
     useRecoilState(editSaveLatLngAtom);
@@ -19,12 +20,12 @@ const DetailMaps = ({ searchPlace, setInfoDiv }: any) => {
 
     //----------------------------카카오맵 셋팅/----------------------------
     kakao.maps.load(() => {
-      const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(33.37713123240438, 126.54331893240735),
         level: 5,
       };
-      const map = new kakao.maps.Map(container, options);
+      const map = new kakao.maps.Map(container.current, options);
+
       const geocoder = new kakao.maps.services.Geocoder();
 
       //----------------------------줌 레벨 및 스카이뷰/----------------------------
@@ -104,7 +105,13 @@ const DetailMaps = ({ searchPlace, setInfoDiv }: any) => {
     });
   }, [searchPlace, setEditSaveAddress, setInfoDiv, setEditSaveLatLng]);
 
-  return <div id="map" style={{ width: '100%', height: '230px' }}></div>;
+  return (
+    <div
+      id="map"
+      ref={container}
+      style={{ width: '100%', height: '230px' }}
+    ></div>
+  );
 };
 
 export default DetailMaps;
