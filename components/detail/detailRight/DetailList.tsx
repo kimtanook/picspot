@@ -83,7 +83,6 @@ const DetailList = ({ item }: ItemProps) => {
 
   //* 수정 완료 버튼을 눌렀을 때 실행하는 함수
   const onClickEdit = (data: DeatailListItemType) => {
-    // console.log('data: ', data);
     if (titleInput.current?.value === '' || data.title === '') {
       customAlert('제목을 입력해주세요');
       return;
@@ -122,7 +121,6 @@ const DetailList = ({ item }: ItemProps) => {
         icon: 'success',
         title: '수정사항이 저장 완료되었습니다!',
         confirmButtonColor: '#1882FF',
-        // showCancelButton: false,
         confirmButtonText: ' 내 게시글 보러 가기',
       }).then((result) => {
         if (result.isConfirmed) {
@@ -250,9 +248,6 @@ const DetailList = ({ item }: ItemProps) => {
 
     const cityMap = editSaveAddress.split(' ')[1];
     const townMap = editSaveAddress.split(' ')[2];
-
-    console.log('cityMap: ', cityMap);
-    console.log('townMap: ', townMap);
 
     if (
       cityMap === '제주시' &&
@@ -575,20 +570,6 @@ const MenuPointImg = styled.img`
     height: 16px;
   }
 `;
-// const MenuPointImg = styled.img`
-//   position: absolute;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   right: 0%;
-//   top: 0%;
-//   @media ${(props) => props.theme.mobile} {
-//     position: absolute;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//   }
-// `;
 
 const Menu = styled.div`
   position: absolute;

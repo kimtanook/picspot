@@ -19,7 +19,6 @@ function CommentItem({
     isLoading,
     isError,
   } = useQuery(['CommentUser', item.creatorUid], getCommentUser);
-  // console.log('commentItem: ', commentItem);
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation(deleteComment);

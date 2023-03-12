@@ -9,7 +9,6 @@ const DetailProfile = ({ item }: ItemProps) => {
   //* 마이페이지로 이동하기
   const router = useRouter();
   const onClickRouteMypage = (obj: ObjType) => {
-    // console.log('obj: ', obj);
     if (authService.currentUser?.uid === obj.uid) {
       router.push(`/mypage`);
     } else {
