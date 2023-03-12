@@ -2,7 +2,7 @@ import { addComment, getComment } from '@/api';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import CommentItem from './CommentItem';
 import { v4 as uuidv4 } from 'uuid';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { authService } from '@/firebase';
 import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
@@ -10,11 +10,13 @@ import { logEvent } from '@amplitude/analytics-browser';
 import { useMediaQuery } from 'react-responsive';
 import { editBtnToggleAtom } from '@/atom';
 import { useRecoilState } from 'recoil';
+import { AuthCurrentUser } from '@/atom';
 
 const CommentList = ({ postId }: postId) => {
   const [inputCount, setInputCount] = useState(0);
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
-
+  const [currentUser, setCurrentUser] = useRecoilState(AuthCurrentUser);
+  const user = authService.currentUser;
   const queryClient = useQueryClient();
   const [comment, setComment] = useState('');
   const { data, isLoading } = useQuery(['comments', postId], getComment);
@@ -30,7 +32,7 @@ const CommentList = ({ postId }: postId) => {
 
   const onSubmitComment = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!authService.currentUser) {
+    if (!user) {
       return customAlert('로그인 후 댓글을 남겨보세요!');
     } else if (comment.length > 30) {
       customAlert('댓글이 30자를 초과했어요.');
@@ -70,11 +72,11 @@ const CommentList = ({ postId }: postId) => {
             }}
             value={comment}
             placeholder={
-              authService.currentUser
+              currentUser || user
                 ? '댓글을 남겨보세요!'
                 : '로그인 후 댓글을 남겨보세요!'
             }
-            disabled={authService.currentUser ? false : true}
+            disabled={currentUser || user ? false : true}
           />
           {isPc && (
             <InputBtnContainer>
