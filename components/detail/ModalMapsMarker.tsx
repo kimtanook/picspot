@@ -63,8 +63,8 @@ const ModalMapsMarker = ({
 };
 
 const OverLayWrap = styled.div`
-  width: 185px;
-  margin-top: -160%;
+  width: 195px;
+  margin-top: -155%;
   background-color: white;
   box-shadow: 2.5px 5px 5px gray;
   border-radius: 3px;
@@ -78,8 +78,8 @@ const OverLayWrap = styled.div`
 `;
 
 const OverLayTitle = styled.div`
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 17px;
+  font-weight: 500;
   padding: 13px;
   /* white-space: normal; */
 `;

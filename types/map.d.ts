@@ -74,3 +74,28 @@ interface IModalMapsMarkerProps {
   isOpen: any;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+declare interface IPostState {
+  title: string;
+  content: string;
+  imgUrl: string;
+  createdAt: number;
+  creator: string | undefined;
+  city: string;
+  town: string;
+  clickCounter: number;
+  lat: number | undefined;
+  long: number | undefined;
+  address: string;
+  nickname: string | null | undefined;
+  imgPath: string;
+}
+
+declare interface IFileInput {
+  current: input;
+}
+declare interface IImageRef {
+  _location: string;
+  _service: string;
+  StorageReference: string | null | undefined;
+}

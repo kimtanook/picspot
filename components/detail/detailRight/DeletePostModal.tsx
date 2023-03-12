@@ -1,23 +1,19 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { deletePostModalAtom, deleteItem } from '@/atom';
+import { deletePostModalAtom, deleteAtom } from '@/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import { storageService } from '@/firebase';
-import { deleteObject, ref } from 'firebase/storage';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { deleteData, visibleReset } from '@/api';
-import Swal from 'sweetalert2';
-// type Post = {
-//   id: string|undefined;
-//   imgPath: string|undefined;
-// };
-const DeletePostModal = ({
-  item,
-  setDeletePostModal,
-  deletePostModal,
-}: any): JSX.Element => {
-  // const [deleteModal, setDeleteModal] = useRecoilState(deleteModalAtom);
+import { deleteObject, ref } from 'firebase/storage';
+
+const DeletePostModal = () => {
+  const queryClient = useQueryClient(); // * 쿼리 최신화하기
+
+  const [deletePostData, setDeletePostData] = useRecoilState(deleteAtom);
+  const [deletePostModal, setDeletePostModal] =
+    useRecoilState(deletePostModalAtom);
   const router = useRouter();
 
   // 모달 창 뒤에 누르면 닫힘
@@ -38,34 +34,20 @@ const DeletePostModal = ({
 
   //* useMutation 사용해서 데이터 삭제하기
   const { mutate: onDeleteData } = useMutation(deleteData);
-  const [delteItemData] = useRecoilState<any>(deleteItem);
-  console.log(delteItemData);
-  const onClickDelete = async () => {
-    // event.stopPropagation();
-    // DeletePost(item);
-    // deleteModal(fa
-    // lse);
-    const imageRef = ref(storageService, `images/${delteItemData?.imgPath}`);
-    // console.log(delteItemData?.imgPath);
-    // console.log(delteItemData);
-    const docId: any = delteItemData?.id;
-    // await deleteObject(imageRef)
-    //   .then(() => {
-    //     Swal.fire({
-    //       title: '게시물을 삭제했습니다',
-    //     });
-    //     console.log('스토리지를 파일을 삭제를 성공했습니다');
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     console.log('스토리지 파일 삭제를 실패했습니다');
-    //   });
+
+  const onClickDelete = async (data: any) => {
+    console.log('data: ', data);
+    const imageRef = ref(storageService, `images/${data?.imgPath}`);
+    const docId: any = data?.id;
+
     onDeleteData(docId, {
       onSuccess: () => {
+        deleteObject(imageRef);
         setDeletePostModal(!deletePostModal);
         router.push('/main?city=제주전체');
+        queryClient.invalidateQueries('infiniteData');
       },
-      onError(error, variables, context) {
+      onError(error) {
         console.log(error);
       },
     });
@@ -89,7 +71,7 @@ const DeletePostModal = ({
           >
             취소
           </DeleteCancleButton>
-          <PostDeleteButton onClick={() => onClickDelete()}>
+          <PostDeleteButton onClick={() => onClickDelete(deletePostData)}>
             게시물 삭제하기
           </PostDeleteButton>
         </DeleteContainer>
@@ -112,7 +94,6 @@ const ModalStyled = styled.div`
   @media ${(props) => props.theme.mobile} {
     background-color: white;
   }
-
   .modalBody {
     position: relative;
     color: black;
@@ -122,13 +103,10 @@ const ModalStyled = styled.div`
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
     overflow-y: auto;
-    @media ${(props) => props.theme.mobile} {
-      width: 100%;
-      height: 30000px;
-    }
   }
 `;
 const DeleteContainer = styled.div``;
+
 const Text = styled.div`
   display: 1px solid;
   font-size: 24px;
@@ -138,7 +116,11 @@ const Text = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 90px;
+  @media ${(props) => props.theme.mobile} {
+    margin-top: 20px;
+  }
 `;
+
 const DeleteCancleButton = styled.button`
   display: 1px solid blue;
   font-size: 14px;
@@ -158,6 +140,9 @@ const DeleteCancleButton = styled.button`
   font-size: 15px;
   &:hover {
     cursor: pointer;
+  }
+  @media ${(props) => props.theme.mobile} {
+    width: 300px;
   }
 `;
 const PostDeleteButton = styled.button`
@@ -181,6 +166,7 @@ const PostDeleteButton = styled.button`
     cursor: pointer;
   }
   @media ${(props) => props.theme.mobile} {
+    width: 300px;
   }
 `;
 export default DeletePostModal;

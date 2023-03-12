@@ -295,6 +295,7 @@ const FollowerCount = styled.div`
   font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   padding-top: 10px;
+  cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     font-size: 14px;
   }

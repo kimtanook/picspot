@@ -106,6 +106,11 @@ export const deleteItem = atom({
   default: {},
 });
 
+export const AuthCurrentUser = atom({
+  key: 'currentUser',
+  default: false,
+});
+
 export const isOpenMapAtom = atom({
   key: `isOpenMap`,
   default: false,
@@ -114,4 +119,9 @@ export const isOpenMapAtom = atom({
 export const imageUploadAtom = atom<string | null>({
   key: `imageUpload`,
   default: null,
+});
+
+export const deleteAtom = atom<any>({
+  key: `deleteAtom`,
+  default: {},
 });

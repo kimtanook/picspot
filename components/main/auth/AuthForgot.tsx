@@ -1,5 +1,5 @@
 import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom } from '@/atom';
@@ -34,7 +34,21 @@ const AuthForgot = (): JSX.Element => {
         setSending(false);
       });
   };
-
+  // 모달 창 뒤에 누르면 닫힘
+  useEffect(() => {
+    const html = document.documentElement;
+    if (closeLoginModal || forgotModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [closeLoginModal || forgotModal]);
   return (
     <ForgotPwContainer onClick={(e) => e.stopPropagation()}>
       <Heder
