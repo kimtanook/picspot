@@ -18,7 +18,7 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData, visibleReset } from '@/api';
 import { authService } from '@/firebase';
 import { useRouter } from 'next/router';
-import { CustomModal } from '@/components/common/CustomModal';
+import { CustomModalMainMap } from '@/components/common/CustomModalMainMap';
 import ModalMaps from '@/components/detail/ModalMaps';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
@@ -283,7 +283,7 @@ export default function Main() {
         {isMobile && (
           <>
             {isModalActive ? (
-              <CustomModal
+              <CustomModalMainMap
                 modal={isModalActive}
                 setModal={setIsModalActive}
                 width="500"
@@ -312,7 +312,7 @@ export default function Main() {
         {isPc && (
           <>
             {isModalActive ? (
-              <CustomModal
+              <CustomModalMainMap
                 modal={isModalActive}
                 setModal={setIsModalActive}
                 width="500"
@@ -463,7 +463,10 @@ const MapModalBtn = styled.button`
   left: calc(50% - 121px / 2 - 0.5px);
   bottom: 42px;
   z-index: 999;
-
+  &:hover {
+    background-color: #1882ff;
+    color: white;
+  }
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 60px;
@@ -518,7 +521,6 @@ const TopBtn = styled.button`
 const PostFormWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 375px;
-    /* background-color: red; */
     height: 1240px;
     overflow: hidden;
   }
