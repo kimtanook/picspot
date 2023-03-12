@@ -53,7 +53,7 @@ const PostForm = () => {
     setIsOpenMap(!isOpenMap);
   };
 
-  console.log('onClickOpen', onClickOpen);
+  // console.log('onClickOpen', onClickOpen);
   let postState: any = {
     title: title,
     content: content,

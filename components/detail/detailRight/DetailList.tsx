@@ -462,7 +462,7 @@ const DetailList = ({ item }: ItemProps) => {
               {isPc && (
                 <span
                   style={{
-                    color: ' #F4F4F4;',
+                    color: ' #F4F4F4',
                     width: 65,
                     marginTop: 'auto',
                     marginBottom: 'auto',
@@ -476,7 +476,7 @@ const DetailList = ({ item }: ItemProps) => {
           </TitleInputWrap>
           {editBtnToggle ? (
             <EditBtnCotainer>
-              <div>
+              <EditBox>
                 {/* <EditBtn onClick={() => onClickDelete(item.id)}>
                 게시물 삭제 〉
               </EditBtn> */}
@@ -504,7 +504,7 @@ const DetailList = ({ item }: ItemProps) => {
                   <EditBtn onClick={onClickEditToggle}>수정하기 취소</EditBtn>
                   <EditBtnArrow src="/arrow-right-white.png" alt="image" />
                 </EditBtnWrap>
-              </div>
+              </EditBox>
             </EditBtnCotainer>
           ) : (
             <>
@@ -618,7 +618,7 @@ const DetailList = ({ item }: ItemProps) => {
             <ContentInputSpan>
               <span
                 style={{
-                  color: ' #F4F4F4;',
+                  color: ' #F4F4F4',
                   width: 100,
                   marginTop: 'auto',
                   marginBottom: 'auto',
@@ -1137,4 +1137,10 @@ const DetailBtn = styled.label`
     top: 400px;
     bottom: 0px;
   }
+`;
+
+const EditBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
