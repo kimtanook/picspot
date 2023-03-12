@@ -133,7 +133,7 @@ const Form = styled.form`
     position: absolute;
     width: 350px;
     height: 50px;
-    top: 60%;
+    top: 58%;
   }
 `;
 

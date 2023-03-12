@@ -1,4 +1,4 @@
-import { deleteData, postCounter, updateData, visibleReset } from '@/api';
+import { updateData } from '@/api';
 import {
   deleteAtom,
   deletePostModalAtom,
@@ -13,12 +13,7 @@ import DataLoading from '@/components/common/DataLoading';
 import { authService, storageService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
 import { logEvent } from '@/utils/amplitude';
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadString,
-} from 'firebase/storage';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -30,7 +25,6 @@ import { useMediaQuery } from 'react-responsive';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-// import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const DetailList = ({ item }: ItemProps) => {
   //! global state
@@ -66,8 +60,6 @@ const DetailList = ({ item }: ItemProps) => {
     });
   };
 
-  // console.log('deletePostData: ', deletePostData);
-
   //! 게시물 수정 버튼을 눌렀을때 실행하는 함수
   const onClickEditToggle = () => {
     setEditBtnToggle(!editBtnToggle);
@@ -81,48 +73,6 @@ const DetailList = ({ item }: ItemProps) => {
 
   const [editTitleInputCount, setEditTitleInputCount] = useState(0);
   const [editContentInputCount, setEditContentInputCount] = useState(0);
-
-  //* useMutation 사용해서 데이터 삭제하기
-  const { mutate: onDeleteData } = useMutation<undefined, undefined, string>(
-    deleteData
-  );
-
-  //* 게시물 삭제 버튼을 눌렀을 때 실행하는 함수
-  // const onClickDelete = (docId: string) => {
-  //   // console.log('docId: ', docId);
-  //   const imageRef = ref(storageService, `images/${item.imgPath}`);
-
-  //   Swal.fire({
-  //     icon: 'warning',
-  //     title: '정말로 삭제하시겠습니까?',
-  //     confirmButtonColor: '#08818c',
-  //     showCancelButton: true,
-  //     confirmButtonText: '삭제',
-  //     cancelButtonText: '취소',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       deleteObject(imageRef)
-  //         .then(() => {
-  //           console.log('스토리지를 파일을 삭제를 성공했습니다');
-  //         })
-  //         .catch((error) => {
-  //           console.log('스토리지 파일 삭제를 실패했습니다');
-  //         });
-
-  //       onDeleteData(docId, {
-  //         onSuccess: () => {
-  //           setTimeout(
-  //             () => queryClient.invalidateQueries('infiniteData'),
-  //             500
-  //           );
-  //           logEvent('게시물 삭제 버튼', { from: 'detail page' });
-  //           router.push('/main?city=제주전체');
-  //         },
-  //       });
-  //       visibleReset();
-  //     }
-  //   });
-  // };
 
   //* useMutation 사용해서 데이터 수정하기
   const {
@@ -164,8 +114,6 @@ const DetailList = ({ item }: ItemProps) => {
       return;
     }
 
-    // console.log('data: ', data);
-
     const imageRef = ref(storageService, `images/${item.imgPath}`);
 
     if (imageUpload === null) {
@@ -182,7 +130,6 @@ const DetailList = ({ item }: ItemProps) => {
             { ...data, imgUrl: item.imgUrl },
             {
               onSuccess: () => {
-                // setEditState(data);
                 setTimeout(
                   () => queryClient.invalidateQueries('detailData'),
                   500
@@ -228,7 +175,6 @@ const DetailList = ({ item }: ItemProps) => {
                 { ...data, imgUrl: response },
                 {
                   onSuccess: () => {
-                    // setEditState(data);
                     setTimeout(
                       () => queryClient.invalidateQueries('detailData'),
                       500
@@ -282,7 +228,6 @@ const DetailList = ({ item }: ItemProps) => {
   };
 
   //* 지도 클릭 시 카테고리 변경하기
-  // console.log('saveAddress: ', saveAddress);
   useEffect(() => {
     if (!editSaveAddress) {
       return;
@@ -339,7 +284,6 @@ const DetailList = ({ item }: ItemProps) => {
               <Link href="/main?city=제주전체">
                 <Back
                   onClick={() => {
-                    // sessionStorage.clear();
                     localStorage.clear();
                   }}
                 >
@@ -380,8 +324,7 @@ const DetailList = ({ item }: ItemProps) => {
                 ) : null}
               </div>
             </>
-          ) : // <EditBtn onClick={onClickEditToggle}>게시물 수정 〉</EditBtn>
-          null}
+          ) : null}
         </TitleAndView>
         <CityAndTownAndAddress>
           <City>{item.city}</City>
@@ -423,12 +366,7 @@ const DetailList = ({ item }: ItemProps) => {
           {isMobile && (
             <AddressWrap>
               <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-              {/* <CopyToClipboard
-                text={item.address}
-                onCopy={() => alert('클립보드에 복사되었습니다.')}
-              > */}
               <AddressText>{item.address}</AddressText>
-              {/* </CopyToClipboard> */}
             </AddressWrap>
           )}
         </>
@@ -447,7 +385,6 @@ const DetailList = ({ item }: ItemProps) => {
             <TitleInputContainer>
               <TitleInput
                 maxLength={15}
-                defaultValue={item.title}
                 onChange={(e) => {
                   setEditTitle(e.target.value);
                   setEditTitleInputCount(e.target.value.length);
@@ -477,9 +414,6 @@ const DetailList = ({ item }: ItemProps) => {
           {editBtnToggle ? (
             <EditBtnCotainer>
               <EditBox>
-                {/* <EditBtn onClick={() => onClickDelete(item.id)}>
-                게시물 삭제 〉
-              </EditBtn> */}
                 <EditBtnWrap>
                   <EditBtn
                     onClick={() =>
@@ -511,43 +445,13 @@ const DetailList = ({ item }: ItemProps) => {
               <EditBtn onClick={onClickEditToggle}>게시물 수정</EditBtn>
             </>
           )}
-          {/* {isPc ? (
-            <View>
-              <Image
-                src="/view_icon.svg"
-                alt="image"
-                width={20}
-                height={20}
-                style={{ marginRight: 5 }}
-              />
-              <span
-                style={{
-                  color: '#1882FF',
-                }}
-              >
-                {item.clickCounter} view
-              </span>
-            </View>
-          ) : (
-            ''
-          )} */}
         </TitleAndView>
         <CityAndTownAndAddress>
-          <CityInput
-            // defaultValue={item.city}
-            value={editCity}
-            // ref={cityInput}
-            onChange={(e) => onChangeCityInput(e)}
-          >
+          <CityInput value={editCity} onChange={(e) => onChangeCityInput(e)}>
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
           </CityInput>
-          <TownInput
-            // defaultValue={item.town}
-            value={editTown}
-            // ref={townInput}
-            onChange={(e) => onChangeTownInput(e)}
-          >
+          <TownInput value={editTown} onChange={(e) => onChangeTownInput(e)}>
             {editCity === '제주시' && (
               <>
                 <option value="제주시 시내">제주시 시내</option>
@@ -588,26 +492,15 @@ const DetailList = ({ item }: ItemProps) => {
               </View>
             )}
           </HowManyView>
-          {/* <Address>
-            <Image src="/spot_icon.svg" alt="image" width={24} height={24} />{' '}
-            <span>{item.address}</span>
-          </Address> */}
         </CityAndTownAndAddress>
         <AddressWrap>
           <Image src="/spot_icon.svg" alt="image" width={15} height={15} />{' '}
-          {/* <CopyToClipboard
-                text={item.address}
-                onCopy={() => alert('클립보드에 복사되었습니다.')}
-              > */}
           <AddressText>{item.address}</AddressText>
-          {/* </CopyToClipboard> */}
         </AddressWrap>
         <ContentInputContainer>
           <ContentInputWrap>
             <ContentInput
-              // value={editContent}
               maxLength={100}
-              defaultValue={item.content}
               value={editContent}
               onChange={(e) => {
                 setEditContent(e.target.value);
@@ -1143,4 +1036,7 @@ const EditBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  @media ${(props) => props.theme.mobile} {
+    gap: 3px;
+  }
 `;
