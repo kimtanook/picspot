@@ -120,3 +120,8 @@ export const imageUploadAtom = atom<string | null>({
   key: `imageUpload`,
   default: null,
 });
+
+export const deleteAtom = atom<any>({
+  key: `deleteAtom`,
+  default: {},
+});
