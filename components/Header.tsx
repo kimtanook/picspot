@@ -68,18 +68,15 @@ const Header = ({
   }, [nowUser]);
   return (
     <HeaderContainer>
-      {/* picspot */}
       <Link
         href="/main?city=제주전체"
         style={{ color: 'black', textDecorationLine: 'none' }}
       >
         <Title
           onClick={() => {
-            // sessionStorage.clear();
             localStorage.clear();
           }}
         >
-          {/* <LogoImg src="/logo.png" alt="logo" /> */}
           <LogoImgBox>
             <Image
               src="/logo.png"
@@ -173,7 +170,6 @@ const Header = ({
         {currentUser ? (
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
-              // <ProfileImg src={userImg} alt="profile" />
               <Image
                 src={userImg}
                 alt="profileImg"
@@ -183,7 +179,6 @@ const Header = ({
                 style={{ borderRadius: '50%', cursor: 'pointer' }}
               />
             ) : (
-              // <ProfileImg src="/profileicon.svg" alt="profile" />
               <Image
                 src="/profileicon.svg"
                 alt="profileImg"
