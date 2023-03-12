@@ -146,7 +146,7 @@ const ModalFollow = () => {
           <ProfileImg src={profileImage} />
           <UserNicknameFollow>
             <UserNickname>{authService.currentUser?.displayName}</UserNickname>
-            님을 팔로잉중인 사람
+            님을 팔로우 하는 사람
           </UserNicknameFollow>
         </FollowTotal>
       </FollowList>

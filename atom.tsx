@@ -77,8 +77,8 @@ export const editBtnToggleAtom = atom({
   key: `editBtnToggleAtom${uuidv4()}`,
   default: false,
 });
-export const deleteModalAtom = atom({
-  key: `deleteModalAtom`,
+export const deletePostModalAtom = atom({
+  key: `deletePostModalAtom`,
   default: false,
 });
 export const myDataAtom = atom({
@@ -93,7 +93,7 @@ export const editPlaceAtom = atom({
 
 export const editSaveLatLngAtom = atom({
   key: `editSaveLatLngAtom${uuidv4()}`,
-  default: [],
+  default: [] as any,
 });
 
 export const editSaveAddressAtom = atom({

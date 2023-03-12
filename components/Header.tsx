@@ -105,7 +105,7 @@ const Header = ({
             onClickTogglePostModal();
           }}
         >
-          + 나의 스팟 추가
+          + 게시물 추가
         </PostFormButton>
         <SearchWrap>
           <Search
@@ -186,8 +186,6 @@ const Header = ({
               <Image
                 src="/profileicon.svg"
                 alt="profileImg"
-                width={30}
-                height={30}
                 style={{ borderRadius: '50%', cursor: 'pointer' }}
                 priority={true}
               />
