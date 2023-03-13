@@ -68,24 +68,23 @@ const Header = ({
   }, [nowUser]);
   return (
     <HeaderContainer>
-      {/* picspot */}
       <Link
         href="/main?city=제주전체"
         style={{ color: 'black', textDecorationLine: 'none' }}
       >
         <Title
           onClick={() => {
-            // sessionStorage.clear();
             localStorage.clear();
           }}
         >
-          {/* <LogoImg src="/logo.png" alt="logo" /> */}
           <LogoImgBox>
             <Image
               src="/logo.png"
               alt="logoImg"
-              layout="fill"
               priority={true}
+              width={107}
+              height={29}
+              className="logo-image"
             />
           </LogoImgBox>
         </Title>
@@ -97,13 +96,14 @@ const Header = ({
           <option value="서귀포시">서귀포시</option>
         </CityCategory>
       ) : null}
+
       <SearchAndForm>
         <PostFormButton
           onClick={() => {
             onClickTogglePostModal();
           }}
         >
-          + 나의 스팟 추가
+          + 게시물 추가
         </PostFormButton>
         <SearchWrap>
           <Search
@@ -125,8 +125,10 @@ const Header = ({
                 <Image
                   src="/menu.png"
                   alt="meunImg"
-                  layout="fill"
                   priority={true}
+                  height={24}
+                  width={24}
+                  className="menu-image"
                   onClick={() => setMenuToggle(!menuToggle)}
                 />
               </MenuImgBox>
@@ -138,7 +140,7 @@ const Header = ({
                     onClickTogglePostModal();
                   }}
                 >
-                  나의 스팟 추가
+                  게시물 추가
                 </PostFormButtonMobile>
               </DropMenu>
             ) : null}
@@ -168,8 +170,6 @@ const Header = ({
         {currentUser ? (
           <div onClick={() => router.push('/mypage')}>
             {userImg ? (
-              // <ProfileImg src={userImg} alt="profile" />
-
               <Image
                 src={userImg}
                 alt="profileImg"
@@ -179,21 +179,18 @@ const Header = ({
                 style={{ borderRadius: '50%', cursor: 'pointer' }}
               />
             ) : (
-              // <ProfileImg src="/profileicon.svg" alt="profile" />
               <Image
                 src="/profileicon.svg"
                 alt="profileImg"
-                width={30}
-                height={30}
                 style={{ borderRadius: '50%', cursor: 'pointer' }}
                 priority={true}
               />
             )}
           </div>
         ) : (
-          <div onClick={closeLoginModalButton}>
-            <ProfileImg src="/profileicon.svg" alt="profile" />
-          </div>
+          <BeforeLogin onClick={closeLoginModalButton}>
+            <ProfileImg src="/profileicon-white.png" alt="profile" /> 로그인하기
+          </BeforeLogin>
         )}
       </HeaderRight>
     </HeaderContainer>
@@ -230,23 +227,15 @@ const Title = styled.div`
 `;
 
 const LogoImgBox = styled.div`
-  width: 107px;
-  height: 29px;
-  position: relative;
-  @media ${(props) => props.theme.mobile} {
-    width: 92px;
-    height: 25px;
+  & > .logo-image {
+    width: 100%;
+    height: 100%;
+    @media ${(props) => props.theme.mobile} {
+      width: 92px;
+      height: 25px;
+    }
   }
 `;
-
-// const LogoImg = styled.img`
-//   width: 107px;
-//   height: 29px;
-//   @media ${(props) => props.theme.mobile} {
-//     width: 92px;
-//     height: 25px;
-//   }
-// `;
 
 const CityCategory = styled.select`
   position: absolute;
@@ -268,12 +257,14 @@ const SearchAndForm = styled.div`
   flex-direction: row-reverse;
   align-items: center;
   margin-top: 3px;
-  margin-left: 53%;
+  margin-left: 59%;
+  /* margin-left: 53%; */
   width: 440px;
   @media ${(props) => props.theme.mobile} {
     display: none;
   }
 `;
+
 const PostFormButton = styled.button`
   border-radius: 20px;
   color: #1882ff;
@@ -282,6 +273,10 @@ const PostFormButton = styled.button`
   cursor: pointer;
   width: 121.16px;
   height: 31px;
+  &:hover {
+    background-color: #1882ff;
+    color: white;
+  }
   @media ${(props) => props.theme.mobile} {
     display: none;
   }
@@ -302,13 +297,12 @@ const HeaderRight = styled.div`
 `;
 
 const MenuImgBox = styled.div`
-  position: relative;
-  display: none;
-  @media ${(props) => props.theme.mobile} {
-    display: inherit;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+  & > .menu-image {
+    display: none;
+    @media ${(props) => props.theme.mobile} {
+      display: inherit;
+      margin-right: 8px;
+    }
   }
 `;
 
@@ -366,8 +360,29 @@ const CheckedCount = styled.div`
 `;
 
 const ProfileImg = styled.img`
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 16px;
+  height: 16px;
+  @media ${(props) => props.theme.mobile} {
+    width: 12px;
+    height: 12px;
+  }
+`;
+const BeforeLogin = styled.div`
+  border-radius: 20px;
+  width: 125px;
+  height: 31px;
+  background-color: #1882ff;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    width: 100px;
+    height: 26px;
+    size: 12px;
+  }
 `;

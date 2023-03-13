@@ -4,6 +4,10 @@ import Script from 'next/script';
 export default function Document() {
   return (
     <Html lang="en">
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:&display=swap"
+        rel="stylesheet"
+      />
       <Head />
       <body style={{ margin: '0px' }}>
         <Main />

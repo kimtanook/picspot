@@ -1,11 +1,11 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 
 // * Socket.io
+import { authService } from '@/firebase';
 import * as SocketIOClient from 'socket.io-client';
 import ChatItem from './ChatItem';
-import { authService } from '@/firebase';
 
 const Chat = () => {
   const [socketServer, setSocketServer] = useState<any>(null);
@@ -169,8 +169,6 @@ const Chat = () => {
                       key={uuidv4()}
                       myName={authService.currentUser?.displayName}
                       item={chat}
-                      // socketServer={socketServer}
-                      // setChat={setChat}
                     />
                   ))
                 ) : (

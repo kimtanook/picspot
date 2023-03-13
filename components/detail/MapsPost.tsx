@@ -15,9 +15,7 @@ declare global {
   }
 }
 
-const Maps = () => {
-  const isMobile = useMediaQuery({ maxWidth: 766 });
-  const isPc = useMediaQuery({ minWidth: 767 });
+const MapsPost = () => {
   const container = useRef(null);
   const [saveLatLng, setSaveLatLng] = useRecoilState(saveLatLngAtom);
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
@@ -116,9 +114,12 @@ const Maps = () => {
     <div
       id="map"
       ref={container}
-      style={{ width: '620px', height: '630px' }}
+      style={{
+        width: '620px',
+        height: '630px',
+      }}
     ></div>
   );
 };
 
-export default Maps;
+export default MapsPost;

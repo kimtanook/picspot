@@ -18,7 +18,7 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import { getInfiniteData, visibleReset } from '@/api';
 import { authService } from '@/firebase';
 import { useRouter } from 'next/router';
-import { CustomModal } from '@/components/common/CustomModal';
+import { CustomModalMainMap } from '@/components/common/CustomModalMainMap';
 import ModalMaps from '@/components/detail/ModalMaps';
 import DataLoading from '@/components/common/DataLoading';
 import DataError from '@/components/common/DataError';
@@ -147,11 +147,6 @@ export default function Main() {
   // 스크롤이 바닥을 찍으면 발생하는 이벤트. offset으로 바닥에서 offset값 픽셀 직전에 실행시킬 수 있다.
   useBottomScrollListener(fetchNextPage, { offset: 300 });
 
-  // 아이템 클릭 시 스크롤 위치 저장
-  const saveScroll = () => {
-    sessionStorage.setItem('scrollY', String(window.scrollY));
-  };
-
   // 뒤로가기로 메인 페이지 진입 시 스크롤 위치 복원 및 삭제
   const scrollRevert = () => {
     window.scrollTo(0, Number(sessionStorage.getItem('scrollY')));
@@ -241,21 +236,30 @@ export default function Main() {
             <DataError />
           ) : (
             <GridBox>
-              <ResponsiveMasonry
-                columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
-              >
-                <Masonry columnsCount={4}>
-                  {data?.pages.map((data) =>
-                    data?.map((item: { [key: string]: string }) => (
-                      <ContentBox
-                        key={uuidv4()}
-                        onClick={saveScroll}
-                        item={item}
-                      />
-                    ))
-                  )}
-                </Masonry>
-              </ResponsiveMasonry>
+              {data?.pages[0]?.length === 0 ? (
+                <EmptyPostBox>
+                  <Image
+                    src="/main/empty-icon.png"
+                    alt="empty-icon"
+                    className="empty-image"
+                    width={300}
+                    height={300}
+                  />
+                  <div>게시글이 없습니다.</div>
+                </EmptyPostBox>
+              ) : (
+                <ResponsiveMasonry
+                  columnsCountBreakPoints={{ 425: 2, 700: 3, 1200: 4 }}
+                >
+                  <Masonry columnsCount={4}>
+                    {data?.pages.map((data) =>
+                      data?.map((item: { [key: string]: string }) => (
+                        <ContentBox key={uuidv4()} item={item} />
+                      ))
+                    )}
+                  </Masonry>
+                </ResponsiveMasonry>
+              )}
             </GridBox>
           )}
 
@@ -279,7 +283,7 @@ export default function Main() {
         {isMobile && (
           <>
             {isModalActive ? (
-              <CustomModal
+              <CustomModalMainMap
                 modal={isModalActive}
                 setModal={setIsModalActive}
                 width="500"
@@ -308,7 +312,7 @@ export default function Main() {
         {isPc && (
           <>
             {isModalActive ? (
-              <CustomModal
+              <CustomModalMainMap
                 modal={isModalActive}
                 setModal={setIsModalActive}
                 width="500"
@@ -344,7 +348,7 @@ export default function Main() {
         <TopBtn
           onClick={() => scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
         >
-          TOP
+          <TopImg src="/TopImg.png" />
         </TopBtn>
       </MainContainer>
     </Wrap>
@@ -406,6 +410,21 @@ const GridBox = styled.div`
   }
 `;
 
+const EmptyPostBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  & > .empty-image {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 const ChatWrap = styled.div`
   position: fixed;
   left: 3%;
@@ -443,6 +462,11 @@ const MapModalBtn = styled.button`
   height: 36px;
   left: calc(50% - 121px / 2 - 0.5px);
   bottom: 42px;
+  z-index: 999;
+  &:hover {
+    background-color: #1882ff;
+    color: white;
+  }
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 60px;
@@ -451,7 +475,7 @@ const MapModalBtn = styled.button`
     bottom: 0;
     border-radius: inherit;
     font-size: 14px;
-    z-index: 1;
+    z-index: 999;
   }
 `;
 const PinImgBox = styled.div`
@@ -479,11 +503,11 @@ const TopBtn = styled.button`
   height: 56px;
   border: none;
   border-radius: 50%;
-  background-color: #feb819;
+  background-color: transparent;
   color: white;
   position: fixed;
   top: 90%;
-  left: 85%;
+  left: 93%;
   cursor: pointer;
   transition: 0.3s;
   :hover {
@@ -494,10 +518,14 @@ const TopBtn = styled.button`
   }
 `;
 
+const TopImg = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
 const PostFormWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 375px;
-    /* background-color: red; */
     height: 1240px;
     overflow: hidden;
   }
@@ -507,6 +535,7 @@ const ModalMapsWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: relative;
     display: flex;
+    background-color: none;
   }
 `;
 const ModalMapsBackButton = styled.div`

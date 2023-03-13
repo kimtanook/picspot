@@ -10,7 +10,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import DetailMapLanding from './DetailMapLanding';
 
-const DetailMap = ({ item }: any) => {
+const DetailMap = ({ item }: ItemProps) => {
   //! global state
   const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
 
@@ -36,7 +36,7 @@ const DetailMap = ({ item }: any) => {
         style={{
           // 지도의 크기
           width: '100%',
-          height: '230px',
+          height: '250px',
         }}
         level={11} // 지도의 확대 레벨
       >
@@ -61,5 +61,6 @@ const MapContainer = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 350px;
     margin: auto;
+    margin-top: 95px;
   }
 `;

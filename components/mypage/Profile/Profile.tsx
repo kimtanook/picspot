@@ -51,7 +51,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
   // 로그아웃
   const logOut = () => {
     signOut(authService).then(() => {
-      // Sign-out successful.
       setCurrentUser(false);
       customConfirm('로그아웃에 성공하였습니다!');
       localStorage.removeItem('googleUser');
@@ -68,7 +67,6 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
           <Link href="/main?city=제주전체">
             <Back
               onClick={() => {
-                // sessionStorage.clear();
                 localStorage.clear();
               }}
             >
@@ -80,7 +78,7 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
       {isMobile && <HeaderText>마이페이지</HeaderText>}
       <div>
         <div onClick={() => setIsOpen(!isOpen)}>
-          <MenuPointImg src="/three-point.png" />
+          <MenuPointImg src="/three-point.png" alt="image" />
         </div>
         {isOpen === true ? (
           <Menu>
@@ -157,7 +155,6 @@ const MobileBack = styled.img`
 const HeaderText = styled.div`
   font-size: 20px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -234,7 +231,6 @@ const ProfileTextdiv = styled.div`
 `;
 
 const ProfileNickname = styled.span`
-  font-family: Noto Sans CJK KR;
   color: #212121;
   font-style: normal;
   font-weight: 700;
@@ -245,7 +241,6 @@ const ProfileNickname = styled.span`
   }
 `;
 const LogoutProfileButton = styled.button`
-  font-family: Noto Sans CJK KR;
   border: none;
   background-color: transparent;
   color: #5b5b5f;
@@ -273,12 +268,12 @@ const FollowingOpenModal = styled.img`
   padding-left: 7px;
   width: 17px;
   height: 16px;
+
   cursor: pointer;
 `;
 
 const Follow = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   display: flex;
   text-align: left;
@@ -291,9 +286,9 @@ const Follow = styled.div`
 
 const FollowerCount = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   padding-top: 10px;
+  cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     font-size: 14px;
   }
@@ -301,7 +296,6 @@ const FollowerCount = styled.div`
 
 const FollowBtween = styled.div`
   font-size: 25px;
-  font-family: Noto Sans CJK KR;
   color: #d9d9d9;
   padding-top: 10px;
   @media ${(props) => props.theme.mobile} {

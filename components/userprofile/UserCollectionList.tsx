@@ -1,24 +1,27 @@
-import { getCollection } from '@/api';
+import { getCollection, getUserCollection } from '@/api';
+import Image from 'next/image';
 import { useQuery } from 'react-query';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import UserCollectionTown from './UserCollectionTown';
+import { useRouter } from 'next/router';
 
 const UserCollectionList = ({ userId }: { userId: string }) => {
-  //* useQuery 사용해서 collection 데이터 불러오기
+  //* 특정 유저의 collection 데이터 불러오기
   const { data: collectionData, isLoading } = useQuery(
-    'UserCollection',
-    getCollection
+    ['UserCollection', userId],
+    getUserCollection,
+    {
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 10,
+    }
   );
-  console.log('collectionData : ', collectionData);
-  // filter로 거른다 (collectionData의 collector 중에서, userId가 true인 item을. )
-  const userCollectPost = collectionData?.filter((item: userItem) => {
-    return item.collector?.find((item: string) => userId.includes(item));
-  });
+
+  const router = useRouter();
 
   // town값만 추출
-  const townArray = userCollectPost?.map((item: userItem) => {
+  const townArray = collectionData?.map((item: userItem) => {
     return item.town;
   });
 
@@ -30,17 +33,42 @@ const UserCollectionList = ({ userId }: { userId: string }) => {
   );
   return (
     <GridBox>
-      <ResponsiveMasonry columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}>
-        <Masonry columnsCount={3}>
-          {uniqueTownArray?.map((item: string) => (
-            <UserCollectionTown
-              key={uuidv4()}
-              value={item}
-              postList={userCollectPost}
-            />
-          ))}
-        </Masonry>
-      </ResponsiveMasonry>
+      {uniqueTownArray?.length === 0 ? (
+        <EmptyPostBox>
+          <Image
+            src="/main/empty-icon.png"
+            alt="empty-icon"
+            className="empty-image"
+            width={200}
+            height={200}
+          />
+          <EmptyTitle>아직 저장된 사진이 없어요.</EmptyTitle>
+          <EmptyContetnts>
+            가보고 싶은 여행지 사진을 찾으러 가볼까요?
+          </EmptyContetnts>
+          <EmptyBtn onClick={() => router.push('/main?city=제주전체')}>
+            제주도 전체 사진 둘러보기
+          </EmptyBtn>
+        </EmptyPostBox>
+      ) : (
+        <>
+          {typeof window === 'undefined' ? null : (
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 425: 1, 750: 2, 1200: 3 }}
+            >
+              <Masonry columnsCount={3}>
+                {uniqueTownArray?.map((item: string) => (
+                  <UserCollectionTown
+                    key={uuidv4()}
+                    value={item}
+                    postList={collectionData}
+                  />
+                ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          )}
+        </>
+      )}
     </GridBox>
   );
 };
@@ -53,4 +81,41 @@ const GridBox = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100%;
   }
+`;
+
+const EmptyPostBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  padding-top: 10px;
+  margin-bottom: 100px;
+  transform: translate(-50%, -50%);
+  & > .empty-image {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const EmptyTitle = styled.div`
+  margin: 24px 0px 15px 0px;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const EmptyContetnts = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  width: 260px;
+  text-align: center;
+`;
+const EmptyBtn = styled.button`
+  color: #1882ff;
+  border: none;
+  border-bottom: 1px solid #1882ff;
+  background: none;
+  cursor: pointer;
 `;

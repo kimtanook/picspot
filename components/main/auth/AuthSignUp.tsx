@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
@@ -7,7 +7,12 @@ import { customConfirm } from '@/utils/alerts';
 import { useMutation } from 'react-query';
 import { addUser } from '@/api';
 import { useRecoilState } from 'recoil';
-import { forgotModalAtom, loginModalAtom, signUpModalAtom } from '@/atom';
+import {
+  AuthCurrentUser,
+  forgotModalAtom,
+  loginModalAtom,
+  signUpModalAtom,
+} from '@/atom';
 import { setAmplitudeUserId } from '@/utils/amplitude';
 import { useMediaQuery } from 'react-responsive';
 
@@ -29,6 +34,7 @@ const AuthSignUp = () => {
   //* useMutation 사용해서 유저 추가하기
   const { mutate: onAddUser } = useMutation(addUser);
   const [registering, setRegistering] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useRecoilState(AuthCurrentUser);
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [hidePassword, setHidePassword] = useState<boolean>(false);
@@ -69,6 +75,7 @@ const AuthSignUp = () => {
         setSignUpModal(false);
         setForgotModal(false);
         setAmplitudeUserId(authService.currentUser?.uid);
+        setCurrentUser(true);
       })
       .then(() => {
         //* 회원가입 시 user 추가하기
@@ -97,6 +104,21 @@ const AuthSignUp = () => {
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
   };
+  // 모달 창 뒤에 누르면 닫힘
+  useEffect(() => {
+    const html = document.documentElement;
+    if (closeLoginModal || signUpModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [closeLoginModal || signUpModal]);
   return (
     <SignUpContainer onClick={(e) => e.stopPropagation()}>
       <Heder
@@ -260,7 +282,6 @@ const SignUpTextDiv = styled.div`
   @media ${(props) => props.theme.mobile} {
     transform: translate(55%, -170%);
     width: 50%;
-    font-family: 'Noto Sans CJK KR';
     font-weight: bold;
     font-size: 14px;
   }
@@ -305,7 +326,6 @@ const EditInputBox = styled.div`
 const EditInputText = styled.div`
   font-size: 12px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   width: 80%;
   height: 20px;
   position: inherit;
@@ -350,7 +370,6 @@ const AuthWarn = styled.p`
   @media ${(props) => props.theme.mobile} {
     transform: translate(0%, -10%);
     font-size: 12px;
-    font-family: Noto Sans CJK KR;
     border: none;
     background: transparent;
   }

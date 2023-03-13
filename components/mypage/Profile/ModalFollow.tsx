@@ -42,15 +42,12 @@ const ModalFollow = () => {
         (item: any) => item.docId === authService.currentUser?.uid
       )[0]?.follow,
   });
-  // console.log('followData: ', followData);
-  const followerCount = followData?.length; //* 나를 팔로잉 하는 사람 숫자
 
   //* user에서 나를 팔로우한 사람 데이터 뽑기
   const { data: followUserData } = useQuery('UserData', getUser, {
     select: (data) =>
       data?.filter((item: any) => followData?.includes(item.uid)),
   });
-  // console.log('followUserData: ', followUserData);
 
   //* mutation 사용해서 팔로잉 추가 데이터 보내기
   const { mutate: followingMutate } = useMutation(addFollowing, {
@@ -79,31 +76,26 @@ const ModalFollow = () => {
       data?.find((item: any) => item.docId === authService.currentUser?.uid)
         ?.following,
   });
-  // console.log('followingData: ', followingData);
 
   //* user에서 내가 팔로우한 사람 데이터 뽑기
   const { data: followingUserData } = useQuery('UserData', getUser, {
     select: (data) =>
       data?.filter((item: any) => followingData?.includes(item.uid)),
   });
-  // console.log('followingUserData: ', followingUserData);
 
   //* 나를 팔로우한 사람과 내가 팔로잉한 사람의 uid가 담긴 배열
   const CommonUidArr = followUserData
     ?.filter((item: any) => followingData?.includes(item.uid))
     .map((item: any) => item.uid);
-  // console.log('CommonUidArr: ', CommonUidArr);
 
   //* 팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
-    console.log('item: ', item);
     followingMutate({ ...item, uid: authService?.currentUser?.uid });
     logEvent('팔로잉 버튼', { from: 'mypage follow modal' });
   };
 
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowingBtn = (item: any) => {
-    console.log('item: ', item);
     deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
     logEvent('언팔로잉 버튼', { from: 'mypage follow modal' });
   };
@@ -146,7 +138,7 @@ const ModalFollow = () => {
           <ProfileImg src={profileImage} />
           <UserNicknameFollow>
             <UserNickname>{authService.currentUser?.displayName}</UserNickname>
-            님을 팔로잉중인 사람
+            님을 팔로우 하는 사람
           </UserNicknameFollow>
         </FollowTotal>
       </FollowList>
@@ -246,7 +238,6 @@ const FollowTotal = styled.div`
 
 const UserNicknameFollow = styled.div`
   display: flex;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -255,7 +246,6 @@ const UserNicknameFollow = styled.div`
 `;
 
 const UserNickname = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-weight: 700;
   font-size: 17px;

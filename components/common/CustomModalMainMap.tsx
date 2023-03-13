@@ -9,7 +9,7 @@ interface ModalProps {
   setModal: Dispatch<SetStateAction<boolean>>;
 }
 
-export const CustomModal = ({
+export const CustomModalMainMap = ({
   modal,
   width,
   height,
@@ -39,7 +39,7 @@ const Container = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   padding: 8px;
-  background-color: white;
+
   z-index: 1000;
   color: black;
   display: flex;
@@ -61,9 +61,6 @@ const Canvas = styled.div`
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  @media ${(props) => props.theme.mobile} {
-    /* display: none; */
-  }
 `;
 
 const Wrapper = styled.div`

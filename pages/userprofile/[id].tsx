@@ -1,8 +1,8 @@
 import {
-  addFollow,
-  addFollowing,
-  deleteFollow,
-  deleteFollowing,
+  addFollow2,
+  addFollowing2,
+  deleteFollow2,
+  deleteFollowing2,
   getFollow,
   getFollowing,
   getUser,
@@ -26,9 +26,11 @@ function Profile() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const userId = router.query.id as string;
-  const isMobile = useMediaQuery({ maxWidth: 785 });
-  const isPc = useMediaQuery({ minWidth: 786 });
   const [onSpot, setOnSpot] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isPc, setIsPc] = useState(false);
+  const mobile = useMediaQuery({ maxWidth: 785 });
+  const pc = useMediaQuery({ minWidth: 786 });
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
   //* 현재 페이지 유저가 팔로잉한 사람 uid가 담긴 배열
@@ -65,11 +67,16 @@ function Profile() {
           item.docId === authService.currentUser?.uid
       )[0]?.following,
   });
-  // console.log('getMyFollowing: ', getMyFollowing);
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
-  const { mutate: followingMutate } = useMutation(addFollowing);
-  const { mutate: followMutate } = useMutation(addFollow, {
+  const { mutate: followingMutate } = useMutation(addFollowing2, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
+      setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
+    },
+    onError: () => {},
+  });
+  const { mutate: followMutate } = useMutation(addFollow2, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
       setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
@@ -79,15 +86,20 @@ function Profile() {
 
   //* 팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickFollowingBtn = (item: any) => {
-    // console.log('item: ', item);
-    followingMutate({ ...item, uid: authService?.currentUser?.uid });
-    followMutate({ ...item, uid: authService?.currentUser?.uid });
+    followingMutate({ ...item, id: authService?.currentUser?.uid });
+    followMutate({ ...item, id: authService?.currentUser?.uid });
     logEvent('팔로잉 버튼', { from: 'userprofile page' });
   };
 
   //* mutation 사용해서 팔로잉, 팔로워 추가 데이터 보내기
-  const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing);
-  const { mutate: deleteFollowMutate } = useMutation(deleteFollow, {
+  const { mutate: deleteFollowingMutate } = useMutation(deleteFollowing2, {
+    onSuccess: () => {
+      setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
+      setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
+    },
+    onError: () => {},
+  });
+  const { mutate: deleteFollowMutate } = useMutation(deleteFollow2, {
     onSuccess: () => {
       setTimeout(() => queryClient.invalidateQueries('getFollowData'), 500);
       setTimeout(() => queryClient.invalidateQueries('getMyFollowing'), 500);
@@ -97,13 +109,16 @@ function Profile() {
 
   //* 언팔로잉 버튼을 눌렀을때 실행하는 함수
   const onClickDeleteFollowingBtn = (item: any) => {
-    // console.log('item: ', item);
-    deleteFollowingMutate({ ...item, uid: authService?.currentUser?.uid });
-    deleteFollowMutate({ ...item, uid: authService?.currentUser?.uid });
+    deleteFollowingMutate({ ...item, id: authService?.currentUser?.uid });
+    deleteFollowMutate({ ...item, id: authService?.currentUser?.uid });
     logEvent('언팔로잉 버튼', { from: 'userprofile page' });
   };
 
-  // console.log('getFollowingData?.length: ', getFollowingData?.length);
+  // 반응형 모바일 작업 시, 모달 지도 사이즈 줄이기
+  useEffect(() => {
+    setIsMobile(mobile);
+    setIsPc(pc);
+  }, [mobile, pc]);
 
   //* Amplitude 이벤트 생성
   useEffect(() => {
@@ -129,7 +144,6 @@ function Profile() {
             <Link href="/main?city=제주전체">
               <Back
                 onClick={() => {
-                  // sessionStorage.clear();
                   localStorage.clear();
                 }}
               >
@@ -145,28 +159,35 @@ function Profile() {
             <ProfileText>
               <ProfileTextWrap>
                 <ProfileNickname>{userData?.userName}님</ProfileNickname>
-                {getMyFollowing?.indexOf(userId) === -1 ? (
-                  <FollowingBtn onClick={() => onClickFollowingBtn(userData)}>
+
+                {authService.currentUser ? (
+                  getMyFollowing?.indexOf(userId) === undefined ||
+                  getMyFollowing?.indexOf(userId) === -1 ? (
+                    <FollowingBtn onClick={() => onClickFollowingBtn(userData)}>
+                      <FollowingCheckAirplane
+                        src="/following-checked.png"
+                        alt="image"
+                      />
+                      팔로잉
+                    </FollowingBtn>
+                  ) : (
+                    <FollowingBtn
+                      onClick={() => onClickDeleteFollowingBtn(userData)}
+                    >
+                      언팔로잉
+                    </FollowingBtn>
+                  )
+                ) : null}
+
+                {authService.currentUser ? (
+                  <SendMsg onClick={() => setSendMsgToggle(true)}>
                     <FollowingCheckAirplane
-                      src="/following-checked.png"
+                      src="/airplane-white.png"
                       alt="image"
-                    />
-                    팔로잉
-                  </FollowingBtn>
-                ) : (
-                  <FollowingBtn
-                    onClick={() => onClickDeleteFollowingBtn(userData)}
-                  >
-                    언팔로잉
-                  </FollowingBtn>
-                )}
-                <SendMsg onClick={() => setSendMsgToggle(true)}>
-                  <FollowingCheckAirplane
-                    src="/airplane-white.png"
-                    alt="image"
-                  />{' '}
-                  쪽지보내기
-                </SendMsg>
+                    />{' '}
+                    쪽지보내기
+                  </SendMsg>
+                ) : null}
               </ProfileTextWrap>
 
               <Follow>
@@ -234,7 +255,6 @@ function Profile() {
             </>
           )}
         </CategoryBtn>
-
         <GridBox>
           {onSpot ? (
             <UserPostList userId={userId} />
@@ -249,13 +269,19 @@ function Profile() {
 export default Profile;
 
 const UserContainer = styled.div`
+  box-shadow: inset 0px 20px 15px rgba(0, 0, 0, 0.05);
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 64px;
+  padding-top: 64px;
+  margin-bottom: 10px;
+  background-color: #fbfbfb;
+  @media ${(props) => props.theme.mobile} {
+    background-color: white;
+  }
 `;
 const Back = styled.div`
   position: absolute;
@@ -268,7 +294,6 @@ const MobileBack = styled.img`
 const HeaderText = styled.div`
   font-size: 20px;
   font-weight: bold;
-  font-family: Noto Sans CJK KR;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -292,7 +317,6 @@ const UserPostTownList = styled.div`
   }
 `;
 const CategoryBtn = styled.div`
-  margin: 40px 0px 10px 0px;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
     margin: 0px;
@@ -395,7 +419,6 @@ const ProfileTextWrap = styled.div`
   margin-top: 5px;
 `;
 const ProfileNickname = styled.div`
-  font-family: Noto Sans CJK KR;
   color: #212121;
   font-style: normal;
   font-weight: 700;
@@ -493,7 +516,6 @@ const SendMessage = styled.button`
 `;
 const Follow = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   display: flex;
   text-align: left;
@@ -506,7 +528,6 @@ const Follow = styled.div`
 `;
 const FollowerCount = styled.div`
   font-size: 16px;
-  font-family: Noto Sans CJK KR;
   color: #5b5b5f;
   padding-top: 10px;
   @media ${(props) => props.theme.mobile} {
@@ -515,7 +536,6 @@ const FollowerCount = styled.div`
 `;
 const FollowBtween = styled.div`
   font-size: 25px;
-  font-family: Noto Sans CJK KR;
   color: #d9d9d9;
   padding-top: 10px;
   @media ${(props) => props.theme.mobile} {

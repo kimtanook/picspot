@@ -1,12 +1,4 @@
-import { deleteSendMessage } from '@/api';
-import { authService } from '@/firebase';
-import React, {
-  ChangeEvent,
-  SetStateAction,
-  ChangeEventHandler,
-  useState,
-} from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DetailMessage from './DetailMessage';
 
@@ -127,7 +119,7 @@ const MessageSelect = styled.input`
   }
 `;
 const MessageUser = styled.div`
-  width: 60px;
+  width: 150px;
   overflow: hidden;
   @media ${(props) => props.theme.mobile} {
     align-self: center;
@@ -136,6 +128,7 @@ const MessageUser = styled.div`
     text-align: left;
     padding-left: 10px;
     overflow: hidden;
+
   }
 `;
 const MessageBody = styled.div`

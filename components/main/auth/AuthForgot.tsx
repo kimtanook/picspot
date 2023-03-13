@@ -1,5 +1,5 @@
 import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { forgotModalAtom, loginModalAtom } from '@/atom';
@@ -34,7 +34,21 @@ const AuthForgot = (): JSX.Element => {
         setSending(false);
       });
   };
-
+  // 모달 창 뒤에 누르면 닫힘
+  useEffect(() => {
+    const html = document.documentElement;
+    if (closeLoginModal || forgotModal) {
+      html.style.overflowY = 'hidden';
+      html.style.overflowX = 'hidden';
+    } else {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    }
+    return () => {
+      html.style.overflowY = 'auto';
+      html.style.overflowX = 'auto';
+    };
+  }, [closeLoginModal || forgotModal]);
   return (
     <ForgotPwContainer onClick={(e) => e.stopPropagation()}>
       <Heder
@@ -138,7 +152,6 @@ const ForgotText = styled.div`
   font-weight: 700;
   text-align: center;
   @media ${(props) => props.theme.mobile} {
-    font-family: 'Noto Sans CJK KR';
     font-style: normal;
     font-weight: 700;
     font-size: 18px;
@@ -175,7 +188,6 @@ const ResetPwInput = styled.input`
   height: 30px;
   border: 1px solid white;
   margin-left: 10px;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 13px;
   @media ${(props) => props.theme.mobile} {

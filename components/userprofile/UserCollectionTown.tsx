@@ -1,7 +1,4 @@
-import { dbService } from '@/firebase';
-import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import UserItem from './UserItem';
 import { v4 as uuidv4 } from 'uuid';
@@ -114,7 +111,6 @@ const PostTownTitle = styled.div`
   margin-right: 3%;
 `;
 const CollectorTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-size: 20px;
   line-height: 30px;
   text-align: left;
@@ -208,7 +204,6 @@ const MorePostTownTitle = styled.div`
 `;
 
 const MoreMyPostTownTitle = styled.div`
-  font-family: 'Noto Sans CJK KR';
   font-size: 20px;
   line-height: 30px;
   text-align: left;

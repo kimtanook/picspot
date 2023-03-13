@@ -14,12 +14,11 @@ import DetailList from '@/components/detail/detailRight/DetailList';
 import DataError from '@/components/common/DataError';
 import DataLoading from '@/components/common/DataLoading';
 import { logEvent } from '@/utils/amplitude';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { dbService } from '@/firebase';
+import { authService } from '@/firebase';
 import { useRecoilState } from 'recoil';
-import { deleteItem } from '@/atom';
+import { deleteItem, editBtnToggleAtom } from '@/atom';
 
-const Post = ({ id }: any) => {
+const Post = ({ id }: ParamsType) => {
   //* useQuery 사용해서 포스트 데이터 불러오기
   const {
     data: detail,
@@ -30,11 +29,15 @@ const Post = ({ id }: any) => {
     cacheTime: 60 * 5 * 1000, // 5분, default >> 5분
   });
   const [, setDeleteItem] = useRecoilState(deleteItem);
+
   // 게시물 삭제하기 Recoil
-  const mydata = detail?.filter((item: any) => {
+  const mydata = detail?.filter((item: ItemType) => {
     return item.id === id;
   });
 
+  const [editBtnToggle, setEditBtnToggle] = useRecoilState(editBtnToggleAtom);
+
+  //* Amplitude 이벤트 생성
   useEffect(() => {
     mydata && setDeleteItem(mydata[0]);
   }, []);
@@ -49,12 +52,12 @@ const Post = ({ id }: any) => {
   });
 
   //* 변화된 counting 값 인지
-  useEffect(() => {
-    countMutate(id);
-  }, []);
+  const creator = mydata?.find((item: ItemType) => item.id === id);
 
-  //* Amplitude 이벤트 생성
   useEffect(() => {
+    if (creator?.creator !== authService.currentUser?.uid) {
+      countMutate(id);
+    }
     logEvent('디테일 페이지', { from: 'detail page' });
   }, []);
 
@@ -73,29 +76,44 @@ const Post = ({ id }: any) => {
       />
 
       {detail
-        ?.filter((item: any) => {
+        ?.filter((item: ItemType) => {
           return item.id === id;
         })
-        .map((item: any) => (
+        .map((item: ItemType) => (
           <DetailContents key={item.id}>
-            <ImgAndProfileAndFollowingAndCollection>
-              <DetailImg item={item} />
+            {editBtnToggle && (
+              <EditImgAndProfileAndFollowingAndCollection>
+                <DetailImg item={item} />
 
-              <ProfileAndFollowingAndCollection>
-                <ProfileAndFollwing>
-                  <DetailProfile item={item} />
-                </ProfileAndFollwing>
+                <ProfileAndFollowingAndCollection>
+                  <ProfileAndFollwing>
+                    <DetailProfile item={item} />
+                  </ProfileAndFollwing>
 
-                <FollowingButton item={item} />
-                <CollectionButton item={item} />
-              </ProfileAndFollowingAndCollection>
-            </ImgAndProfileAndFollowingAndCollection>
+                  <FollowingButton item={item} />
+                  <CollectionButton item={item} />
+                </ProfileAndFollowingAndCollection>
+              </EditImgAndProfileAndFollowingAndCollection>
+            )}
+            {!editBtnToggle && (
+              <ImgAndProfileAndFollowingAndCollection>
+                <DetailImg item={item} />
+
+                <ProfileAndFollowingAndCollection>
+                  <ProfileAndFollwing>
+                    <DetailProfile item={item} />
+                  </ProfileAndFollwing>
+
+                  <FollowingButton item={item} />
+                  <CollectionButton item={item} />
+                </ProfileAndFollowingAndCollection>
+              </ImgAndProfileAndFollowingAndCollection>
+            )}
 
             <ListAndMapAndComment>
               <DetailList item={item} />
 
               <DetailMap item={item} />
-
               <CommentList postId={id} />
             </ListAndMapAndComment>
           </DetailContents>
@@ -127,6 +145,19 @@ const DetailContents = styled.div`
     width: 100%;
     height: auto;
     margin-top: 40px;
+  }
+`;
+
+const EditImgAndProfileAndFollowingAndCollection = styled.div`
+  width: 400px;
+  @media ${(props) => props.theme.mobile} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 400px;
+    margin-top: 30px;
   }
 `;
 
@@ -162,15 +193,17 @@ const ProfileAndFollwing = styled.div`
 const ListAndMapAndComment = styled.div`
   width: 650px;
   @media ${(props) => props.theme.mobile} {
+    display: flex;
     flex-direction: column;
     width: 100%;
+    gap: 20px;
   }
 `;
 
 //* SSR방식으로 server에서 id 값 보내기
-export async function getServerSideProps(context: { params: any }) {
+export async function getServerSideProps(context: { params: ParamsType }) {
   const { params } = context;
-  const { id }: any = params;
+  const { id }: ParamsType = params;
   return {
     props: {
       id: id,

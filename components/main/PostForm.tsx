@@ -4,12 +4,13 @@ import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 import { useMutation, useQueryClient } from 'react-query';
 import { addData, visibleReset } from '@/api';
 import styled from 'styled-components';
-import MapLandingPage from '../detail/MapLandingPage';
+import MapsPostLanding from '../detail/MapsPostLanding';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomButton } from '../common/CustomButton';
 import { customAlert, customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
 import {
+  isOpenMapAtom,
   placeAtom,
   postModalAtom,
   saveAddressAtom,
@@ -26,9 +27,7 @@ const PostForm = () => {
   const [saveAddress, setSaveAddress] = useRecoilState(saveAddressAtom);
 
   //* category 클릭, 검색 시 map이동에 관한 통합 state
-  const [searchCategory, setSearchCategory] =
-    useRecoilState(searchCategoryAtom);
-  const fileInput: any = useRef();
+  const fileInput: IFileInput = useRef();
 
   const [inputCount, setInputCount] = useState(0);
   const [textareaCount, setTextareaCount] = useState(0);
@@ -41,7 +40,7 @@ const PostForm = () => {
 
   //* 이미지 업로드
   const [imageUpload, setImageUpload]: any = useState(null);
-  const imgPath: any = uuidv4();
+  const imgPath: string = uuidv4();
 
   const [postMapModal, setIsPostMapModal] = useRecoilState(postModalAtom);
   const nickname = authService?.currentUser?.displayName;
@@ -49,10 +48,11 @@ const PostForm = () => {
   const isPc = useMediaQuery({ minWidth: 767 });
 
   const [place, setPlace] = useRecoilState(placeAtom);
-  const [isOpenMap, setIsOpenMap] = useState(false);
+  const [isOpenMap, setIsOpenMap] = useRecoilState(isOpenMapAtom);
   const onClickOpen = () => {
     setIsOpenMap(!isOpenMap);
   };
+
   let postState: any = {
     title: title,
     content: content,
@@ -73,10 +73,8 @@ const PostForm = () => {
   const { mutate: onAddData, isLoading } = useMutation(addData);
 
   //* image 업로드 후 화면 표시 함수
-  // 수정코드
   const handleImageChange = async (e: any) => {
-    let file: any = e.target.files;
-
+    let file = e.target.files;
     if (file.length === 0) {
       return;
     } else {
@@ -91,14 +89,11 @@ const PostForm = () => {
       };
 
       let theFile = files[0];
-      // console.log('theFile; ', theFile);
 
       try {
         const compressedFile = await imageCompression(theFile, options);
-        // console.log('compressedFile: ', compressedFile);
 
         const reader = new FileReader();
-        // reader?.readAsDataURL(theFile);
         reader?.readAsDataURL(compressedFile);
         reader.onloadend = (finishedEvent) => {
           const {
@@ -141,10 +136,7 @@ const PostForm = () => {
       return;
     }
 
-    const imageRef: any = ref(storageService, `images/${imgPath}`);
-    // console.log('imgPath: ', imgPath);
-    // console.log('imageRef._location.path: ', imageRef._location.path);
-
+    const imageRef = ref(storageService, `images/${imgPath}`);
     uploadString(imageRef, imageUpload, 'data_url').then((response) => {
       getDownloadURL(response.ref).then((url) => {
         const response = url;
@@ -168,13 +160,13 @@ const PostForm = () => {
   //* 카테고리버튼 눌렀을 때 실행하는 함수
 
   //select에서 value값 받아오기
-  const onChangeFormSelect = (e: any) => {
-    setCity(e.target.value);
+  const onChangeFormSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCity(e.currentTarget.value);
   };
 
-  const onChangeFormSelectSub = (e: any) => {
-    setPlace(e.target.value);
-    setTown(e.target.value);
+  const onChangeFormSelectSub = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPlace(e.currentTarget.value);
+    setTown(e.currentTarget.value);
   };
 
   // 지도에 마커 변경시 카테고리 변경
@@ -226,20 +218,45 @@ const PostForm = () => {
   return (
     <>
       <PostFormWrap>
-        <MapLandingPageWrap>
-          <MapLandingPage />
-        </MapLandingPageWrap>
+        {isPc && (
+          <MapsPostLandingWrap>
+            <MapsPostLanding />
+          </MapsPostLandingWrap>
+        )}
+
+        {isMobile && isOpenMap && (
+          <MapsPostLandingWrap>
+            <MapsPostLanding />
+
+            {isMobile && (
+              <PostFormMobileUploadButton>
+                <CustomButton
+                  width="200%"
+                  height="48px"
+                  borderRadius="0px"
+                  margin="0px 5px"
+                  padding="0px"
+                  backgroundColor="#1882FF"
+                  color="white"
+                  onClick={onClickAddData}
+                >
+                  업로드하기
+                </CustomButton>
+              </PostFormMobileUploadButton>
+            )}
+          </MapsPostLandingWrap>
+        )}
 
         <PostFormContainer>
           <PostFormContentBox>
             <PostFormContenTitle>
-              <ModalMapsBackButton
+              <PostFormBackButton
                 onClick={() => {
                   setIsPostMapModal(!postMapModal);
                 }}
               >
-                {isMobile && <MobileCancle src="/Back-point.png" />}
-              </ModalMapsBackButton>
+                {isMobile && <img src="/Back-point.png" />}
+              </PostFormBackButton>
               내 스팟 추가하기
             </PostFormContenTitle>
             <PostFormContentWrap>
@@ -337,20 +354,45 @@ const PostForm = () => {
                 </PostFormContentTextCount>
               </PostFormContentTextWrap>
             </PostFormInputWrap>
-            <PostFormUploadButton>
-              <CustomButton
-                width="100%"
-                height="48px"
-                borderRadius="0px"
-                color="white"
-                margin="0px 5px"
-                padding="0px"
-                backgroundColor="#1882FF"
-                onClick={onClickAddData}
-              >
-                업로드하기
-              </CustomButton>
-            </PostFormUploadButton>
+            {isPc && (
+              <PostFormUploadButton>
+                <CustomButton
+                  width="100%"
+                  height="48px"
+                  borderRadius="0px"
+                  color="white"
+                  margin="0px 5px"
+                  padding="0px"
+                  backgroundColor="gray"
+                  onClick={onClickAddData}
+                >
+                  업로드하기
+                </CustomButton>
+              </PostFormUploadButton>
+            )}
+            {isMobile && (
+              <PostFormUploadButton>
+                <PostFormMapsPinIcon
+                  onClick={() => {
+                    setIsOpenMap(!isOpenMap);
+                  }}
+                >
+                  <img src="/icon-pin.svg" />
+                </PostFormMapsPinIcon>
+                <CustomButton
+                  width="100%"
+                  height="48px"
+                  borderRadius="0px"
+                  margin="0px 5px"
+                  padding="0px"
+                  backgroundColor="white"
+                  color="#1882FF"
+                  onClick={onClickOpen}
+                >
+                  위치 추가하고 업로드하기
+                </CustomButton>
+              </PostFormUploadButton>
+            )}
           </PostFormContentBox>
         </PostFormContainer>
       </PostFormWrap>
@@ -370,13 +412,16 @@ const PostFormWrap = styled.div`
     width: 100vw;
     height: 100vh;
     z-index: 9999;
+    position: relative;
   }
 `;
 
-const MapLandingPageWrap = styled.div`
+const MapsPostLandingWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
-    height: 100vh;
+    height: 50vh;
+    position: absolute;
+    z-index: 9999;
   }
 `;
 
@@ -416,6 +461,7 @@ const PostFormContentWrap = styled.div`
   margin-top: -20px;
   @media ${(props) => props.theme.mobile} {
     padding: 0 10px;
+    margin-top: 10%;
   }
 `;
 
@@ -470,6 +516,7 @@ const PostFormInputWrap = styled.div`
   @media ${(props) => props.theme.mobile} {
     width: 80%;
     margin: 0 auto;
+    margin-top: 13%;
   }
 `;
 const PostFormInput = styled.input`
@@ -518,6 +565,9 @@ const PostFormUploadButton = styled.div`
   margin-top: 10px;
   @media ${(props) => props.theme.mobile} {
     margin: 5px -10px;
+    margin-top: 15%;
+    position: relative;
+    cursor: pointer;
   }
 `;
 
@@ -542,10 +592,42 @@ const SpotImg = styled.img`
 `;
 
 // 모바일 시 뒤로가기 버튼
-const ModalMapsBackButton = styled.div`
+const PostFormBackButton = styled.div`
   @media ${(props) => props.theme.mobile} {
     position: absolute;
     left: 5%;
   }
 `;
-const MobileCancle = styled.img``;
+
+const PostFormMapsBackButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 9999;
+    left: 45%;
+    top: 97%;
+    padding: 5px;
+    cursor: pointer;
+  }
+`;
+const PostFormMobileUploadButton = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+    z-index: 9999;
+    width: 50%;
+    top: 175%;
+    padding: 5px;
+    cursor: pointer;
+  }
+`;
+
+const PostFormMapsPinIcon = styled.div`
+  @media ${(props) => props.theme.mobile} {
+    position: absolute;
+
+    z-index: 9999;
+    left: 25%;
+    top: 10%;
+    padding: 5px;
+    cursor: pointer;
+  }
+`;

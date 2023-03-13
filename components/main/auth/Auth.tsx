@@ -6,7 +6,12 @@ import { authService } from '@/firebase';
 import AuthSocial from './AuthSocial';
 import { customConfirm } from '@/utils/alerts';
 import { useRecoilState } from 'recoil';
-import { signUpModalAtom, forgotModalAtom, loginModalAtom } from '@/atom';
+import {
+  signUpModalAtom,
+  forgotModalAtom,
+  loginModalAtom,
+  AuthCurrentUser,
+} from '@/atom';
 import { useMediaQuery } from 'react-responsive';
 import { setAmplitudeUserId } from '@/utils/amplitude';
 
@@ -19,6 +24,7 @@ const Auth = (): JSX.Element => {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
   const [hidePassword, setHidePassword] = useState<boolean>(false);
   const [isRemember, setIsRemember] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useRecoilState(AuthCurrentUser);
   const LS_KEY_ID = 'LS_KEY_ID';
   const [signUpModal, setSignUpModal] = useRecoilState(signUpModalAtom);
   const [forgotModal, setForgotModal] = useRecoilState(forgotModalAtom);
@@ -47,6 +53,7 @@ const Auth = (): JSX.Element => {
         customConfirm('로그인에 성공하였습니다!');
         setCloseLoginModal(!closeLoginModal);
         setAmplitudeUserId(authService.currentUser?.uid);
+        setCurrentUser(true);
       })
       .then(() => {})
       .catch(() => {
@@ -71,6 +78,7 @@ const Auth = (): JSX.Element => {
     setIsRemember(!isRemember);
   };
 
+  // 아이디 저장
   useEffect(() => {
     let idFlag = localStorage.getItem(LS_KEY_ID);
 
@@ -273,7 +281,6 @@ const LogoImg = styled.img`
 const LoginTextDiv = styled.div`
   margin-top: 0px;
   margin-bottom: 10px;
-  font-family: 'Noto Sans CJK KR';
   font-style: normal;
   font-size: 20px;
   line-height: 138.5%;
@@ -374,7 +381,6 @@ const RememberID = styled.label`
   display: flex;
   align-items: center;
   font-size: 15px;
-  font-family: Noto Sans CJK KR;
   @media ${(props) => props.theme.mobile} {
     transform: translate(9%, 1150%);
     font-size: 12px;

@@ -62,6 +62,11 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
       collector: authService.currentUser?.uid,
     });
   };
+
+  // 아이템 클릭 시 스크롤 위치 저장
+  const saveScroll = () => {
+    sessionStorage.setItem('scrollY', String(window.scrollY));
+  };
   return (
     <>
       {collectHover ? (
@@ -76,16 +81,19 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
           )}
         </>
       ) : null}
-
       <Link href={`/detail/${item.id}`}>
-        <Image
-          src={item?.imgUrl}
-          alt="postImg"
-          layout="responsive"
-          width={50}
-          height={50}
-          priority={true}
-        />
+        <ImageBox>
+          <Image
+            src={item?.imgUrl}
+            alt="postImg"
+            width={252}
+            height={300}
+            priority={true}
+            onClick={saveScroll}
+            className="image-box"
+            quality={75}
+          />
+        </ImageBox>
       </Link>
     </>
   );
@@ -110,5 +118,11 @@ const DeleteBtn = styled.img`
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
     display: none;
+  }
+`;
+const ImageBox = styled.div`
+  & > .image-box {
+    width: 100%;
+    height: 100%;
   }
 `;

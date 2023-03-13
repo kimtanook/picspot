@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
-    /* font-family: Noto Sans CJK KR */
+    font-family: 'Noto Sans KR', sans-serif;
   }
 
   body {

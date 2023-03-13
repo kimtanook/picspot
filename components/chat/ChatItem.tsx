@@ -1,22 +1,15 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const ChatItem = ({
   myName,
   item,
-}: // socketServer,
-// setChat,
-{
+}: {
   myName: string | null | undefined;
   item: IMessage;
-  // socketServer: string;
-  // setChat: Dispatch<SetStateAction<IMessage[]>>;
 }) => {
   const [userMenuToggle, setUserMenuToggle] = useState(false);
   const onClickUserMenuToggle = () => {
-    // if (item.user === myName || item.user === '입장 알림!') {
-    //   return;
-    // }
     setUserMenuToggle(!userMenuToggle);
   };
 

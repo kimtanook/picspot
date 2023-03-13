@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
-const DetailProfile = ({ item }: any) => {
+const DetailProfile = ({ item }: ItemProps) => {
   //* 마이페이지로 이동하기
   const router = useRouter();
-  const onClickRouteMypage = (obj: any) => {
+  const onClickRouteMypage = (obj: ObjType) => {
     if (authService.currentUser?.uid === obj.uid) {
       router.push(`/mypage`);
     } else {
@@ -25,8 +25,8 @@ const DetailProfile = ({ item }: any) => {
   return (
     <>
       {user
-        ?.filter((obj: any) => obj.uid === item.creator)
-        .map((obj: any) => (
+        ?.filter((obj: ObjType) => obj.uid === item.creator)
+        .map((obj: ObjType) => (
           <ProfileContainer
             key={obj.uid}
             onClick={() => onClickRouteMypage(obj)}
@@ -39,6 +39,7 @@ const DetailProfile = ({ item }: any) => {
                     alt="userImage"
                     layout="fill"
                     priority={true}
+                    style={{ borderRadius: '50%' }}
                   />
                 </ProfileImgBox>
                 <ProfileName>{obj.userName}</ProfileName>
@@ -71,8 +72,8 @@ const ProfileContainer = styled.div`
 const ProfileImgBox = styled.div`
   position: relative;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   margin-right: 10px;
   @media ${(props) => props.theme.mobile} {
     width: 30px;

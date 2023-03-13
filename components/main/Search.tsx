@@ -23,9 +23,8 @@ const Search = ({
         <option value="title">제목</option>
       </Select>
       <SearchInput
-        // value={searchValue}
         onChange={onChangeSearchValue}
-        placeholder="검색으로 사진을 둘러보세요!"
+        placeholder="ex) 제주시 우도"
       />
     </SearchWrap>
   );

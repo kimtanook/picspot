@@ -140,6 +140,7 @@ export const getData = async () => {
 export const addData: any = (data: any) => {
   addDoc(collection(dbService, 'post'), data);
 };
+
 //* 포스트 삭제하기
 export const deleteData: any = (docId: any) => {
   deleteDoc(doc(dbService, 'post', docId));
@@ -147,7 +148,7 @@ export const deleteData: any = (docId: any) => {
 
 //* 포스트 수정하기
 export const updateData: any = (data: any) => {
-  updateDoc(doc(dbService, 'post', data.id), data);
+  return updateDoc(doc(dbService, 'post', data.id), data);
 };
 
 //* 댓글 가져오기
@@ -167,7 +168,6 @@ export const getComment = async ({ queryKey }: any) => {
 
 //* 댓글 추가
 export const addComment = async (item: AddComment) => {
-  // console.log('item: ', item);
   await addDoc(
     collection(dbService, `post/${item.postId}/comment`),
     item.submitCommentData
@@ -197,7 +197,7 @@ export const getCollection = async () => {
 
   return response;
 };
-// 특정 유저의 collection 데이터 불러오기
+//* 특정 유저의 collection 데이터 불러오기
 export const getUserCollection = async ({
   queryKey,
 }: {
@@ -246,7 +246,6 @@ export const deleteCollectionData: any = ({ uid, collector }: any) => {
 
 //* 팔로잉 추가하기
 export const addFollowing: any = (data: any) => {
-  // console.log('data: ', data);
   setDoc(
     doc(dbService, 'following', data.uid),
     {
@@ -256,10 +255,28 @@ export const addFollowing: any = (data: any) => {
   );
 };
 
+//? 팔로잉 추가하기2
+export const addFollowing2: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'following', data.id),
+    {
+      following: arrayUnion(data.uid),
+    },
+    { merge: true }
+  );
+};
+
 //* 팔로잉 삭제하기
 export const deleteFollowing: any = (data: any) => {
   updateDoc(doc(dbService, 'following', data.uid), {
     following: arrayRemove(data.creator),
+  });
+};
+
+//? 팔로잉 삭제하기2
+export const deleteFollowing2: any = (data: any) => {
+  updateDoc(doc(dbService, 'following', data.id), {
+    following: arrayRemove(data.uid),
   });
 };
 
@@ -286,10 +303,28 @@ export const addFollow: any = (data: any) => {
   );
 };
 
+//? 팔로우 추가하기2
+export const addFollow2: any = (data: any) => {
+  setDoc(
+    doc(dbService, 'follow', data.uid),
+    {
+      follow: arrayUnion(data.id),
+    },
+    { merge: true }
+  );
+};
+
 //* 팔로우 삭제하기
 export const deleteFollow: any = (data: any) => {
   updateDoc(doc(dbService, 'follow', data.creator), {
     follow: arrayRemove(data.uid),
+  });
+};
+
+//? 팔로우 삭제하기2
+export const deleteFollow2: any = (data: any) => {
+  updateDoc(doc(dbService, 'follow', data.uid), {
+    follow: arrayRemove(data.id),
   });
 };
 
@@ -328,18 +363,16 @@ export const getUser = async () => {
 
 //* 댓글 작성한 유저만 가져오기
 export const getCommentUser = async ({ queryKey }: any) => {
-  // console.log('queryKey: ', queryKey);
   const [, creatorId] = queryKey;
-  // console.log('creatorId: ', creatorId);
+
   const q = query(collection(dbService, 'user'), where('uid', '==', creatorId));
 
   const response: any = [];
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    // console.log('doc.data(): ', doc.data());
     response.push(doc.data());
   });
-  // console.log('response[0]: ', response[0]);
+
   return response[0];
 };
 
