@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import AddBackground from './AddBackground';
 
 function BackgroundModal() {
   const queryClient = useQueryClient();
@@ -86,7 +85,6 @@ function BackgroundModal() {
           ))}
         </BackgroundBox>
       </BackgroundWrap>
-      {addToggle ? <AddBackground /> : null}
     </Wrap>
   );
 }
