@@ -1,23 +1,24 @@
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
-  getDocs,
-  increment,
-  orderBy,
-  query,
-  updateDoc,
-  limit,
-  startAfter,
-  where,
-  QueryDocumentSnapshot,
   DocumentData,
   endAt,
-  startAt,
+  getDoc,
+  getDocs,
+  increment,
+  limit,
+  orderBy,
+  query,
+  QueryDocumentSnapshot,
   setDoc,
-  arrayUnion,
-  arrayRemove,
+  startAfter,
+  startAt,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import { dbService } from './firebase';
 
@@ -359,6 +360,15 @@ export const getUser = async () => {
   });
 
   return response;
+};
+
+//* 특정 유저만 가져오기
+export const getSpecificUser = async ({ queryKey }: any) => {
+  const [_, userUid] = queryKey;
+  const docRef = doc(dbService, 'user', userUid);
+  const docData = await getDoc(docRef);
+
+  return docData.data();
 };
 
 //* 댓글 작성한 유저만 가져오기
