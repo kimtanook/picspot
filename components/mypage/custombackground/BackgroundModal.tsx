@@ -41,6 +41,7 @@ function BackgroundModal() {
   const backgroundUrl = specificUserData?.background;
 
   const backgroundTheme = [
+    { name: '없음', url: '/background/back_0.png' },
     { name: '테마 1', url: '/background/back_1.jpg' },
     { name: '테마 2', url: '/background/back_2.jpeg' },
     { name: '테마 3', url: '/background/back_3.png' },
@@ -57,18 +58,6 @@ function BackgroundModal() {
           />
         </CancelButtonBox>
         <BackgroundBox onChange={onChangeBackground}>
-          <div>
-            <ThemeName>없음</ThemeName>
-            <ImageBox>
-              <Image
-                src="/background/back_0.png"
-                backgroundUrl={backgroundUrl}
-                url="inherit"
-                alt="background-image"
-              />
-              <Input type="radio" name="background" value="inherit" />
-            </ImageBox>
-          </div>
           {backgroundTheme.map((item: any) => (
             <label key={uuidv4()}>
               <ThemeName>{item.name}</ThemeName>
@@ -139,6 +128,8 @@ const Image = styled.img<{ backgroundUrl: string; url: string }>`
   width: 300px;
   border-radius: 8px;
   border: ${(props) =>
-    props.backgroundUrl === props.url ? '2px solid blue' : null};
+    props.backgroundUrl === props.url
+      ? '2px solid blue'
+      : '1px solid rgba(0, 0, 0, 0.1)'};
   cursor: pointer;
 `;
