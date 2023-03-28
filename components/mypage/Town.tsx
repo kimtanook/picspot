@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import MyCollectItem from './MyCollectItem';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import { useState } from 'react';
 import { uuidv4 } from '@firebase/util';
 import Link from 'next/link';
+import { useState } from 'react';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import styled from 'styled-components';
+import MyCollectItem from './MyCollectItem';
 
 const Town = ({ value, myPostData }: { value: string; myPostData: any }) => {
   const [more, setMore] = useState(true);
@@ -193,7 +193,7 @@ const MoreBtn = styled.button`
   float: right;
   margin-top: 20px;
   border: none;
-  background-color: white;
+  background-color: inherit;
   margin-right: 25px;
   :hover {
     font-size: 15px;
