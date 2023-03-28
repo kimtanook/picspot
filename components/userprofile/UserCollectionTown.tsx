@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import UserItem from './UserItem';
-import { v4 as uuidv4 } from 'uuid';
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
+import UserItem from './UserItem';
 
 const UserCollectionTown = ({
   value,
@@ -141,7 +141,7 @@ const MoreBtn = styled.button`
   float: right;
   margin-top: 20px;
   border: none;
-  background-color: white;
+  background-color: inherit;
   margin-right: 25px;
   :hover {
     font-size: 15px;

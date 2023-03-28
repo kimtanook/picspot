@@ -1,31 +1,31 @@
 import {
-  messageBoxToggle,
-  messageSendToggle,
+  CustomBackgroundModal,
+  deletePostModalAtom,
+  editProfileModalAtom,
   followingToggleAtom,
   followToggleAtom,
-  signUpModalAtom,
   forgotModalAtom,
   loginModalAtom,
+  messageBoxToggle,
+  messageSendToggle,
   postModalAtom,
-  editProfileModalAtom,
-  deletePostModalAtom,
+  signUpModalAtom,
 } from '@/atom';
-import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useMediaQuery } from 'react-responsive';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { CustomModal } from './common/CustomModal';
+import { CustomModalMap } from './common/CustomModalMap';
+import DeletePostModal from './detail/detailRight/DeletePostModal';
+import Auth from './main/auth/Auth';
 import AuthForgot from './main/auth/AuthForgot';
 import AuthSignUp from './main/auth/AuthSignUp';
+import PostForm from './main/PostForm';
 import MessageBox from './message/MessageBox';
 import MessageSend from './message/MessageSend';
+import BackgroundModal from './mypage/custombackground/BackgroundModal';
 import ModalFollow from './mypage/Profile/ModalFollow';
 import ModalFollowing from './mypage/Profile/ModalFollowing';
-import Auth from './main/auth/Auth';
-import PostForm from './main/PostForm';
 import ModalProfile from './mypage/Profile/ModalProfile';
-import { useMediaQuery } from 'react-responsive';
-import { CustomModalMap } from './common/CustomModalMap';
-import DetailList from './detail/detailRight/DetailList';
-import DeletePostModal from './detail/detailRight/DeletePostModal';
 
 function Layout() {
   const [msgBoxToggle, setMsgBoxToggle] = useRecoilState(messageBoxToggle);
@@ -41,11 +41,13 @@ function Layout() {
     useRecoilState(editProfileModalAtom);
   const [deletePostModal, setDeletePostModal] =
     useRecoilState(deletePostModalAtom);
+  const backgroundModal = useRecoilValue(CustomBackgroundModal);
 
   const isMobile = useMediaQuery({ maxWidth: 823 });
   const isPc = useMediaQuery({ minWidth: 824 });
   return (
     <div>
+      <div>{backgroundModal ? <BackgroundModal /> : null}</div>
       <div>{msgBoxToggle ? <MessageBox /> : null}</div>
       <div>
         {msgSendToggle ? <MessageSend setModal={setMsgSendToggle} /> : null}
