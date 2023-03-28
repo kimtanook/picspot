@@ -125,3 +125,8 @@ export const deleteAtom = atom<any>({
   key: `deleteAtom`,
   default: {},
 });
+
+export const CustomBackgroundModal = atom({
+  key: 'customBackground',
+  default: false,
+});
