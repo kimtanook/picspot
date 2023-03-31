@@ -131,8 +131,7 @@ const BackgroundModalButton = styled.div`
   transform: translate(-50%, -50%);
   cursor: pointer;
   @media ${(props) => props.theme.mobile} {
-    top: 6.5%;
-    left: 85%;
+    display: none;
   }
 `;
 const MyContainer = styled.div`
