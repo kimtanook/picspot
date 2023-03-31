@@ -130,6 +130,10 @@ const BackgroundModalButton = styled.div`
   left: 78%;
   transform: translate(-50%, -50%);
   cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    top: 6.5%;
+    left: 85%;
+  }
 `;
 const MyContainer = styled.div`
   box-shadow: inset 0px 20px 15px rgba(0, 0, 0, 0.05);
