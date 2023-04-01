@@ -1,19 +1,20 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { authService } from '@/firebase';
-import { signOut } from 'firebase/auth';
-import { customConfirm } from '@/utils/alerts';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { useRecoilState } from 'recoil';
 import {
+  CustomBackgroundModal,
+  editProfileModalAtom,
   followingToggleAtom,
   followToggleAtom,
-  editProfileModalAtom,
 } from '@/atom';
+import { authService } from '@/firebase';
+import { customConfirm } from '@/utils/alerts';
 import { resetAmplitude } from '@/utils/amplitude';
-import { useMediaQuery } from 'react-responsive';
+import { signOut } from 'firebase/auth';
 import { getRouteRegex } from 'next/dist/shared/lib/router/utils/route-regex';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
 
 const imgFile = '/profileicon.svg';
 
@@ -32,6 +33,9 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
   const profileimg = authService?.currentUser?.photoURL ?? imgFile;
   const [currentUser, setCurrentUser] = useState(false);
   const [userImg, setUserImg] = useState<string | null>(null);
+  const [backgroundModal, setBackgroundModal] = useRecoilState(
+    CustomBackgroundModal
+  );
   const nowUser = authService.currentUser;
   const router = useRouter();
   const isMobile = useMediaQuery({ maxWidth: 785 });
@@ -84,6 +88,9 @@ const Profile = ({ followingCount, followerCount }: propsType) => {
           <Menu>
             <MenuItem onClick={editProfileModalButton}>내 정보 변경</MenuItem>
             <MenuItem onClick={logOut}>로그아웃</MenuItem>
+            <MenuItem onClick={() => setBackgroundModal(!backgroundModal)}>
+              테마 변경
+            </MenuItem>
           </Menu>
         ) : null}
       </div>
@@ -185,7 +192,7 @@ const Menu = styled.div`
     border: 1px solid #d9d9d9;
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.21);
     width: 88px;
-    height: 90px;
+    height: 120px;
     place-content: center;
     gap: 19px;
     background-color: #f4f4f4;
