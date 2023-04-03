@@ -1,21 +1,35 @@
-import Header from '@/components/Header';
-import Seo from '@/components/Seo';
-import Profile from '@/components/mypage/Profile/Profile';
-import CollectionList from '@/components/mypage/CollectionList';
-import { getFollow, getFollowing } from '@/api';
-import { authService } from '@/firebase';
-import { useQuery } from 'react-query';
-import styled from 'styled-components';
-import MyPostList from '@/components/mypage/MyPostList';
-import { useEffect, useState } from 'react';
-import DataLoading from '@/components/common/DataLoading';
+import { getFollow, getFollowing, getSpecificUser } from '@/api';
+import { CustomBackgroundModal } from '@/atom';
 import DataError from '@/components/common/DataError';
-import { useMediaQuery } from 'react-responsive';
+import DataLoading from '@/components/common/DataLoading';
+import Header from '@/components/Header';
+import CollectionList from '@/components/mypage/CollectionList';
+import MyPostList from '@/components/mypage/MyPostList';
+import Profile from '@/components/mypage/Profile/Profile';
+import Seo from '@/components/Seo';
+import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
 
 export default function Mypage() {
   const [onSpot, setOnSpot] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 823 });
+  const [backgroundModal, setBackgroundModal] = useRecoilState(
+    CustomBackgroundModal
+  );
+  const userUid = authService.currentUser?.uid;
+  const { data: specificUserData } = useQuery(
+    ['backgroundData', userUid],
+    getSpecificUser
+  );
+
+  const backgroundUrl = specificUserData?.background;
+
   //* following에서 uid와 현재 uid가 같은 following만 뽑기
   const {
     data: followingData,
@@ -50,13 +64,12 @@ export default function Mypage() {
   if (isError) return <DataError />;
 
   return (
-    <>
+    <Wrap backgroundUrl={backgroundUrl}>
       <Seo title="My" />
       {isMobile ? (
         ''
       ) : (
         <>
-          {' '}
           <Header
             selectCity={undefined}
             onChangeSelectCity={undefined}
@@ -66,7 +79,15 @@ export default function Mypage() {
           />
         </>
       )}
-
+      <BackgroundModalButton>
+        <Image
+          onClick={() => setBackgroundModal(!backgroundModal)}
+          src="/mypage/custom-button.png"
+          width={36}
+          height={36}
+          alt="custom-button"
+        />
+      </BackgroundModalButton>
       <MyContainer>
         <MyProfileContainer>
           <Profile
@@ -93,10 +114,26 @@ export default function Mypage() {
 
         <GridBox>{onSpot ? <MyPostList /> : <CollectionList />}</GridBox>
       </AllMyPostList>
-    </>
+    </Wrap>
   );
 }
+const Wrap = styled.div<{ backgroundUrl: string }>`
+  background-image: ${(props) => `url(${props.backgroundUrl})`};
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+`;
 
+const BackgroundModalButton = styled.div`
+  position: absolute;
+  top: 20%;
+  left: 78%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  @media ${(props) => props.theme.mobile} {
+    display: none;
+  }
+`;
 const MyContainer = styled.div`
   box-shadow: inset 0px 20px 15px rgba(0, 0, 0, 0.05);
   width: 100%;
@@ -116,6 +153,7 @@ const MyContainer = styled.div`
 const MyProfileContainer = styled.div`
   width: 600px;
   height: 200px;
+
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
     height: 40vw;
@@ -125,7 +163,6 @@ const MyProfileContainer = styled.div`
 const AllMyPostList = styled.div`
   margin: auto;
   width: 1188px;
-  background-color: #ffffff;
   @media ${(props) => props.theme.mobile} {
     width: 100vw;
   }
@@ -154,7 +191,7 @@ const GrayBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
   border: none;
-  background-color: white;
+  background-color: inherit;
   color: #8e8e93;
   border-bottom: 3px solid #8e8e93;
   padding-bottom: 5px;
@@ -179,7 +216,7 @@ const BlackBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
   border: none;
-  background-color: white;
+  background-color: inherit;
   color: #1882ff;
   border-bottom: 3.5px solid #1882ff;
   padding-bottom: 5px;

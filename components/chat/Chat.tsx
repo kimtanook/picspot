@@ -96,7 +96,7 @@ const Chat = () => {
 
   useEffect((): any => {
     // socket.io 연결
-    const socket = SocketIOClient.connect('localhost:3000');
+    const socket = SocketIOClient.connect('3.36.76.108');
     // useEffect 밖에서도 사용할 수 있게 state에 저장
     setSocketServer(socket);
 
