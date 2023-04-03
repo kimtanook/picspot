@@ -1,9 +1,9 @@
-import { uuidv4 } from '@firebase/util';
-import Link from 'next/link';
-import { useState } from 'react';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import styled from 'styled-components';
 import MyCollectPost from './MyCollectPost';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { useState } from 'react';
+import { uuidv4 } from '@firebase/util';
+import Link from 'next/link';
 
 const CollectionCategory = ({ value, collectorList }: any) => {
   const [more, setMore] = useState(true);
@@ -14,6 +14,7 @@ const CollectionCategory = ({ value, collectorList }: any) => {
 
   const onClickMoreBtn = () => {
     setMore(!more);
+    console.log('제목인가?');
   };
 
   return (
@@ -196,7 +197,7 @@ const MoreBtn = styled.button`
   float: right;
   margin-top: 20px;
   border: none;
-  background-color: inherit;
+  background-color: white;
   margin-right: 25px;
   :hover {
     font-size: 15px;
