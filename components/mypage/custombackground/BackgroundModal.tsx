@@ -56,15 +56,17 @@ function BackgroundModal() {
 
   const backgroundTheme = [
     { name: '없음', url: '/background/back_0.png' },
-    { name: '테마 1', url: '/background/back_1.jpg' },
-    { name: '테마 2', url: '/background/back_2.jpeg' },
+    { name: '테마 1', url: '/background/back_1.png' },
+    { name: '테마 2', url: '/background/back_2.png' },
     { name: '테마 3', url: '/background/back_3.png' },
+    { name: '테마 4', url: '/background/back_4.png' },
   ];
   const backgroundThemeMobile = [
-    { name: 'M없음', url: '/background/back_0.png' },
-    { name: 'M테마 1', url: '/background/back_1.jpg' },
-    { name: 'M테마 2', url: '/background/back_2.jpeg' },
-    { name: 'M테마 3', url: '/background/back_3.png' },
+    { name: '없음', url: '/background/back_0.png' },
+    { name: '테마 1', url: '/background/back_1_m.png' },
+    { name: '테마 2', url: '/background/back_2_m.png' },
+    { name: '테마 3', url: '/background/back_3_m.png' },
+    { name: '테마 4', url: '/background/back_4_m.png' },
   ];
 
   const settings = {
@@ -96,7 +98,12 @@ function BackgroundModal() {
             <StyledSlider {...settings}>
               {backgroundThemeMobile.map((item: any) => (
                 <label key={uuidv4()}>
-                  <ThemeName>{item.name}</ThemeName>
+                  <ThemeBox>
+                    <ThemeName>{item.name}</ThemeName>
+                    <CurrentTheme backgroundUrl={backgroundUrl} url={item.url}>
+                      사용중인 테마
+                    </CurrentTheme>
+                  </ThemeBox>
                   <ImageBox>
                     <Image
                       src={item.url}
@@ -114,22 +121,32 @@ function BackgroundModal() {
             </CompleteCustom>
           </BackgroundBoxMobile>
         ) : (
-          <BackgroundBox onChange={onChangeBackground}>
-            {backgroundTheme.map((item: any) => (
-              <label key={uuidv4()}>
-                <ThemeName>{item.name}</ThemeName>
-                <ImageBox>
-                  <Image
-                    src={item.url}
-                    backgroundUrl={backgroundUrl}
-                    url={item.url}
-                    alt="background-image"
-                  />
-                  <Input type="radio" name="background" value={item.url} />
-                </ImageBox>
-              </label>
-            ))}
-          </BackgroundBox>
+          <>
+            <BackgroundBox onChange={onChangeBackground}>
+              {backgroundTheme.map((item: any) => (
+                <label key={uuidv4()}>
+                  <ThemeBox>
+                    <ThemeName>{item.name}</ThemeName>
+                    <CurrentTheme backgroundUrl={backgroundUrl} url={item.url}>
+                      사용중인 테마
+                    </CurrentTheme>
+                  </ThemeBox>
+                  <ImageBox>
+                    <Image
+                      src={item.url}
+                      backgroundUrl={backgroundUrl}
+                      url={item.url}
+                      alt="background-image"
+                    />
+                    <Input type="radio" name="background" value={item.url} />
+                  </ImageBox>
+                </label>
+              ))}
+            </BackgroundBox>
+            <CompleteCustom onClick={() => setToggle(false)}>
+              테마 변경하기
+            </CompleteCustom>
+          </>
         )}
       </BackgroundWrap>
     </Wrap>
@@ -199,11 +216,34 @@ const StyledSlider = styled(Slider)`
     display: none !important;
   }
 `;
+const ThemeBox = styled.div`
+  margin: auto;
+  margin-top: 12px;
+  width: 300px;
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+const CurrentTheme = styled.div<{ backgroundUrl: string; url: string }>`
+  width: 85px;
+  height: 26px;
+  background-color: #1882ff;
+  font-size: 12px;
+  color: white;
+  text-align: center;
+  line-height: 26px;
+  border-radius: 52px;
+  margin-right: 112px;
+  display: ${(props) => (props.backgroundUrl === props.url ? 'block' : 'none')};
+`;
 const CompleteCustom = styled.div`
+  cursor: pointer;
   background-color: #1882ff;
   width: 326px;
   height: 48px;
-  margin: auto;
+  margin: 12px auto 12px auto;
   text-align: center;
   line-height: 48px;
   color: white;
@@ -212,16 +252,14 @@ const BackgroundBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 92vh;
   overflow-y: scroll;
   box-shadow: -16px 0px 8px rgba(0, 0, 0, 0.1);
+  padding-bottom: 24px;
 `;
 
 const ThemeName = styled.div`
-  padding: 28px 16px 8px 16px;
   @media ${(props) => props.theme.mobile} {
-    width: 300px;
-    margin: auto;
     padding: inherit;
   }
 `;
