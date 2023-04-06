@@ -287,9 +287,9 @@ const UserContainer = styled.div`
   flex-direction: column;
   padding-top: 64px;
   margin-bottom: 10px;
-  background-color: #fbfbfb;
+  background-color: #fbfbfbb0;
   @media ${(props) => props.theme.mobile} {
-    background-color: white;
+    background-color: #fbfbfbb0;
   }
 `;
 const Back = styled.div`

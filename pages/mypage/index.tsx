@@ -145,9 +145,9 @@ const MyContainer = styled.div`
   padding-top: 64px;
   overflow: hidden;
   margin-bottom: 10px;
-  background-color: #fbfbfb;
+  background-color: #fbfbfbb0;
   @media ${(props) => props.theme.mobile} {
-    background-color: white;
+    background-color: #fbfbfbb0;
   }
 `;
 const MyProfileContainer = styled.div`
