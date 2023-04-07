@@ -156,7 +156,7 @@ function BackgroundModal() {
 export default BackgroundModal;
 
 const Wrap = styled.div`
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 100%;
   transform: translate(-50%, -50%);
