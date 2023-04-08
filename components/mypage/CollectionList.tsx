@@ -34,7 +34,7 @@ const CollectionList = () => {
       return myCollectionTown?.indexOf(element) === index;
     }
   );
-  console.log('myCollectionTownArr', myCollectionTownArr);
+  // console.log('myCollectionTownArr', myCollectionTownArr);
 
   const router = useRouter();
   return (

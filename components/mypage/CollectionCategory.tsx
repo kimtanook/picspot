@@ -11,7 +11,7 @@ const CollectionCategory = ({ value, collectorList }: any) => {
   const townSameValueData = collectorList?.filter(
     (item: { town: string }) => item.town === value
   );
-  console.log('맞나', townSameValueData);
+  // console.log('맞나', townSameValueData);
   const onClickMoreBtn = () => {
     setMore(!more);
   };
