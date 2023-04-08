@@ -341,18 +341,6 @@ export const getFollow = async () => {
   return response;
 };
 
-export const getFollowRank = async () => {
-  const response: any = [];
-  const q = query(collection(dbService, 'follow'), orderBy('follow', 'desc'));
-
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    response.push({ docId: doc.id, ...doc.data() });
-  });
-
-  return response;
-};
-
 //* 유저 추가하기
 export const addUser: any = (data: any) => {
   setDoc(doc(dbService, 'user', data.uid), {

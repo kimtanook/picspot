@@ -1,10 +1,10 @@
-import { getData, getFollowRank, getUser } from '@/api';
+import { getFollow, getUser } from '@/api';
 import { uuidv4 } from '@firebase/util';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
 function FollowerRankList() {
-  const { data: rankFollower } = useQuery(['rankFollwer'], getFollowRank, {
+  const { data: rankFollower } = useQuery(['rankFollwer'], getFollow, {
     staleTime: 1000 * 60 * 10,
     cacheTime: 1000 * 60 * 15,
   });
