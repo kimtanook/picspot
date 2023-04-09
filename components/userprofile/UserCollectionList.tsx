@@ -47,7 +47,7 @@ const UserCollectionList = ({ userId }: { userId: string }) => {
             가보고 싶은 여행지 사진을 찾으러 가볼까요?
           </EmptyContetnts>
           <EmptyBtn onClick={() => router.push('/main?city=제주전체')}>
-            제주도 전체 사진 둘러보기
+            제주도 전체 사진 둘러보기 {'>'}
           </EmptyBtn>
         </EmptyPostBox>
       ) : (
@@ -89,14 +89,13 @@ const EmptyPostBox = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
+  padding-top: 10px;
   top: 70%;
   left: 50%;
-  padding-top: 10px;
-  margin-bottom: 100px;
   transform: translate(-50%, -50%);
   & > .empty-image {
-    width: 100%;
-    height: 100%;
+    width: 200px;
+    height: 173px;
   }
 `;
 
@@ -109,8 +108,9 @@ const EmptyTitle = styled.div`
 const EmptyContetnts = styled.div`
   font-size: 24px;
   font-weight: 700;
-  width: 260px;
+  width: 250px;
   text-align: center;
+  margin-bottom: 10px;
 `;
 const EmptyBtn = styled.button`
   color: #1882ff;

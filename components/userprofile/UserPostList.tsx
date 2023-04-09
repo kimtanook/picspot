@@ -46,7 +46,7 @@ const UserPostList = ({ userId }: { userId: string }) => {
               onClickTogglePostModal();
             }}
           >
-            게시물 업로드 바로가기
+            게시물 업로드 바로가기 {'>'}
           </EmptyBtn>
         </EmptyPostBox>
       ) : (
@@ -87,8 +87,8 @@ const EmptyPostBox = styled.div`
   padding-top: 10px;
   transform: translate(-50%, -50%);
   & > .empty-image {
-    width: 100%;
-    height: 100%;
+    width: 200px;
+    height: 173px;
   }
 `;
 
@@ -101,8 +101,9 @@ const EmptyTitle = styled.div`
 const EmptyContetnts = styled.div`
   font-size: 24px;
   font-weight: 700;
-  width: 260px;
+  width: 217px;
   text-align: center;
+  margin-bottom: 10px;
 `;
 const EmptyBtn = styled.button`
   color: #1882ff;

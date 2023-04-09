@@ -1,9 +1,9 @@
-import { uuidv4 } from '@firebase/util';
-import Link from 'next/link';
-import { useState } from 'react';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import styled from 'styled-components';
 import MyCollectPost from './MyCollectPost';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { useState } from 'react';
+import { uuidv4 } from '@firebase/util';
+import Link from 'next/link';
 
 const CollectionCategory = ({ value, collectorList }: any) => {
   const [more, setMore] = useState(true);
@@ -11,7 +11,7 @@ const CollectionCategory = ({ value, collectorList }: any) => {
   const townSameValueData = collectorList?.filter(
     (item: { town: string }) => item.town === value
   );
-
+  // console.log('맞나', townSameValueData);
   const onClickMoreBtn = () => {
     setMore(!more);
   };
@@ -196,7 +196,7 @@ const MoreBtn = styled.button`
   float: right;
   margin-top: 20px;
   border: none;
-  background-color: inherit;
+  background-color: white;
   margin-right: 25px;
   :hover {
     font-size: 15px;
