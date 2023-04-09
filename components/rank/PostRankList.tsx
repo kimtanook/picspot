@@ -29,7 +29,7 @@ function PostRankList() {
     });
     return acc;
   }, []);
-  console.log('userPosts : ', userPosts);
+
   // 유저별 포스트 정렬
   userPosts.sort(function (a, b) {
     if (a.posts.length < b.posts.length) {
@@ -46,7 +46,7 @@ function PostRankList() {
         <PostRankBox key={uuidv4()}>
           <Rank>{index + 1}등</Rank>
           <Name>
-            {rankUser.map((user: { [key: string]: string }) => (
+            {rankUser?.map((user: { [key: string]: string }) => (
               <div key={uuidv4()}>
                 {user.uid === item.user ? user.userName : null}
               </div>
