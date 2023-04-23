@@ -1,5 +1,8 @@
 import { getData, getUser } from '@/api';
+import { AuthCurrentUser } from '@/atom';
+import { authService } from '@/firebase';
 import { uuidv4 } from '@firebase/util';
+import { AnyMxRecord } from 'dns';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
@@ -41,20 +44,32 @@ function PostRankList() {
     return 0;
   });
 
+  // const myRank = userPosts?.filter((item: any) => {
+  //   const a = item.user === authService.currentUser?.uid;
+  //   return a;
+  // });
+  // console.log(myRank);
+
   const topFour = userPosts.slice(0, 4);
   const fromOneToTen = userPosts.slice(0, 10);
   const fromElevenToTwenty = userPosts.slice(10, 20);
   return (
     <div>
       <TopFourWrap>
-        {topFour?.map((item) => (
+        {topFour?.map((item, index) => (
           <TopFourItemBox key={uuidv4()}>
             <TopFourItem>
               {rankUser?.map((user: { [key: string]: string }) => (
                 <div key={uuidv4()}>
                   {user.uid === item.user ? (
                     <>
-                      <TopFourUserImg src={user.userImg} />
+                      <TopFourTitle>
+                        <TopFourRankNum>#{index + 1}</TopFourRankNum>
+                      </TopFourTitle>
+                      <TopFourRingDiv>
+                        <TopFourUserRing />
+                        <TopFourUserImg src={user.userImg} />
+                      </TopFourRingDiv>
                       <TopFourName>{user.userName}</TopFourName>
                     </>
                   ) : null}
@@ -75,6 +90,11 @@ function PostRankList() {
           </TopFourItemBox>
         ))}
       </TopFourWrap>
+      {/* <div>나의 랭킹</div>
+      {myRank?.map((item: any) => (
+        <div>{item.user}</div>
+      ))} */}
+
       <TopTwentyTitle>전체랭킹 Top 20</TopTwentyTitle>
       <PostRankWrap>
         <FromOneToTenBox>
@@ -155,13 +175,53 @@ const TopFourItem = styled.div`
   align-items: center;
   position: relative;
   top: -10%;
+  z-index: 1;
+`;
+
+const TopFourTitle = styled.div`
+  width: 36px;
+  height: 29px;
+  border-radius: 28px;
+  background-image: linear-gradient(310deg, #00b9f5 0%, #31d3bd 100%);
+  position: absolute;
+  margin-left: 64px;
+  z-index: 1;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
+const TopFourRankNum = styled.div`
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 5px;
+`;
+
+const TopFourRingDiv = styled.div`
+  position: relative;
+  width: 97px;
+  height: 97px;
+`;
+
+const TopFourUserRing = styled.div`
+  width: 97px;
+  height: 97px;
+  border-radius: 50%;
+  background-color: tomato;
+  z-index: -1;
+  border: 5px solid transparent;
+  background-image: linear-gradient(#d9d9d9, #d9d9d9),
+    linear-gradient(310deg, #00b9f5 0%, #31d3bd 100%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  position: absolute;
 `;
 
 const TopFourUserImg = styled.img`
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background-color: #d9d9d9;
+  z-index: 1000;
+  margin: 3px;
 `;
 
 const TopFourName = styled.div`
