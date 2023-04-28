@@ -137,18 +137,21 @@ const MoreDiv = styled.div`
   background-color: white;
   z-index: 100;
   position: absolute;
-  width: 83%;
+  width: 100%;
+  height: 100vh;
   transform: translate(-50%, 0%);
   left: 50vw;
   overflow: hidden;
-  height: 1000px;
+  height: 80vh;
+  padding: 20px 200px;
   @media ${(props) => props.theme.mobile} {
-    position: absolute;
+    position: fixed;
     width: 90%;
     overflow: auto;
     margin: auto;
     left: 50%;
     height: 100%;
+    padding: 0%;
   }
 `;
 const MyPostImg = styled.img`
@@ -196,7 +199,7 @@ const MoreBtn = styled.button`
   float: right;
   margin-top: 20px;
   border: none;
-  background-color: white;
+  background-color: transparent;
   margin-right: 25px;
   :hover {
     font-size: 15px;
