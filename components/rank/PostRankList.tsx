@@ -119,7 +119,7 @@ function PostRankList() {
       <MyRankBox>
         <MyRankList>
           {preRank?.map((item: any, index: number) => (
-            <MyHighRank>
+            <MyHighRank key={uuidv4()}>
               {rankUser?.map((user: { [key: string]: string }) => (
                 <>
                   {user.uid === item.user ? (
@@ -135,7 +135,7 @@ function PostRankList() {
             </MyHighRank>
           ))}
           {myRank?.map((item: any) => (
-            <MyRank>
+            <MyRank key={uuidv4()}>
               <Image
                 src="/RankArrow.png"
                 alt="RankArrowImg"
@@ -162,7 +162,7 @@ function PostRankList() {
             </MyRank>
           ))}
           {nextRankNum?.map((item: any) => (
-            <MyLowerRank>
+            <MyLowerRank key={uuidv4()}>
               {rankUser?.map((user: { [key: string]: string }) => (
                 <>
                   {user.uid === item.user ? (
