@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import CommentRankList from '@/components/rank/CommentRankList';
 import FollowerRankList from '@/components/rank/FollowerRankList';
 import PostRankList from '@/components/rank/PostRankList';
 import { useState } from 'react';
@@ -41,7 +42,9 @@ function Index() {
       <div>
         {category === 'post' ? (
           <PostRankList />
-        ) : category === 'comment' ? null : (
+        ) : category === 'comment' ? (
+          <CommentRankList />
+        ) : (
           <FollowerRankList />
         )}
       </div>
