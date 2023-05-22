@@ -114,7 +114,9 @@ const Header = ({
         </SearchWrap>
       </SearchAndForm>
       <HeaderRight>
-        <Rank onClick={() => router.push('/rank')}>rank</Rank>
+        <Rank onClick={() => router.push('/rank')}>
+          <RankImg src="/HeaderCrown.png" />
+        </Rank>
         {nowUser ? (
           <MessageImgWrap>
             <div>
@@ -299,9 +301,14 @@ const HeaderRight = styled.div`
 `;
 
 const Rank = styled.div`
-  background-color: aqua;
-  width: 36px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+`;
+
+const RankImg = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const MenuImgBox = styled.div`
