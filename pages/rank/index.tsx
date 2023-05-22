@@ -2,20 +2,35 @@ import Header from '@/components/Header';
 import CommentRankList from '@/components/rank/CommentRankList';
 import FollowerRankList from '@/components/rank/FollowerRankList';
 import PostRankList from '@/components/rank/PostRankList';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 
 function Index() {
   const [category, setCategory] = useState('post');
+  const isMobile = useMediaQuery({ maxWidth: 413 });
+  const router = useRouter();
   return (
     <Wrap>
-      <Header
-        selectCity={undefined}
-        onChangeSelectCity={undefined}
-        searchOptionRef={undefined}
-        searchValue={undefined}
-        onChangeSearchValue={undefined}
-      />
+      {/* {isMobile ? (
+        <MobileHeader>
+          <Back onClick={() => router.push('/main')}>
+            <BackArrow src="/Back-point.png" alt="image" />
+          </Back>
+        </MobileHeader>
+      ) : ( */}
+      <>
+        <Header
+          selectCity={undefined}
+          onChangeSelectCity={undefined}
+          searchOptionRef={undefined}
+          searchValue={undefined}
+          onChangeSearchValue={undefined}
+        />
+      </>
+      {/* )} */}
+
       <CategoryWrap>
         <RankCategory
           category={category}
@@ -53,6 +68,21 @@ function Index() {
 }
 
 export default Index;
+const MobileHeader = styled.div`
+  width: 100vw;
+  height: 60px;
+  padding: 30px;
+`;
+
+const Back = styled.div`
+  width: 30px;
+`;
+
+const BackArrow = styled.img`
+  width: 12px;
+  height: 28px;
+`;
+
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,6 +92,9 @@ const CategoryWrap = styled.div`
   display: flex;
   flex-direction: row;
   margin: 40px 0 80px 0;
+  @media ${(props) => props.theme.mobile} {
+    margin: 10px 0 30px 0;
+  }
 `;
 const RankCategory = styled.div<{ category: string; name: string }>`
   cursor: pointer;
