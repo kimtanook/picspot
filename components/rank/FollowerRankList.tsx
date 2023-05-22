@@ -22,26 +22,18 @@ function FollowerRankList() {
       return 0;
     }
   });
-  console.log('rankFollowerData', rankFollowerData);
-  console.log('What', authService.currentUser?.uid);
   const myRankNum = rankFollowerData?.map((item: any, index: any) => {
     if (item.docId === authService.currentUser?.uid) return index;
   });
-  console.log('myRankNum', myRankNum);
   const myRanking: any = myRankNum?.filter((item: any) => item > -1);
-  console.log('myRanking', myRanking);
   const preRank = rankFollower?.slice(myRanking - 1, myRanking);
-  console.log('preSlice', preRank);
   const myRank = rankFollower?.filter((item: any) => {
     if (item.docId === authService.currentUser?.uid) {
       return item;
     }
   });
-  console.log('myRank', myRank);
   const nextRank = rankFollower?.slice(myRanking, myRanking + 1);
-  console.log('nextRank', nextRank);
   const nextRankNum = nextRank?.filter((item: any, index: any) => index === 1);
-  console.log('nextRankNum', nextRankNum);
   const { data: rankUser } = useQuery(['rankUser'], getUser, {
     staleTime: 1000 * 60 * 10,
     cacheTime: 1000 * 60 * 15,
@@ -52,8 +44,6 @@ function FollowerRankList() {
   const fromOneToTen = rankFollowerData?.slice(0, 10);
   const fromElevenToTwenty = rankFollowerData?.slice(10, 20);
   const fromOneToTwenty = rankFollowerData?.slice(0, 20);
-
-  console.log('rankUser', rankUser);
 
   return (
     <div>
@@ -181,17 +171,6 @@ function FollowerRankList() {
                         {index < 3 ? (
                           <TopTwentyUserImgBox>
                             {index === 0 ? (
-                              // <Image
-                              //   src="/CrownFollow.png"
-                              //   alt="crownFollowImg"
-                              //   priority={true}
-                              //   width={30}
-                              //   height={13}
-                              //   style={{
-                              //     marginTop: '-17px',
-                              //     position: 'absolute',
-                              //   }}
-                              // />
                               <MobileCrownImg
                                 src="/CrownFollow.png"
                                 alt="crownFollowImg"

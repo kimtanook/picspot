@@ -1,9 +1,6 @@
 import { getData, getUser } from '@/api';
-import { AuthCurrentUser } from '@/atom';
 import { authService } from '@/firebase';
 import { uuidv4 } from '@firebase/util';
-import { AnyMxRecord } from 'dns';
-import { divide } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
@@ -191,17 +188,6 @@ function PostRankList() {
                         {index < 3 ? (
                           <TopTwentyUserImgBox>
                             {index === 0 ? (
-                              // <Image
-                              //   src="/Crown.png"
-                              //   alt="crownImg"
-                              //   priority={true}
-                              //   width={30}
-                              //   height={13}
-                              //   style={{
-                              //     marginTop: '-17px',
-                              //     position: 'absolute',
-                              //   }}
-                              // />
                               <MobileCrownImg
                                 src="/Crown.png"
                                 alt="crownImg"
