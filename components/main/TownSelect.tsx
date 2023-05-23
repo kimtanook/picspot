@@ -1,5 +1,4 @@
 import { townArray } from '@/atom';
-import React from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -121,6 +120,9 @@ const SelectTownWrap = styled.div`
   align-items: center;
   flex-direction: row;
   overflow-x: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   @media ${(props) => props.theme.mobile} {
     overflow-x: scroll;
     justify-content: inherit;
@@ -141,7 +143,7 @@ const TownBtn = styled.button<{ town: string[]; value: string }>`
   background-color: ${({ value, town }) =>
     town.includes(value) ? '#FEB819' : 'none'};
   color: ${({ value, town }) => (town.includes(value) ? 'white' : 'none')};
-  :hover  {
+  :hover {
     border: 2px solid #feb819;
   }
 `;

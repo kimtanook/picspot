@@ -5,22 +5,23 @@ import {
   deleteFollowing2,
   getFollow,
   getFollowing,
+  getSpecificUser,
   getUser,
 } from '@/api';
+import { messageSendToggle } from '@/atom';
 import Header from '@/components/Header';
 import Seo from '@/components/Seo';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import styled from 'styled-components';
-import UserPostList from '@/components/userprofile/UserPostList';
 import UserCollectionList from '@/components/userprofile/UserCollectionList';
-import { useRecoilState } from 'recoil';
-import { messageSendToggle } from '@/atom';
+import UserPostList from '@/components/userprofile/UserPostList';
 import { authService } from '@/firebase';
 import { logEvent } from '@/utils/amplitude';
-import { useMediaQuery } from 'react-responsive';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
 
 function Profile() {
   const queryClient = useQueryClient();
@@ -31,6 +32,12 @@ function Profile() {
   const [isPc, setIsPc] = useState(false);
   const mobile = useMediaQuery({ maxWidth: 785 });
   const pc = useMediaQuery({ minWidth: 786 });
+
+  const { data: specificUserData } = useQuery(
+    ['backgroundData', userId],
+    getSpecificUser
+  );
+  const backgroundUrl = specificUserData?.background;
 
   const { data: getUserData } = useQuery('getUserProfileData', getUser);
   //* 현재 페이지 유저가 팔로잉한 사람 uid가 담긴 배열
@@ -126,7 +133,7 @@ function Profile() {
   }, []);
 
   return (
-    <>
+    <Wrap backgroundUrl={backgroundUrl}>
       <Seo title="My" />
       {isPc && (
         <Header
@@ -263,11 +270,13 @@ function Profile() {
           )}
         </GridBox>
       </UserPostTownList>
-    </>
+    </Wrap>
   );
 }
 export default Profile;
-
+const Wrap = styled.div<{ backgroundUrl: string }>`
+  background-image: ${(props) => `url(${props.backgroundUrl})`};
+`;
 const UserContainer = styled.div`
   box-shadow: inset 0px 20px 15px rgba(0, 0, 0, 0.05);
   width: 100%;
@@ -278,9 +287,9 @@ const UserContainer = styled.div`
   flex-direction: column;
   padding-top: 64px;
   margin-bottom: 10px;
-  background-color: #fbfbfb;
+  background-color: #fbfbfbb0;
   @media ${(props) => props.theme.mobile} {
-    background-color: white;
+    background-color: #fbfbfbb0;
   }
 `;
 const Back = styled.div`
@@ -338,7 +347,7 @@ const GrayBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
   border: none;
-  background-color: white;
+  background-color: inherit;
   color: #8e8e93;
   border-bottom: 3px solid #8e8e93;
   padding-bottom: 5px;
@@ -363,7 +372,7 @@ const BlackBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
   border: none;
-  background-color: white;
+  background-color: inherit;
   color: #1882ff;
   border-bottom: 3.5px solid #1882ff;
   padding-bottom: 5px;

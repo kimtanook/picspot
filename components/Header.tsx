@@ -1,15 +1,15 @@
-import { authService } from '@/firebase';
-import Link from 'next/link';
-import { ChangeEventHandler, RefObject, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { loginModalAtom, messageBoxToggle, postModalAtom } from '@/atom';
 import { getTakeMessage } from '@/api';
-import { useQuery } from 'react-query';
+import { loginModalAtom, messageBoxToggle, postModalAtom } from '@/atom';
+import { authService } from '@/firebase';
 import { customAlert } from '@/utils/alerts';
-import Search from './main/Search';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ChangeEventHandler, RefObject, useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
+import Search from './main/Search';
 
 const Header = ({
   selectCity,
@@ -114,6 +114,9 @@ const Header = ({
         </SearchWrap>
       </SearchAndForm>
       <HeaderRight>
+        <Rank onClick={() => router.push('/rank')}>
+          <RankImg src="/HeaderCrown.png" />
+        </Rank>
         {nowUser ? (
           <MessageImgWrap>
             <div>
@@ -292,8 +295,20 @@ const HeaderRight = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  padding-left: 12px;
   @media ${(props) => props.theme.mobile} {
   }
+`;
+
+const Rank = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+`;
+
+const RankImg = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const MenuImgBox = styled.div`
