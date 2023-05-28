@@ -152,12 +152,25 @@ export const updateData: any = (data: any) => {
   return updateDoc(doc(dbService, 'post', data.id), data);
 };
 
+//* 모든 댓글 가져오기
+export const getAllComment = async () => {
+  const response: any = [];
+
+  const querySnapshot = await getDocs(collection(dbService, 'comment'));
+  querySnapshot.forEach((doc) => {
+    response.push({ id: doc.id, ...doc.data() });
+  });
+
+  return response;
+};
+
 //* 댓글 가져오기
 export const getComment = async ({ queryKey }: any) => {
   const [, postId] = queryKey;
   const response: any = [];
   const q = query(
-    collection(dbService, `post/${postId}/comment`),
+    collection(dbService, `comment`),
+    where('postId', '==', postId),
     orderBy('createdAt', 'desc')
   );
   const querySnapshot = await getDocs(q);
@@ -169,10 +182,7 @@ export const getComment = async ({ queryKey }: any) => {
 
 //* 댓글 추가
 export const addComment = async (item: AddComment) => {
-  await addDoc(
-    collection(dbService, `post/${item.postId}/comment`),
-    item.submitCommentData
-  );
+  await addDoc(collection(dbService, `comment`), item.submitCommentData);
 };
 
 //* 댓글 삭제

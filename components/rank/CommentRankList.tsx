@@ -1,54 +1,33 @@
-import { getComment, getData, getUser } from '@/api';
+import { getAllComment, getUser } from '@/api';
 import { authService } from '@/firebase';
 import { uuidv4 } from '@firebase/util';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 
 function CommentRankList() {
-  const [commentsDataList, setCommentsDataList] = useState<any>([]);
+  const { data: allCommentData } = useQuery(['allCommentData'], getAllComment);
 
-  // 모든 포스트 데이터 가져오기
-  const { data: rankPost } = useQuery(['rankPost'], getData, {
-    staleTime: 1000 * 60 * 10,
-    cacheTime: 1000 * 60 * 15,
-  });
   // 모든 유저 데이터 가져오기
   const { data: rankUser } = useQuery(['rankUser'], getUser, {
     staleTime: 1000 * 60 * 10,
     cacheTime: 1000 * 60 * 15,
   });
-  // 댓글 데이터 추출
-  const getCommentData = async () => {
-    const results = await Promise.all(
-      rankPost.map((item: any) =>
-        getComment({ queryKey: ['getCommentData', item.id] })
-      )
-    );
-
-    const commentsData = results
-      .filter((result: any) => result.length > 0)
-      .reduce((acc: any, cur: any) => {
-        return [...acc, ...cur];
-      }, []);
-
-    setCommentsDataList(commentsData);
-  };
 
   // 유저 목록 추출
   const users: string[] = Array.from(
-    new Set(rankPost?.map((post: RankPost) => post.creator))
+    new Set(allCommentData?.map((post: RankPost) => post.creatorUid))
   );
 
-  // 유저별 포스트 추출
+  // 유저별 댓글 추출
   let userComments: RankUserPost[] = users.reduce<RankUserPost[]>(
     (acc, user) => {
       acc.push({
         user,
-        posts: commentsDataList.filter(
+        posts: allCommentData.filter(
           (post: RankPost) => post.creatorUid === user
         ),
       });
@@ -91,7 +70,7 @@ function CommentRankList() {
   const fromOneToTwenty = userComments?.slice(0, 20);
 
   useEffect(() => {
-    getCommentData();
+    // getCommentData();
   }, []);
 
   return (

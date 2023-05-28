@@ -1,16 +1,15 @@
 import { addComment, getComment } from '@/api';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import CommentItem from './CommentItem';
-import { v4 as uuidv4 } from 'uuid';
-import { FormEvent, useEffect, useState } from 'react';
+import { AuthCurrentUser, editBtnToggleAtom } from '@/atom';
 import { authService } from '@/firebase';
-import styled from 'styled-components';
 import { customAlert } from '@/utils/alerts';
 import { logEvent } from '@amplitude/analytics-browser';
+import { FormEvent, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
-import { editBtnToggleAtom } from '@/atom';
 import { useRecoilState } from 'recoil';
-import { AuthCurrentUser } from '@/atom';
+import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
+import CommentItem from './CommentItem';
 
 const CommentList = ({ postId }: postId) => {
   const [inputCount, setInputCount] = useState(0);
@@ -28,6 +27,7 @@ const CommentList = ({ postId }: postId) => {
     creatorUid: authService.currentUser?.uid,
     contents: comment,
     createdAt: Date.now(),
+    postId: postId,
   };
 
   const onSubmitComment = (event: FormEvent<HTMLFormElement>) => {
@@ -39,7 +39,7 @@ const CommentList = ({ postId }: postId) => {
       return;
     } else if (comment) {
       commentMutate(
-        { postId, submitCommentData },
+        { submitCommentData },
         {
           onSuccess: () => {
             queryClient.invalidateQueries('comments');
@@ -59,7 +59,7 @@ const CommentList = ({ postId }: postId) => {
   return (
     <CommentContainer>
       <CommentBox>
-        {data.map((item: CommentItemType) => (
+        {data?.map((item: CommentItemType) => (
           <CommentItem key={uuidv4()} item={item} postId={postId} />
         ))}
       </CommentBox>
