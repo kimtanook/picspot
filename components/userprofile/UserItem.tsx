@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import React from 'react';
 import styled from 'styled-components';
 
 export default function UserItem({ item }: { item: userItem }) {
+  console.log('item : ', item);
   return (
-    <Link href={`/detail/${item.uid}`}>
+    <Link href={`/detail/${item.id}`}>
       <UserPostImg src={item.imgUrl} />
     </Link>
   );
