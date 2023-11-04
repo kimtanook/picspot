@@ -51,6 +51,8 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
       imgUrl: item.imgUrl,
       town: item.town,
     });
+    console.log('컬렉션이 저장되었습니다');
+    console.log(item.id);
   };
 
   //* collection 삭제 기능입니다.
@@ -61,6 +63,7 @@ const Content = ({ item, userCollectData, collectHover }: any) => {
       uid: item.id,
       collector: authService.currentUser?.uid,
     });
+    console.log('컬렉션이 삭제되었습니다');
   };
 
   // 아이템 클릭 시 스크롤 위치 저장

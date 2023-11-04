@@ -8,7 +8,7 @@ import Content from './Content';
 
 function ContentBox({ item }: any) {
   const [collectHover, setCollectHover] = useState(false);
-  // 특정 유저의 컬렉션 데이터 가져오기
+  // 특정 유저(나 제외 다른 유저페이지)의 컬렉션 데이터 가져오기
   const { data: userCollectData } = useQuery(
     ['userCollectData', authService.currentUser?.uid],
     getUserCollection

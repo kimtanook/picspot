@@ -44,6 +44,7 @@ const CollectionButton = ({ item }: ItemProps) => {
     ItemType
   >(deleteCollectionData, {
     onSuccess: () => {
+      console.log('queryClient', queryClient.invalidateQueries);
       setTimeout(() => queryClient.invalidateQueries('collectiondata'), 500);
     },
     onError: () => {},
@@ -59,6 +60,7 @@ const CollectionButton = ({ item }: ItemProps) => {
       town: town,
     });
     setIsCollect(!isCollect);
+    // console.log('게시물이 저장되었습니다');
   };
 
   //* collection 삭제 기능입니다.
@@ -69,6 +71,7 @@ const CollectionButton = ({ item }: ItemProps) => {
       collector: authService.currentUser?.uid,
     });
     setIsCollect(!isCollect);
+    // console.log('게시물이 삭제되었습니다');
   };
 
   //* collector필드의 배열값
@@ -92,7 +95,7 @@ const CollectionButton = ({ item }: ItemProps) => {
   if (isLoading) return <h1>로딩중 입니다</h1>;
   if (isError) return <h1>통신이 불안정합니다</h1>;
 
-  //* 컬렉팅한 사람은 컬렉팅 삭제 버튼이 컬렉팅 하지 않은 사람은 컬렉팅 추가 버튼을 보이도록 하기
+  //* 컬렉팅한 사람은 컬렉팅 삭제 버튼이, 컬렉팅 하지 않은 사람은 컬렉팅 추가 버튼을 보이도록 하기
   //* 비회원 or 자기 자신 포스트에는 컬렉팅 버튼이 안보이도록 하기
   if (
     authService.currentUser &&

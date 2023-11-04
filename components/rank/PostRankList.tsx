@@ -44,19 +44,18 @@ function PostRankList() {
     return 0;
   });
 
+  //해당 유저의 랭킹
   const myRankNum = userPosts?.map((item: any, index: any) => {
     if (item.user === authService.currentUser?.uid) return index;
   });
-  // console.log('myRankNum', myRankNum);
   const myRanking: any = myRankNum?.filter((item: any) => item > -1);
-  // console.log('myRanking', myRanking);
-  const preRank = userPosts?.slice(myRanking - 1, myRanking);
-  // console.log('preSlice', preRank);
   const myRank = userPosts?.filter((item: any) => {
     if (item.user === authService.currentUser?.uid) {
       return item;
     }
   });
+  // 해당 유저 기준 앞 뒤 랭킹 데이터
+  const preRank = userPosts?.slice(myRanking - 1, myRanking);
   const nextRank = userPosts?.slice(myRanking, myRanking + 1);
   const nextRankNum = nextRank?.filter((item: any, index: any) => index === 1);
 

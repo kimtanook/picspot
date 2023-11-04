@@ -8,11 +8,13 @@ import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
 
 function FollowerRankList() {
+  // 팔로워 데이터 불러오기
   const { data: rankFollower } = useQuery(['rankFollwer'], getFollow, {
     staleTime: 1000 * 60 * 10,
     cacheTime: 1000 * 60 * 15,
   });
 
+  // 팔로워 랭킹 길이에 따른 정렬하기
   const rankFollowerData = rankFollower?.sort((a: any, b: any) => {
     if (a.follow.length < b.follow.length) {
       return 1;
@@ -22,16 +24,19 @@ function FollowerRankList() {
       return 0;
     }
   });
+
+  // 해당 유저 랭킹 번호 index로 나열하여 알아내기
   const myRankNum = rankFollowerData?.map((item: any, index: any) => {
     if (item.docId === authService.currentUser?.uid) return index;
   });
   const myRanking: any = myRankNum?.filter((item: any) => item > -1);
-  const preRank = rankFollower?.slice(myRanking - 1, myRanking);
   const myRank = rankFollower?.filter((item: any) => {
     if (item.docId === authService.currentUser?.uid) {
       return item;
     }
   });
+  //해당 유저 기준 앞,뒤 랭킹 데이터
+  const preRank = rankFollower?.slice(myRanking - 1, myRanking);
   const nextRank = rankFollower?.slice(myRanking, myRanking + 1);
   const nextRankNum = nextRank?.filter((item: any, index: any) => index === 1);
   const { data: rankUser } = useQuery(['rankUser'], getUser, {

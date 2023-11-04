@@ -25,6 +25,7 @@ const MyPostList = () => {
   const myCollectPost = data?.filter((item: { town: string }) => {
     return item.town;
   });
+
   //* town값을 골라 map 돌리기
   const myCollectPostTown = myCollectPost?.map((item: { town: string }) => {
     return item.town;
